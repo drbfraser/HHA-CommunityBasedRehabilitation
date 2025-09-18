@@ -1,5 +1,5 @@
 import { RiskGoalOptions, RiskRequirementOptions } from "@cbr/common/types/translationKeys";
-import { IRisk, RiskType } from "@cbr/common/util/risks";
+import { cancellationOptions, IRisk, RiskType } from "@cbr/common/util/risks";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import {
     Button,
@@ -15,9 +15,10 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import { Field, Form, Formik, FieldProps, FormikProps } from "formik";
-import { TextField } from "formik-mui";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import ModalDropdown from "./ModalDropdown";
+import { validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 
 interface IModalProps {
     risk: IRisk;
@@ -59,9 +60,13 @@ export default function UpdateGoalStatus(props: IModalProps) {
                 props.close();
             }}
             enableReinitialize
-            initialValues={props.risk}
+            initialValues={{
+                ...props.risk,
+                cancellation_reason: "",
+            }}
+            validationSchema={validationSchema}
         >
-            {({ isSubmitting, values }: FormikProps<IRisk>) => {
+            {({ isSubmitting, values, errors, touched }: FormikProps<IRisk>) => {
                 return (
                     <Dialog fullWidth open={true} aria-labelledby="form-dialog-title">
                         <Form>
@@ -97,16 +102,19 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                             </Field>
                                             {values.goal_status === OutcomeGoalMet.CANCELLED && (
                                                 <Grid item>
-                                                    <Field
-                                                        component={TextField}
-                                                        fullWidth
-                                                        multiline
-                                                        required
-                                                        rows={1}
-                                                        variant="outlined"
-                                                        margin="dense"
-                                                        label={t("risks.cancelReason")}
+                                                    <ModalDropdown
                                                         name="cancellation_reason"
+                                                        label={t("risks.cancelReason")}
+                                                        options={cancellationOptions}
+                                                        isCustom={
+                                                            !Object.values(
+                                                                cancellationOptions
+                                                            ).includes(
+                                                                values.cancellation_reason
+                                                            ) && values.cancellation_reason !== ""
+                                                        }
+                                                        error={errors.cancellation_reason}
+                                                        touched={touched.cancellation_reason}
                                                     />
                                                 </Grid>
                                             )}

@@ -14,7 +14,7 @@ import Typography from "@mui/material/Typography";
 import { Field, Form, Formik, FormikProps } from "formik";
 import { TextField } from "formik-mui";
 import { useTranslation } from "react-i18next";
-import { RiskLevel } from "@cbr/common/util/risks";
+import { RiskLevel, riskDropdownOptions, riskTypeKeyMap } from "@cbr/common/util/risks";
 import { handleSubmit } from "@cbr/common/forms/Risks/riskFormFieldHandler";
 import { fieldLabels, FormField, validationSchema } from "@cbr/common/forms/Risks/riskFormFields";
 import { getRiskGoalsTranslationKey, IRisk, riskLevels, RiskType } from "@cbr/common/util/risks";
@@ -23,7 +23,7 @@ import React, { useState } from "react";
 import UpdateGoalStatus from "./UpdateGoalStatus";
 import GoalStatusChip from "components/GoalStatusChip/GoalStatusChip";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
-
+import ModalDropdown from "./ModalDropdown";
 interface IModalProps {
     risk: IRisk;
     setRisk: (risk: IRisk) => void;
@@ -126,7 +126,7 @@ const ClientRisksModal = (props: IModalProps) => {
                 initialValues={editedRisk}
                 validationSchema={validationSchema}
             >
-                {({ isSubmitting, values }: FormikProps<IRisk>) => {
+                {({ isSubmitting, values, errors, touched }: FormikProps<IRisk>) => {
                     const handleEditGoalsClick = () => {
                         setEditedRisk(values);
                         setOpenEditGoals(true);
@@ -193,29 +193,45 @@ const ClientRisksModal = (props: IModalProps) => {
                                             </FormControl>
                                         </Grid>
                                         <Grid item>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                required
-                                                rows={1}
-                                                variant="outlined"
-                                                margin="dense"
-                                                label={fieldLabels[FormField.goal_name]}
-                                                name={FormField.goal_name}
+                                            <ModalDropdown
+                                                name={FormField.requirement}
+                                                label={fieldLabels[FormField.requirement]}
+                                                options={
+                                                    riskDropdownOptions[
+                                                        riskTypeKeyMap[props.risk.risk_type]
+                                                    ]?.requirement || {}
+                                                }
+                                                isCustom={
+                                                    !Object.values(
+                                                        riskDropdownOptions[
+                                                            riskTypeKeyMap[props.risk.risk_type]
+                                                        ].requirement
+                                                    ).includes(editedRisk.requirement) &&
+                                                    editedRisk.requirement !== ""
+                                                }
+                                                error={errors.requirement}
+                                                touched={touched.requirement}
                                             />
                                         </Grid>
                                         <Grid item>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                required
-                                                rows={4}
-                                                variant="outlined"
-                                                margin="dense"
-                                                label={fieldLabels[FormField.requirement]}
-                                                name={FormField.requirement}
+                                            <ModalDropdown
+                                                name={FormField.goal_name}
+                                                label={fieldLabels[FormField.goal_name]}
+                                                options={
+                                                    riskDropdownOptions[
+                                                        riskTypeKeyMap[props.risk.risk_type]
+                                                    ]?.goal || {}
+                                                }
+                                                isCustom={
+                                                    !Object.values(
+                                                        riskDropdownOptions[
+                                                            riskTypeKeyMap[props.risk.risk_type]
+                                                        ].goal
+                                                    ).includes(editedRisk.goal_name) &&
+                                                    editedRisk.goal_name !== ""
+                                                }
+                                                error={errors.goal_name}
+                                                touched={touched.goal_name}
                                             />
                                         </Grid>
                                     </Grid>

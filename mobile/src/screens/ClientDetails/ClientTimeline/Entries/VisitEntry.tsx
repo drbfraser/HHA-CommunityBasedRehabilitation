@@ -46,7 +46,6 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 improvements: [],
             };
             const fetchedImprov = await fetchedVisit.improvements.fetch();
-            console.log("fetched", fetchedImprov);
             setVisitImprovement(fetchedImprov);
             setVisit(iVisit);
         }

@@ -52,7 +52,7 @@ const ModalDropdown = ({ name, label, options, isCustom, error, touched }: IModa
                             multiline
                             variant="outlined"
                             margin="dense"
-                            label=""
+                            label={field.value === "" ? "Please specify" : ""}
                             value={field.value || ""}
                             onChange={(e) => form.setFieldValue(name, e.target.value)}
                             error={Boolean(error && touched)}

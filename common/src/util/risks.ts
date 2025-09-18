@@ -63,7 +63,9 @@ export interface IGoalStatus {
 export let riskLevels: { [key: string]: IRiskLevel } = {};
 export let riskTypes: { [key: string]: IRiskType } = {};
 export let goalStatuses: { [key: string]: IGoalStatus } = {};
-export let riskDropdownOptions: { [key: string]: { requirement: { [key: string]: string }, goal: { [key: string]: string } } } = {};
+export let riskDropdownOptions: {
+    [key: string]: { requirement: { [key: string]: string }; goal: { [key: string]: string } };
+} = {};
 export let cancellationOptions: { [key: string]: string } = {};
 
 const refreshArrays = () => {
@@ -219,7 +221,6 @@ const refreshArrays = () => {
             },
         },
     };
-
 };
 refreshArrays();
 i18n.on("languageChanged", () => {
@@ -233,7 +234,6 @@ export const riskTypeKeyMap: Record<RiskType, string> = {
     [RiskType.NUTRITION]: "nutrition",
     [RiskType.MENTAL]: "mental",
 };
-
 
 export const getRiskRequirementsTranslationKey = (riskType: RiskType) => {
     // TODO: Use real values for requirements. Current values are only placeholders

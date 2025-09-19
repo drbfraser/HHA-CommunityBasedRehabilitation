@@ -7,6 +7,7 @@ import {
     AccordionDetails,
     AccordionSummary,
     Button,
+    Divider,
     FormControl,
     Grid,
     MenuItem,
@@ -18,13 +19,14 @@ import {
     clientInitialValues,
     newClientValidationSchema,
 } from "@cbr/common/forms/Client/clientFields";
-import { riskLevels } from "@cbr/common/util/risks";
+import { riskDropdownOptions, riskLevels, RiskType, riskTypeKeyMap } from "@cbr/common/util/risks";
 import { HCRType, genders } from "@cbr/common/util/clients";
 import { getOtherDisabilityId, useDisabilities } from "@cbr/common/util/hooks/disabilities";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { handleNewWebClientSubmit, handleReset } from "@cbr/common/forms/Client/clientHandler";
 import { clientFormStyles } from "./ClientForm.styles";
+import ModalDropdown from "pages/ClientDetails/Risks/ModalDropdown";
 
 const ClientForm = () => {
     const zones = useZones();
@@ -206,23 +208,23 @@ const ClientForm = () => {
                                             {(values[ClientField.disability] as number[]).includes(
                                                 getOtherDisabilityId(disabilities)
                                             ) && (
-                                                <div>
-                                                    <br />
-                                                    <Field
-                                                        component={TextField}
-                                                        fullWidth
-                                                        label={
-                                                            clientFieldLabels[
+                                                    <div>
+                                                        <br />
+                                                        <Field
+                                                            component={TextField}
+                                                            fullWidth
+                                                            label={
+                                                                clientFieldLabels[
                                                                 ClientField.otherDisability
-                                                            ]
-                                                        }
-                                                        required
-                                                        name={ClientField.otherDisability}
-                                                        variant="outlined"
-                                                        autoComplete="off"
-                                                    />
-                                                </div>
-                                            )}
+                                                                ]
+                                                            }
+                                                            required
+                                                            name={ClientField.otherDisability}
+                                                            variant="outlined"
+                                                            autoComplete="off"
+                                                        />
+                                                    </div>
+                                                )}
                                         </Grid>
                                         <Grid item md={12} xs={12}>
                                             <Field
@@ -264,8 +266,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                            ClientField
-                                                                                .caregiverName
+                                                                        ClientField
+                                                                            .caregiverName
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -285,8 +287,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                            ClientField
-                                                                                .caregiverEmail
+                                                                        ClientField
+                                                                            .caregiverEmail
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -305,8 +307,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                            ClientField
-                                                                                .caregiverPhone
+                                                                        ClientField
+                                                                            .caregiverPhone
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -320,17 +322,15 @@ const ClientForm = () => {
                                         ) : (
                                             <></>
                                         )}
-
+                                    </Grid> <Grid container spacing={1}>
                                         <Grid item md={12} xs={12}>
                                             <hr />
                                         </Grid>
-
                                         <Grid item md={6} xs={12}>
                                             <FormControl fullWidth variant="outlined">
                                                 <Field
                                                     component={TextField}
                                                     select
-                                                    required
                                                     variant="outlined"
                                                     label={
                                                         clientFieldLabels[ClientField.healthRisk]
@@ -353,43 +353,29 @@ const ClientForm = () => {
                                         </Grid>
 
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                required
-                                                rows={4}
-                                                variant="outlined"
-                                                label={
-                                                    clientFieldLabels[
-                                                        ClientField.healthRequirements
-                                                    ]
-                                                }
+                                            <ModalDropdown
                                                 name={ClientField.healthRequirements}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.healthRequirements]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.HEALTH]]?.requirement || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                rows={4}
-                                                required
-                                                variant="outlined"
-                                                label={clientFieldLabels[ClientField.healthGoals]}
+                                            <ModalDropdown
                                                 name={ClientField.healthGoals}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.healthGoals]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.HEALTH]]?.goal || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
+                                        <Grid item md={12} xs={12}>
+                                            <Divider />
+                                        </Grid>
                                         <Grid item md={6} xs={12}>
                                             <FormControl fullWidth variant="outlined">
                                                 <Field
                                                     component={TextField}
                                                     select
-                                                    required
                                                     variant="outlined"
                                                     label={
                                                         clientFieldLabels[ClientField.educationRisk]
@@ -412,46 +398,30 @@ const ClientForm = () => {
                                         </Grid>
 
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                rows={4}
-                                                required
-                                                variant="outlined"
-                                                label={
-                                                    clientFieldLabels[
-                                                        ClientField.educationRequirements
-                                                    ]
-                                                }
+                                            <ModalDropdown
                                                 name={ClientField.educationRequirements}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.educationRequirements]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.EDUCATION]]?.requirement || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                required
-                                                rows={4}
-                                                variant="outlined"
-                                                label={
-                                                    clientFieldLabels[ClientField.educationGoals]
-                                                }
+                                            <ModalDropdown
                                                 name={ClientField.educationGoals}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.educationGoals]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.EDUCATION]]?.goal || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
+                                        <Grid item md={12} xs={12}>
+                                            <Divider />
+                                        </Grid>
                                         <Grid item md={6} xs={12}>
                                             <FormControl fullWidth variant="outlined">
                                                 <Field
                                                     component={TextField}
                                                     select
                                                     variant="outlined"
-                                                    required
                                                     label={
                                                         clientFieldLabels[ClientField.socialRisk]
                                                     }
@@ -473,44 +443,30 @@ const ClientForm = () => {
                                         </Grid>
 
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                required
-                                                rows={4}
-                                                variant="outlined"
-                                                label={
-                                                    clientFieldLabels[
-                                                        ClientField.socialRequirements
-                                                    ]
-                                                }
+                                            <ModalDropdown
                                                 name={ClientField.socialRequirements}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.socialRequirements]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.SOCIAL]]?.requirement || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                required
-                                                multiline
-                                                rows={4}
-                                                variant="outlined"
-                                                label={clientFieldLabels[ClientField.socialGoals]}
+                                            <ModalDropdown
                                                 name={ClientField.socialGoals}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.socialGoals]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.SOCIAL]]?.goal || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
+                                        <Grid item md={12} xs={12}>
+                                            <Divider />
+                                        </Grid>
                                         <Grid item md={6} xs={12}>
                                             <FormControl fullWidth variant="outlined">
                                                 <Field
                                                     component={TextField}
                                                     select
                                                     variant="outlined"
-                                                    required
                                                     label={
                                                         clientFieldLabels[ClientField.nutritionRisk]
                                                     }
@@ -532,47 +488,31 @@ const ClientForm = () => {
                                         </Grid>
 
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                required
-                                                rows={4}
-                                                variant="outlined"
-                                                label={
-                                                    clientFieldLabels[
-                                                        ClientField.nutritionRequirements
-                                                    ]
-                                                }
+                                            <ModalDropdown
                                                 name={ClientField.nutritionRequirements}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.nutritionRequirements]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.NUTRITION]]?.requirement || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                required
-                                                multiline
-                                                rows={4}
-                                                variant="outlined"
-                                                label={
-                                                    clientFieldLabels[ClientField.nutritionGoals]
-                                                }
+                                            <ModalDropdown
                                                 name={ClientField.nutritionGoals}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.nutritionGoals]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.NUTRITION]]?.goal || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
                                         <br />
-
+                                        <Grid item md={12} xs={12}>
+                                            <Divider />
+                                        </Grid>
                                         <Grid item md={6} xs={12}>
                                             <FormControl fullWidth variant="outlined">
                                                 <Field
                                                     component={TextField}
                                                     select
                                                     variant="outlined"
-                                                    required
                                                     label={
                                                         clientFieldLabels[ClientField.mentalRisk]
                                                     }
@@ -594,34 +534,19 @@ const ClientForm = () => {
                                         </Grid>
 
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                multiline
-                                                required
-                                                rows={4}
-                                                variant="outlined"
-                                                label={
-                                                    clientFieldLabels[
-                                                        ClientField.mentalRequirements
-                                                    ]
-                                                }
+                                            <ModalDropdown
                                                 name={ClientField.mentalRequirements}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.mentalRequirements]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.MENTAL]]?.requirement || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
-
                                         <Grid item md={8} xs={12}>
-                                            <Field
-                                                component={TextField}
-                                                fullWidth
-                                                required
-                                                multiline
-                                                rows={4}
-                                                variant="outlined"
-                                                label={clientFieldLabels[ClientField.mentalGoals]}
+                                            <ModalDropdown
                                                 name={ClientField.mentalGoals}
-                                                autoComplete="off"
+                                                label={clientFieldLabels[ClientField.mentalGoals]}
+                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.MENTAL]]?.goal || {}}
+                                                isCustom={false}
                                             />
                                         </Grid>
                                         <br />

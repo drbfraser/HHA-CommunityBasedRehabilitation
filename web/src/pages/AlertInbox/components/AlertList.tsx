@@ -87,7 +87,6 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                             color="#01579b"
                                             noWrap={false}
                                         >
-                                            {alert.created_by_user}
                                         </Typography>
                                     </div>
                                 }

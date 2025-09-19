@@ -44,7 +44,7 @@ class DetailedVisitSerializerTests(TestCase):
         # visit created with correct fields
         self.assertEqual(visit.id, uuid.UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"))
         self.assertEqual(visit.user_id, self.user)
-        self.assertEqual(str(visit.client_id.id), str(self.client.id))
+        self.assertEqual(visit.client_id, self.client)
         self.assertEqual(visit.created_at, 1700000000000)
         self.assertEqual(visit.server_created_at, 1700000000000)
 
@@ -92,3 +92,20 @@ class DetailedVisitSerializerTests(TestCase):
         # visit fields still correct
         self.assertEqual(visit.user_id, self.user)
         self.assertEqual(str(visit.client_id.id), str(self.client.id))
+
+    @patch("cbr_api.serializers.current_milli_time", return_value=1700000000000)
+    @patch(
+        "uuid.uuid4",
+        side_effect=[
+            uuid.UUID("cccccccc-cccc-cccc-cccc-cccccccccccc"),
+            uuid.UUID("00000000-0000-0000-0000-000000000003"),
+        ],
+    )
+    def test_improvements_default_to_empty_list(self, _, __):
+        data = helper.base_visit_payload(self.client.id, self.zone.id)
+        # do NOT include "improvements" to ensure default=list kicks in
+        ctx = {"request": helper.mock_request(self.user)}
+        s = DetailedVisitSerializer(data=data, context=ctx)
+        self.assertTrue(s.is_valid(), s.errors)
+        visit = s.save()
+        self.assertEqual(Improvement.objects.filter(visit_id=visit).count(), 0)

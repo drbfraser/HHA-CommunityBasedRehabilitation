@@ -152,7 +152,7 @@ class DetailedVisitSerializerTestsHelper:
         # Provide the minimum valid visit payload for your model.
         # Toggle the *_visit flags as your model requires (booleans).
         return {
-            "client_id": client_id, # DRF usually accepts pk
+            "client_id": client_id,  # DRF usually accepts pk
             "health_visit": True,
             "educat_visit": False,
             "social_visit": False,
@@ -166,5 +166,5 @@ class DetailedVisitSerializerTestsHelper:
         }
 
     @staticmethod
-    def improvement(risk_type="HEALTH", provided=True, desc=""):
+    def improvement(risk_type="HEALTH", provided="", desc=""):
         return {"risk_type": risk_type, "provided": provided, "desc": desc}

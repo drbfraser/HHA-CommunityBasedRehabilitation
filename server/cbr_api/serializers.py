@@ -349,6 +349,8 @@ class ClientRiskSerializer(serializers.ModelSerializer):
 
 
 class ImprovementSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(required=False, allow_null=True)
+
     class Meta:
         model = models.Improvement
         fields = ["id", "visit_id", "risk_type", "provided", "desc", "created_at"]

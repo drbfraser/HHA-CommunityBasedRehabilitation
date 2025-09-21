@@ -154,16 +154,14 @@ class DetailedVisitSerializerTests(TestCase):
         self.assertIn("improvements", s.errors)
         self.assertIn("desc", s.errors["improvements"][0])
 
-    # def test_invalid_improvement_payload_surfaces_validation_error(self):
-    #     # Assuming ImprovementSerializer requires 'risk_type' and 'provided'
-    #     data = helper.base_visit_payload(self.client.id, self.zone.id) | {
-    #         "improvements": [
-    #             {"provided": "wheel chair repair"},  # missing risk type
-    #         ]
-    #     }
-    #     ctx = {"request": helper.mock_request(self.user)}
-    #     s = DetailedVisitSerializer(data=data, context=ctx)
-    #     self.assertFalse(s.is_valid())
-    #     # Depending on your ImprovementSerializer, adjust the key path:
-    #     print(s.errors)
-    #     self.assertIn("improvements", s.errors)
+    def test_invalid_improvement_payload_surfaces_validation_error(self):
+        data = helper.base_visit_payload(self.client.id, self.zone.id) | {
+            "improvements": [
+                {"desc": "wheel chair repair"},  # missing 'provided'
+            ]
+        }
+        ctx = {"request": helper.mock_request(self.user)}
+        s = DetailedVisitSerializer(data=data, context=ctx)
+        self.assertFalse(s.is_valid())
+        self.assertIn("improvements", s.errors)
+        self.assertIn("provided", s.errors["improvements"][0])

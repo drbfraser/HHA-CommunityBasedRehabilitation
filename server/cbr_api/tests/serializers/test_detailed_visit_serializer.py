@@ -44,7 +44,7 @@ class DetailedVisitSerializerTests(TestCase):
         # visit created with correct fields
         self.assertEqual(visit.id, uuid.UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"))
         self.assertEqual(visit.user_id, self.user)
-        self.assertEqual(visit.client_id, self.client)
+        self.assertEqual(str(visit.client_id.id), str(self.client.id))
         self.assertEqual(visit.created_at, 1700000000000)
         self.assertEqual(visit.server_created_at, 1700000000000)
 
@@ -109,3 +109,38 @@ class DetailedVisitSerializerTests(TestCase):
         self.assertTrue(s.is_valid(), s.errors)
         visit = s.save()
         self.assertEqual(Improvement.objects.filter(visit_id=visit).count(), 0)
+
+    @patch("cbr_api.serializers.current_milli_time", return_value=1700000000000)
+    @patch(
+        "uuid.uuid4", side_effect=[uuid.UUID("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee")]
+    )
+    def test_read_only_fields_are_ignored_on_input(self, _uuid, _now):
+        # Try to spoof id/user/created_at in the input; they should be ignored/overridden.
+        data = helper.base_visit_payload(self.client.id, self.zone.id) | {
+            "id": "ffffffff-ffff-ffff-ffff-ffffffffffff",
+            "user_id": "spoof-user",
+            "created_at": 123,
+        }
+        ctx = {"request": helper.mock_request(self.user)}
+        s = DetailedVisitSerializer(data=data, context=ctx)
+        self.assertTrue(s.is_valid(), s.errors)
+        visit = s.save()
+
+        # Ensure our serializer's create() logic won over input
+        self.assertEqual(visit.id, uuid.UUID("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"))
+        self.assertEqual(visit.user_id, self.user)
+        self.assertEqual(visit.created_at, 1700000000000)
+    
+    def test_invalid_improvement_payload_surfaces_validation_error(self):
+        # Assuming ImprovementSerializer requires 'risk_type' and 'provided'
+        data = helper.base_visit_payload(self.client.id, self.zone.id) | {
+            "improvements": [
+                {"provided": "wheel chair repair"},  # missing risk type
+            ]
+        }
+        ctx = {"request": helper.mock_request(self.user)}
+        s = DetailedVisitSerializer(data=data, context=ctx)
+        self.assertFalse(s.is_valid())
+        # Depending on your ImprovementSerializer, adjust the key path:
+        print(s.errors)
+        self.assertIn("improvements", s.errors)

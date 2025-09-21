@@ -39,7 +39,7 @@ const ClientForm = () => {
             validationSchema={newClientValidationSchema}
             onSubmit={handleNewWebClientSubmit}
         >
-            {({ values, isSubmitting, resetForm, touched, setFieldValue }) => (
+            {({ values, isSubmitting, resetForm, touched, setFieldValue, errors, submitCount }) => (
                 <Grid container direction="row" justifyContent="flex-start" spacing={2}>
                     <Grid item md={12} xs={12}>
                         <Field
@@ -322,233 +322,444 @@ const ClientForm = () => {
                                         ) : (
                                             <></>
                                         )}
-                                    </Grid> <Grid container spacing={1}>
+                                    </Grid>
+
+                                    <Grid item md={12} xs={12}>
+                                        <hr />
+                                    </Grid>
+                                    <Grid container spacing={0}>
                                         <Grid item md={12} xs={12}>
-                                            <hr />
+                                            <Field
+                                                component={CheckboxWithLabel}
+                                                type="checkbox"
+                                                color="secondary"
+                                                name={ClientField.healthChecked}
+                                                Label={{
+                                                    label: clientFieldLabels[
+                                                        ClientField.healthRisk
+                                                    ],
+                                                }}
+                                            />
                                         </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <FormControl fullWidth variant="outlined">
-                                                <Field
-                                                    component={TextField}
-                                                    select
-                                                    variant="outlined"
-                                                    label={
-                                                        clientFieldLabels[ClientField.healthRisk]
-                                                    }
-                                                    name={ClientField.healthRisk}
-                                                    autoComplete="off"
-                                                >
-                                                    {Object.entries(riskLevels)
-                                                        .filter(
-                                                            ([_, { isDropDownOption }]) =>
-                                                                isDropDownOption
-                                                        )
-                                                        .map(([value, { name }]) => (
-                                                            <MenuItem key={value} value={value}>
-                                                                {name}
-                                                            </MenuItem>
-                                                        ))}
-                                                </Field>
-                                            </FormControl>
+                                        {values.healthChecked ? (
+                                            <>
+                                                <Grid item md={6} xs={12}>
+                                                    <FormControl fullWidth variant="outlined">
+                                                        <Field
+                                                            component={TextField}
+                                                            select
+                                                            variant="outlined"
+                                                            label={
+                                                                clientFieldLabels[
+                                                                ClientField.healthRisk
+                                                                ]
+                                                            }
+                                                            name={ClientField.healthRisk}
+                                                            autoComplete="off"
+                                                            error={errors.healthRisk && touched.healthRisk}
+                                                        >
+                                                            {Object.entries(riskLevels)
+                                                                .filter(
+                                                                    ([_, { isDropDownOption }]) =>
+                                                                        isDropDownOption
+                                                                )
+                                                                .map(([value, { name }]) => (
+                                                                    <MenuItem
+                                                                        key={value}
+                                                                        value={value}
+                                                                    >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))}
+                                                        </Field>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.healthRequirements}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.healthRequirements
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.HEALTH]
+                                                            ]?.requirement || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.healthRequirements}
+                                                        touched={touched.healthRequirements}
+                                                    />
+                                                </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.healthGoals}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.healthGoals
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.HEALTH]
+                                                            ]?.goal || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.healthGoals}
+                                                        touched={touched.healthGoals}
+                                                    />
+                                                </Grid>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <Grid item md={12} xs={12}>
+                                            <Field
+                                                component={CheckboxWithLabel}
+                                                type="checkbox"
+                                                color="secondary"
+                                                name={ClientField.educationChecked}
+                                                Label={{
+                                                    label: clientFieldLabels[
+                                                        ClientField.educationRisk
+                                                    ],
+                                                }}
+                                            />
+                                        </Grid>
+                                        {values.educationChecked ? (
+                                            <>
+                                                <Grid item md={6} xs={12}>
+                                                    <FormControl fullWidth variant="outlined">
+                                                        <Field
+                                                            component={TextField}
+                                                            select
+                                                            variant="outlined"
+                                                            label={
+                                                                clientFieldLabels[
+                                                                ClientField.educationRisk
+                                                                ]
+                                                            }
+                                                            name={ClientField.educationRisk}
+                                                            autoComplete="off"
+                                                            error={errors.educationRisk && touched.educationRisk}
+                                                        >
+                                                            {Object.entries(riskLevels)
+                                                                .filter(
+                                                                    ([_, { isDropDownOption }]) =>
+                                                                        isDropDownOption
+                                                                )
+                                                                .map(([value, { name }]) => (
+                                                                    <MenuItem
+                                                                        key={value}
+                                                                        value={value}
+                                                                    >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))}
+                                                        </Field>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.educationRequirements}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.educationRequirements
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.EDUCATION]
+                                                            ]?.requirement || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.educationRequirements}
+                                                        touched={touched.educationRequirements}
+                                                    />
+                                                </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.educationGoals}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.educationGoals
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.EDUCATION]
+                                                            ]?.goal || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.educationGoals}
+                                                        touched={touched.educationGoals}
+                                                    />
+                                                </Grid>{" "}
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <Grid item md={12} xs={12}>
+                                            <Field
+                                                component={CheckboxWithLabel}
+                                                type="checkbox"
+                                                color="secondary"
+                                                name={ClientField.socialChecked}
+                                                Label={{
+                                                    label: clientFieldLabels[
+                                                        ClientField.socialRisk
+                                                    ],
+                                                }}
+                                            />
+                                        </Grid>
+                                        {values.socialChecked ? (
+                                            <>
+                                                <Grid item md={6} xs={12}>
+                                                    <FormControl fullWidth variant="outlined">
+                                                        <Field
+                                                            component={TextField}
+                                                            select
+                                                            variant="outlined"
+                                                            label={
+                                                                clientFieldLabels[
+                                                                ClientField.socialRisk
+                                                                ]
+                                                            }
+                                                            name={ClientField.socialRisk}
+                                                            autoComplete="off"
+                                                        >
+                                                            {Object.entries(riskLevels)
+                                                                .filter(
+                                                                    ([_, { isDropDownOption }]) =>
+                                                                        isDropDownOption
+                                                                )
+                                                                .map(([value, { name }]) => (
+                                                                    <MenuItem
+                                                                        key={value}
+                                                                        value={value}
+                                                                    >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))}
+                                                        </Field>
+                                                    </FormControl>
+                                                </Grid>
+
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.socialRequirements}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.socialRequirements
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.SOCIAL]
+                                                            ]?.requirement || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.socialRequirements}
+                                                        touched={touched.socialRequirements}
+                                                    />
+                                                </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.socialGoals}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.socialGoals
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.SOCIAL]
+                                                            ]?.goal || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.socialGoals}
+                                                        touched={touched.socialGoals}
+                                                    />
+                                                </Grid>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <Grid item md={12} xs={12}>
+                                            <Field
+                                                component={CheckboxWithLabel}
+                                                type="checkbox"
+                                                color="secondary"
+                                                name={ClientField.nutritionChecked}
+                                                Label={{
+                                                    label: clientFieldLabels[
+                                                        ClientField.nutritionRisk
+                                                    ],
+                                                }}
+                                            />
                                         </Grid>
 
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.healthRequirements}
-                                                label={clientFieldLabels[ClientField.healthRequirements]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.HEALTH]]?.requirement || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.healthGoals}
-                                                label={clientFieldLabels[ClientField.healthGoals]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.HEALTH]]?.goal || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
+                                        {values.nutritionChecked ? (
+                                            <>
+                                                <Grid item md={6} xs={12}>
+                                                    <FormControl fullWidth variant="outlined">
+                                                        <Field
+                                                            component={TextField}
+                                                            select
+                                                            variant="outlined"
+                                                            label={
+                                                                clientFieldLabels[
+                                                                ClientField.nutritionRisk
+                                                                ]
+                                                            }
+                                                            name={ClientField.nutritionRisk}
+                                                            autoComplete="off"
+                                                        >
+                                                            {Object.entries(riskLevels)
+                                                                .filter(
+                                                                    ([_, { isDropDownOption }]) =>
+                                                                        isDropDownOption
+                                                                )
+                                                                .map(([value, { name }]) => (
+                                                                    <MenuItem
+                                                                        key={value}
+                                                                        value={value}
+                                                                    >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))}
+                                                        </Field>
+                                                    </FormControl>
+                                                </Grid>
+
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.nutritionRequirements}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.nutritionRequirements
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.NUTRITION]
+                                                            ]?.requirement || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.nutritionRequirements}
+                                                        touched={touched.nutritionRequirements}
+                                                    />
+                                                </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.nutritionGoals}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.nutritionGoals
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.NUTRITION]
+                                                            ]?.goal || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.nutritionGoals}
+                                                        touched={touched.nutritionGoals}
+                                                    />
+                                                </Grid>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
                                         <Grid item md={12} xs={12}>
-                                            <Divider />
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <FormControl fullWidth variant="outlined">
-                                                <Field
-                                                    component={TextField}
-                                                    select
-                                                    variant="outlined"
-                                                    label={
-                                                        clientFieldLabels[ClientField.educationRisk]
-                                                    }
-                                                    name={ClientField.educationRisk}
-                                                    autoComplete="off"
-                                                >
-                                                    {Object.entries(riskLevels)
-                                                        .filter(
-                                                            ([_, { isDropDownOption }]) =>
-                                                                isDropDownOption
-                                                        )
-                                                        .map(([value, { name }]) => (
-                                                            <MenuItem key={value} value={value}>
-                                                                {name}
-                                                            </MenuItem>
-                                                        ))}
-                                                </Field>
-                                            </FormControl>
+                                            <Field
+                                                component={CheckboxWithLabel}
+                                                type="checkbox"
+                                                color="secondary"
+                                                name={ClientField.mentalChecked}
+                                                Label={{
+                                                    label: clientFieldLabels[
+                                                        ClientField.mentalRisk
+                                                    ],
+                                                }}
+                                            />
                                         </Grid>
 
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.educationRequirements}
-                                                label={clientFieldLabels[ClientField.educationRequirements]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.EDUCATION]]?.requirement || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.educationGoals}
-                                                label={clientFieldLabels[ClientField.educationGoals]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.EDUCATION]]?.goal || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <Grid item md={12} xs={12}>
-                                            <Divider />
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <FormControl fullWidth variant="outlined">
-                                                <Field
-                                                    component={TextField}
-                                                    select
-                                                    variant="outlined"
-                                                    label={
-                                                        clientFieldLabels[ClientField.socialRisk]
-                                                    }
-                                                    name={ClientField.socialRisk}
-                                                    autoComplete="off"
-                                                >
-                                                    {Object.entries(riskLevels)
-                                                        .filter(
-                                                            ([_, { isDropDownOption }]) =>
-                                                                isDropDownOption
-                                                        )
-                                                        .map(([value, { name }]) => (
-                                                            <MenuItem key={value} value={value}>
-                                                                {name}
-                                                            </MenuItem>
-                                                        ))}
-                                                </Field>
-                                            </FormControl>
-                                        </Grid>
+                                        {values.mentalChecked ? (
+                                            <>
+                                                <Grid item md={6} xs={12}>
+                                                    <FormControl fullWidth variant="outlined">
+                                                        <Field
+                                                            component={TextField}
+                                                            select
+                                                            variant="outlined"
+                                                            label={
+                                                                clientFieldLabels[
+                                                                ClientField.mentalRisk
+                                                                ]
+                                                            }
+                                                            name={ClientField.mentalRisk}
+                                                            autoComplete="off"
+                                                        >
+                                                            {Object.entries(riskLevels)
+                                                                .filter(
+                                                                    ([_, { isDropDownOption }]) =>
+                                                                        isDropDownOption
+                                                                )
+                                                                .map(([value, { name }]) => (
+                                                                    <MenuItem
+                                                                        key={value}
+                                                                        value={value}
+                                                                    >
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))}
+                                                        </Field>
+                                                    </FormControl>
+                                                </Grid>
 
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.socialRequirements}
-                                                label={clientFieldLabels[ClientField.socialRequirements]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.SOCIAL]]?.requirement || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.socialGoals}
-                                                label={clientFieldLabels[ClientField.socialGoals]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.SOCIAL]]?.goal || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <Grid item md={12} xs={12}>
-                                            <Divider />
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <FormControl fullWidth variant="outlined">
-                                                <Field
-                                                    component={TextField}
-                                                    select
-                                                    variant="outlined"
-                                                    label={
-                                                        clientFieldLabels[ClientField.nutritionRisk]
-                                                    }
-                                                    name={ClientField.nutritionRisk}
-                                                    autoComplete="off"
-                                                >
-                                                    {Object.entries(riskLevels)
-                                                        .filter(
-                                                            ([_, { isDropDownOption }]) =>
-                                                                isDropDownOption
-                                                        )
-                                                        .map(([value, { name }]) => (
-                                                            <MenuItem key={value} value={value}>
-                                                                {name}
-                                                            </MenuItem>
-                                                        ))}
-                                                </Field>
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.nutritionRequirements}
-                                                label={clientFieldLabels[ClientField.nutritionRequirements]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.NUTRITION]]?.requirement || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.nutritionGoals}
-                                                label={clientFieldLabels[ClientField.nutritionGoals]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.NUTRITION]]?.goal || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <br />
-                                        <Grid item md={12} xs={12}>
-                                            <Divider />
-                                        </Grid>
-                                        <Grid item md={6} xs={12}>
-                                            <FormControl fullWidth variant="outlined">
-                                                <Field
-                                                    component={TextField}
-                                                    select
-                                                    variant="outlined"
-                                                    label={
-                                                        clientFieldLabels[ClientField.mentalRisk]
-                                                    }
-                                                    name={ClientField.mentalRisk}
-                                                    autoComplete="off"
-                                                >
-                                                    {Object.entries(riskLevels)
-                                                        .filter(
-                                                            ([_, { isDropDownOption }]) =>
-                                                                isDropDownOption
-                                                        )
-                                                        .map(([value, { name }]) => (
-                                                            <MenuItem key={value} value={value}>
-                                                                {name}
-                                                            </MenuItem>
-                                                        ))}
-                                                </Field>
-                                            </FormControl>
-                                        </Grid>
-
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.mentalRequirements}
-                                                label={clientFieldLabels[ClientField.mentalRequirements]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.MENTAL]]?.requirement || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
-                                        <Grid item md={8} xs={12}>
-                                            <ModalDropdown
-                                                name={ClientField.mentalGoals}
-                                                label={clientFieldLabels[ClientField.mentalGoals]}
-                                                options={riskDropdownOptions[riskTypeKeyMap[RiskType.MENTAL]]?.goal || {}}
-                                                isCustom={false}
-                                            />
-                                        </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.mentalRequirements}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.mentalRequirements
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.MENTAL]
+                                                            ]?.requirement || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.mentalRequirements}
+                                                        touched={touched.mentalRequirements}
+                                                    />
+                                                </Grid>
+                                                <Grid item md={8} xs={12}>
+                                                    <ModalDropdown
+                                                        name={ClientField.mentalGoals}
+                                                        label={
+                                                            clientFieldLabels[
+                                                            ClientField.mentalGoals
+                                                            ]
+                                                        }
+                                                        options={
+                                                            riskDropdownOptions[
+                                                                riskTypeKeyMap[RiskType.MENTAL]
+                                                            ]?.goal || {}
+                                                        }
+                                                        isCustom={false}
+                                                        error={errors.mentalGoals}
+                                                        touched={touched.mentalGoals}
+                                                    />
+                                                </Grid>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
                                         <br />
                                         <Grid
                                             // todo: what is the purpose of this?  not displaying anything in either case
@@ -564,7 +775,10 @@ const ClientForm = () => {
                                     </Grid>
                                     <br />
                                     <br />
-                                    <Grid justifyContent="flex-end" container spacing={2}>
+                                    <Grid justifyContent="flex-end" container spacing={2} alignItems="center" >
+                                        {errors.hasRisk && submitCount > 0 && (
+                                            <Grid sx={clientFormStyles.riskFieldsError} item>{errors.hasRisk}</Grid>
+                                        )}
                                         <Grid item>
                                             <Button
                                                 color="primary"

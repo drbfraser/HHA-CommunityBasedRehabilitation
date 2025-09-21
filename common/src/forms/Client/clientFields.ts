@@ -18,24 +18,30 @@ export enum ClientField {
     disability = "disability",
     otherDisability = "otherDisability",
     interviewConsent = "interviewConsent",
+    healthChecked = "healthChecked",
     healthRisk = "healthRisk",
     healthRequirements = "healthRequirements",
     healthGoals = "healthGoals",
+    educationChecked = "educationChecked",
     educationRisk = "educationRisk",
     educationRequirements = "educationRequirements",
     educationGoals = "educationGoals",
+    socialChecked = "socialChecked",
     socialRisk = "socialRisk",
     socialRequirements = "socialRequirements",
     socialGoals = "socialGoals",
+    nutritionChecked = "nutritionChecked",
     nutritionRisk = "nutritionRisk",
     nutritionRequirements = "nutritionRequirements",
     nutritionGoals = "nutritionGoals",
+    mentalChecked = "mentalChecked",
     mentalRisk = "mentalRisk",
     mentalRequirements = "mentalRequirements",
     mentalGoals = "mentalGoals",
     picture = "picture",
     pictureChanged = "pictureChanged",
     hcrType = "hcrType",
+    hasRisk = "hasRisk",
 
     // Required to match DB attributes to display client details in web app
     first_name = "first_name",
@@ -120,22 +126,28 @@ const refreshArrays = () => {
         [ClientField.caregiverEmail]: i18n.t("clientFields.caregiverEmail"),
         [ClientField.disability]: i18n.t("clientFields.disability"),
         [ClientField.otherDisability]: i18n.t("clientFields.otherDisability"),
+        [ClientField.healthChecked]: i18n.t("clientFields.healthRisk"),
         [ClientField.healthRisk]: i18n.t("clientFields.healthRisk"),
         [ClientField.healthRequirements]: i18n.t("clientFields.healthRequirements"),
         [ClientField.healthGoals]: i18n.t("clientFields.healthGoals"),
+        [ClientField.educationChecked]: i18n.t("clientFields.educationRisk"),
         [ClientField.educationRisk]: i18n.t("clientFields.educationRisk"),
         [ClientField.educationRequirements]: i18n.t("clientFields.educationRequirements"),
         [ClientField.educationGoals]: i18n.t("clientFields.educationGoals"),
+        [ClientField.socialChecked]: i18n.t("clientFields.socialRisk"),
         [ClientField.socialRisk]: i18n.t("clientFields.socialRisk"),
         [ClientField.socialRequirements]: i18n.t("clientFields.socialRequirements"),
         [ClientField.socialGoals]: i18n.t("clientFields.socialGoals"),
+        [ClientField.nutritionChecked]: i18n.t("clientFields.nutritionRisk"),
         [ClientField.nutritionRisk]: i18n.t("clientFields.nutritionRisk"),
         [ClientField.nutritionRequirements]: i18n.t("clientFields.nutritionRequirements"),
         [ClientField.nutritionGoals]: i18n.t("clientFields.nutritionGoals"),
+        [ClientField.mentalChecked]: i18n.t("clientFields.mentalRisk"),
         [ClientField.mentalRisk]: i18n.t("clientFields.mentalRisk"),
         [ClientField.mentalRequirements]: i18n.t("clientFields.mentalRequirements"),
         [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
         [ClientField.hcrType]: i18n.t("clientFields.hcrType"),
+        [ClientField.hasRisk]: i18n.t("clientFields.healthRisk"),
     };
 
     updateClientfieldLabels = {
@@ -177,18 +189,23 @@ export const clientInitialValues = {
     [ClientField.caregiverEmail]: "",
     [ClientField.disability]: [] as number[],
     [ClientField.otherDisability]: "",
+    [ClientField.healthChecked]: false,
     [ClientField.healthRisk]: "",
     [ClientField.healthRequirements]: "",
     [ClientField.healthGoals]: "",
+    [ClientField.educationChecked]: false,
     [ClientField.educationRisk]: "",
     [ClientField.educationRequirements]: "",
     [ClientField.educationGoals]: "",
+    [ClientField.socialChecked]: false,
     [ClientField.socialRisk]: "",
     [ClientField.socialRequirements]: "",
     [ClientField.socialGoals]: "",
+    [ClientField.nutritionChecked]: false,
     [ClientField.nutritionRisk]: "",
     [ClientField.nutritionRequirements]: "",
     [ClientField.nutritionGoals]: "",
+    [ClientField.mentalChecked]: false,
     [ClientField.mentalRisk]: "",
     [ClientField.mentalRequirements]: "",
     [ClientField.mentalGoals]: "",
@@ -196,6 +213,7 @@ export const clientInitialValues = {
     [ClientField.pictureChanged]: false,
     [ClientField.is_active]: true,
     [ClientField.hcrType]: "" as HCRType,
+    [ClientField.hasRisk]: false,
 };
 
 export type TClientValues = typeof clientInitialValues;
@@ -367,61 +385,139 @@ export const newClientValidationSchema = () =>
             .trim()
             .required(),
         [ClientField.zone]: Yup.string().label(clientFieldLabels[ClientField.zone]).required(),
+        [ClientField.healthChecked]: Yup.boolean(),
         [ClientField.healthRisk]: Yup.string()
             .label(clientFieldLabels[ClientField.healthRisk])
-            .required(),
+            .when(ClientField.healthChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.healthRequirements]: Yup.string()
             .label(clientFieldLabels[ClientField.healthRequirements])
             .trim()
-            .required(),
+            .when(ClientField.healthChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.healthGoals]: Yup.string()
             .label(clientFieldLabels[ClientField.healthGoals])
             .trim()
-            .required(),
+            .when(ClientField.healthChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+        [ClientField.educationChecked]: Yup.boolean(),
         [ClientField.educationRisk]: Yup.string()
             .label(clientFieldLabels[ClientField.educationRisk])
-            .required(),
+            .when(ClientField.educationChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.educationRequirements]: Yup.string()
             .label(clientFieldLabels[ClientField.educationRequirements])
             .trim()
-            .required(),
+            .when(ClientField.educationChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.educationGoals]: Yup.string()
             .label(clientFieldLabels[ClientField.educationGoals])
             .trim()
-            .required(),
+            .when(ClientField.educationChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+        [ClientField.socialChecked]: Yup.boolean(),
         [ClientField.socialRisk]: Yup.string()
             .label(clientFieldLabels[ClientField.socialRisk])
-            .required(),
+            .when(ClientField.socialChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.socialRequirements]: Yup.string()
             .label(clientFieldLabels[ClientField.socialRequirements])
             .trim()
-            .required(),
+            .when(ClientField.socialChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.socialGoals]: Yup.string()
             .label(clientFieldLabels[ClientField.socialGoals])
             .trim()
-            .required(),
+            .when(ClientField.socialChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+        [ClientField.nutritionChecked]: Yup.boolean(),
         [ClientField.nutritionRisk]: Yup.string()
             .label(clientFieldLabels[ClientField.nutritionRisk])
-            .required(),
+            .when(ClientField.nutritionChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.nutritionRequirements]: Yup.string()
             .label(clientFieldLabels[ClientField.nutritionRequirements])
             .trim()
-            .required(),
+            .when(ClientField.nutritionChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.nutritionGoals]: Yup.string()
             .label(clientFieldLabels[ClientField.nutritionGoals])
             .trim()
-            .required(),
+            .when(ClientField.nutritionChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+        [ClientField.mentalChecked]: Yup.boolean(),
         [ClientField.mentalRisk]: Yup.string()
             .label(clientFieldLabels[ClientField.mentalRisk])
-            .required(),
+            .when(ClientField.mentalChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.mentalRequirements]: Yup.string()
             .label(clientFieldLabels[ClientField.mentalRequirements])
             .trim()
-            .required(),
+            .when(ClientField.mentalChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
         [ClientField.mentalGoals]: Yup.string()
             .label(clientFieldLabels[ClientField.mentalGoals])
             .trim()
-            .required(),
+            .when(ClientField.mentalChecked, {
+                is: true,
+                then: (schema) => schema.required(),
+                otherwise: (schema) => schema.notRequired(),
+            }),
+        hasRisk: Yup.boolean().test(
+            "hasOneRisk",
+            "Must have one active risk",
+            function () {
+                return (
+                    this.parent.healthChecked === true ||
+                    this.parent.educationChecked === true ||
+                    this.parent.socialChecked === true ||
+                    this.parent.nutritionChecked === true ||
+                    this.parent.mentalChecked === true
+                );
+            }
+        ),
         [ClientField.interviewConsent]: Yup.boolean()
             .label(clientFieldLabels[ClientField.interviewConsent])
             .oneOf([true], i18n.t("clientFields.consentToInterviewRequired"))

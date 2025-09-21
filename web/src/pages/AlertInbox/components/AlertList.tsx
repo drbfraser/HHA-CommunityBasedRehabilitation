@@ -86,9 +86,7 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                             variant="body2"
                                             color="#01579b"
                                             noWrap={false}
-                                        >
-                                            {alert.created_by_user}
-                                        </Typography>
+                                        ></Typography>
                                     </div>
                                 }
                                 secondary={

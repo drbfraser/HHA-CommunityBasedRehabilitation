@@ -130,17 +130,40 @@ class DetailedVisitSerializerTests(TestCase):
         self.assertEqual(visit.id, uuid.UUID("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"))
         self.assertEqual(visit.user_id, self.user)
         self.assertEqual(visit.created_at, 1700000000000)
-    
-    def test_invalid_improvement_payload_surfaces_validation_error(self):
-        # Assuming ImprovementSerializer requires 'risk_type' and 'provided'
+
+    @patch("cbr_api.serializers.current_milli_time", return_value=1700000000000)
+    @patch(
+        "uuid.uuid4",
+        side_effect=[
+            uuid.UUID("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+            uuid.UUID("00000000-0000-0000-0000-000000000004"),
+        ],
+    )
+    def test_improvement_desc_is_required(self, _, __):
         data = helper.base_visit_payload(self.client.id, self.zone.id) | {
             "improvements": [
-                {"provided": "wheel chair repair"},  # missing risk type
+                {
+                    "risk_type": RiskType.HEALTH,
+                    "provided": "wheel chair repair",
+                }  # no desc
             ]
         }
         ctx = {"request": helper.mock_request(self.user)}
         s = DetailedVisitSerializer(data=data, context=ctx)
         self.assertFalse(s.is_valid())
-        # Depending on your ImprovementSerializer, adjust the key path:
-        print(s.errors)
         self.assertIn("improvements", s.errors)
+        self.assertIn("desc", s.errors["improvements"][0])
+
+    # def test_invalid_improvement_payload_surfaces_validation_error(self):
+    #     # Assuming ImprovementSerializer requires 'risk_type' and 'provided'
+    #     data = helper.base_visit_payload(self.client.id, self.zone.id) | {
+    #         "improvements": [
+    #             {"provided": "wheel chair repair"},  # missing risk type
+    #         ]
+    #     }
+    #     ctx = {"request": helper.mock_request(self.user)}
+    #     s = DetailedVisitSerializer(data=data, context=ctx)
+    #     self.assertFalse(s.is_valid())
+    #     # Depending on your ImprovementSerializer, adjust the key path:
+    #     print(s.errors)
+    #     self.assertIn("improvements", s.errors)

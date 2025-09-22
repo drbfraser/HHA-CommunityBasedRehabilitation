@@ -505,19 +505,15 @@ export const newClientValidationSchema = () =>
                 then: (schema) => schema.required(),
                 otherwise: (schema) => schema.notRequired(),
             }),
-        hasRisk: Yup.boolean().test(
-            "hasOneRisk",
-            "Must have one active risk",
-            function () {
-                return (
-                    this.parent.healthChecked === true ||
-                    this.parent.educationChecked === true ||
-                    this.parent.socialChecked === true ||
-                    this.parent.nutritionChecked === true ||
-                    this.parent.mentalChecked === true
-                );
-            }
-        ),
+        hasRisk: Yup.boolean().test("hasOneRisk", "Must have one active risk", function () {
+            return (
+                this.parent.healthChecked === true ||
+                this.parent.educationChecked === true ||
+                this.parent.socialChecked === true ||
+                this.parent.nutritionChecked === true ||
+                this.parent.mentalChecked === true
+            );
+        }),
         [ClientField.interviewConsent]: Yup.boolean()
             .label(clientFieldLabels[ClientField.interviewConsent])
             .oneOf([true], i18n.t("clientFields.consentToInterviewRequired"))

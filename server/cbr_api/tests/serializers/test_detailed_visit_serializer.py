@@ -206,3 +206,12 @@ class DetailedVisitSerializerTests(TestCase):
 
             # sanity check they actually exist
             self.assertEqual(Improvement.objects.filter(visit_id=visit).count(), 3)
+
+    def test_missing_required_top_level_field_fails_validation(self):
+        bad = helper.base_visit_payload(self.client.id, self.zone.id)
+        del bad["client_id"]  # client id must be passed to serializer (required)
+
+        ctx = {"request": helper.mock_request(self.user)}
+        s = DetailedVisitSerializer(data=bad, context=ctx)
+        self.assertFalse(s.is_valid())
+        self.assertIn("client_id", s.errors)

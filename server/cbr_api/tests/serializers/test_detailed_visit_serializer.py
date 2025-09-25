@@ -165,3 +165,44 @@ class DetailedVisitSerializerTests(TestCase):
         self.assertFalse(s.is_valid())
         self.assertIn("improvements", s.errors)
         self.assertIn("provided", s.errors["improvements"][0])
+
+    @patch("cbr_api.serializers.current_milli_time", return_value=1700000000000)
+    @patch(
+        "uuid.uuid4",
+        side_effect=[
+            # visit id
+            uuid.UUID("12121212-1212-1212-1212-121212121212"),
+            # improvement 1
+            uuid.UUID("23232323-2323-2323-2323-232323232323"),
+            # improvement 2
+            uuid.UUID("34343434-3434-3434-3434-343434343434"),
+            # improvement 3
+            uuid.UUID("45454545-4545-4545-4545-454545454545"),
+        ],
+    )
+    def test_bulk_create_is_called_once(self, _uuid, _now):
+        data = helper.base_visit_payload(self.client.id, self.zone.id) | {
+            "improvements": [
+                helper.improvement(RiskType.HEALTH, "wheel chair repair", "A"),
+                helper.improvement(RiskType.EDUCAT, "school supplies", "B"),
+                helper.improvement(RiskType.SOCIAL, "mobile phone", "C"),
+            ]
+        }
+        ctx = {"request": helper.mock_request(self.user)}
+
+        with patch.object(
+            Improvement.objects, "bulk_create", wraps=Improvement.objects.bulk_create
+        ) as bc:
+            s = DetailedVisitSerializer(data=data, context=ctx)
+            self.assertTrue(s.is_valid(), s.errors)
+            visit = s.save()
+
+            # assert bulk_create called exactly once with 3 objects which are improvements
+            self.assertEqual(bc.call_count, 1)
+            args, kwargs = bc.call_args
+            created_list = args[0]
+            self.assertEqual(len(created_list), 3)
+            self.assertTrue(all(isinstance(x, Improvement) for x in created_list))
+
+            # sanity check they actually exist
+            self.assertEqual(Improvement.objects.filter(visit_id=visit).count(), 3)

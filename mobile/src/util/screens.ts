@@ -1,6 +1,5 @@
 import React from "react";
 import { UserRole } from "@cbr/common";
-import Stats from "../screens/Stats/Stats";
 import ClientList from "../screens/ClientList/ClientList";
 import Profile from "../screens/Profile/Profile";
 import UserList from "../screens/UserList/UserList";
@@ -49,12 +48,6 @@ export const screens: IScreen[] = [
         roles: [UserRole.CLINICIAN, UserRole.WORKER],
         Component: Profile,
         iconName: "account",
-    },
-    {
-        name: "Stats",
-        roles: [UserRole.ADMIN],
-        Component: Stats,
-        iconName: "chart-bar",
     },
     {
         name: "Admin",

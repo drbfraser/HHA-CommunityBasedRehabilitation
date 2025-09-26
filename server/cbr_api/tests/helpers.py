@@ -139,3 +139,32 @@ def get_valid_client_data(zone, d1, d2):
             "goal_status": GoalOutcomes.CONCLUDED,
         },
     }
+
+
+# these static methods are used in test_detailed_visit_serializer.py
+class DetailedVisitSerializerTestsHelper:
+    @staticmethod
+    def mock_request(user):
+        return type("MockRequest", (), {"user": user})()
+
+    @staticmethod
+    def base_visit_payload(client_id, zone):
+        # Provide the minimum valid visit payload for your model.
+        # Toggle the *_visit flags as your model requires (booleans).
+        return {
+            "client_id": client_id,  # DRF usually accepts pk
+            "health_visit": True,
+            "educat_visit": False,
+            "social_visit": False,
+            "nutrit_visit": False,
+            "mental_visit": False,
+            "longitude": 12.34,
+            "latitude": 56.78,
+            "zone": zone,
+            "village": "village x",
+            # improvements intentionally omitted in some tests
+        }
+
+    @staticmethod
+    def improvement(risk_type="HEALTH", provided="", desc=""):
+        return {"risk_type": risk_type, "provided": provided, "desc": desc}

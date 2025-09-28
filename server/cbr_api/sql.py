@@ -18,7 +18,7 @@ ADULT_BANDS = {"18-25", "26-30", "31-45", "46+"}
 AGE_EXPR = "EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000)))"
 
 
-def age_band_case(selected_bands):
+def _age_band_case(selected_bands):
     parts = []
     for name, (lo, hi) in AGE_BANDS:
         if name in selected_bands:
@@ -313,11 +313,14 @@ def whereStatsBuilder(user_id, time_col, from_time, to_time):
 
     return where
 
+
 def _from_join_block(option, is_active):
     if option == "follow_up":
         if is_active:
             return "FROM cbr_api_client AS c JOIN cbr_api_visit AS v ON c.id = v.client_id_id AND c.is_active = True"
-        return "FROM cbr_api_client AS c JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+        return (
+            "FROM cbr_api_client AS c JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+        )
 
     if option == "new_clients":
         return "FROM cbr_api_client AS c"
@@ -325,13 +328,18 @@ def _from_join_block(option, is_active):
     if option == "referral_stats":
         base = "FROM cbr_api_referral AS r "
         if is_active:
-            return base + "JOIN cbr_api_client AS c ON r.client_id_id = c.id AND c.is_active = True"
+            return (
+                base
+                + "JOIN cbr_api_client AS c ON r.client_id_id = c.id AND c.is_active = True"
+            )
         return base + "JOIN cbr_api_client AS c ON r.client_id_id = c.id"
 
     if option == "visit_stats":
         if is_active:
             return "FROM cbr_api_visit AS v JOIN cbr_api_client AS c ON v.client_id_id = c.id and c.is_active = True"
-        return "FROM cbr_api_visit AS v JOIN cbr_api_client AS c ON v.client_id_id = c.id"
+        return (
+            "FROM cbr_api_visit AS v JOIN cbr_api_client AS c ON v.client_id_id = c.id"
+        )
 
     if option == "disability_stats" or option == "clients_with_disabilities":
         base = "FROM cbr_api_client_disability AS d JOIN cbr_api_client as c ON d.client_id = c.id"
@@ -342,90 +350,89 @@ def _from_join_block(option, is_active):
     raise ValueError(f"Unsupported option: {option}")
 
 
-
-# Gets the default demographic (age and gender) statistics
 def demographicStatsBuilder(
     option,
     is_active,
-    alias=None,
-    column_names=None,
-    category_names=None,
+    *,
+    categorize_by=None,  # e.g. "zone" (0–1 field) or None
+    group_by=None,  # e.g. ["gender","host_status","age_band"] (0..N)
+    demographics=None,  # "child" | "adult" | None
+    selected_age_bands=None,  # e.g. {"0-5","6-10"} (overrides demographics if provided)
 ):
-    sql = ""
+    """
+    Build a dynamic SELECT ... FROM ... for stats, returning:
+      select_from_sql:  'SELECT ... FROM ...' (no WHERE, no GROUP BY)
+      group_keys:       list of SQL expressions to put in GROUP BY
+      age_filter_sql:   optional ' AND (... OR ...)' to append inside your WHERE when
+                        demographics/selected_age_bands should *filter* the rows.
+    """
+    group_by = group_by or []
 
-    # If there are custom column names to query from and custom category names
-    if column_names:
-        for i in range(len(column_names)):
-            sql += f""",
-    COUNT(*) FILTER (WHERE {alias}{column_names[i]} AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS {category_names[i]}_female_adult_total,
-    COUNT(*) FILTER (WHERE {alias}{column_names[i]} AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS {category_names[i]}_male_adult_total,
-    COUNT(*) FILTER (WHERE {alias}{column_names[i]} AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS {category_names[i]}_female_child_total,
-    COUNT(*) FILTER (WHERE {alias}{column_names[i]} AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS {category_names[i]}_male_child_total"""
+    # Map logical names to SQL columns (adjust to your exact schema)
+    colmap = {
+        "zone": "c.zone_id",  # or a name column if you join on zones
+        "gender": "c.gender",
+        "host_status": "c.hcr_type",  # host/refugee field in your schema
+        # "visit_type":  "v.visit_type",   # uncomment if you want this as a grouper
+        # "referral_type": "r.services_type",  # example
+    }
 
+    # ---- Which age bands are active? (for grouping and/or filtering) ----
+    if selected_age_bands:
+        active_bands = set(selected_age_bands)
+    elif demographics == "child":
+        active_bands = set(CHILD_BANDS)
+    elif demographics == "adult":
+        active_bands = set(ADULT_BANDS)
     else:
-        sql += """,
-    COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS female_adult_total,
-    COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS male_adult_total,
-    COUNT(*) FILTER (WHERE c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS female_child_total,
-    COUNT(*) FILTER (WHERE c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS male_child_total
-    """
+        # all bands available; if not grouping by age we won't SELECT a band column
+        active_bands = {name for name, _ in AGE_BANDS}
 
-    if option == "follow_up":
-        sql += """FROM cbr_api_client AS c """
+    include_age_band_col = (
+        ("age_band" in group_by)
+        or (demographics in {"child", "adult"})
+        or (selected_age_bands is not None)
+    )
 
-        if is_active:
-            sql += """JOIN cbr_api_visit AS v ON c.id = v.client_id_id AND c.is_active = True"""
+    # ---- SELECT pieces & GROUP BY keys ----
+    select_fields = []
+    group_keys = []
 
-        else:
-            sql += """JOIN cbr_api_visit AS v ON c.id = v.client_id_id"""
+    if categorize_by:
+        if categorize_by not in colmap:
+            raise ValueError(f"Unsupported categorize_by: {categorize_by}")
+        select_fields.append(f"{colmap[categorize_by]} AS category")
+        group_keys.append(colmap[categorize_by])
 
-    elif option == "new_clients":
-        sql += """FROM cbr_api_client AS c"""
+    if include_age_band_col:
+        select_fields.append(f"{_age_band_case(active_bands)} AS age_band")
+        group_keys.append("age_band")
 
-    elif option == "referral_stats":
-        sql += """,
-    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS other_female_adult_total,
-    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) >= 18) AS other_male_adult_total,
-    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'F' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS other_female_child_total,
-    COUNT(*) FILTER (WHERE r.services_other != '' AND c.gender = 'M' AND EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000))) < 18) AS other_male_child_total
-    FROM cbr_api_referral AS r 
-    """
-        if is_active:
-            sql += """JOIN cbr_api_client AS c ON r.client_id_id = c.id AND c.is_active = True"""
-        else:
-            sql += """JOIN cbr_api_client AS c ON r.client_id_id = c.id"""
+    for g in group_by:
+        if g == "age_band":
+            continue  # handled above
+        if g not in colmap:
+            raise ValueError(f"Unsupported group_by: {g}")
+        select_fields.append(f"{colmap[g]} AS {g}")
+        group_keys.append(colmap[g])
 
-    elif option == "visit_stats":
-        if is_active:
-            sql += """
-        FROM cbr_api_visit as v 
-        JOIN cbr_api_client AS c ON v.client_id_id = c.id and c.is_active = True"""
+    # COUNT(*) aggregate
+    if select_fields:
+        sql = "SELECT " + ", ".join(select_fields) + ", COUNT(*) AS value\n"
+    else:
+        sql = "SELECT COUNT(*) AS value\n"
 
-        else:
-            sql += """
-        FROM cbr_api_visit as v
-        JOIN cbr_api_client AS c ON v.client_id_id = c.id"""
+    # FROM / JOIN identical to the old builder
+    sql += _from_join_block(option, is_active)
 
-    elif option == "disability_stats":
-        if is_active:
-            sql += """FROM cbr_api_client_disability AS d
-        JOIN cbr_api_client as c ON d.client_id = c.id AND c.is_active = True
-        """
+    # ---- If demographics/selected_age_bands are used *as a filter*, return a WHERE snippet ----
+    age_filter_sql = ""
+    if demographics or selected_age_bands:
+        clauses = []
+        for name, (lo, hi) in AGE_BANDS:
+            if name in active_bands:
+                clauses.append(f"({AGE_EXPR} BETWEEN {lo} AND {hi})")
+        if clauses:
+            age_filter_sql = " AND (" + " OR ".join(clauses) + ")"
 
-        else:
-            sql += """FROM cbr_api_client_disability AS d
-        JOIN cbr_api_client as c ON d.client_id = c.id
-        """
-
-    elif option == "clients_with_disabilities":
-        if is_active:
-            sql += """FROM cbr_api_client_disability AS d
-        JOIN cbr_api_client as c ON d.client_id = c.id AND c.is_active = True
-        """
-        else:
-            sql += """FROM cbr_api_client_disability AS d
-        JOIN cbr_api_client as c ON d.client_id = c.id
-        """
-
-    return sql
-
+    return sql, group_keys, age_filter_sql

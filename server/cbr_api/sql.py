@@ -2,6 +2,30 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+AGE_BANDS = [
+    ("0-5", (0, 5)),
+    ("6-10", (6, 10)),
+    ("11-17", (11, 17)),
+    ("18-25", (18, 25)),
+    ("26-30", (26, 30)),
+    ("31-45", (31, 45)),
+    ("46+", (46, 200)),
+]
+
+CHILD_BANDS = {"0-5", "6-10", "11-17"}
+ADULT_BANDS = {"18-25", "26-30", "31-45", "46+"}
+
+AGE_EXPR = "EXTRACT(YEAR FROM AGE(TO_TIMESTAMP(c.birth_date / 1000)))"
+
+
+def age_band_case(selected_bands):
+    parts = []
+    for name, (lo, hi) in AGE_BANDS:
+        if name in selected_bands:
+            parts.append(f"WHEN {AGE_EXPR} BETWEEN {lo} AND {hi} THEN '{name}'")
+    # If nothing matches we return NULL; query will filter those out
+    return "CASE " + " ".join(parts) + " ELSE NULL END"
+
 
 def getOutstandingReferrals():
     from django.db import connection

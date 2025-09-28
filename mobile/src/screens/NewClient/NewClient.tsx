@@ -32,6 +32,7 @@ import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { handleSubmit } from "./formHandler";
 import useStyles from "./NewClient.styles";
+import { riskDropdownOptions } from "@cbr/common";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels)
@@ -46,7 +47,7 @@ const RiskForm = ({
     containerStyle,
 }: {
     formikProps: FormikProps<TClientValues>;
-    riskPrefix: string;
+    riskPrefix: string; // e.g., "health", "education"
     riskType: RiskType;
     containerStyle?: ViewStyle | false;
 }) => {
@@ -57,32 +58,57 @@ const RiskForm = ({
         [formikProps.isSubmitting, formikProps.values.interviewConsent]
     );
 
+    // Name of the checkbox field, e.g., "healthChecked"
+    const checkedField = `${riskPrefix}Checked` as keyof TClientValues;
+    const isChecked = !!formikProps.values[checkedField];
+
     return (
         <View style={containerStyle}>
-            <FormikExposedDropdownMenu
-                style={styles.field}
-                valuesType="map"
-                values={riskMap}
-                fieldLabels={clientFieldLabels}
-                field={`${riskPrefix}Risk`}
-                formikProps={formikProps}
-                mode="outlined"
-                disabled={isFieldDisabled()}
+            {/* Checkbox to toggle this risk */}
+            <TextCheckBox
+                field={checkedField}
+                label={clientFieldLabels[`${riskPrefix}Risk`]}
+                setFieldTouched={formikProps.setFieldTouched}
+                setFieldValue={formikProps.setFieldValue}
+                value={isChecked}
+                disabled={formikProps.isSubmitting}
             />
-            <ModalForm
-                label={clientFieldLabels[`${riskPrefix}Requirements`]}
-                formikField={`${riskPrefix}Requirements`}
-                formikProps={formikProps}
-                transKey={getRiskRequirementsTranslationKey(riskType)}
-                disabled={isFieldDisabled()}
-            />
-            <ModalForm
-                label={clientFieldLabels[`${riskPrefix}Goals`]}
-                formikField={`${riskPrefix}Goals`}
-                formikProps={formikProps}
-                transKey={getRiskGoalsTranslationKey(riskType)}
-                disabled={isFieldDisabled()}
-            />
+
+            {/* Conditionally render dropdowns only if checkbox is checked */}
+            {isChecked && (
+                <>
+                    <FormikExposedDropdownMenu
+                        style={styles.field}
+                        valuesType="map"
+                        values={riskMap}
+                        fieldLabels={clientFieldLabels}
+                        field={`${riskPrefix}Risk`}
+                        formikProps={formikProps}
+                        mode="outlined"
+                        disabled={isFieldDisabled()}
+                    />
+                    <FormikExposedDropdownMenu
+                        style={styles.field}
+                        valuesType="record-string"
+                        values={riskDropdownOptions[riskPrefix].requirement}
+                        fieldLabels={clientFieldLabels}
+                        field={`${riskPrefix}Requirements`}
+                        formikProps={formikProps}
+                        mode="outlined"
+                        disabled={isFieldDisabled()}
+                    />
+                    <FormikExposedDropdownMenu
+                        style={styles.field}
+                        valuesType="record-string"
+                        values={riskDropdownOptions[riskPrefix].goal}
+                        fieldLabels={clientFieldLabels}
+                        field={`${riskPrefix}Goals`}
+                        formikProps={formikProps}
+                        mode="outlined"
+                        disabled={isFieldDisabled()}
+                    />
+                </>
+            )}
         </View>
     );
 };
@@ -123,7 +149,7 @@ const NewClient = () => {
                 <Formik
                     initialValues={clientInitialValues}
                     validationSchema={newClientValidationSchema}
-                    onSubmit={(values, helpers) =>
+                    onSubmit={(values, helpers) => {
                         handleSubmit(
                             values,
                             helpers,
@@ -133,8 +159,8 @@ const NewClient = () => {
                             user!.id,
                             autoSync,
                             cellularSync
-                        )
-                    }
+                        );
+                    }}
                     enableReinitialize
                 >
                     {(formikProps) => (
@@ -194,7 +220,10 @@ const NewClient = () => {
                                         labelStyle={styles.submitButtonLabel}
                                         mode="contained"
                                         disabled={formikProps.isSubmitting}
-                                        onPress={() => formikProps.submitForm()}
+                                        onPress={() => {
+                                            console.log(formikProps.values);
+                                            formikProps.submitForm();
+                                        }}
                                     >
                                         {t("general.create")}
                                     </Button>

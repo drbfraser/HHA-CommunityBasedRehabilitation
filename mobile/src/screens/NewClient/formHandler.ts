@@ -5,6 +5,7 @@ import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { dbType } from "../../util/watermelonDatabase";
 import { AutoSyncDB } from "../../util/syncHandler";
+import { riskDropdownOptions, riskLevels } from "@cbr/common";
 
 // TODO: profile picture does not upload correctly to server
 
@@ -50,6 +51,23 @@ const handleNewMobileClientSubmit = async (
     enum CancellationReason {
         NONE = "None",
     }
+
+    const buildRiskValues = (
+        level: string,
+        requirementKey: string,
+        goalKey: string,
+        riskPrefix: keyof typeof riskDropdownOptions
+    ) => {
+        const requirement =
+            riskDropdownOptions[riskPrefix]?.requirement?.[requirementKey] || "No requirement";
+        const goal = riskDropdownOptions[riskPrefix]?.goal?.[goalKey] || "No goal";
+        return {
+            risk_level: level || "NA",
+            requirement: requirement,
+            goal_name: goal,
+        };
+    };
+
     try {
         let newClient;
         const currentUser = await database.get(modelName.users).find(userID);
@@ -82,76 +100,110 @@ const handleNewMobileClientSubmit = async (
                 client.is_active = true;
                 client.hcr_type = values.hcrType;
             });
+
+            const health = buildRiskValues(
+                values.healthRisk,
+                values.healthRequirements,
+                values.healthGoals,
+                "health"
+            );
             await addRisk(
                 newClient,
                 database,
                 "HEALTH",
-                values.healthRisk,
-                values.healthRequirements,
-                values.healthGoals,
+                health.risk_level,
+                health.requirement,
+                health.goal_name,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
+            );
+
+            const social = buildRiskValues(
+                values.socialRisk,
+                values.socialRequirements,
+                values.socialGoals,
+                "social"
             );
             await addRisk(
                 newClient,
                 database,
                 "SOCIAL",
-                values.socialRisk,
-                values.socialRequirements,
-                values.socialGoals,
+                social.risk_level,
+                social.requirement,
+                social.goal_name,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
+            );
+
+            const educat = buildRiskValues(
+                values.educationRisk,
+                values.educationRequirements,
+                values.educationGoals,
+                "education"
             );
             await addRisk(
                 newClient,
                 database,
                 "EDUCAT",
-                values.educationRisk,
-                values.educationRequirements,
-                values.educationGoals,
+                educat.risk_level,
+                educat.requirement,
+                educat.goal_name,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
+            );
+
+            const nutrit = buildRiskValues(
+                values.nutritionRisk,
+                values.nutritionRequirements,
+                values.nutritionGoals,
+                "nutrition"
             );
             await addRisk(
                 newClient,
                 database,
                 "NUTRIT",
-                values.nutritionRisk,
-                values.nutritionRequirements,
-                values.nutritionGoals,
+                nutrit.risk_level,
+                nutrit.requirement,
+                nutrit.goal_name,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
             );
+
+            const mental = buildRiskValues(
+                values.mentalRisk,
+                values.mentalRequirements,
+                values.mentalGoals,
+                "mental"
+            );
             await addRisk(
                 newClient,
                 database,
                 "MENTAL",
-                values.mentalRisk,
-                values.mentalRequirements,
-                values.mentalGoals,
+                mental.risk_level,
+                mental.requirement,
+                mental.goal_name,
                 OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
             );
         });
-        await newClient.newRiskTime();
 
+        await newClient.newRiskTime();
         await AutoSyncDB(database, autoSync, cellularSync);
 
         return newClient.id;
     } catch (e) {
         console.log(e);
         const initialMessage = "Encountered an error while trying to create the client!";
-
         alert(initialMessage + "\n");
         helpers.setSubmitting(false);
     }

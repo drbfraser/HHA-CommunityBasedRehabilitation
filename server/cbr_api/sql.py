@@ -313,6 +313,35 @@ def whereStatsBuilder(user_id, time_col, from_time, to_time):
 
     return where
 
+def _from_join_block(option, is_active):
+    if option == "follow_up":
+        if is_active:
+            return "FROM cbr_api_client AS c JOIN cbr_api_visit AS v ON c.id = v.client_id_id AND c.is_active = True"
+        return "FROM cbr_api_client AS c JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+
+    if option == "new_clients":
+        return "FROM cbr_api_client AS c"
+
+    if option == "referral_stats":
+        base = "FROM cbr_api_referral AS r "
+        if is_active:
+            return base + "JOIN cbr_api_client AS c ON r.client_id_id = c.id AND c.is_active = True"
+        return base + "JOIN cbr_api_client AS c ON r.client_id_id = c.id"
+
+    if option == "visit_stats":
+        if is_active:
+            return "FROM cbr_api_visit AS v JOIN cbr_api_client AS c ON v.client_id_id = c.id and c.is_active = True"
+        return "FROM cbr_api_visit AS v JOIN cbr_api_client AS c ON v.client_id_id = c.id"
+
+    if option == "disability_stats" or option == "clients_with_disabilities":
+        base = "FROM cbr_api_client_disability AS d JOIN cbr_api_client as c ON d.client_id = c.id"
+        if is_active:
+            return base + " AND c.is_active = True"
+        return base
+
+    raise ValueError(f"Unsupported option: {option}")
+
+
 
 # Gets the default demographic (age and gender) statistics
 def demographicStatsBuilder(
@@ -399,3 +428,4 @@ def demographicStatsBuilder(
         """
 
     return sql
+

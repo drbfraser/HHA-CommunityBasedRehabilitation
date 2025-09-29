@@ -92,22 +92,32 @@ def getUnreadAlertListByUserId(user_id):
         return unread_alerts_count
 
 
-# QUERIES FOR STATISTICS
-def getDisabilityStats(user_id, from_time, to_time, is_active):
-    sql = """
-    SELECT d.disability_id AS disability_id, c.hcr_type, c.zone_id,
-    COUNT(*) AS total"""
+def getDisabilityStats(user_id, from_time, to_time, is_active,
+                       *, categorize_by=None, group_by=None,
+                       demographics=None, selected_age_bands=None):
 
-    sql += demographicStatsBuilder("disability_stats", is_active, "d.")
-    sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
+    select_from, group_keys, age_where = demographicStatsBuilder(
+        option="disability_stats",
+        is_active=is_active,
+        categorize_by=categorize_by,
+        group_by=group_by or [],
+        demographics=demographics,
+        selected_age_bands=selected_age_bands
+    )
 
-    sql += "GROUP BY d.disability_id, c.hcr_type, c.zone_id ORDER BY d.disability_id"
+    sql = select_from
+    sql += whereStatsBuilder(user_id, "d.created_at", from_time, to_time)
+    sql += age_where
+    if group_keys:
+        sql += "\nGROUP BY " + ", ".join(group_keys)
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
+        cols = [c[0] for c in cursor.description]
+        rows = [dict(zip(cols, r)) for r in cursor.fetchall()]
 
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+    return _format_rows_for_frontend(rows, categorize_by, group_by or [])
+
 
 
 def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):

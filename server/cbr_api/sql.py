@@ -123,39 +123,32 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
         return cursor.fetchone()[0]
 
 
-def getVisitStats(user_id, from_time, to_time, is_active):
-    column_names = [
-        "health_visit",
-        "educat_visit",
-        "social_visit",
-        "nutrit_visit",
-        "mental_visit",
-    ]
+def getVisitStats(user_id, from_time, to_time, is_active,
+                  *, categorize_by=None, group_by=None,
+                  demographics=None, selected_age_bands=None):
 
-    category_names = ["health", "educat", "social", "nutrit", "mental"]
-
-    sql = """
-    SELECT v.zone_id, c.hcr_type,
-    COUNT(*) AS total"""
-
-    sql += demographicStatsBuilder(
-        "visit_stats",
-        is_active,
-        "v.",
-        column_names=column_names,
-        category_names=category_names,
+    select_from, group_keys, age_where = demographicStatsBuilder(
+        option="visit_stats",
+        is_active=is_active,
+        categorize_by=categorize_by,          # e.g. "zone" or None
+        group_by=group_by or [],              # e.g. ["gender","host_status","age_band"]
+        demographics=demographics,            # "child" | "adult" | None
+        selected_age_bands=selected_age_bands # optional set like {"0-5","6-10"}
     )
 
+    sql = select_from
     sql += whereStatsBuilder(user_id, "v.created_at", from_time, to_time)
-
-    sql += """
-    GROUP BY v.zone_id, c.hcr_type ORDER BY v.zone_id"""
+    sql += age_where
+    if group_keys:
+        sql += "\nGROUP BY " + ", ".join(group_keys)
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
+        cols = [c[0] for c in cursor.description]
+        rows = [dict(zip(cols, r)) for r in cursor.fetchall()]
 
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+    return _format_rows_for_frontend(rows, categorize_by, group_by or [])
+
 
 
 def getReferralStats(user_id, from_time, to_time, is_active):

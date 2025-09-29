@@ -91,11 +91,20 @@ const handleNewMobileClientSubmit = async (
                 client.caregiver_name = values.caregiverName;
                 client.caregiver_phone = values.caregiverPhone;
                 client.caregiver_email = values.caregiverEmail;
-                client.health_risk_level = values.healthRisk;
-                client.social_risk_level = values.socialRisk;
-                client.educat_risk_level = values.educationRisk;
-                client.nutrit_risk_level = values.nutritionRisk;
-                client.mental_risk_level = values.mentalRisk;
+                client.health_risk_level =
+                    values.healthRisk && values.healthRisk.trim() !== "" ? values.healthRisk : "NA";
+                client.social_risk_level =
+                    values.socialRisk && values.socialRisk.trim() !== "" ? values.socialRisk : "NA";
+                client.educat_risk_level =
+                    values.educationRisk && values.educationRisk.trim() !== ""
+                        ? values.educationRisk
+                        : "NA";
+                client.nutrit_risk_level =
+                    values.nutritionRisk && values.nutritionRisk.trim() !== ""
+                        ? values.nutritionRisk
+                        : "NA";
+                client.mental_risk_level =
+                    values.mentalRisk && values.mentalRisk.trim() !== "" ? values.mentalRisk : "NA";
                 client.last_visit_date = 0;
                 client.is_active = true;
                 client.hcr_type = values.hcrType;
@@ -107,6 +116,7 @@ const handleNewMobileClientSubmit = async (
                 values.healthGoals,
                 "health"
             );
+
             await addRisk(
                 newClient,
                 database,
@@ -126,6 +136,7 @@ const handleNewMobileClientSubmit = async (
                 values.socialGoals,
                 "social"
             );
+
             await addRisk(
                 newClient,
                 database,

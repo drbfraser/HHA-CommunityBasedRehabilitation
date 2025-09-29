@@ -14,7 +14,6 @@ const addMobileClient = async (clientInfo: FormData) => {
         body: clientInfo,
     };
 
-    console.log(clientInfo);
     return await apiFetch(Endpoint.CLIENTS, "", init).then((res) => res.json());
 };
 
@@ -24,7 +23,6 @@ export const handleNewMobileClientSubmit = async (
 ) => {
     const buildRiskObject = (riskLevel: string, requirement: string, goalName: string) => {
         if (riskLevel && requirement && goalName) {
-            console.log("test");
             return {
                 risk_level: riskLevel,
                 requirement: requirement,

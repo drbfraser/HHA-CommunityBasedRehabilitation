@@ -29,6 +29,15 @@ const useStyles = () =>
             margin: 5,
             marginTop: 10,
         },
+        errorWrapper: {
+            alignItems: "center",
+            justifyContent: "center",
+            marginRight: 15,
+        },
+        errorText: {
+            color: themeColors.errorRed,
+            textAlign: "center",
+        },
         submitButtonContainer: {
             marginTop: 10,
             display: "flex",
@@ -38,7 +47,6 @@ const useStyles = () =>
         },
         submitButtonWrapper: {
             flexShrink: 1,
-            marginRight: 15,
         },
         submitButtonLabel: {
             paddingVertical: 4,

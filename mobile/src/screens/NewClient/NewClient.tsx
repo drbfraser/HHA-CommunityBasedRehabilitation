@@ -6,6 +6,7 @@ import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
 import { Formik, FormikProps } from "formik";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { Text } from "react-native-paper";
 
 import {
     ClientField,
@@ -215,13 +216,20 @@ const NewClient = () => {
                                 />
                             ))}
                             <View style={styles.submitButtonContainer}>
+                                {formikProps.errors && formikProps.submitCount > 0 && (
+                                    <View style={styles.errorWrapper}>
+                                        <Text style={styles.errorText}>
+                                            {formikProps.errors.hasRisk}
+                                        </Text>
+                                    </View>
+                                )}
+
                                 <View style={styles.submitButtonWrapper}>
                                     <Button
                                         labelStyle={styles.submitButtonLabel}
                                         mode="contained"
                                         disabled={formikProps.isSubmitting}
                                         onPress={() => {
-                                            console.log(formikProps.values);
                                             formikProps.submitForm();
                                         }}
                                     >

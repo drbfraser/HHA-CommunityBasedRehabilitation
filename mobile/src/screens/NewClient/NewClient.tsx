@@ -48,7 +48,7 @@ const RiskForm = ({
     containerStyle,
 }: {
     formikProps: FormikProps<TClientValues>;
-    riskPrefix: string; // e.g., "health", "education"
+    riskPrefix: string;
     riskType: RiskType;
     containerStyle?: ViewStyle | false;
 }) => {
@@ -59,13 +59,11 @@ const RiskForm = ({
         [formikProps.isSubmitting, formikProps.values.interviewConsent]
     );
 
-    // Name of the checkbox field, e.g., "healthChecked"
     const checkedField = `${riskPrefix}Checked` as keyof TClientValues;
     const isChecked = !!formikProps.values[checkedField];
 
     return (
         <View style={containerStyle}>
-            {/* Checkbox to toggle this risk */}
             <TextCheckBox
                 field={checkedField}
                 label={clientFieldLabels[`${riskPrefix}Risk`]}
@@ -75,7 +73,6 @@ const RiskForm = ({
                 disabled={formikProps.isSubmitting}
             />
 
-            {/* Conditionally render dropdowns only if checkbox is checked */}
             {isChecked && (
                 <>
                     <FormikExposedDropdownMenu

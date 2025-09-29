@@ -123,17 +123,25 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
         return cursor.fetchone()[0]
 
 
-def getVisitStats(user_id, from_time, to_time, is_active,
-                  *, categorize_by=None, group_by=None,
-                  demographics=None, selected_age_bands=None):
+def getVisitStats(
+    user_id,
+    from_time,
+    to_time,
+    is_active,
+    *,
+    categorize_by=None,
+    group_by=None,
+    demographics=None,
+    selected_age_bands=None,
+):
 
     select_from, group_keys, age_where = demographicStatsBuilder(
         option="visit_stats",
         is_active=is_active,
-        categorize_by=categorize_by,          # e.g. "zone" or None
-        group_by=group_by or [],              # e.g. ["gender","host_status","age_band"]
-        demographics=demographics,            # "child" | "adult" | None
-        selected_age_bands=selected_age_bands # optional set like {"0-5","6-10"}
+        categorize_by=categorize_by,  # e.g. "zone" or None
+        group_by=group_by or [],  # e.g. ["gender","host_status","age_band"]
+        demographics=demographics,  # "child" | "adult" | None
+        selected_age_bands=selected_age_bands,  # optional set like {"0-5","6-10"}
     )
 
     sql = select_from
@@ -150,53 +158,39 @@ def getVisitStats(user_id, from_time, to_time, is_active,
     return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
+def getReferralStats(
+    user_id,
+    from_time,
+    to_time,
+    is_active,
+    *,
+    categorize_by=None,
+    group_by=None,
+    demographics=None,
+    selected_age_bands=None,
+):
 
-def getReferralStats(user_id, from_time, to_time, is_active):
-    column_names = [
-        "wheelchair",
-        "physiotherapy",
-        "prosthetic",
-        "orthotic",
-        "hha_nutrition_and_agriculture_project",
-        "mental_health",
-    ]
-
-    category_names = [
-        "wheelchair",
-        "physiotherapy",
-        "prosthetic",
-        "orthotic",
-        "nutrition_agriculture",
-        "mental_health",
-    ]
-
-    sql = """
-    SELECT r.resolved, c.zone_id, c.hcr_type,
-    COUNT(*) AS total"""
-
-    sql += demographicStatsBuilder(
-        "referral_stats",
-        is_active,
-        "r.",
-        column_names=column_names,
-        category_names=category_names,
+    select_from, group_keys, age_where = demographicStatsBuilder(
+        option="referral_stats",
+        is_active=is_active,
+        categorize_by=categorize_by,
+        group_by=group_by or [],
+        demographics=demographics,
+        selected_age_bands=selected_age_bands,
     )
+
+    sql = select_from
     sql += whereStatsBuilder(user_id, "r.date_referred", from_time, to_time)
-    sql += """
-    GROUP BY r.resolved, c.zone_id, c.hcr_type ORDER BY r.resolved DESC"""
+    sql += age_where
+    if group_keys:
+        sql += "\nGROUP BY " + ", ".join(group_keys)
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
+        cols = [c[0] for c in cursor.description]
+        rows = [dict(zip(cols, r)) for r in cursor.fetchall()]
 
-        columns = [col[0] for col in cursor.description]
-        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
-
-        empty_stats = dict(zip(columns, [0] * len(columns)))
-
-        def getOrEmpty(resolved):
-            return next((r for r in rows if r["resolved"] == resolved), empty_stats)
-
-        return {"resolved": getOrEmpty(True), "unresolved": getOrEmpty(False)}
+    return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
 def getNewClients(user_id, from_time, to_time, is_active):

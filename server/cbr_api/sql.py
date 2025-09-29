@@ -1,3 +1,4 @@
+from django.db import connection
 import logging
 
 logger = logging.getLogger(__name__)
@@ -27,8 +28,32 @@ def _age_band_case(selected_bands):
     return "CASE " + " ".join(parts) + " ELSE NULL END"
 
 
+def _format_rows_for_frontend(rows, categorize_by, group_by):
+    def label(r):
+        parts = []
+        if "gender" in group_by and r.get("gender"):
+            parts.append(r["gender"].capitalize())
+        if "host_status" in group_by and r.get("host_status"):
+            parts.append(r["host_status"].capitalize())
+        if "age_band" in group_by and r.get("age_band"):
+            parts.append(f"age {r['age_band']}")
+        return " ".join(parts) if parts else "Total"
+
+    if categorize_by:
+        by_cat = {}
+        for r in rows:
+            cat = r["category"]
+            by_cat.setdefault(cat, []).append({"name": label(r), "value": r["value"]})
+        return [
+            {"name": str(cat), "data": sorted(v, key=lambda x: x["name"])}
+            for cat, v in by_cat.items()
+        ]
+    else:
+        payload = [{"name": label(r), "value": r["value"]} for r in rows]
+        return sorted(payload, key=lambda x: x["name"])
+
+
 def getOutstandingReferrals():
-    from django.db import connection
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -48,7 +73,6 @@ def getOutstandingReferrals():
 
 
 def getUnreadAlertListByUserId(user_id):
-    from django.db import connection
 
     with connection.cursor() as cursor:
         cursor.execute(
@@ -79,8 +103,6 @@ def getDisabilityStats(user_id, from_time, to_time, is_active):
 
     sql += "GROUP BY d.disability_id, c.hcr_type, c.zone_id ORDER BY d.disability_id"
 
-    from django.db import connection
-
     with connection.cursor() as cursor:
         cursor.execute(sql)
 
@@ -94,8 +116,6 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
 
     sql += demographicStatsBuilder("clients_with_disabilities", is_active, "d.")
     sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
-
-    from django.db import connection
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
@@ -130,8 +150,6 @@ def getVisitStats(user_id, from_time, to_time, is_active):
 
     sql += """
     GROUP BY v.zone_id, c.hcr_type ORDER BY v.zone_id"""
-
-    from django.db import connection
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
@@ -174,8 +192,6 @@ def getReferralStats(user_id, from_time, to_time, is_active):
     sql += """
     GROUP BY r.resolved, c.zone_id, c.hcr_type ORDER BY r.resolved DESC"""
 
-    from django.db import connection
-
     with connection.cursor() as cursor:
         cursor.execute(sql)
 
@@ -191,7 +207,6 @@ def getReferralStats(user_id, from_time, to_time, is_active):
 
 
 def getNewClients(user_id, from_time, to_time, is_active):
-    from django.db import connection
 
     sql = """
     SELECT c.zone_id, c.hcr_type,
@@ -219,7 +234,6 @@ def getNewClients(user_id, from_time, to_time, is_active):
 
 
 def getFollowUpVisits(user_id, from_time, to_time, is_active):
-    from django.db import connection
 
     sql = """
     SELECT c.zone_id, c.hcr_type,
@@ -239,7 +253,6 @@ def getFollowUpVisits(user_id, from_time, to_time, is_active):
 
 
 def getDischargedClients(user_id, from_time, to_time, is_active):
-    from django.db import connection
 
     sql = """
     WITH latest_risks AS (
@@ -373,8 +386,6 @@ def demographicStatsBuilder(
         "zone": "c.zone_id",  # or a name column if you join on zones
         "gender": "c.gender",
         "host_status": "c.hcr_type",  # host/refugee field in your schema
-        # "visit_type":  "v.visit_type",   # uncomment if you want this as a grouper
-        # "referral_type": "r.services_type",  # example
     }
 
     # ---- Which age bands are active? (for grouping and/or filtering) ----

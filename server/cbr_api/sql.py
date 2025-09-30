@@ -92,9 +92,17 @@ def getUnreadAlertListByUserId(user_id):
         return unread_alerts_count
 
 
-def getDisabilityStats(user_id, from_time, to_time, is_active,
-                       *, categorize_by=None, group_by=None,
-                       demographics=None, selected_age_bands=None):
+def getDisabilityStats(
+    user_id,
+    from_time,
+    to_time,
+    is_active,
+    *,
+    categorize_by=None,
+    group_by=None,
+    demographics=None,
+    selected_age_bands=None,
+):
 
     select_from, group_keys, age_where = demographicStatsBuilder(
         option="disability_stats",
@@ -102,7 +110,7 @@ def getDisabilityStats(user_id, from_time, to_time, is_active,
         categorize_by=categorize_by,
         group_by=group_by or [],
         demographics=demographics,
-        selected_age_bands=selected_age_bands
+        selected_age_bands=selected_age_bands,
     )
 
     sql = select_from
@@ -119,18 +127,21 @@ def getDisabilityStats(user_id, from_time, to_time, is_active,
     return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
-
 def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
-    sql = """
-    SELECT COUNT(DISTINCT d.client_id) as total"""
+    from_join = (
+        "FROM cbr_api_client_disability AS d "
+        "JOIN cbr_api_client AS c ON d.client_id = c.id"
+    )
+    if is_active:
+        from_join += " AND c.is_active = True"
 
-    sql += demographicStatsBuilder("clients_with_disabilities", is_active, "d.")
+    sql = "SELECT COUNT(DISTINCT d.client_id) AS total\n" + from_join
     sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-
         return cursor.fetchone()[0]
+
 
 
 def getVisitStats(
@@ -204,53 +215,47 @@ def getReferralStats(
 
 
 def getNewClients(user_id, from_time, to_time, is_active):
-
-    sql = """
-    SELECT c.zone_id, c.hcr_type,
-    COUNT(*) AS total"""
-    sql += demographicStatsBuilder("new_clients", is_active, "c.")
+    sql = (
+        "SELECT c.zone_id, c.hcr_type, COUNT(*) AS total\n"
+        "FROM cbr_api_client AS c\n"
+    )
     statsRes = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
     if is_active:
-        if len(statsRes) != 0:
-            statsRes += """ AND c.is_active = True"""
+        if statsRes:
+            statsRes += " AND c.is_active = True"
         else:
-            statsRes = """
-            WHERE c.is_active = True"""
+            statsRes = "WHERE c.is_active = True"
 
     sql += statsRes
-    sql += """
-    GROUP BY c.zone_id, c.hcr_type"""
+    sql += "\nGROUP BY c.zone_id, c.hcr_type"
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-
         columns = [col[0] for col in cursor.description]
-        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        return res
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
 def getFollowUpVisits(user_id, from_time, to_time, is_active):
+    from_join = (
+        "FROM cbr_api_client AS c "
+        "JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+    )
+    if is_active:
+        from_join += " AND c.is_active = True"
 
-    sql = """
-    SELECT c.zone_id, c.hcr_type,
-    COUNT (*) AS total"""
-    sql += demographicStatsBuilder("follow_up", is_active, "c.")
+    sql = "SELECT c.zone_id, c.hcr_type, COUNT(*) AS total\n" + from_join
     sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
-
-    sql += """
-    GROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1"""
+    sql += "\nGROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1"
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-
         columns = [col[0] for col in cursor.description]
-        res = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        return res
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+
 
 
 def getDischargedClients(user_id, from_time, to_time, is_active):
-
     sql = """
     WITH latest_risks AS (
         SELECT DISTINCT ON (client_id_id, risk_type)
@@ -271,13 +276,9 @@ def getDischargedClients(user_id, from_time, to_time, is_active):
         c.zone_id,
         c.hcr_type,
         COUNT(*) AS total
-    """
-    sql += demographicStatsBuilder("new_clients", is_active, alias="")
-
-    sql += """
+    FROM cbr_api_client AS c
     JOIN discharged_clients d ON c.id = d.client_id_id
     """
-
     statsRes = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
     if is_active:
@@ -292,9 +293,8 @@ def getDischargedClients(user_id, from_time, to_time, is_active):
     with connection.cursor() as cursor:
         cursor.execute(sql)
         columns = [col[0] for col in cursor.description]
-        result = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
-    return result
 
 
 def whereStatsBuilder(user_id, time_col, from_time, to_time):

@@ -192,8 +192,8 @@ def getReferralStats(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    resolved=None,  # <--- NEW: True | False | None
 ):
-
     select_from, group_keys, age_clause = demographicStatsBuilder(
         option="referral_stats",
         is_active=is_active,
@@ -203,11 +203,15 @@ def getReferralStats(
         selected_age_bands=selected_age_bands,
     )
 
-    sql = select_from
     where_sql = whereStatsBuilder(user_id, "r.date_referred", from_time, to_time)
+    if resolved is not None:
+        where_sql += (" AND " if where_sql else "WHERE ") + (
+            "r.resolved = TRUE" if resolved else "r.resolved = FALSE"
+        )
     if age_clause:
         where_sql += (" AND " if where_sql else "WHERE ") + age_clause
-    sql += where_sql
+
+    sql = select_from + where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
 

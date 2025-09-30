@@ -66,42 +66,106 @@ class AdminStats(generics.RetrieveAPIView):
             OpenApiParameter(name="from", type={"type": "int"}),
             OpenApiParameter(name="to", type={"type": "int"}),
             OpenApiParameter(name="is_active", type={"type": "boolean"}),
+            # NEW dynamic params:
+            OpenApiParameter(
+                name="categorize_by", type={"type": "string"}
+            ),  # e.g. "zone"
+            OpenApiParameter(
+                name="group_by", type={"type": "string"}
+            ),  # csv e.g. "gender,host_status,age_band"
+            OpenApiParameter(
+                name="demographics", type={"type": "string"}
+            ),  # "child" | "adult"
+            OpenApiParameter(
+                name="age_bands", type={"type": "string"}
+            ),  # csv e.g. "0-5,6-10"
         ]
     )
     def get(self, request):
         return super().get(request)
 
     def get_object(self):
-        def get_int_or_none(req_body_key):
-            val = self.request.GET.get(req_body_key, "")
-            return int(val) if val != "" else None
+        def get_int_or_none(k):
+            v = self.request.GET.get(k, "")
+            return int(v) if v != "" else None
 
-        def get_str_or_none(req_body_key):
-            val = self.request.GET.get(req_body_key, "")
-            return val if val != "" else None
+        def get_str_or_none(k):
+            v = self.request.GET.get(k, "")
+            return v if v != "" else None
 
-        def get_boolean_or_none(req_body_key):
-            val = self.request.GET.get(req_body_key, "")
-            if val == "true":
-                return True
-            else:
-                return False
+        def get_bool(k):
+            # Accept "true"/"false" (case-insensitive)
+            v = (self.request.GET.get(k, "") or "").lower()
+            return v == "true"
+
+        def parse_csv(k):
+            v = get_str_or_none(k)
+            return [s.strip() for s in v.split(",") if s.strip()] if v else None
 
         user_id = get_str_or_none("user_id")
         from_time = get_int_or_none("from")
         to_time = get_int_or_none("to")
-        is_active = get_boolean_or_none("is_active")
+        is_active = get_bool("is_active")
 
-        referral_stats = getReferralStats(user_id, from_time, to_time, is_active)
+        categorize_by = get_str_or_none("categorize_by")  # None or "zone"
+        group_by = parse_csv("group_by") or []  # list[str]
+        demographics = get_str_or_none("demographics")  # "child"|"adult"|None
+        age_bands = parse_csv("age_bands")  # list[str] or None
+
+        # Dynamic calls
+        disabilities = getDisabilityStats(
+            user_id,
+            from_time,
+            to_time,
+            is_active,
+            categorize_by=categorize_by,
+            group_by=group_by,
+            demographics=demographics,
+            selected_age_bands=set(age_bands) if age_bands else None,
+        )
+
+        visits = getVisitStats(
+            user_id,
+            from_time,
+            to_time,
+            is_active,
+            categorize_by=categorize_by,
+            group_by=group_by,
+            demographics=demographics,
+            selected_age_bands=set(age_bands) if age_bands else None,
+        )
+
+        referrals_resolved = getReferralStats(
+            user_id,
+            from_time,
+            to_time,
+            is_active,
+            categorize_by=categorize_by,
+            group_by=group_by,
+            demographics=demographics,
+            selected_age_bands=set(age_bands) if age_bands else None,
+            resolved=True,
+        )
+        referrals_unresolved = getReferralStats(
+            user_id,
+            from_time,
+            to_time,
+            is_active,
+            categorize_by=categorize_by,
+            group_by=group_by,
+            demographics=demographics,
+            selected_age_bands=set(age_bands) if age_bands else None,
+            resolved=False,
+        )
 
         return {
-            "disabilities": getDisabilityStats(user_id, from_time, to_time, is_active),
+            "disabilities": disabilities,
             "clients_with_disabilities": getNumClientsWithDisabilities(
                 user_id, from_time, to_time, is_active
             ),
-            "visits": getVisitStats(user_id, from_time, to_time, is_active),
-            "referrals_resolved": referral_stats["resolved"],
-            "referrals_unresolved": referral_stats["unresolved"],
+            "visits": visits,
+            "referrals_resolved": referrals_resolved,
+            "referrals_unresolved": referrals_unresolved,
             "new_clients": getNewClients(user_id, from_time, to_time, is_active),
             "discharged_clients": getDischargedClients(
                 user_id, from_time, to_time, is_active

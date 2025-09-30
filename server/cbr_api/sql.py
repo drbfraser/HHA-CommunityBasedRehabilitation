@@ -192,7 +192,7 @@ def getReferralStats(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
-    resolved=None,  # <--- NEW: True | False | None
+    resolved=None,
 ):
     select_from, group_keys, age_clause = demographicStatsBuilder(
         option="referral_stats",

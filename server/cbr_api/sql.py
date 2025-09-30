@@ -34,9 +34,9 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
         if "gender" in group_by and r.get("gender"):
             parts.append(r["gender"].capitalize())
         if "host_status" in group_by and r.get("host_status"):
-            parts.append(r["host_status"].capitalize())
+            parts.append(r["host_status"].lower())
         if "age_band" in group_by and r.get("age_band"):
-            parts.append(f"age {r['age_band']}")
+            parts.append(f"Age {r['age_band']}")
         return " ".join(parts) if parts else "Total"
 
     if categorize_by:
@@ -104,7 +104,7 @@ def getDisabilityStats(
     selected_age_bands=None,
 ):
 
-    select_from, group_keys, age_where = demographicStatsBuilder(
+    select_from, group_keys, age_clause = demographicStatsBuilder(
         option="disability_stats",
         is_active=is_active,
         categorize_by=categorize_by,
@@ -114,8 +114,10 @@ def getDisabilityStats(
     )
 
     sql = select_from
-    sql += whereStatsBuilder(user_id, "d.created_at", from_time, to_time)
-    sql += age_where
+    where_sql = whereStatsBuilder(user_id, "d.created_at", from_time, to_time)
+    if age_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
 
@@ -143,7 +145,6 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
         return cursor.fetchone()[0]
 
 
-
 def getVisitStats(
     user_id,
     from_time,
@@ -156,7 +157,7 @@ def getVisitStats(
     selected_age_bands=None,
 ):
 
-    select_from, group_keys, age_where = demographicStatsBuilder(
+    select_from, group_keys, age_clause = demographicStatsBuilder(
         option="visit_stats",
         is_active=is_active,
         categorize_by=categorize_by,  # e.g. "zone" or None
@@ -166,8 +167,10 @@ def getVisitStats(
     )
 
     sql = select_from
-    sql += whereStatsBuilder(user_id, "v.created_at", from_time, to_time)
-    sql += age_where
+    where_sql = whereStatsBuilder(user_id, "v.created_at", from_time, to_time)
+    if age_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
 
@@ -191,7 +194,7 @@ def getReferralStats(
     selected_age_bands=None,
 ):
 
-    select_from, group_keys, age_where = demographicStatsBuilder(
+    select_from, group_keys, age_clause = demographicStatsBuilder(
         option="referral_stats",
         is_active=is_active,
         categorize_by=categorize_by,
@@ -201,8 +204,10 @@ def getReferralStats(
     )
 
     sql = select_from
-    sql += whereStatsBuilder(user_id, "r.date_referred", from_time, to_time)
-    sql += age_where
+    where_sql = whereStatsBuilder(user_id, "r.date_referred", from_time, to_time)
+    if age_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
 
@@ -216,8 +221,7 @@ def getReferralStats(
 
 def getNewClients(user_id, from_time, to_time, is_active):
     sql = (
-        "SELECT c.zone_id, c.hcr_type, COUNT(*) AS total\n"
-        "FROM cbr_api_client AS c\n"
+        "SELECT c.zone_id, c.hcr_type, COUNT(*) AS total\n" "FROM cbr_api_client AS c\n"
     )
     statsRes = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
@@ -238,8 +242,7 @@ def getNewClients(user_id, from_time, to_time, is_active):
 
 def getFollowUpVisits(user_id, from_time, to_time, is_active):
     from_join = (
-        "FROM cbr_api_client AS c "
-        "JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+        "FROM cbr_api_client AS c " "JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
     )
     if is_active:
         from_join += " AND c.is_active = True"
@@ -252,7 +255,6 @@ def getFollowUpVisits(user_id, from_time, to_time, is_active):
         cursor.execute(sql)
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
-
 
 
 def getDischargedClients(user_id, from_time, to_time, is_active):
@@ -296,7 +298,6 @@ def getDischargedClients(user_id, from_time, to_time, is_active):
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
-
 def whereStatsBuilder(user_id, time_col, from_time, to_time):
     where = """
     WHERE """
@@ -314,7 +315,7 @@ def whereStatsBuilder(user_id, time_col, from_time, to_time):
 
     if to_time is not None:
         if args >= 1:
-            where += """AND """
+            where += """ AND """
         where += f"""{time_col}<={str(to_time)}"""
         args += 1
 
@@ -434,13 +435,14 @@ def demographicStatsBuilder(
     sql += _from_join_block(option, is_active)
 
     # ---- If demographics/selected_age_bands are used *as a filter*, return a WHERE snippet ----
-    age_filter_sql = ""
+    # inside demographicStatsBuilder
+    age_filter_clause = ""
     if demographics or selected_age_bands:
         clauses = []
         for name, (lo, hi) in AGE_BANDS:
             if name in active_bands:
                 clauses.append(f"({AGE_EXPR} BETWEEN {lo} AND {hi})")
         if clauses:
-            age_filter_sql = " AND (" + " OR ".join(clauses) + ")"
+            age_filter_clause = "(" + " OR ".join(clauses) + ")"
 
-    return sql, group_keys, age_filter_sql
+    return sql, group_keys, age_filter_clause

@@ -294,7 +294,7 @@ const ClientInfoForm = (props: IProps) => {
                                             name={ClientDetailsFields.zone}
                                             autoComplete="off"
                                         >
-                                            {Array.from(zones).map(([id, name]) => (
+                                            {Array.from(zones).sort((a, b) => a[1].localeCompare(b[1])).map(([id, name]) => (
                                                 <MenuItem key={id} value={id}>
                                                     {name}
                                                 </MenuItem>

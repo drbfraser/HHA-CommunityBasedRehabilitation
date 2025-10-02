@@ -614,7 +614,6 @@ class ConfigStatsSerializer(serializers.Serializer):
         return type(f"{class_name}", (serializers.Serializer,), fields)
 
 
-
 AdminStatsNewClientsSerializer = ConfigStatsSerializer.create_serializer(
     "AdminStatsNewClientsSerializer"
 )
@@ -650,7 +649,9 @@ class AdminStatsSerializer(serializers.Serializer):
     referrals_resolved = serializers.JSONField()
     referrals_unresolved = serializers.JSONField()
     new_clients = AdminStatsNewClientsSerializer(many=True, read_only=True)
-    discharged_clients = AdminStatsDischargedClientsSerializer(many=True, read_only=True)
+    discharged_clients = AdminStatsDischargedClientsSerializer(
+        many=True, read_only=True
+    )
     follow_up_visits = AdminStatsFollowUpVisitsSerializer(many=True, read_only=True)
 
 

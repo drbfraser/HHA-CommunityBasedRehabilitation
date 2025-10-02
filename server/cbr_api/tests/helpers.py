@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 from cbr_api.models import (
     Client,
     ClientRisk,
+    Disability,
     GoalOutcomes,
     Referral,
     RiskLevel,
@@ -228,9 +229,11 @@ class AdminStatsSetUp(APITestCase):
         self.z1 = Zone.objects.create(zone_name="BidiBidi Zone 1")
         self.z2 = Zone.objects.create(zone_name="BidiBidi Zone 2")
         self.user = UserCBR.objects.create_user(
+            id="admin-1",
             username="root",
             password="root",
             zone=self.z1.id,
+            role=UserCBR.Role.ADMIN,
         )
 
         now_ms = self.ms(datetime.now(timezone.utc))
@@ -351,3 +354,13 @@ class AdminStatsSetUp(APITestCase):
             resolved=False,
             outcome="tbd",
         )
+
+        # ---- Disabilities (M2M) so disability stats return > 0 ----
+        self.dis_mobility = Disability.objects.create(disability_type="Mobility")
+        self.dis_mental = Disability.objects.create(disability_type="Mental")
+
+        # Attach disabilities to clients
+        self.c_host_m_adult.disability.add(self.dis_mobility)
+        self.c_host_f_adult.disability.add(self.dis_mental)
+        self.c_refugee_m_child.disability.add(self.dis_mobility, self.dis_mental)
+        self.c_host_f_child.disability.add(self.dis_mobility)

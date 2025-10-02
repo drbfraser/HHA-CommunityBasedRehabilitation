@@ -29,12 +29,15 @@ def _age_band_case(selected_bands):
 
 
 def _format_rows_for_frontend(rows, categorize_by, group_by):
+    GENDER_LABEL = {"M": "Male", "F": "Female"}
+    HCR_LABEL = {"HC": "host", "R": "refugee", "NA": "not set"}
+
     def label(r):
         parts = []
-        if "gender" in group_by and r.get("gender"):
-            parts.append(r["gender"].capitalize())
-        if "host_status" in group_by and r.get("host_status"):
-            parts.append(r["host_status"].lower())
+        if "gender" in group_by and r.get("gender") is not None:
+            parts.append(GENDER_LABEL.get(r["gender"], str(r["gender"])))
+        if "host_status" in group_by and r.get("host_status") is not None:
+            parts.append(HCR_LABEL.get(r["host_status"], str(r["host_status"])).lower())
         if "age_band" in group_by and r.get("age_band"):
             parts.append(f"Age {r['age_band']}")
         return " ".join(parts) if parts else "Total"
@@ -114,7 +117,7 @@ def getDisabilityStats(
     )
 
     sql = select_from
-    where_sql = whereStatsBuilder(user_id, "d.created_at", from_time, to_time)
+    where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
     if age_clause:
         where_sql += (" AND " if where_sql else "WHERE ") + age_clause
     sql += where_sql
@@ -369,28 +372,24 @@ def demographicStatsBuilder(
     option,
     is_active,
     *,
-    categorize_by=None,  # e.g. "zone" (0–1 field) or None
-    group_by=None,  # e.g. ["gender","host_status","age_band"] (0..N)
-    demographics=None,  # "child" | "adult" | None
-    selected_age_bands=None,  # e.g. {"0-5","6-10"} (overrides demographics if provided)
+    categorize_by=None,
+    group_by=None,
+    demographics=None,
+    selected_age_bands=None,
 ):
-    """
-    Build a dynamic SELECT ... FROM ... for stats, returning:
-      select_from_sql:  'SELECT ... FROM ...' (no WHERE, no GROUP BY)
-      group_keys:       list of SQL expressions to put in GROUP BY
-      age_filter_sql:   optional ' AND (... OR ...)' to append inside your WHERE when
-                        demographics/selected_age_bands should *filter* the rows.
-    """
     group_by = group_by or []
 
-    # Map logical names to SQL columns (adjust to your exact schema)
+    # ---- choose which zone FK to use depending on option ----
+    zone_fk = "v.zone_id" if option == "visit_stats" else "c.zone_id"
+
+    # Map logical names to SQL columns (now uses zone NAME)
     colmap = {
-        "zone": "c.zone_id",  # or a name column if you join on zones
+        "zone": "z.zone_name",  # <-- use zone name for labels
         "gender": "c.gender",
-        "host_status": "c.hcr_type",  # host/refugee field in your schema
+        "host_status": "c.hcr_type",
     }
 
-    # ---- Which age bands are active? (for grouping and/or filtering) ----
+    # Which age bands are active
     if selected_age_bands:
         active_bands = set(selected_age_bands)
     elif demographics == "child":
@@ -398,7 +397,6 @@ def demographicStatsBuilder(
     elif demographics == "adult":
         active_bands = set(ADULT_BANDS)
     else:
-        # all bands available; if not grouping by age we won't SELECT a band column
         active_bands = {name for name, _ in AGE_BANDS}
 
     include_age_band_col = (
@@ -407,13 +405,15 @@ def demographicStatsBuilder(
         or (selected_age_bands is not None)
     )
 
-    # ---- SELECT pieces & GROUP BY keys ----
-    select_fields = []
-    group_keys = []
+    # SELECT fields & GROUP BY keys
+    select_fields, group_keys = [], []
+    needs_zone_join = False
 
     if categorize_by:
         if categorize_by not in colmap:
             raise ValueError(f"Unsupported categorize_by: {categorize_by}")
+        if categorize_by == "zone":
+            needs_zone_join = True
         select_fields.append(f"{colmap[categorize_by]} AS category")
         group_keys.append(colmap[categorize_by])
 
@@ -423,29 +423,33 @@ def demographicStatsBuilder(
 
     for g in group_by:
         if g == "age_band":
-            continue  # handled above
+            continue
         if g not in colmap:
             raise ValueError(f"Unsupported group_by: {g}")
+        if g == "zone":
+            needs_zone_join = True
         select_fields.append(f"{colmap[g]} AS {g}")
         group_keys.append(colmap[g])
 
-    # COUNT(*) aggregate
-    if select_fields:
-        sql = "SELECT " + ", ".join(select_fields) + ", COUNT(*) AS value\n"
-    else:
-        sql = "SELECT COUNT(*) AS value\n"
-
-    # FROM / JOIN identical to the old builder
+    sql = (
+        ("SELECT " + ", ".join(select_fields) + ", COUNT(*) AS value\n")
+        if select_fields
+        else "SELECT COUNT(*) AS value\n"
+    )
     sql += _from_join_block(option, is_active)
 
-    # ---- If demographics/selected_age_bands are used *as a filter*, return a WHERE snippet ----
-    # inside demographicStatsBuilder
+    # ---- join Zone only if needed ----
+    if needs_zone_join:
+        sql += f" JOIN cbr_api_zone AS z ON z.id = {zone_fk}"
+
+    # Return a bare age clause (no WHERE/AND prefix)
     age_filter_clause = ""
     if demographics or selected_age_bands:
-        clauses = []
-        for name, (lo, hi) in AGE_BANDS:
-            if name in active_bands:
-                clauses.append(f"({AGE_EXPR} BETWEEN {lo} AND {hi})")
+        clauses = [
+            f"({AGE_EXPR} BETWEEN {lo} AND {hi})"
+            for name, (lo, hi) in AGE_BANDS
+            if name in active_bands
+        ]
         if clauses:
             age_filter_clause = "(" + " OR ".join(clauses) + ")"
 

@@ -342,7 +342,7 @@ def getDischargedClients(
         selected_age_bands=selected_age_bands,
     )
 
-    sql = cte + select_from + " JOIN discharged_clients d ON c.id = d.client_id_id"
+    sql = cte + select_from + " JOIN discharged_clients d ON c.id = d.client_id_id\n"
 
     where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
     if age_clause:
@@ -496,6 +496,10 @@ def demographicStatsBuilder(
     # ---- join Zone only if needed ----
     if needs_zone_join:
         sql += f" JOIN cbr_api_zone AS z ON z.id = {zone_fk}"
+
+    # Ensure a trailing newline before WHERE clauses get appended by callers
+    if not sql.endswith("\n"):
+        sql += "\n"
 
     # Return a bare age clause (no WHERE/AND prefix)
     age_filter_clause = ""

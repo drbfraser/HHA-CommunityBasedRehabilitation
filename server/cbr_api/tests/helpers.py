@@ -220,9 +220,20 @@ class AdminStatsSetUp(APITestCase):
         return int(dt.timestamp() * 1000)
 
     def years_ago_ms(self, years: int) -> int:
-        return self.ms(
-            datetime.now(timezone.utc) - timedelta(days=365 * years + years // 4)
-        )
+        """Return a birth_date in ms for someone at least `years` years old.
+        We subtract one extra day to avoid boundary/time-of-day issues where the
+        database `now()` is earlier than the Python `now()` used to compute DOB,
+        which could otherwise yield `years-1` when extracting YEAR from AGE().
+        """
+        now = datetime.now(timezone.utc)
+        try:
+            dob = now.replace(year=now.year - years)
+        except ValueError:
+            # Handle Feb 29 by using Feb 28 on non-leap years
+            dob = now.replace(month=2, day=28, year=now.year - years)
+        # Make slightly older to ensure EXTRACT(YEAR FROM AGE(...)) >= years
+        dob = dob - timedelta(days=1)
+        return self.ms(dob)
 
     def setUp(self):
         # create zones

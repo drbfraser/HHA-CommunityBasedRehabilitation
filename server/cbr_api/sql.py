@@ -458,7 +458,7 @@ def demographicStatsBuilder(
 
     # Only include age band column when explicitly grouped by it.
     # Demographics/selected_age_bands now act as FILTER-ONLY (see age_filter_clause below).
-    include_age_band_col = ("age_band" in group_by)
+    include_age_band_col = "age_band" in group_by
 
     # SELECT fields & GROUP BY keys
     select_fields, group_keys = [], []

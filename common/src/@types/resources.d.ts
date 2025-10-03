@@ -853,46 +853,76 @@ interface Resources {
       "unwilling": "&Patient is no longer willing to work with us"
     },
     "risk": {
-      "healthRequirementMalaria": "&Malaria treatment",
-      "healthRequirementMedical": "&Medical assistance",
-      "healthRequirementWound": "&Wound care for pressure sores",
-      "healthRequirementMobility": "wheelchair etc",
-      "healthRequirementPhysiotherapy": "&Physiotherapy",
-      "healthGoalMedical": "&Medical treatment provided",
-      "healthGoalSores": "&Sores managed/healed",
-      "healthGoalMobility": "&Mobility device provided",
-      "healthGoalPain": "&Pain managed",
-      "socialRequirementContact": "&Contact with community",
-      "socialRequirementInclusion": "&Inclusion in family",
-      "socialRequirementTraining": "&Training for family members",
-      "socialGoalCommunity": "&Take part in a community event",
-      "socialGoalInclusion": "&Inclusion in family time",
-      "nutritionRequirementDiabetic": "&Special dietary need - diabetic",
-      "nutritionRequirementAllergies": "&Special dietary need - allergies",
-      "nutritionRequirementMalnutrition": "&Special dietary need - malnutrition",
-      "nutritionRequirementTraining": "&Nutrition training",
-      "nutritionRequirementAgricultural": "&Inclusion in Agricultural project",
-      "nutritionGoalManageDiet": "&Manage diet to meet needs",
-      "nutritionGoalSustainable": "&Sustainable food source",
-      "educationRequirementSchool": "&Attend school",
-      "educationRequirementVocational": "&Vocational training",
-      "educationRequirementFamily": "&Training for family - learning through play",
-      "educationGoalEducation": "&Have an education",
-      "educationGoalIncome": "&Sustainable source of income",
-      "educationGoalChild": "&Child ready to start school",
-      "mentalRequirementMedical": "&Needs medical attention",
-      "mentalRequirementFamily": "&Promote understanding in the family",
-      "mentalRequirementCommunity": "&Promote understanding in the community",
-      "mentalRequirementRefer": "&Refer to mental health agencies",
-      "mentalRequirementCounsellingStressTrauma": "&Advice and counselling - stress and trauma",
-      "mentalRequirementCounsellingOther": "&Advice and counselling - other",
-      "mentalGoalFamily": "&Inclusion in family",
-      "mentalGoalCommunity": "&Inclusion in community",
-      "mentalGoalMedical": "&Medical assistance provided",
-      "mentalGoalAgency": "&Seen by mental health agency",
-      "mentalGoalImprovement": "&Improvement in mental health",
-      "mentalGoalReduction": "&Reduction of stress and trauma",
-      "mentalGoalImprovements": "&Improvements"
+      "health": {
+        "requirement": {
+          "Malaria": "&Malaria treatment",
+          "Medical": "&Medical assistance",
+          "Wound": "&Wound care for pressure sores",
+          "Mobility": "wheelchair etc",
+          "Physiotherapy": "&Physiotherapy"
+        },
+        "goal": {
+          "Medical": "&Medical treatment provided",
+          "Sores": "&Sores managed/healed",
+          "Mobility": "&Mobility device provided",
+          "Pain": "&Pain managed"
+        }
+      },
+      "social": {
+        "requirement": {
+          "Contact": "&Contact with community",
+          "Inclusion": "&Inclusion in family",
+          "Training": "&Training for family members"
+        },
+        "goal": {
+          "Community": "&Take part in a community event",
+          "Inclusion": "&Inclusion in family time"
+        }
+      },
+      "nutrition": {
+        "requirement": {
+          "Diabetic": "&Special dietary need - diabetic",
+          "Allergies": "&Special dietary need - allergies",
+          "Malnutrition": "&Special dietary need - malnutrition",
+          "Training": "&Nutrition training",
+          "Agricultural": "&Inclusion in Agricultural project"
+        },
+        "goal": {
+          "ManageDiet": "&Manage diet to meet needs",
+          "Sustainable": "&Sustainable food source"
+        }
+      },
+      "education": {
+        "requirement": {
+          "School": "&Attend school",
+          "Vocational": "&Vocational training",
+          "Family": "&Training for family - learning through play"
+        },
+        "goal": {
+          "Education": "&Have an education",
+          "Income": "&Sustainable source of income",
+          "Child": "&Child ready to start school"
+        }
+      },
+      "mental": {
+        "requirement": {
+          "Medical": "&Needs medical attention",
+          "Family": "&Promote understanding in the family",
+          "Community": "&Promote understanding in the community",
+          "Refer": "&Refer to mental health agencies",
+          "CounsellingStressTrauma": "&Advice and counselling - stress and trauma",
+          "CounsellingOther": "&Advice and counselling - other"
+        },
+        "goal": {
+          "Family": "&Inclusion in family",
+          "Community": "&Inclusion in community",
+          "Medical": "&Medical assistance provided",
+          "Agency": "&Seen by mental health agency",
+          "Improvement": "&Improvement in mental health",
+          "Reduction": "&Reduction of stress and trauma",
+          "Improvements": "&Improvements"
+        }
+      }
     }
   },
   "en": {
@@ -1749,46 +1779,76 @@ interface Resources {
       "unwilling": "Patient is no longer willing to work with us"
     },
     "risk": {
-      "healthRequirementMalaria": "Malaria treatment",
-      "healthRequirementMedical": "Medical assistance",
-      "healthRequirementWound": "Wound care for pressure sores",
-      "healthRequirementMobility": "Mobility device - crutches",
-      "healthRequirementPhysiotherapy": "Physiotherapy",
-      "healthGoalMedical": "Medical treatment provided",
-      "healthGoalSores": "Sores managed/healed",
-      "healthGoalMobility": "Mobility device provided",
-      "healthGoalPain": "Pain managed",
-      "socialRequirementContact": "Contact with community",
-      "socialRequirementInclusion": "Inclusion in family",
-      "socialRequirementTraining": "Training for family members",
-      "socialGoalCommunity": "Take part in a community event",
-      "socialGoalInclusion": "Inclusion in family time",
-      "nutritionRequirementDiabetic": "Special dietary need - diabetic",
-      "nutritionRequirementAllergies": "Special dietary need - allergies",
-      "nutritionRequirementMalnutrition": "Special dietary need - malnutrition",
-      "nutritionRequirementTraining": "Nutrition training",
-      "nutritionRequirementAgricultural": "Inclusion in Agricultural project",
-      "nutritionGoalManageDiet": "Manage diet to meet needs",
-      "nutritionGoalSustainable": "Sustainable food source",
-      "educationRequirementSchool": "Attend school",
-      "educationRequirementVocational": "Vocational training",
-      "educationRequirementFamily": "Training for family - learning through play",
-      "educationGoalEducation": "Have an education",
-      "educationGoalIncome": "Sustainable source of income",
-      "educationGoalChild": "Child ready to start school",
-      "mentalRequirementMedical": "Needs medical attention",
-      "mentalRequirementFamily": "Promote understanding in the family",
-      "mentalRequirementCommunity": "Promote understanding in the community",
-      "mentalRequirementRefer": "Refer to mental health agencies",
-      "mentalRequirementCounsellingStressTrauma": "Advice and counselling - stress and trauma",
-      "mentalRequirementCounsellingOther": "Advice and counselling - other",
-      "mentalGoalFamily": "Inclusion in family",
-      "mentalGoalCommunity": "Inclusion in community",
-      "mentalGoalMedical": "Medical assistance provided",
-      "mentalGoalAgency": "Seen by mental health agency",
-      "mentalGoalImprovement": "Improvement in mental health",
-      "mentalGoalReduction": "Reduction of stress and trauma",
-      "mentalGoalImprovements": "Improvements"
+      "health": {
+        "requirement": {
+          "Malaria": "Malaria treatment",
+          "Medical": "Medical assistance",
+          "Wound": "Wound care for pressure sores",
+          "Mobility": "Mobility device - crutches",
+          "Physiotherapy": "Physiotherapy"
+        },
+        "goal": {
+          "Medical": "Medical treatment provided",
+          "Sores": "Sores managed/healed",
+          "Mobility": "Mobility device provided",
+          "Pain": "Pain managed"
+        }
+      },
+      "social": {
+        "requirement": {
+          "Contact": "Contact with community",
+          "Inclusion": "Inclusion in family",
+          "Training": "Training for family members"
+        },
+        "goal": {
+          "Community": "Take part in a community event",
+          "Inclusion": "Inclusion in family time"
+        }
+      },
+      "nutrition": {
+        "requirement": {
+          "Diabetic": "Special dietary need - diabetic",
+          "Allergies": "Special dietary need - allergies",
+          "Malnutrition": "Special dietary need - malnutrition",
+          "Training": "Nutrition training",
+          "Agricultural": "Inclusion in Agricultural project"
+        },
+        "goal": {
+          "ManageDiet": "Manage diet to meet needs",
+          "Sustainable": "Sustainable food source"
+        }
+      },
+      "education": {
+        "requirement": {
+          "School": "Attend school",
+          "Vocational": "Vocational training",
+          "Family": "Training for family - learning through play"
+        },
+        "goal": {
+          "Education": "Have an education",
+          "Income": "Sustainable source of income",
+          "Child": "Child ready to start school"
+        }
+      },
+      "mental": {
+        "requirement": {
+          "Medical": "Needs medical attention",
+          "Family": "Promote understanding in the family",
+          "Community": "Promote understanding in the community",
+          "Refer": "Refer to mental health agencies",
+          "CounsellingStressTrauma": "Advice and counselling - stress and trauma",
+          "CounsellingOther": "Advice and counselling - other"
+        },
+        "goal": {
+          "Family": "Inclusion in family",
+          "Community": "Inclusion in community",
+          "Medical": "Medical assistance provided",
+          "Agency": "Seen by mental health agency",
+          "Improvement": "Improvement in mental health",
+          "Reduction": "Reduction of stress and trauma",
+          "Improvements": "Improvements"
+        }
+      }
     }
   }
 }

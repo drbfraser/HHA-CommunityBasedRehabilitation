@@ -648,11 +648,9 @@ class AdminStatsSerializer(serializers.Serializer):
     visits = serializers.JSONField()
     referrals_resolved = serializers.JSONField()
     referrals_unresolved = serializers.JSONField()
-    new_clients = AdminStatsNewClientsSerializer(many=True, read_only=True)
-    discharged_clients = AdminStatsDischargedClientsSerializer(
-        many=True, read_only=True
-    )
-    follow_up_visits = AdminStatsFollowUpVisitsSerializer(many=True, read_only=True)
+    new_clients = serializers.JSONField()
+    discharged_clients = serializers.JSONField()
+    follow_up_visits = serializers.JSONField()
 
 
 class ClientListSerializer(serializers.ModelSerializer):

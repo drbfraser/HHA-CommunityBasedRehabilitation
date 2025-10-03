@@ -79,6 +79,9 @@ class AdminStats(generics.RetrieveAPIView):
             OpenApiParameter(
                 name="age_bands", type={"type": "string"}
             ),  # csv e.g. "0-5,6-10"
+            OpenApiParameter(
+                name="resolved", type={"type": "boolean"}
+            ),  # referrals only
         ]
     )
     def get(self, request):
@@ -97,6 +100,12 @@ class AdminStats(generics.RetrieveAPIView):
             # Accept "true"/"false" (case-insensitive)
             v = (self.request.GET.get(k, "") or "").lower()
             return v == "true"
+
+        def get_bool_or_none(k):
+            v = self.request.GET.get(k, None)
+            if v is None or v == "":
+                return None
+            return str(v).lower() == "true"
 
         def parse_csv(k):
             v = get_str_or_none(k)
@@ -135,28 +144,46 @@ class AdminStats(generics.RetrieveAPIView):
             selected_age_bands=set(age_bands) if age_bands else None,
         )
 
-        referrals_resolved = getReferralStats(
-            user_id,
-            from_time,
-            to_time,
-            is_active,
-            categorize_by=categorize_by,
-            group_by=group_by,
-            demographics=demographics,
-            selected_age_bands=set(age_bands) if age_bands else None,
-            resolved=True,
-        )
-        referrals_unresolved = getReferralStats(
-            user_id,
-            from_time,
-            to_time,
-            is_active,
-            categorize_by=categorize_by,
-            group_by=group_by,
-            demographics=demographics,
-            selected_age_bands=set(age_bands) if age_bands else None,
-            resolved=False,
-        )
+        resolved = get_bool_or_none("resolved")
+        if resolved is None:
+            referrals_resolved = getReferralStats(
+                user_id,
+                from_time,
+                to_time,
+                is_active,
+                categorize_by=categorize_by,
+                group_by=group_by,
+                demographics=demographics,
+                selected_age_bands=set(age_bands) if age_bands else None,
+                resolved=True,
+            )
+            referrals_unresolved = getReferralStats(
+                user_id,
+                from_time,
+                to_time,
+                is_active,
+                categorize_by=categorize_by,
+                group_by=group_by,
+                demographics=demographics,
+                selected_age_bands=set(age_bands) if age_bands else None,
+                resolved=False,
+            )
+        else:
+            one = getReferralStats(
+                user_id,
+                from_time,
+                to_time,
+                is_active,
+                categorize_by=categorize_by,
+                group_by=group_by,
+                demographics=demographics,
+                selected_age_bands=set(age_bands) if age_bands else None,
+                resolved=resolved,
+            )
+            if resolved:
+                referrals_resolved, referrals_unresolved = one, []
+            else:
+                referrals_resolved, referrals_unresolved = [], one
 
         return {
             "disabilities": disabilities,
@@ -166,12 +193,35 @@ class AdminStats(generics.RetrieveAPIView):
             "visits": visits,
             "referrals_resolved": referrals_resolved,
             "referrals_unresolved": referrals_unresolved,
-            "new_clients": getNewClients(user_id, from_time, to_time, is_active),
+            "new_clients": getNewClients(
+                user_id,
+                from_time,
+                to_time,
+                is_active,
+                categorize_by=categorize_by,
+                group_by=group_by,
+                demographics=demographics,
+                selected_age_bands=set(age_bands) if age_bands else None,
+            ),
             "discharged_clients": getDischargedClients(
-                user_id, from_time, to_time, is_active
+                user_id,
+                from_time,
+                to_time,
+                is_active,
+                categorize_by=categorize_by,
+                group_by=group_by,
+                demographics=demographics,
+                selected_age_bands=set(age_bands) if age_bands else None,
             ),
             "follow_up_visits": getFollowUpVisits(
-                user_id, from_time, to_time, is_active
+                user_id,
+                from_time,
+                to_time,
+                is_active,
+                categorize_by=categorize_by,
+                group_by=group_by,
+                demographics=demographics,
+                selected_age_bands=set(age_bands) if age_bands else None,
             ),
         }
 

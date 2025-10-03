@@ -40,6 +40,8 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
             parts.append(HCR_LABEL.get(r["host_status"], str(r["host_status"])).lower())
         if "age_band" in group_by and r.get("age_band"):
             parts.append(f"Age {r['age_band']}")
+        if "resolved" in group_by and r.get("resolved") is not None:
+            parts.append("Resolved" if bool(r["resolved"]) else "Unresolved")
         return " ".join(parts) if parts else "Total"
 
     if categorize_by:
@@ -47,10 +49,13 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
         for r in rows:
             cat = r["category"]
             by_cat.setdefault(cat, []).append({"name": label(r), "value": r["value"]})
-        return [
-            {"name": str(cat), "data": sorted(v, key=lambda x: x["name"])}
-            for cat, v in by_cat.items()
-        ]
+        result = []
+        for cat, v in by_cat.items():
+            display = str(cat)
+            if categorize_by == "resolved":
+                display = "Resolved" if bool(cat) else "Unresolved"
+            result.append({"name": display, "data": sorted(v, key=lambda x: x["name"])})
+        return result
     else:
         payload = [{"name": label(r), "value": r["value"]} for r in rows]
         return sorted(payload, key=lambda x: x["name"])
@@ -226,46 +231,91 @@ def getReferralStats(
     return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
-def getNewClients(user_id, from_time, to_time, is_active):
-    sql = (
-        "SELECT c.zone_id, c.hcr_type, COUNT(*) AS total\n" "FROM cbr_api_client AS c\n"
+def getNewClients(
+    user_id,
+    from_time,
+    to_time,
+    is_active,
+    *,
+    categorize_by=None,
+    group_by=None,
+    demographics=None,
+    selected_age_bands=None,
+):
+    select_from, group_keys, age_clause = demographicStatsBuilder(
+        option="new_clients",
+        is_active=is_active,
+        categorize_by=categorize_by,
+        group_by=group_by or [],
+        demographics=demographics,
+        selected_age_bands=selected_age_bands,
     )
-    statsRes = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
-    if is_active:
-        if statsRes:
-            statsRes += " AND c.is_active = True"
-        else:
-            statsRes = "WHERE c.is_active = True"
-
-    sql += statsRes
-    sql += "\nGROUP BY c.zone_id, c.hcr_type"
+    sql = select_from
+    where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
+    if age_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    sql += where_sql
+    if group_keys:
+        sql += "\nGROUP BY " + ", ".join(group_keys)
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+        cols = [c[0] for c in cursor.description]
+        rows = [dict(zip(cols, r)) for r in cursor.fetchall()]
+
+    return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
-def getFollowUpVisits(user_id, from_time, to_time, is_active):
-    from_join = (
-        "FROM cbr_api_client AS c " "JOIN cbr_api_visit AS v ON c.id = v.client_id_id"
+def getFollowUpVisits(
+    user_id,
+    from_time,
+    to_time,
+    is_active,
+    *,
+    categorize_by=None,
+    group_by=None,
+    demographics=None,
+    selected_age_bands=None,
+):
+    select_from, group_keys, age_clause = demographicStatsBuilder(
+        option="follow_up",
+        is_active=is_active,
+        categorize_by=categorize_by,
+        group_by=group_by or [],
+        demographics=demographics,
+        selected_age_bands=selected_age_bands,
     )
-    if is_active:
-        from_join += " AND c.is_active = True"
 
-    sql = "SELECT c.zone_id, c.hcr_type, COUNT(*) AS total\n" + from_join
-    sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
-    sql += "\nGROUP BY c.zone_id, c.hcr_type HAVING COUNT(v.client_id_id) > 1"
+    sql = select_from
+    where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
+    if age_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    sql += where_sql
+    if group_keys:
+        sql += "\nGROUP BY " + ", ".join(group_keys)
+        sql += " HAVING COUNT(v.client_id_id) > 1"
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+        cols = [c[0] for c in cursor.description]
+        rows = [dict(zip(cols, r)) for r in cursor.fetchall()]
+
+    return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
-def getDischargedClients(user_id, from_time, to_time, is_active):
-    sql = """
+def getDischargedClients(
+    user_id,
+    from_time,
+    to_time,
+    is_active,
+    *,
+    categorize_by=None,
+    group_by=None,
+    demographics=None,
+    selected_age_bands=None,
+):
+    cte = """
     WITH latest_risks AS (
         SELECT DISTINCT ON (client_id_id, risk_type)
             client_id_id,
@@ -281,28 +331,32 @@ def getDischargedClients(user_id, from_time, to_time, is_active):
             BOOL_OR(goal_status IN ('CON', 'CAN')) AND
             NOT BOOL_OR(goal_status = 'GO')
     )
-    SELECT 
-        c.zone_id,
-        c.hcr_type,
-        COUNT(*) AS total
-    FROM cbr_api_client AS c
-    JOIN discharged_clients d ON c.id = d.client_id_id
     """
-    statsRes = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
 
-    if is_active:
-        if statsRes:
-            statsRes += " AND c.is_active = True"
-        else:
-            statsRes = "WHERE c.is_active = True"
+    select_from, group_keys, age_clause = demographicStatsBuilder(
+        option="new_clients",
+        is_active=is_active,
+        categorize_by=categorize_by,
+        group_by=group_by or [],
+        demographics=demographics,
+        selected_age_bands=selected_age_bands,
+    )
 
-    sql += "\n" + statsRes
-    sql += "\nGROUP BY c.zone_id, c.hcr_type"
+    sql = cte + select_from + " JOIN discharged_clients d ON c.id = d.client_id_id"
+
+    where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
+    if age_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    sql += where_sql
+    if group_keys:
+        sql += "\nGROUP BY " + ", ".join(group_keys)
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-        columns = [col[0] for col in cursor.description]
-        return [dict(zip(columns, row)) for row in cursor.fetchall()]
+        cols = [c[0] for c in cursor.description]
+        rows = [dict(zip(cols, r)) for r in cursor.fetchall()]
+
+    return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
 def whereStatsBuilder(user_id, time_col, from_time, to_time):
@@ -388,6 +442,9 @@ def demographicStatsBuilder(
         "gender": "c.gender",
         "host_status": "c.hcr_type",
     }
+    # Allow grouping/categorizing by referral resolution state
+    if option == "referral_stats":
+        colmap["resolved"] = "r.resolved"
 
     # Which age bands are active
     if selected_age_bands:
@@ -399,11 +456,9 @@ def demographicStatsBuilder(
     else:
         active_bands = {name for name, _ in AGE_BANDS}
 
-    include_age_band_col = (
-        ("age_band" in group_by)
-        or (demographics in {"child", "adult"})
-        or (selected_age_bands is not None)
-    )
+    # Only include age band column when explicitly grouped by it.
+    # Demographics/selected_age_bands now act as FILTER-ONLY (see age_filter_clause below).
+    include_age_band_col = ("age_band" in group_by)
 
     # SELECT fields & GROUP BY keys
     select_fields, group_keys = [], []

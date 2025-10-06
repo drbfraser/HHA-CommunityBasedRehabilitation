@@ -74,14 +74,24 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                                     {t("general.requirements")}:
                                 </Typography>
                                 <Typography variant="body2" component="p">
-                                    {t(`risk.${riskTypes[risk.risk_type].name.toLowerCase()}.requirement.${risk.requirement}`, { defaultValue: risk.requirement })}
+                                    {t(
+                                        `risk.${riskTypes[
+                                            risk.risk_type
+                                        ].name.toLowerCase()}.requirement.${risk.requirement}`,
+                                        { defaultValue: risk.requirement }
+                                    )}
                                 </Typography>
                                 <br />
                                 <Typography variant="subtitle2" component="h6">
                                     {t("general.goals")}:
                                 </Typography>
                                 <Typography variant="body2" component="p">
-                                    {t(`risk.${riskTypes[risk.risk_type].name.toLowerCase()}.goal.${risk.goal_name}`, { defaultValue: risk.goal_name })}
+                                    {t(
+                                        `risk.${riskTypes[
+                                            risk.risk_type
+                                        ].name.toLowerCase()}.goal.${risk.goal_name}`,
+                                        { defaultValue: risk.goal_name }
+                                    )}
                                 </Typography>
                             </>
                         ) : (

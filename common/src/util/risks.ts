@@ -143,7 +143,10 @@ const refreshArrays = () => {
     // TODO: replace all of these below with translations once we have them
 
     cancellationOptions = Object.fromEntries(
-        Object.keys(en.cancellation).map((key) => [key, en.cancellation[key as keyof typeof en.cancellation]])
+        Object.keys(en.cancellation).map((key) => [
+            key,
+            en.cancellation[key as keyof typeof en.cancellation],
+        ])
     );
 
     riskDropdownOptions = Object.fromEntries(

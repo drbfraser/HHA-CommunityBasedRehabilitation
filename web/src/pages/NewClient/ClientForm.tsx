@@ -209,23 +209,23 @@ const ClientForm = () => {
                                             {(values[ClientField.disability] as number[]).includes(
                                                 getOtherDisabilityId(disabilities)
                                             ) && (
-                                                    <div>
-                                                        <br />
-                                                        <Field
-                                                            component={TextField}
-                                                            fullWidth
-                                                            label={
-                                                                clientFieldLabels[
+                                                <div>
+                                                    <br />
+                                                    <Field
+                                                        component={TextField}
+                                                        fullWidth
+                                                        label={
+                                                            clientFieldLabels[
                                                                 ClientField.otherDisability
-                                                                ]
-                                                            }
-                                                            required
-                                                            name={ClientField.otherDisability}
-                                                            variant="outlined"
-                                                            autoComplete="off"
-                                                        />
-                                                    </div>
-                                                )}
+                                                            ]
+                                                        }
+                                                        required
+                                                        name={ClientField.otherDisability}
+                                                        variant="outlined"
+                                                        autoComplete="off"
+                                                    />
+                                                </div>
+                                            )}
                                         </Grid>
                                         <Grid item md={12} xs={12}>
                                             <Field
@@ -267,8 +267,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                        ClientField
-                                                                            .caregiverName
+                                                                            ClientField
+                                                                                .caregiverName
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -288,8 +288,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                        ClientField
-                                                                            .caregiverEmail
+                                                                            ClientField
+                                                                                .caregiverEmail
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -308,8 +308,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                        ClientField
-                                                                            .caregiverPhone
+                                                                            ClientField
+                                                                                .caregiverPhone
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -352,7 +352,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                ClientField.healthRisk
+                                                                    ClientField.healthRisk
                                                                 ]
                                                             }
                                                             name={ClientField.healthRisk}
@@ -386,7 +386,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.HEALTH}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.healthRequirements
+                                                                ClientField.healthRequirements
                                                             ]
                                                         }
                                                         options={
@@ -407,7 +407,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.HEALTH}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.healthGoals
+                                                                ClientField.healthGoals
                                                             ]
                                                         }
                                                         options={
@@ -447,7 +447,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                ClientField.educationRisk
+                                                                    ClientField.educationRisk
                                                                 ]
                                                             }
                                                             name={ClientField.educationRisk}
@@ -481,7 +481,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.EDUCATION}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.educationRequirements
+                                                                ClientField.educationRequirements
                                                             ]
                                                         }
                                                         options={
@@ -502,7 +502,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.EDUCATION}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.educationGoals
+                                                                ClientField.educationGoals
                                                             ]
                                                         }
                                                         options={
@@ -542,7 +542,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                ClientField.socialRisk
+                                                                    ClientField.socialRisk
                                                                 ]
                                                             }
                                                             name={ClientField.socialRisk}
@@ -573,7 +573,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.SOCIAL}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.socialRequirements
+                                                                ClientField.socialRequirements
                                                             ]
                                                         }
                                                         options={
@@ -594,7 +594,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.SOCIAL}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.socialGoals
+                                                                ClientField.socialGoals
                                                             ]
                                                         }
                                                         options={
@@ -635,7 +635,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                ClientField.nutritionRisk
+                                                                    ClientField.nutritionRisk
                                                                 ]
                                                             }
                                                             name={ClientField.nutritionRisk}
@@ -666,7 +666,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.NUTRITION}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.nutritionRequirements
+                                                                ClientField.nutritionRequirements
                                                             ]
                                                         }
                                                         options={
@@ -687,7 +687,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.NUTRITION}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.nutritionGoals
+                                                                ClientField.nutritionGoals
                                                             ]
                                                         }
                                                         options={
@@ -728,7 +728,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                ClientField.mentalRisk
+                                                                    ClientField.mentalRisk
                                                                 ]
                                                             }
                                                             name={ClientField.mentalRisk}
@@ -759,7 +759,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.MENTAL}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.mentalRequirements
+                                                                ClientField.mentalRequirements
                                                             ]
                                                         }
                                                         options={
@@ -780,7 +780,7 @@ const ClientForm = () => {
                                                         riskType={RiskType.MENTAL}
                                                         label={
                                                             clientFieldLabels[
-                                                            ClientField.mentalGoals
+                                                                ClientField.mentalGoals
                                                             ]
                                                         }
                                                         options={

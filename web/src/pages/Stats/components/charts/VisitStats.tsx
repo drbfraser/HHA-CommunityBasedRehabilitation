@@ -155,7 +155,7 @@ const VisitStats = ({ stats, age, gender }: IProps) => {
                 });
             });
 
-            const totalData = Object.values(zoneMap);
+            const totalData = Object.values(zoneMap).sort((a, b) => a.label.localeCompare(b.label));
 
             setTotalCategory(categoryTotals);
             setTotalPieData(pieData);

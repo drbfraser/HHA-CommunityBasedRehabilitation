@@ -14,7 +14,12 @@ export type TZoneMap = ReadonlyMap<number, string>;
 const cache = new APICacheData<TZoneMap, TZoneMap, TZoneMap>(
     "cache_zones",
     () => apiFetch(Endpoint.ZONES),
-    (zones: IZone[]) => new Map(zones.map((z) => [z.id, z.zone_name])),
+    (zones: IZone[]) =>
+        new Map(
+            zones
+                .sort((a, b) => a.zone_name.localeCompare(b.zone_name)) // sort alphabetically
+                .map((z) => [z.id, z.zone_name])
+        ),
     emptyMap,
     emptyMap
 );

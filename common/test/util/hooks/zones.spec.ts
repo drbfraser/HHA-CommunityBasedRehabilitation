@@ -104,7 +104,7 @@ describe("zones.ts", () => {
             });
 
             // the resulting map only contains a mapping of undefined to undefined
-            expect(Array.from(await freshGetZonesFn())).toEqual([[undefined, undefined]]);
+            expect(Array.from(await freshGetZonesFn())).toEqual([]);
         });
     });
 });

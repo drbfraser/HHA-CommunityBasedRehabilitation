@@ -53,8 +53,8 @@ const LanguagePicker = ({ sx }: IProps) => {
                 value={language}
                 onChange={handleLanguageChange}
             >
-                <MenuItem value={Language.EN}>{t("languagePicker.english")}</MenuItem>
-                <MenuItem value={Language.BARI}>{t("languagePicker.bari")}</MenuItem>
+                <MenuItem value={Language.EN}>{"English"}</MenuItem>
+                <MenuItem value={Language.BARI}>{"Kutuk na bari"}</MenuItem>
             </Select>
         </FormControl>
     );

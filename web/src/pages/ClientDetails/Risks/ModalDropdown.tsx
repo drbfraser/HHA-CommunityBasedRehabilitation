@@ -16,7 +16,17 @@ interface IModalDropdownProps {
     touched?: boolean;
 }
 
-const ModalDropdown = ({ name, modalType, requirementOrGoal, riskType, label, options, isCustom, error, touched }: IModalDropdownProps) => {
+const ModalDropdown = ({
+    name,
+    modalType,
+    requirementOrGoal,
+    riskType,
+    label,
+    options,
+    isCustom,
+    error,
+    touched,
+}: IModalDropdownProps) => {
     const [showOther, setShowOther] = useState(isCustom);
     const { t } = useTranslation();
     const risk_type = riskTypeKeyMap[riskType];
@@ -48,7 +58,11 @@ const ModalDropdown = ({ name, modalType, requirementOrGoal, riskType, label, op
                     >
                         {Object.entries(options).map(([key, value]) => (
                             <MenuItem key={key} value={key}>
-                                {modal_type === "risk" ? t(`risk.${risk_type}.${requirementOrGoal}.${key}`, { defaultValue: value }) : t(`cancellation.${key}`, { defaultValue: value })}
+                                {modal_type === "risk"
+                                    ? t(`risk.${risk_type}.${requirementOrGoal}.${key}`, {
+                                          defaultValue: value,
+                                      })
+                                    : t(`cancellation.${key}`, { defaultValue: value })}
                             </MenuItem>
                         ))}
                         <MenuItem value="Other">{t("disabilities.other")}</MenuItem>

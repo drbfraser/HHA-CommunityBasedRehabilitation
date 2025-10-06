@@ -62,7 +62,6 @@ export default function UpdateGoalStatus(props: IModalProps) {
             enableReinitialize
             initialValues={{
                 ...props.risk,
-                cancellation_reason: "",
             }}
             validationSchema={validationSchema}
         >
@@ -104,10 +103,13 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                 <Grid item>
                                                     <ModalDropdown
                                                         name="cancellation_reason"
+                                                        modalType="cancellation"
+                                                        requirementOrGoal="goal"
+                                                        riskType={props.risk.risk_type}
                                                         label={t("risks.cancelReason")}
                                                         options={cancellationOptions}
                                                         isCustom={
-                                                            !Object.values(
+                                                            !Object.keys(
                                                                 cancellationOptions
                                                             ).includes(
                                                                 values.cancellation_reason

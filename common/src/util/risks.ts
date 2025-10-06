@@ -1,6 +1,7 @@
 import { themeColors } from "./colors";
 import i18n from "i18next";
 import { OutcomeGoalMet } from "./visits";
+import en from "../locales/en.json";
 export interface IRisk {
     id: string;
     client_id: string;
@@ -141,86 +142,19 @@ const refreshArrays = () => {
 
     // TODO: replace all of these below with translations once we have them
 
-    cancellationOptions = {
-        dead: i18n.t("cancellation.dead"),
-        moved: i18n.t("cancellation.moved"),
-        circumstances: i18n.t("cancellation.circumstances"),
-        abandoned: i18n.t("cancellation.abandoned"),
-        unwilling: i18n.t("cancellation.unwilling"),
-    };
+    cancellationOptions = Object.fromEntries(
+        Object.keys(en.cancellation).map((key) => [key, en.cancellation[key as keyof typeof en.cancellation]])
+    );
 
-    riskDropdownOptions = {
-        health: {
-            requirement: {
-                Malaria: i18n.t("risk.health.requirement.Malaria"),
-                Medical: i18n.t("risk.health.requirement.Medical"),
-                Wound: i18n.t("risk.health.requirement.Wound"),
-                Mobility: i18n.t("risk.health.requirement.Mobility"),
-                Physiotherapy: i18n.t("risk.health.requirement.Physiotherapy"),
+    riskDropdownOptions = Object.fromEntries(
+        Object.entries(en.risk).map(([riskKey, riskData]) => [
+            riskKey,
+            {
+                requirement: { ...(riskData.requirement || {}) },
+                goal: { ...(riskData.goal || {}) },
             },
-            goal: {
-                Medical: i18n.t("risk.health.goal.Medical"),
-                Sores: i18n.t("risk.health.goal.Sores"),
-                Mobility: i18n.t("risk.health.goal.Mobility"),
-                Pain: i18n.t("risk.health.goal.Pain"),
-            },
-        },
-        social: {
-            requirement: {
-                Contact: i18n.t("risk.social.requirement.Contact"),
-                Inclusion: i18n.t("risk.social.requirement.Inclusion"),
-                Training: i18n.t("risk.social.requirement.Training"),
-            },
-            goal: {
-                Community: i18n.t("risk.social.goal.Community"),
-                Inclusion: i18n.t("risk.social.goal.Inclusion"),
-            },
-        },
-        nutrition: {
-            requirement: {
-                Diabetic: i18n.t("risk.nutrition.requirement.Diabetic"),
-                Allergies: i18n.t("risk.nutrition.requirement.Allergies"),
-                Malnutrition: i18n.t("risk.nutrition.requirement.Malnutrition"),
-                Training: i18n.t("risk.nutrition.requirement.Training"),
-                Agricultural: i18n.t("risk.nutrition.requirement.Agricultural"),
-            },
-            goal: {
-                ManageDiet: i18n.t("risk.nutrition.goal.ManageDiet"),
-                Sustainable: i18n.t("risk.nutrition.goal.Sustainable"),
-            },
-        },
-        education: {
-            requirement: {
-                School: i18n.t("risk.education.requirement.School"),
-                Vocational: i18n.t("risk.education.requirement.Vocational"),
-                Family: i18n.t("risk.education.requirement.Family"),
-            },
-            goal: {
-                Education: i18n.t("risk.education.goal.Education"),
-                Income: i18n.t("risk.education.goal.Income"),
-                Child: i18n.t("risk.education.goal.Child"),
-            },
-        },
-        mental: {
-            requirement: {
-                Medical: i18n.t("risk.mental.requirement.Medical"),
-                Family: i18n.t("risk.mental.requirement.Family"),
-                Community: i18n.t("risk.mental.requirement.Community"),
-                Refer: i18n.t("risk.mental.requirement.Refer"),
-                CounsellingStressTrauma: i18n.t("risk.mental.requirement.CounsellingStressTrauma"),
-                CounsellingOther: i18n.t("risk.mental.requirement.CounsellingOther"),
-            },
-            goal: {
-                Family: i18n.t("risk.mental.goal.Family"),
-                Community: i18n.t("risk.mental.goal.Community"),
-                Medical: i18n.t("risk.mental.goal.Medical"),
-                Agency: i18n.t("risk.mental.goal.Agency"),
-                Improvement: i18n.t("risk.mental.goal.Improvement"),
-                Reduction: i18n.t("risk.mental.goal.Reduction"),
-                Improvements: i18n.t("risk.mental.goal.Improvements"),
-            },
-        },
-    };
+        ])
+    );
 };
 refreshArrays();
 i18n.on("languageChanged", () => {

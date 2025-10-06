@@ -858,7 +858,7 @@ interface Resources {
           "Malaria": "&Malaria treatment",
           "Medical": "&Medical assistance",
           "Wound": "&Wound care for pressure sores",
-          "Mobility": "wheelchair etc",
+          "Mobility": "&Mobility device - crutches",
           "Physiotherapy": "&Physiotherapy"
         },
         "goal": {

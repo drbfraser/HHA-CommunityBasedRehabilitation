@@ -207,23 +207,23 @@ const ClientForm = () => {
                                             {(values[ClientField.disability] as number[]).includes(
                                                 getOtherDisabilityId(disabilities)
                                             ) && (
-                                                <div>
-                                                    <br />
-                                                    <Field
-                                                        component={TextField}
-                                                        fullWidth
-                                                        label={
-                                                            clientFieldLabels[
+                                                    <div>
+                                                        <br />
+                                                        <Field
+                                                            component={TextField}
+                                                            fullWidth
+                                                            label={
+                                                                clientFieldLabels[
                                                                 ClientField.otherDisability
-                                                            ]
-                                                        }
-                                                        required
-                                                        name={ClientField.otherDisability}
-                                                        variant="outlined"
-                                                        autoComplete="off"
-                                                    />
-                                                </div>
-                                            )}
+                                                                ]
+                                                            }
+                                                            required
+                                                            name={ClientField.otherDisability}
+                                                            variant="outlined"
+                                                            autoComplete="off"
+                                                        />
+                                                    </div>
+                                                )}
                                         </Grid>
                                         <Grid item md={12} xs={12}>
                                             <Field
@@ -265,8 +265,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                            ClientField
-                                                                                .caregiverName
+                                                                        ClientField
+                                                                            .caregiverName
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -286,8 +286,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                            ClientField
-                                                                                .caregiverEmail
+                                                                        ClientField
+                                                                            .caregiverEmail
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -306,8 +306,8 @@ const ClientForm = () => {
                                                                     variant="outlined"
                                                                     label={
                                                                         clientFieldLabels[
-                                                                            ClientField
-                                                                                .caregiverPhone
+                                                                        ClientField
+                                                                            .caregiverPhone
                                                                         ]
                                                                     }
                                                                     fullWidth
@@ -350,7 +350,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                    ClientField.healthRisk
+                                                                ClientField.healthRisk
                                                                 ]
                                                             }
                                                             name={ClientField.healthRisk}
@@ -379,9 +379,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.healthRequirements}
+                                                        modalType="risk"
+                                                        requirementOrGoal="requirement"
+                                                        riskType={RiskType.HEALTH}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.healthRequirements
+                                                            ClientField.healthRequirements
                                                             ]
                                                         }
                                                         options={
@@ -397,9 +400,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.healthGoals}
+                                                        modalType="risk"
+                                                        requirementOrGoal="goal"
+                                                        riskType={RiskType.HEALTH}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.healthGoals
+                                                            ClientField.healthGoals
                                                             ]
                                                         }
                                                         options={
@@ -439,7 +445,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                    ClientField.educationRisk
+                                                                ClientField.educationRisk
                                                                 ]
                                                             }
                                                             name={ClientField.educationRisk}
@@ -468,9 +474,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.educationRequirements}
+                                                        modalType="risk"
+                                                        requirementOrGoal="requirement"
+                                                        riskType={RiskType.EDUCATION}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.educationRequirements
+                                                            ClientField.educationRequirements
                                                             ]
                                                         }
                                                         options={
@@ -486,9 +495,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.educationGoals}
+                                                        modalType="risk"
+                                                        requirementOrGoal="goal"
+                                                        riskType={RiskType.EDUCATION}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.educationGoals
+                                                            ClientField.educationGoals
                                                             ]
                                                         }
                                                         options={
@@ -528,7 +540,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                    ClientField.socialRisk
+                                                                ClientField.socialRisk
                                                                 ]
                                                             }
                                                             name={ClientField.socialRisk}
@@ -554,9 +566,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.socialRequirements}
+                                                        modalType="risk"
+                                                        requirementOrGoal="requirement"
+                                                        riskType={RiskType.SOCIAL}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.socialRequirements
+                                                            ClientField.socialRequirements
                                                             ]
                                                         }
                                                         options={
@@ -572,9 +587,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.socialGoals}
+                                                        modalType="risk"
+                                                        requirementOrGoal="goal"
+                                                        riskType={RiskType.SOCIAL}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.socialGoals
+                                                            ClientField.socialGoals
                                                             ]
                                                         }
                                                         options={
@@ -615,7 +633,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                    ClientField.nutritionRisk
+                                                                ClientField.nutritionRisk
                                                                 ]
                                                             }
                                                             name={ClientField.nutritionRisk}
@@ -641,9 +659,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.nutritionRequirements}
+                                                        modalType="risk"
+                                                        requirementOrGoal="requirement"
+                                                        riskType={RiskType.NUTRITION}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.nutritionRequirements
+                                                            ClientField.nutritionRequirements
                                                             ]
                                                         }
                                                         options={
@@ -659,9 +680,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.nutritionGoals}
+                                                        modalType="risk"
+                                                        requirementOrGoal="goal"
+                                                        riskType={RiskType.NUTRITION}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.nutritionGoals
+                                                            ClientField.nutritionGoals
                                                             ]
                                                         }
                                                         options={
@@ -702,7 +726,7 @@ const ClientForm = () => {
                                                             variant="outlined"
                                                             label={
                                                                 clientFieldLabels[
-                                                                    ClientField.mentalRisk
+                                                                ClientField.mentalRisk
                                                                 ]
                                                             }
                                                             name={ClientField.mentalRisk}
@@ -728,9 +752,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.mentalRequirements}
+                                                        modalType="risk"
+                                                        requirementOrGoal="requirement"
+                                                        riskType={RiskType.MENTAL}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.mentalRequirements
+                                                            ClientField.mentalRequirements
                                                             ]
                                                         }
                                                         options={
@@ -746,9 +773,12 @@ const ClientForm = () => {
                                                 <Grid item md={8} xs={12}>
                                                     <ModalDropdown
                                                         name={ClientField.mentalGoals}
+                                                        modalType="risk"
+                                                        requirementOrGoal="goal"
+                                                        riskType={RiskType.MENTAL}
                                                         label={
                                                             clientFieldLabels[
-                                                                ClientField.mentalGoals
+                                                            ClientField.mentalGoals
                                                             ]
                                                         }
                                                         options={

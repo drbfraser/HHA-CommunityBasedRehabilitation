@@ -1,6 +1,7 @@
 import { themeColors } from "./colors";
 import i18n from "i18next";
 import { OutcomeGoalMet } from "./visits";
+import en from "../locales/en.json";
 export interface IRisk {
     id: string;
     client_id: string;
@@ -141,86 +142,22 @@ const refreshArrays = () => {
 
     // TODO: replace all of these below with translations once we have them
 
-    cancellationOptions = {
-        dead: "Patient has died",
-        moved: "Patient has moved away",
-        circumstances: "Patient's circumstances have changed",
-        abandoned: "Patient has abandoned this goal",
-        unwilling: "Patient is no longer willing to work with us",
-    };
+    cancellationOptions = Object.fromEntries(
+        Object.keys(en.cancellation).map((key) => [
+            key,
+            en.cancellation[key as keyof typeof en.cancellation],
+        ])
+    );
 
-    riskDropdownOptions = {
-        health: {
-            requirement: {
-                Malaria: "Malaria treatment",
-                Medical: "Medical assistance",
-                Wound: "Wound care for pressure sores",
-                Mobility: "Mobility device - crutches, wheelchair etc",
-                Physiotherapy: "Physiotherapy",
+    riskDropdownOptions = Object.fromEntries(
+        Object.entries(en.risk).map(([riskKey, riskData]) => [
+            riskKey,
+            {
+                requirement: { ...(riskData.requirement || {}) },
+                goal: { ...(riskData.goal || {}) },
             },
-            goal: {
-                Medical: "Medical treatment provided",
-                Sores: "Sores managed/healed",
-                Mobility: "Mobility device provided",
-                Pain: "Pain managed",
-            },
-        },
-        social: {
-            requirement: {
-                Contact: "Contact with community",
-                Inclusion: "Inclusion in family",
-                Training: "Training for family members",
-            },
-            goal: {
-                Community: "Take part in a community event",
-                Inclusion: "Inclusion in family time",
-            },
-        },
-        nutrition: {
-            requirement: {
-                Diabetic: "Special dietary need - diabetic",
-                Allergies: "Special dietary need - allergies",
-                Malnutrition: "Special dietary need - malnutrition",
-                Training: "Nutrition training",
-                Agricultural: "Inclusion in Agricultural project",
-            },
-            goal: {
-                ManageDiet: "Manage diet to meet needs",
-                Sustainable: "Sustainable food source",
-            },
-        },
-        education: {
-            requirement: {
-                School: "Attend school",
-                Vocational: "Vocational training",
-                Family: "Training for family - learning through play",
-            },
-            goal: {
-                Education: "Have an education",
-                Income: "Sustainable source of income",
-                Child: "Child ready to start school",
-            },
-        },
-        mental: {
-            requirement: {
-                Medical: "Needs medical attention",
-                Family: "Promote understanding in the family",
-                Community: "Promote understanding in the community",
-                Refer: "Refer to mental health agencies",
-                CounsellingStressTrauma: "Advice and counselling - stress and trauma",
-                CounsellingOther: "Advice and counselling - other",
-            },
-            goal: {
-                Family: "Inclusion in family",
-                Community: "Inclusion in community",
-                Medical: "Medical assistance provided",
-                Agency: "Seen by mental health agency",
-                Improvement: "Improvement in mental health",
-                Reduction: "Reduction of stress and trauma",
-                Improvements: "Improvements",
-            },
-        },
-    };
+        ])
+    );
 };
 refreshArrays();
 i18n.on("languageChanged", () => {

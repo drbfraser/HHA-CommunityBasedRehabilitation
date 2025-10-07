@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import { Field } from "formik";
 import { TextField, MenuItem } from "@mui/material";
+import { RiskType, riskTypeKeyMap } from "@cbr/common/util/risks";
+import { useTranslation } from "react-i18next";
 
 interface IModalDropdownProps {
     name: string;
+    modalType: string;
+    requirementOrGoal: string;
+    riskType: RiskType;
     label: string;
     options: Record<string, string>;
     isCustom: boolean;
@@ -11,8 +16,21 @@ interface IModalDropdownProps {
     touched?: boolean;
 }
 
-const ModalDropdown = ({ name, label, options, isCustom, error, touched }: IModalDropdownProps) => {
+const ModalDropdown = ({
+    name,
+    modalType,
+    requirementOrGoal,
+    riskType,
+    label,
+    options,
+    isCustom,
+    error,
+    touched,
+}: IModalDropdownProps) => {
     const [showOther, setShowOther] = useState(isCustom);
+    const { t } = useTranslation();
+    const risk_type = riskTypeKeyMap[riskType];
+    const modal_type = modalType === "risk" ? "risk" : "cancellation";
 
     return (
         <Field name={name}>
@@ -39,11 +57,15 @@ const ModalDropdown = ({ name, label, options, isCustom, error, touched }: IModa
                         helperText={!showOther && touched && error}
                     >
                         {Object.entries(options).map(([key, value]) => (
-                            <MenuItem key={key} value={value}>
-                                {value}
+                            <MenuItem key={key} value={key}>
+                                {modal_type === "risk"
+                                    ? t(`risk.${risk_type}.${requirementOrGoal}.${key}`, {
+                                          defaultValue: value,
+                                      })
+                                    : t(`cancellation.${key}`, { defaultValue: value })}
                             </MenuItem>
                         ))}
-                        <MenuItem value="Other">Other</MenuItem>
+                        <MenuItem value="Other">{t("disabilities.other")}</MenuItem>
                     </TextField>
 
                     {showOther && (

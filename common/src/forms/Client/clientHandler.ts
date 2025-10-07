@@ -7,6 +7,7 @@ import { appendPicture, IClient } from "../../util/clients";
 import history from "../../util/history";
 import { IUser, UserRole } from "../../util/users";
 import i18n from "i18next";
+import { OutcomeGoalMet } from "../../util/visits";
 
 const addClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -35,6 +36,23 @@ export const handleNewWebClientSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>
 ) => {
+    const buildRiskObject = (riskLevel: string, requirement: string, goal_name: string) => {
+        if (riskLevel && requirement && goal_name) {
+            return {
+                risk_level: riskLevel,
+                requirement: requirement,
+                goal_name: goal_name,
+                goal_status: OutcomeGoalMet.ONGOING,
+            };
+        } else {
+            return {
+                risk_level: "NA",
+                requirement: "requirement",
+                goal_name: "goal name",
+            };
+        }
+    };
+
     const disabilities = await getDisabilities();
     const newClient = {
         birth_date: Math.round(timestampFromFormDate(values.birthDate)),
@@ -57,31 +75,31 @@ export const handleNewWebClientSubmit = async (
         caregiver_name: values.caregiverName,
         caregiver_phone: values.caregiverPhone,
         caregiver_email: values.caregiverEmail,
-        health_risk: {
-            risk_level: values.healthRisk,
-            requirement: values.healthRequirements,
-            goal: values.healthGoals,
-        },
-        social_risk: {
-            risk_level: values.socialRisk,
-            requirement: values.socialRequirements,
-            goal: values.socialGoals,
-        },
-        educat_risk: {
-            risk_level: values.educationRisk,
-            requirement: values.educationRequirements,
-            goal: values.educationGoals,
-        },
-        nutrit_risk: {
-            risk_level: values.nutritionRisk,
-            requirement: values.nutritionRequirements,
-            goal: values.nutritionGoals,
-        },
-        mental_risk: {
-            risk_level: values.mentalRisk,
-            requirement: values.mentalRequirements,
-            goal: values.mentalGoals,
-        },
+        health_risk: buildRiskObject(
+            values.healthRisk,
+            values.healthRequirements,
+            values.healthGoals
+        ),
+        social_risk: buildRiskObject(
+            values.socialRisk,
+            values.socialRequirements,
+            values.socialGoals
+        ),
+        educat_risk: buildRiskObject(
+            values.educationRisk,
+            values.educationRequirements,
+            values.educationGoals
+        ),
+        nutrit_risk: buildRiskObject(
+            values.nutritionRisk,
+            values.nutritionRequirements,
+            values.nutritionGoals
+        ),
+        mental_risk: buildRiskObject(
+            values.mentalRisk,
+            values.mentalRequirements,
+            values.mentalGoals
+        ),
     };
 
     const formData = objectToFormData(newClient);

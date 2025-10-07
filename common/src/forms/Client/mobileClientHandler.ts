@@ -6,6 +6,7 @@ import { clientFieldLabels, TClientValues } from "./clientFields";
 import { IClient } from "../../util/clients";
 import { appendMobilePict } from "../../util/mobileImageSubmisson";
 import i18n from "i18next";
+import { OutcomeGoalMet } from "../../util/visits";
 
 const addMobileClient = async (clientInfo: FormData) => {
     const init: RequestInit = {
@@ -13,19 +14,30 @@ const addMobileClient = async (clientInfo: FormData) => {
         body: clientInfo,
     };
 
-    return await apiFetch(Endpoint.CLIENTS, "", init)
-        .then((res) => {
-            return res.json();
-        })
-        .then((res) => {
-            return res;
-        });
+    return await apiFetch(Endpoint.CLIENTS, "", init).then((res) => res.json());
 };
 
 export const handleNewMobileClientSubmit = async (
     values: TClientValues,
     helpers: FormikHelpers<TClientValues>
 ) => {
+    const buildRiskObject = (riskLevel: string, requirement: string, goalName: string) => {
+        if (riskLevel && requirement && goalName) {
+            return {
+                risk_level: riskLevel,
+                requirement: requirement,
+                goal_name: goalName,
+                goal_status: OutcomeGoalMet.ONGOING,
+            };
+        } else {
+            return {
+                risk_level: "NA",
+                requirement: "requirement",
+                goal_name: "goal name",
+            };
+        }
+    };
+
     const disabilities = await getDisabilities();
 
     const newClient = {
@@ -48,34 +60,35 @@ export const handleNewMobileClientSubmit = async (
         caregiver_name: values.caregiverName,
         caregiver_phone: values.caregiverPhone,
         caregiver_email: values.caregiverEmail,
-        health_risk: {
-            risk_level: values.healthRisk,
-            requirement: values.healthRequirements,
-            goal: values.healthGoals,
-        },
-        social_risk: {
-            risk_level: values.socialRisk,
-            requirement: values.socialRequirements,
-            goal: values.socialGoals,
-        },
-        educat_risk: {
-            risk_level: values.educationRisk,
-            requirement: values.educationRequirements,
-            goal: values.educationGoals,
-        },
-        nutrit_risk: {
-            risk_level: values.nutritionRisk,
-            requirement: values.nutritionRequirements,
-            goal: values.nutritionGoals,
-        },
-        mental_risk: {
-            risl_level: values.mentalRisk,
-            requirement: values.mentalRequirements,
-            goal: values.mentalGoals,
-        },
+        health_risk: buildRiskObject(
+            values.healthRisk,
+            values.healthRequirements,
+            values.healthGoals
+        ),
+        social_risk: buildRiskObject(
+            values.socialRisk,
+            values.socialRequirements,
+            values.socialGoals
+        ),
+        educat_risk: buildRiskObject(
+            values.educationRisk,
+            values.educationRequirements,
+            values.educationGoals
+        ),
+        nutrit_risk: buildRiskObject(
+            values.nutritionRisk,
+            values.nutritionRequirements,
+            values.nutritionGoals
+        ),
+        mental_risk: buildRiskObject(
+            values.mentalRisk,
+            values.mentalRequirements,
+            values.mentalGoals
+        ),
     };
 
     const formData = objectToFormData(newClient);
+
     if (values.picture) {
         await appendMobilePict(formData, values.picture);
     }

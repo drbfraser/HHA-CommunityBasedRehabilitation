@@ -272,7 +272,9 @@ const ClientDetails = (props: ClientProps) => {
                                             disabled={!formikProps.values.is_active}
                                             onPress={() => {
                                                 navigation.navigate(StackScreenName.VISIT, {
-                                                    clientID: client.id,
+                                                    clientID: `${client?.first_name ?? ""} ${
+                                                        client?.last_name ?? ""
+                                                    }`,
                                                 });
                                             }}
                                         >

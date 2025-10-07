@@ -195,6 +195,9 @@ const ClientRisksModal = (props: IModalProps) => {
                                         <Grid item>
                                             <ModalDropdown
                                                 name={FormField.requirement}
+                                                modalType={"risk"}
+                                                requirementOrGoal="requirement"
+                                                riskType={props.risk.risk_type}
                                                 label={fieldLabels[FormField.requirement]}
                                                 options={
                                                     riskDropdownOptions[
@@ -202,7 +205,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                                     ]?.requirement || {}
                                                 }
                                                 isCustom={
-                                                    !Object.values(
+                                                    !Object.keys(
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
                                                         ].requirement
@@ -216,6 +219,9 @@ const ClientRisksModal = (props: IModalProps) => {
                                         <Grid item>
                                             <ModalDropdown
                                                 name={FormField.goal_name}
+                                                modalType={"risk"}
+                                                requirementOrGoal="goal"
+                                                riskType={props.risk.risk_type}
                                                 label={fieldLabels[FormField.goal_name]}
                                                 options={
                                                     riskDropdownOptions[
@@ -223,7 +229,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                                     ]?.goal || {}
                                                 }
                                                 isCustom={
-                                                    !Object.values(
+                                                    !Object.keys(
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
                                                         ].goal

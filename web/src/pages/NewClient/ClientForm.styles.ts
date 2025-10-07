@@ -14,6 +14,9 @@ export const clientFormStyles: Record<string, SxProps<Theme>> = {
             color: themeColors.errorRed,
         },
     },
+    riskFieldsError: {
+        color: themeColors.errorRed,
+    },
     errorMessage: {
         fontSize: "0.75rem",
         color: themeColors.errorRed,

@@ -22,6 +22,17 @@ class AdminStatsViewTests(AdminStatsSetUp):
         }
 
     # VISITS
+    def test_visits_group_by_all_no_filter_max_bars(self):
+        resp = self.client.get(self.url, {"group_by": "gender, host_status, age_band"})
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["visits"])
+        # exactly the combos present in setup
+        assert len(m) == 4
+        assert m.get("Male host Age 26-30", 0) == 2
+        assert m.get("Female host Age 18-25", 0) == 1
+        assert m.get("Male refugee Age 11-17", 0) == 3
+        assert m.get("Female host Age 6-10", 0) == 1
+
     def test_visits_categorized_by_zone_group_gender_host(self):
         resp = self.client.get(
             self.url,
@@ -107,6 +118,20 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert cat["BidiBidi Zone 2"].get("Age 6-10", 0) == 1
 
     # REFERRALS
+    def test_referrals_group_by_all_no_filter_max_bars(self):
+        resp = self.client.get(self.url, {"group_by": "gender, host_status, resolved"})
+        assert resp.status_code == status.HTTP_200_OK
+        resolved_series = resp.json()["referrals_resolved"]
+        unresolved_series = resp.json()["referrals_unresolved"]
+        mr = self._series_to_map(resolved_series)
+        mu = self._series_to_map(unresolved_series)
+        # Bars should include the resolved state in the label
+        assert mr.get("Male host Resolved", 0) == 1
+        assert mu.get("Female host Unresolved", 0) == 1
+        # Only those two combos exist with referrals
+        assert len(mr) == 1
+        assert len(mu) == 1
+
     def test_referrals_resolved_and_unresolved_split(self):
         # Ask split via resolved query param
         resolved_series = self.client.get(self.url, {"resolved": "true"}).json()[
@@ -144,6 +169,17 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert unresolved_cat["Unresolved"].get("Female host", 0) == 1
 
     # NEW CLIENTS
+    def test_new_clients_group_by_all_no_filter_max_bars(self):
+        resp = self.client.get(self.url, {"group_by": "gender, host_status, age_band"})
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["new_clients"])
+        # One client in each group in setup
+        assert len(m) == 4
+        assert m.get("Male host Age 26-30", 0) == 1
+        assert m.get("Female host Age 18-25", 0) == 1
+        assert m.get("Male refugee Age 11-17", 0) == 1
+        assert m.get("Female host Age 6-10", 0) == 1
+
     def test_new_clients_group_gender_host(self):
         resp = self.client.get(self.url, {"group_by": "gender, host_status"})
         assert resp.status_code == status.HTTP_200_OK
@@ -162,6 +198,15 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert cat["BidiBidi Zone 2"].get("Total", 0) == 2
 
     # FOLLOW-UP VISITS
+    def test_follow_ups_group_by_all_no_filter_max_bars(self):
+        resp = self.client.get(self.url, {"group_by": "gender, host_status, age_band"})
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["follow_up_visits"])
+        # Only combos with >1 visits appear
+        assert len(m) == 2
+        assert m.get("Male host Age 26-30", 0) == 2
+        assert m.get("Male refugee Age 11-17", 0) == 3
+
     def test_follow_up_visits_group_gender_host(self):
         # Use grouping to trigger HAVING > 1 behavior
         resp = self.client.get(self.url, {"group_by": "gender, host_status"})
@@ -195,13 +240,27 @@ class AdminStatsViewTests(AdminStatsSetUp):
             goal_status=GoalOutcomes.CONCLUDED,
         )
 
-        resp = self.client.get(self.url, {
-            "categorize_by": "zone",
-            "group_by": "host_status",
-        })
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "zone",
+                "group_by": "host_status",
+            },
+        )
         assert resp.status_code == status.HTTP_200_OK
         cat = self._categorized_to_map(resp.json()["discharged_clients"])
         # Zone 1 should have 1 discharged host client
         assert cat["BidiBidi Zone 1"].get("host", 0) == 1
 
+    # DISABILITIES
+    def test_disabilities_group_by_all_no_filter_max_bars(self):
+        resp = self.client.get(self.url, {"group_by": "gender, host_status, age_band"})
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["disabilities"])
 
+        # Values are per disability row (M2M), see setup attachments
+        assert len(m) == 4
+        assert m.get("Male host Age 26-30", 0) == 1
+        assert m.get("Female host Age 18-25", 0) == 1
+        assert m.get("Male refugee Age 11-17", 0) == 2
+        assert m.get("Female host Age 6-10", 0) == 1

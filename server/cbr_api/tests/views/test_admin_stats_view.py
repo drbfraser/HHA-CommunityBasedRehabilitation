@@ -51,9 +51,55 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert resp.status_code == status.HTTP_200_OK
         series = resp.json()["visits"]
         m = self._series_to_map(series)
-        print(m)
         assert m.get("Age 11-17", 0) == 3
         assert m.get("Age 6-10", 0) == 1
         # Adult bands should not appear
         assert "Age 18-25" not in m
         assert "Age 26-30" not in m
+
+    def test_visits_group_by_age_band_adult_filter(self):
+        resp = self.client.get(
+            self.url,
+            {
+                "group_by": "age_band",
+                "demographics": "adult",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["visits"])
+        assert m.get("Age 26-30", 0) == 2
+        assert m.get("Age 18-25", 0) == 1
+        # Child bands should not appear
+        assert "Age 11-17" not in m
+        assert "Age 6-10" not in m
+
+    def test_visits_group_by_selected_age_bands(self):
+        # Only show 0-5 and 6-10; we expect only 6-10 to have a value (1)
+        resp = self.client.get(
+            self.url,
+            {
+                "group_by": "age_band",
+                "age_bands": "0-5,6-10",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["visits"])
+        assert m.get("Age 6-10", 0) == 1
+        assert "Age 0-5" not in m  # zero-count bands don't appear
+
+    def test_visits_categorized_by_zone_group_age_band(self):
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "zone",
+                "group_by": "age_band",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["visits"])
+        # Zone 1: ages 26-30 (2), 18-25 (1)
+        assert cat["BidiBidi Zone 1"].get("Age 26-30", 0) == 2
+        assert cat["BidiBidi Zone 1"].get("Age 18-25", 0) == 1
+        # Zone 2: ages 11-17 (3), 6-10 (1)
+        assert cat["BidiBidi Zone 2"].get("Age 11-17", 0) == 3
+        assert cat["BidiBidi Zone 2"].get("Age 6-10", 0) == 1

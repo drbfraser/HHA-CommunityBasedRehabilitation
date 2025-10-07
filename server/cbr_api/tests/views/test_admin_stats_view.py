@@ -33,6 +33,23 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert m.get("Male refugee Age 11-17", 0) == 3
         assert m.get("Female host Age 6-10", 0) == 1
 
+    def test_visits_categorized_by_zone_group_all_no_filter_max_bars(self):
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "zone",
+                "group_by": "gender,host_status,age_band",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["visits"])
+        # Zone 1 bars
+        assert cat["BidiBidi Zone 1"].get("Male host Age 26-30", 0) == 2
+        assert cat["BidiBidi Zone 1"].get("Female host Age 18-25", 0) == 1
+        # Zone 2 bars
+        assert cat["BidiBidi Zone 2"].get("Male refugee Age 11-17", 0) == 3
+        assert cat["BidiBidi Zone 2"].get("Female host Age 6-10", 0) == 1
+
     def test_visits_categorized_by_zone_group_gender_host(self):
         resp = self.client.get(
             self.url,
@@ -132,6 +149,29 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert len(mr) == 1
         assert len(mu) == 1
 
+    def test_referrals_categorized_by_zone_group_all_no_filter_max_bars(self):
+        # AdminStats returns resolved and unresolved arrays separately; we still group by all other keys.
+        params = {
+            "categorize_by": "zone",
+            "group_by": "gender,host_status,age_band",
+        }
+        res = self.client.get(self.url, params)
+        assert res.status_code == status.HTTP_200_OK
+        resolved_cat = self._categorized_to_map(res.json()["referrals_resolved"])
+        unresolved_cat = self._categorized_to_map(res.json()["referrals_unresolved"])
+
+        # Zone 1 has one resolved (male host adult) and one unresolved (female host adult)
+        assert resolved_cat["BidiBidi Zone 1"].get("Male host Age 26-30", 0) == 1
+        assert unresolved_cat["BidiBidi Zone 1"].get("Female host Age 18-25", 0) == 1
+        # No referrals in Zone 2 in setup
+        assert (
+            "BidiBidi Zone 2" not in resolved_cat or not resolved_cat["BidiBidi Zone 2"]
+        )
+        assert (
+            "BidiBidi Zone 2" not in unresolved_cat
+            or not unresolved_cat["BidiBidi Zone 2"]
+        )
+
     def test_referrals_resolved_and_unresolved_split(self):
         # Ask split via resolved query param
         resolved_series = self.client.get(self.url, {"resolved": "true"}).json()[
@@ -180,6 +220,22 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert m.get("Male refugee Age 11-17", 0) == 1
         assert m.get("Female host Age 6-10", 0) == 1
 
+    def test_new_clients_categorized_by_zone_group_all_no_filter_max_bars(self):
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "zone",
+                "group_by": "gender,host_status,age_band",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["new_clients"])
+        # One client per grouping combo in each zone
+        assert cat["BidiBidi Zone 1"].get("Male host Age 26-30", 0) == 1
+        assert cat["BidiBidi Zone 1"].get("Female host Age 18-25", 0) == 1
+        assert cat["BidiBidi Zone 2"].get("Male refugee Age 11-17", 0) == 1
+        assert cat["BidiBidi Zone 2"].get("Female host Age 6-10", 0) == 1
+
     def test_new_clients_group_gender_host(self):
         resp = self.client.get(self.url, {"group_by": "gender, host_status"})
         assert resp.status_code == status.HTTP_200_OK
@@ -206,6 +262,22 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert len(m) == 2
         assert m.get("Male host Age 26-30", 0) == 2
         assert m.get("Male refugee Age 11-17", 0) == 3
+
+    def test_follow_ups_categorized_by_zone_group_all_no_filter_max_bars(self):
+        # HAVING COUNT(v.client_id_id) > 1 filters out single-visit groups
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "zone",
+                "group_by": "gender,host_status,age_band",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["follow_up_visits"])
+        assert cat["BidiBidi Zone 1"].get("Male host Age 26-30", 0) == 2
+        assert "Female host Age 18-25" not in cat["BidiBidi Zone 1"]  # only 1 visit
+        assert cat["BidiBidi Zone 2"].get("Male refugee Age 11-17", 0) == 3
+        assert "Female host Age 6-10" not in cat["BidiBidi Zone 2"]  # only 1 visit
 
     def test_follow_up_visits_group_gender_host(self):
         # Use grouping to trigger HAVING > 1 behavior
@@ -264,3 +336,20 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert m.get("Female host Age 18-25", 0) == 1
         assert m.get("Male refugee Age 11-17", 0) == 2
         assert m.get("Female host Age 6-10", 0) == 1
+
+    def test_disabilities_categorized_by_zone_group_all_no_filter_max_bars(self):
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "zone",
+                "group_by": "gender,host_status,age_band",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["disabilities"])
+        # Zone 1: one disability each on adult male host and adult female host
+        assert cat["BidiBidi Zone 1"].get("Male host Age 26-30", 0) == 1
+        assert cat["BidiBidi Zone 1"].get("Female host Age 18-25", 0) == 1
+        # Zone 2: two on male refugee child, one on female host child
+        assert cat["BidiBidi Zone 2"].get("Male refugee Age 11-17", 0) == 2
+        assert cat["BidiBidi Zone 2"].get("Female host Age 6-10", 0) == 1

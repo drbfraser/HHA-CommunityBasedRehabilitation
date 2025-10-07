@@ -103,3 +103,41 @@ class AdminStatsViewTests(AdminStatsSetUp):
         # Zone 2: ages 11-17 (3), 6-10 (1)
         assert cat["BidiBidi Zone 2"].get("Age 11-17", 0) == 3
         assert cat["BidiBidi Zone 2"].get("Age 6-10", 0) == 1
+
+    # REFERRALS
+    def test_referrals_resolved_and_unresolved_split(self):
+        # Ask split via resolved query param
+        resolved_series = self.client.get(self.url, {"resolved": "true"}).json()[
+            "referrals_resolved"
+        ]
+        unresolved_series = self.client.get(self.url, {"resolved": "false"}).json()[
+            "referrals_unresolved"
+        ]
+
+        def total(series):
+            if not series:
+                return 0
+            return {r["name"]: r["value"] for r in series}.get("Total", 0)
+
+        assert total(resolved_series) == 1
+        assert total(unresolved_series) == 1
+
+    def test_referrals_categorize_by_resolved_group_gender_host(self):
+        # Categorize by resolved; view still filters each set separately
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "resolved",
+                "group_by": "gender, host_status",
+            },
+        )
+        assert resp.status_code == status.HTTP_200_OK
+        resolved_cat = self._categorized_to_map(resp.json()["referrals_resolved"])
+        unresolved_cat = self._categorized_to_map(resp.json()["referrals_unresolved"])
+        print(resp)
+        # Each response will have only one category due to the resolved filter
+        assert "Resolved" in resolved_cat
+        assert resolved_cat["Resolved"].get("Male host", 0) == 1
+
+        assert "Unresolved" in unresolved_cat
+        assert unresolved_cat["Unresolved"].get("Female host", 0) == 1

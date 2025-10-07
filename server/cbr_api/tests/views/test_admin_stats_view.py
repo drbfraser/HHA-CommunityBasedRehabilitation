@@ -1,6 +1,8 @@
+from datetime import datetime, timezone
 from django.urls import reverse
 from rest_framework import status
 from cbr_api.tests.helpers import AdminStatsSetUp
+from cbr_api.models import ClientRisk, GoalOutcomes, RiskLevel, RiskType
 
 
 class AdminStatsViewTests(AdminStatsSetUp):
@@ -134,10 +136,72 @@ class AdminStatsViewTests(AdminStatsSetUp):
         assert resp.status_code == status.HTTP_200_OK
         resolved_cat = self._categorized_to_map(resp.json()["referrals_resolved"])
         unresolved_cat = self._categorized_to_map(resp.json()["referrals_unresolved"])
-        print(resp)
         # Each response will have only one category due to the resolved filter
         assert "Resolved" in resolved_cat
         assert resolved_cat["Resolved"].get("Male host", 0) == 1
 
         assert "Unresolved" in unresolved_cat
         assert unresolved_cat["Unresolved"].get("Female host", 0) == 1
+
+    # NEW CLIENTS
+    def test_new_clients_group_gender_host(self):
+        resp = self.client.get(self.url, {"group_by": "gender, host_status"})
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["new_clients"])
+        # Male host (1), Female host (2), Male refugee (1)
+        assert m.get("Male host", 0) == 1
+        assert m.get("Female host", 0) == 2
+        assert m.get("Male refugee", 0) == 1
+
+    def test_new_clients_categorized_by_zone_totals(self):
+        resp = self.client.get(self.url, {"categorize_by": "zone"})
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["new_clients"])
+        # Each zone has 2 new clients
+        assert cat["BidiBidi Zone 1"].get("Total", 0) == 2
+        assert cat["BidiBidi Zone 2"].get("Total", 0) == 2
+
+    # FOLLOW-UP VISITS
+    def test_follow_up_visits_group_gender_host(self):
+        # Use grouping to trigger HAVING > 1 behavior
+        resp = self.client.get(self.url, {"group_by": "gender, host_status"})
+        assert resp.status_code == status.HTTP_200_OK
+        m = self._series_to_map(resp.json()["follow_up_visits"])
+        # Male host (2), Female host (2), Male refugee (3) — all > 1
+        assert m.get("Male host", 0) == 2
+        assert m.get("Female host", 0) == 2
+        assert m.get("Male refugee", 0) == 3
+
+    def test_follow_up_visits_categorized_by_zone_totals(self):
+        # Categorize to trigger GROUP BY + HAVING (> 1)
+        resp = self.client.get(self.url, {"categorize_by": "zone"})
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["follow_up_visits"])
+        assert cat["BidiBidi Zone 1"].get("Total", 0) == 3
+        assert cat["BidiBidi Zone 2"].get("Total", 0) == 4
+
+    # DISCHARGED CLIENTS
+    def test_discharged_clients_categorized_by_zone_group_host(self):
+        # Mark one client discharged via latest risk status CON and no GO
+        now_ms = self.ms(datetime.now(timezone.utc))
+        ClientRisk.objects.create(
+            id="risk-1",
+            client_id=self.c_host_m_adult,
+            timestamp=now_ms,
+            server_created_at=now_ms,
+            risk_type=RiskType.HEALTH,
+            risk_level=RiskLevel.LOW,
+            goal_name="done",
+            goal_status=GoalOutcomes.CONCLUDED,
+        )
+
+        resp = self.client.get(self.url, {
+            "categorize_by": "zone",
+            "group_by": "host_status",
+        })
+        assert resp.status_code == status.HTTP_200_OK
+        cat = self._categorized_to_map(resp.json()["discharged_clients"])
+        # Zone 1 should have 1 discharged host client
+        assert cat["BidiBidi Zone 1"].get("host", 0) == 1
+
+

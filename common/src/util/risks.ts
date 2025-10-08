@@ -173,18 +173,17 @@ export const riskTypeKeyMap: Record<RiskType, string> = {
 };
 
 export const getRiskRequirementsTranslationKey = (riskType: RiskType) => {
-    // TODO: Use real values for requirements. Current values are only placeholders
     switch (riskType) {
         case RiskType.SOCIAL:
-            return "newVisit.PLACEHOLDER-socialRequirements";
+            return "risk.social.requirement";
         case RiskType.HEALTH:
-            return "newVisit.PLACEHOLDER-healthRequirements";
+            return "risk.health.requirement";
         case RiskType.MENTAL:
-            return "newVisit.PLACEHOLDER-mentalRequirements";
+            return "risk.mental.requirement";
         case RiskType.NUTRITION:
-            return "newVisit.PLACEHOLDER-nutritionRequirements";
+            return "risk.nutrition.requirement";
         case RiskType.EDUCATION:
-            return "newVisit.PLACEHOLDER-educationRequirements";
+            return "risk.education.requirement";
         default:
             console.error("unknown risk type:", riskType);
             return "general.unknown";
@@ -192,18 +191,17 @@ export const getRiskRequirementsTranslationKey = (riskType: RiskType) => {
 };
 
 export const getRiskGoalsTranslationKey = (riskType: RiskType) => {
-    // TODO: Use real values for requirements. Current values are only placeholders
     switch (riskType) {
         case RiskType.SOCIAL:
-            return "newVisit.PLACEHOLDER-socialGoals";
+            return "risk.social.goal";
         case RiskType.HEALTH:
-            return "newVisit.PLACEHOLDER-healthGoals";
+            return "risk.health.goal";
         case RiskType.MENTAL:
-            return "newVisit.PLACEHOLDER-mentalGoals";
+            return "risk.mental.goal";
         case RiskType.NUTRITION:
-            return "newVisit.PLACEHOLDER-nutritionGoals";
+            return "risk.nutrition.goal";
         case RiskType.EDUCATION:
-            return "newVisit.PLACEHOLDER-educationGoals";
+            return "risk.education.goal";
         default:
             console.error("unknown risk type:", riskType);
             return "general.unknown";

@@ -23,9 +23,12 @@ import {
     riskLevels,
     RiskType,
     validationSchema,
+    getRiskRequirementsTranslationKey,
+    getRiskGoalsTranslationKey,
 } from "@cbr/common";
 import { SyncContext } from "../../../context/SyncContext/SyncContext";
 import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
+import FormikExposedDropdownMenu from "@/src/components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
@@ -94,6 +97,16 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
         props.riskData.goal_status as OutcomeGoalMet
     );
     const { t } = useTranslation();
+
+    const requirementKey = getRiskRequirementsTranslationKey(props.riskData.risk_type);
+    const goalKey = getRiskGoalsTranslationKey(props.riskData.risk_type);
+
+    const translatedRequirements = t(requirementKey, { returnObjects: true });
+    const translatedGoals = t(goalKey, { returnObjects: true });
+
+    const localizedRequirements =
+        typeof translatedRequirements === "object" ? translatedRequirements : {};
+    const localizedGoals = typeof translatedGoals === "object" ? translatedGoals : {};
 
     const getHeaderText = () => {
         switch (props.riskType) {
@@ -286,18 +299,24 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                                     </View>
                                 </RadioButton.Group>
 
-                                <FormikTextInput
-                                    formikProps={formikProps}
-                                    field={FormField.requirement}
-                                    label={fieldLabels[FormField.requirement]}
+                                <FormikExposedDropdownMenu
                                     style={styles.riskInputStyle}
+                                    valuesType="record-string"
+                                    values={localizedRequirements}
+                                    fieldLabels={fieldLabels}
+                                    field={FormField.requirement}
+                                    formikProps={formikProps}
+                                    mode="outlined"
                                 />
 
-                                <FormikTextInput
-                                    formikProps={formikProps}
-                                    field={FormField.goal_name}
-                                    label={fieldLabels[FormField.goal_name]}
+                                <FormikExposedDropdownMenu
                                     style={styles.riskInputStyle}
+                                    valuesType="record-string"
+                                    values={localizedGoals}
+                                    fieldLabels={fieldLabels}
+                                    field={FormField.goal_name}
+                                    formikProps={formikProps}
+                                    mode="outlined"
                                 />
 
                                 <Button

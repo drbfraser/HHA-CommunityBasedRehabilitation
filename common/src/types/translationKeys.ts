@@ -1,15 +1,15 @@
 export type RiskRequirementOptions =
-    | "newVisit.PLACEHOLDER-socialRequirements"
-    | "newVisit.PLACEHOLDER-nutritionRequirements"
-    | "newVisit.PLACEHOLDER-mentalRequirements"
-    | "newVisit.PLACEHOLDER-healthRequirements"
-    | "newVisit.PLACEHOLDER-educationRequirements"
+    | "risk.social.requirement"
+    | "risk.nutrition.requirement"
+    | "risk.mental.requirement"
+    | "risk.health.requirement"
+    | "risk.education.requirement"
     | "general.unknown";
 
 export type RiskGoalOptions =
-    | "newVisit.PLACEHOLDER-socialGoals"
-    | "newVisit.PLACEHOLDER-nutritionGoals"
-    | "newVisit.PLACEHOLDER-mentalGoals"
-    | "newVisit.PLACEHOLDER-healthGoals"
-    | "newVisit.PLACEHOLDER-educationGoals"
+    | "risk.social.goal"
+    | "risk.nutrition.goal"
+    | "risk.mental.goal"
+    | "risk.health.goal"
+    | "risk.education.goal"
     | "general.unknown";

@@ -372,7 +372,8 @@ interface Resources {
       "archive": "&archive",
       "dearchive": "&dearchive",
       "cannotEditArchived": "&You cannot edit clients while they are archived",
-      "sureToClearForm": "&Are you sure you want to clear the form?"
+      "sureToClearForm": "&Are you sure you want to clear the form?",
+      "imageSubtitle": "&Press the icon to upload an image."
     },
     "referral": {
       "client_id": "Ngutuu' lo Ngangaraki'",
@@ -1298,7 +1299,8 @@ interface Resources {
       "archive": "archive",
       "dearchive": "dearchive",
       "cannotEditArchived": "You cannot edit clients while they are archived",
-      "sureToClearForm": "Are you sure you want to clear the form?"
+      "sureToClearForm": "Are you sure you want to clear the form?",
+      "imageSubtitle": "Press the icon to upload an image."
     },
     "referral": {
       "client_id": "Client",

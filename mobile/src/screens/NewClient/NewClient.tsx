@@ -24,7 +24,6 @@ import { ClientForm } from "../../components/ClientForm/ClientForm";
 import FormikExposedDropdownMenu from "../../components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
-import ModalForm from "../../components/ModalForm/ModalForm";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import { FieldError } from "../../util/formikUtil";
 import { AppStackNavProp } from "../../util/stackScreens";
@@ -33,7 +32,6 @@ import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { handleSubmit } from "./formHandler";
 import useStyles from "./NewClient.styles";
-import { riskDropdownOptions } from "@cbr/common";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels)
@@ -52,7 +50,18 @@ const RiskForm = ({
     riskType: RiskType;
     containerStyle?: ViewStyle | false;
 }) => {
+    const { t } = useTranslation();
     const styles = useStyles();
+
+    const requirementKey = getRiskRequirementsTranslationKey(riskType);
+    const goalKey = getRiskGoalsTranslationKey(riskType);
+
+    const translatedRequirements = t(requirementKey, { returnObjects: true });
+    const translatedGoals = t(goalKey, { returnObjects: true });
+
+    const localizedRequirements =
+        typeof translatedRequirements === "object" ? translatedRequirements : {};
+    const localizedGoals = typeof translatedGoals === "object" ? translatedGoals : {};
 
     const isFieldDisabled = useCallback(
         () => formikProps.isSubmitting || !formikProps.values.interviewConsent,
@@ -88,7 +97,7 @@ const RiskForm = ({
                     <FormikExposedDropdownMenu
                         style={styles.field}
                         valuesType="record-string"
-                        values={riskDropdownOptions[riskPrefix].requirement}
+                        values={localizedRequirements}
                         fieldLabels={clientFieldLabels}
                         field={`${riskPrefix}Requirements`}
                         formikProps={formikProps}
@@ -98,7 +107,7 @@ const RiskForm = ({
                     <FormikExposedDropdownMenu
                         style={styles.field}
                         valuesType="record-string"
-                        values={riskDropdownOptions[riskPrefix].goal}
+                        values={localizedGoals}
                         fieldLabels={clientFieldLabels}
                         field={`${riskPrefix}Goals`}
                         formikProps={formikProps}
@@ -176,6 +185,9 @@ const NewClient = () => {
                                         }
                                     />
                                 </TouchableRipple>
+                                <Text style={styles.imageSubtitle}>
+                                    {t("clientFields.imageSubtitle")}
+                                </Text>
                             </View>
                             <FormikImageModal
                                 field={ClientField.picture}

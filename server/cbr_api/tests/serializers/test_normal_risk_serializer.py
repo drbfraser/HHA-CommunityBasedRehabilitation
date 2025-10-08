@@ -32,6 +32,11 @@ class NormalRiskSerializerTests(TestCase):
             zone=self.zone,
         )
 
+    def test_goal_field_removed_from_fields(self):
+        """Serializer should not expose a top-level 'goal' field after the change."""
+        serializer = NormalRiskSerializer()
+        self.assertNotIn("goal", serializer.fields)
+
     def test_goal_status_update(self):
         # Create initial risk object
         ClientRisk.objects.create(

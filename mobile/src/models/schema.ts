@@ -74,7 +74,6 @@ export default appSchema({
                 { name: FormField.risk_type, type: "string" },
                 { name: FormField.risk_level, type: "string" },
                 { name: FormField.requirement, type: "string" },
-                { name: FormField.goal, type: "string" },
                 { name: FormField.goal_name, type: "string" },
                 { name: "goal_status", type: "string" },
                 { name: FormField.timestamp, type: "number" },

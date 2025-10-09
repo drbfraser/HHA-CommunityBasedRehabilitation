@@ -74,7 +74,7 @@ const RiskHistoryTimeline = ({ client }: IProps) => {
                     <b>{t("risks.requirements")}:</b> {risk.requirement}
                 </DialogContent>
                 <DialogContent>
-                    <b>{t("risks.goals")}:</b> {risk.goal}
+                    <b>{t("risks.goals")}:</b> {risk.goal_name}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setExpanded(false)} color="primary">

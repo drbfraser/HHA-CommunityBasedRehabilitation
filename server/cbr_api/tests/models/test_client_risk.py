@@ -54,7 +54,7 @@ class ClientRiskModelTests(TestCase):
         self.assertEqual(risk.goal_status, GoalOutcomes.NOT_SET)
         self.assertEqual(risk.change_type, RiskChangeType.INITIAL)
         self.assertEqual(risk.cancellation_reason, "")
-        
+
     def test_unique_id_enforced(self):
         ClientRisk.objects.create(
             id="RISK018",
@@ -141,4 +141,3 @@ class ClientRiskModelTests(TestCase):
 
         # Since goal_status didn't change to CONCLUDED/CANCELLED, end_date should remain 0
         self.assertEqual(risk.end_date, 0)
-   

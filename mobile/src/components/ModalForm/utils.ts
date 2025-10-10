@@ -110,5 +110,5 @@ export const getModalFormGoalsDisplay = (t: TFunction, risk: IRisk): string => {
     const translatedGoalsKey = getRiskGoalsTranslationKey(risk.risk_type);
     if (translatedGoalsKey == "general.unknown") return "";
 
-    return getModalFormDisplay(t, translatedGoalsKey, risk.goal);
+    return getModalFormDisplay(t, translatedGoalsKey, risk.goal_name);
 };

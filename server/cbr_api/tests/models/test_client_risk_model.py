@@ -43,7 +43,7 @@ class ClientRiskModelTests(TestCase):
         }
         defaults.update(kwargs)
         return ClientRisk.objects.create(**defaults)
-    
+
     def test_client_risk_creation_with_required_fields(self):
         risk = self._create_client_risk(
             timestamp=1234567890,

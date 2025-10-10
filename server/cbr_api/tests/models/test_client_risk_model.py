@@ -33,12 +33,20 @@ class ClientRiskModelTests(TestCase):
             zone=self.zone,
         )
 
+    def _create_client_risk(self, **kwargs):
+        defaults = {
+            "id": "RISK001",
+            "client_id": self.client,
+            "timestamp": int(time.time() * 1000),
+            "risk_type": RiskType.HEALTH,
+            "risk_level": RiskLevel.LOW,
+        }
+        defaults.update(kwargs)
+        return ClientRisk.objects.create(**defaults)
+    
     def test_client_risk_creation_with_required_fields(self):
-        risk = ClientRisk.objects.create(
-            id="RISK001",
-            client_id=self.client,
+        risk = self._create_client_risk(
             timestamp=1234567890,
-            risk_type=RiskType.HEALTH,
             risk_level=RiskLevel.HIGH,
         )
 
@@ -56,29 +64,24 @@ class ClientRiskModelTests(TestCase):
         self.assertEqual(risk.cancellation_reason, "")
 
     def test_unique_id_enforced(self):
-        ClientRisk.objects.create(
+        self._create_client_risk(
             id="RISK018",
-            client_id=self.client,
             timestamp=9999999999,
-            risk_type=RiskType.HEALTH,
             risk_level=RiskLevel.MEDIUM,
         )
 
         with self.assertRaises(Exception):
-            ClientRisk.objects.create(
+            self._create_client_risk(
                 id="RISK018",
-                client_id=self.client,
                 timestamp=9999999999,
                 risk_type=RiskType.MENTAL,
                 risk_level=RiskLevel.LOW,
             )
 
     def test_end_date_set_when_cancelled_on_save(self):
-        risk = ClientRisk.objects.create(
+        risk = self._create_client_risk(
             id="RISK003",
-            client_id=self.client,
             timestamp=4444444444,
-            risk_type=RiskType.HEALTH,
             risk_level=RiskLevel.CRITICAL,
             goal_status=GoalOutcomes.CANCELLED,
             cancellation_reason="Client moved away",
@@ -90,21 +93,18 @@ class ClientRiskModelTests(TestCase):
         self.assertGreater(risk.end_date, risk.timestamp)
 
     def test_start_date_preserved_if_non_zero(self):
-        risk = ClientRisk.objects.create(
+        risk = self._create_client_risk(
             id="RISK004",
-            client_id=self.client,
             timestamp=5555555555,
             start_date=5555550000,
             risk_type=RiskType.SOCIAL,
-            risk_level=RiskLevel.LOW,
         )
 
         self.assertEqual(risk.start_date, 5555550000)
 
     def test_change_type_can_be_set_and_persisted(self):
-        risk = ClientRisk.objects.create(
+        risk = self._create_client_risk(
             id="RISK005",
-            client_id=self.client,
             timestamp=6666666666,
             risk_type=RiskType.MENTAL,
             risk_level=RiskLevel.MEDIUM,
@@ -114,9 +114,8 @@ class ClientRiskModelTests(TestCase):
         self.assertEqual(risk.change_type, RiskChangeType.BOTH)
 
     def test_creating_with_concluded_sets_end_date(self):
-        risk = ClientRisk.objects.create(
+        risk = self._create_client_risk(
             id="RISK006",
-            client_id=self.client,
             timestamp=7777777777,
             risk_type=RiskType.NUTRIT,
             risk_level=RiskLevel.HIGH,
@@ -127,12 +126,9 @@ class ClientRiskModelTests(TestCase):
         self.assertGreater(risk.end_date, risk.timestamp)
 
     def test_risk_level_change_does_not_set_end_date(self):
-        risk = ClientRisk.objects.create(
+        risk = self._create_client_risk(
             id="RISK007",
-            client_id=self.client,
             timestamp=8888888888,
-            risk_type=RiskType.HEALTH,
-            risk_level=RiskLevel.LOW,
             goal_status=GoalOutcomes.NOT_SET,
         )
 

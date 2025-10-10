@@ -489,7 +489,8 @@ interface Resources {
       "nutritionChanged": "&<1>Nutrition</1> risk changed to",
       "mentalSet": "&<1>Mental health</1> risk set to",
       "mentalChanged": "&<1>Mental health</1> risk changed to",
-      "area": "&Area"
+      "area": "&Area",
+      "specify": "&Please specify"
     },
     "riskLevelsAbbreviated": {
       "low": "GK",
@@ -1416,7 +1417,8 @@ interface Resources {
       "nutritionChanged": "<1>Nutrition</1> risk changed to",
       "mentalSet": "<1>Mental health</1> risk set to",
       "mentalChanged": "<1>Mental health</1> risk changed to",
-      "area": "Area"
+      "area": "Area",
+      "specify": "Please specify"
     },
     "riskLevelsAbbreviated": {
       "low": "LO",

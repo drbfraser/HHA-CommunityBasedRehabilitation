@@ -91,7 +91,7 @@ const UpdateGoalStatusModal: React.FC<UpdateGoalStatusModalProps> = ({
                 <FormikTextInput
                     formikProps={formik}
                     field={FormField.cancellation_reason}
-                    label={fieldLabels[FormField.cancellation_reason]}
+                    label={t("risks.specify")}
                     style={styles.cancellationReasonInput}
                 />
             )}

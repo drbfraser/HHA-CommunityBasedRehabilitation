@@ -18,7 +18,7 @@ const useStyles = () =>
             gap: 10,
         },
         riskInputStyle: {
-            width: 320,
+            marginBottom: 8,
         },
         riskModalStyle: {
             alignContent: "center",

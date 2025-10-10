@@ -74,7 +74,7 @@ const ModalDropdown = ({
                             multiline
                             variant="outlined"
                             margin="dense"
-                            label={field.value === "" ? "Please specify" : ""}
+                            label={field.value === "" ? t("risks.specify") : ""}
                             value={field.value || ""}
                             onChange={(e) => form.setFieldValue(name, e.target.value)}
                             error={Boolean(error && touched)}

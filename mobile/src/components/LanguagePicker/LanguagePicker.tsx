@@ -44,7 +44,13 @@ const LanguagePicker = () => {
 
     return (
         <View>
-            <Pressable onPress={() => setModalVisible(true)}>
+            <Pressable
+                style={({ pressed }) => [
+                    styles.languageDisplayContainer,
+                    pressed && styles.pressedContainer,
+                ]}
+                onPress={() => setModalVisible(true)}
+            >
                 <Text style={styles.displayText}>
                     <Text style={styles.selectedText}>{t("languagePicker.selectedLanguage")} </Text>
                     <Text style={styles.textGray}>{getLangName(i18n.language)}</Text>

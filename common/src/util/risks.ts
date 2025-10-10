@@ -9,10 +9,6 @@ export interface IRisk {
     risk_type: RiskType;
     risk_level: RiskLevel;
     requirement: string;
-
-    // replace with goal_name after
-    goal: string;
-
     start_date: number;
     end_date: number;
     goal_name: string;

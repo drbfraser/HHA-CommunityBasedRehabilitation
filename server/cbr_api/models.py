@@ -247,9 +247,6 @@ class ClientRisk(models.Model):
     risk_level = RiskLevel.getField()
     requirement = models.TextField(default="No requirement set")
 
-    # SHOULD REMOVE AFTER CORRECT MIGRATIONS HAVE BEEN MADE
-    goal = models.TextField(default="No goal set")
-
     # Changed from goal -> goal_name
     goal_name = models.TextField(default="No goal set")
     goal_status = models.CharField(
@@ -274,9 +271,6 @@ class ClientRisk(models.Model):
     def save(self, *args, **kwargs):
         if self.start_date is None or self.start_date == 0:
             self.start_date = self.timestamp
-
-        if self.goal != "No goal set":
-            self.goal_name = self.goal
 
         if self.goal_status in [GoalOutcomes.CANCELLED, GoalOutcomes.CONCLUDED]:
             self.end_date = int(time.time() * 1000)

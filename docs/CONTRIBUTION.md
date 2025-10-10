@@ -49,6 +49,15 @@ If at some point during development you want to re-seed the database with the ex
 
 If the seed commands fail with an error related "relation 'cbr_api_zone' does not exist", it is likely you need to run the `docker exec cbr_django python manage.py migrate` command to create the DB structure.
 
+If you have branches A and B, where branch A has a new migration, to test branch A you must run:
+- `docker exec cbr_django python manage.py migrate`
+- `docker exec -it cbr_django python manage.py flush`
+- `docker exec -it cbr_django python manage.py seeddatabase`
+
+If you want to go back to branch B (which does not have the extra migration) you must first run `docker exec -it cbr_django python manage.py migrate cbr_api <last_common_migration>`, replacing the last parameter with the filename of the last migration file that both branches have, then repeat the 3 commands above.
+
+Sometimes, on web you must also clear the local storage to force a logout and refresh after this. Similarly on mobile you may have to uninstall the app from your emulator and run `npm start` again.
+
 ### 4. Start Developing!
 
 That's it! The frontend is now running on http://localhost:3000 and the backend is running on http://localhost:8000. Both the frontend and the backend should support hot reloading.

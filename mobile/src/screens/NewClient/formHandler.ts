@@ -49,7 +49,7 @@ const handleNewMobileClientSubmit = async (
     cellularSync: boolean
 ) => {
     enum CancellationReason {
-        NONE = "None",
+        NONE = "",
     }
 
     const buildRiskValues = (

@@ -16,7 +16,7 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { useIsMounted } from "util/hooks/useIsMounted";
-import { helperImgCompress } from "components/ReferralPhotoView/imgCompressHelper";
+import { helperImgCompress } from "components/PhotoUpload/imgCompressHelper";
 import { photoViewUploadStyles } from "./PhotoViewUpload.styles";
 
 interface IProps {

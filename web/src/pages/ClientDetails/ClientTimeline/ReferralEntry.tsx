@@ -28,7 +28,7 @@ import {
 import { themeColors } from "@cbr/common/util/colors";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { timestampToDateTime } from "@cbr/common/util/dates";
-import { Thumb } from "components/ReferralPhotoView/Thumb";
+import { Thumb } from "components/PhotoUpload/Thumb";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { useHistory, useLocation } from "react-router-dom";
 import * as Styled from "./Entry.styles";

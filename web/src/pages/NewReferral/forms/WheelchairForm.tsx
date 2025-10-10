@@ -7,7 +7,7 @@ import { Alert, FormLabel, InputAdornment, Radio, styled } from "@mui/material";
 import { wheelchairExperiences } from "@cbr/common/util/referrals";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
 import * as Styled from "../NewReferral.styles";
-import { PhotoView } from "components/ReferralPhotoView/PhotoView";
+import { PhotoView } from "components/PhotoUpload/PhotoView";
 
 const Container = styled("div")({
     display: "flex",

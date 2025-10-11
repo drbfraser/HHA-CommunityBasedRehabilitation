@@ -611,23 +611,6 @@ class ConfigStatsSerializer(serializers.Serializer):
         return type(f"{class_name}", (serializers.Serializer,), fields)
 
 
-AdminStatsReferralSerializer = ConfigStatsSerializer.create_serializer(
-    "AdminStatsReferralSerializer",
-    [
-        "wheelchair",
-        "physiotherapy",
-        "prosthetic",
-        "orthotic",
-        "nutrition_agriculture",
-        "mental_health",
-        "other",
-    ],
-)
-
-AdminStatsVisitsSerializer = ConfigStatsSerializer.create_serializer(
-    "AdminStatsVisitsSerializer", ["health", "educat", "social", "nutrit", "mental"]
-)
-
 AdminStatsNewClientsSerializer = ConfigStatsSerializer.create_serializer(
     "AdminStatsNewClientsSerializer"
 )
@@ -657,16 +640,14 @@ class AdminStatsDisabilitySerializer(ClientBreakdown):
 
 
 class AdminStatsSerializer(serializers.Serializer):
-    disabilities = AdminStatsDisabilitySerializer(many=True, read_only=True)
+    disabilities = serializers.JSONField()
     clients_with_disabilities = serializers.IntegerField()
-    visits = AdminStatsVisitsSerializer(many=True, read_only=True)
-    referrals_resolved = AdminStatsReferralSerializer(many=False, read_only=True)
-    referrals_unresolved = AdminStatsReferralSerializer(many=False, read_only=True)
-    new_clients = AdminStatsNewClientsSerializer(many=True, read_only=True)
-    discharged_clients = AdminStatsDischargedClientsSerializer(
-        many=True, read_only=True
-    )
-    follow_up_visits = AdminStatsFollowUpVisitsSerializer(many=True, read_only=True)
+    visits = serializers.JSONField()
+    referrals_resolved = serializers.JSONField()
+    referrals_unresolved = serializers.JSONField()
+    new_clients = serializers.JSONField()
+    discharged_clients = serializers.JSONField()
+    follow_up_visits = serializers.JSONField()
 
 
 class ClientListSerializer(serializers.ModelSerializer):

@@ -1,11 +1,14 @@
+from datetime import datetime, timedelta, timezone
 from cbr_api.models import (
     Client,
     ClientRisk,
     Disability,
     GoalOutcomes,
+    Referral,
     RiskLevel,
     RiskType,
     UserCBR,
+    Visit,
     Zone,
 )
 from rest_framework.test import APITestCase, APIClient
@@ -25,7 +28,9 @@ def create_client(
     longitude=0.0,
     latitude=0.0,
     village="",
-    **kwargs
+    hcr_type=Client.HCRType.NOT_SET,
+    is_active=True,
+    **kwargs,
 ):
     data = dict(
         id=uuid.uuid4(),
@@ -33,6 +38,7 @@ def create_client(
         created_at=created_at,
         first_name=first,
         last_name=last,
+        full_name=f"{first} {last}",
         phone_number=contact,
         zone=zone,
         gender=gender,
@@ -40,9 +46,47 @@ def create_client(
         longitude=longitude,
         latitude=latitude,
         village=village,
+        hcr_type=hcr_type,
+        is_active=is_active,
     )
     data.update(kwargs)
     return Client.objects.create(**data)
+
+
+def create_visit(
+    *,
+    client,
+    user,
+    zone,
+    created_at,
+    health=False,
+    educat=False,
+    social=False,
+    nutrit=False,
+    mental=False,
+    longitude=0.0,
+    latitude=0.0,
+    village="",
+):
+    """
+    Creates a Visit with required fields and optional *_visit flags.
+    """
+    return Visit.objects.create(
+        id=uuid.uuid4(),
+        client_id=client,
+        user_id=user,
+        created_at=created_at,
+        server_created_at=0,
+        health_visit=health,
+        educat_visit=educat,
+        social_visit=social,
+        nutrit_visit=nutrit,
+        mental_visit=mental,
+        longitude=longitude,
+        latitude=latitude,
+        zone=zone,
+        village=village,
+    )
 
 
 # setup for RiskList and RiskDetail view tests
@@ -168,3 +212,166 @@ class DetailedVisitSerializerTestsHelper:
     @staticmethod
     def improvement(risk_type="HEALTH", provided="", desc=""):
         return {"risk_type": risk_type, "provided": provided, "desc": desc}
+
+
+# helper setup for test_admin_stats_view.py
+class AdminStatsSetUp(APITestCase):
+    def ms(self, dt: datetime) -> int:
+        return int(dt.timestamp() * 1000)
+
+    def years_ago_ms(self, years: int) -> int:
+        """Return a birth_date in ms for someone at least `years` years old.
+        We subtract one extra day to avoid boundary/time-of-day issues where the
+        database `now()` is earlier than the Python `now()` used to compute DOB,
+        which could otherwise yield `years-1` when extracting YEAR from AGE().
+        """
+        now = datetime.now(timezone.utc)
+        try:
+            dob = now.replace(year=now.year - years)
+        except ValueError:
+            # Handle Feb 29 by using Feb 28 on non-leap years
+            dob = now.replace(month=2, day=28, year=now.year - years)
+        # Make slightly older to ensure EXTRACT(YEAR FROM AGE(...)) >= years
+        dob = dob - timedelta(days=1)
+        return self.ms(dob)
+
+    def setUp(self):
+        # create zones
+        self.z1 = Zone.objects.create(zone_name="BidiBidi Zone 1")
+        self.z2 = Zone.objects.create(zone_name="BidiBidi Zone 2")
+        self.user = UserCBR.objects.create_user(
+            id="admin-1",
+            username="root",
+            password="root",
+            zone=self.z1.id,
+            role=UserCBR.Role.ADMIN,
+        )
+
+        now_ms = self.ms(datetime.now(timezone.utc))
+        # Clients (2 adults host in z1, 2 children split z2)
+        self.c_host_m_adult = create_client(
+            user=self.user,
+            first="Host",
+            last="MAdult",
+            contact="",
+            zone=self.z1,
+            gender=Client.Gender.MALE,
+            hcr_type=Client.HCRType.HOST_COMMUNITY,
+            birth_date=self.years_ago_ms(30),
+            created_at=now_ms,
+            is_active=True,
+        )
+        self.c_host_f_adult = create_client(
+            user=self.user,
+            first="Host",
+            last="FAdult",
+            contact="",
+            zone=self.z1,
+            gender=Client.Gender.FEMALE,
+            hcr_type=Client.HCRType.HOST_COMMUNITY,
+            birth_date=self.years_ago_ms(25),
+            created_at=now_ms,
+            is_active=True,
+        )
+        self.c_refugee_m_child = create_client(
+            user=self.user,
+            first="Ref",
+            last="MChild",
+            contact="",
+            zone=self.z2,
+            gender=Client.Gender.MALE,
+            hcr_type=Client.HCRType.REFUGEE,
+            birth_date=self.years_ago_ms(12),
+            created_at=now_ms,
+            is_active=True,
+        )
+        self.c_host_f_child = create_client(
+            user=self.user,
+            first="Host",
+            last="FChild",
+            contact="",
+            zone=self.z2,
+            gender=Client.Gender.FEMALE,
+            hcr_type=Client.HCRType.HOST_COMMUNITY,
+            birth_date=self.years_ago_ms(6),
+            created_at=now_ms,
+            is_active=True,
+        )
+
+        # Visits
+        create_visit(
+            client=self.c_host_m_adult,
+            user=self.user,
+            zone=self.z1,
+            created_at=now_ms,
+            health=True,
+        )
+        create_visit(
+            client=self.c_host_m_adult,
+            user=self.user,
+            zone=self.z1,
+            created_at=now_ms,
+            health=True,
+        )
+        create_visit(
+            client=self.c_host_f_adult,
+            user=self.user,
+            zone=self.z1,
+            created_at=now_ms,
+            social=True,
+        )
+        create_visit(
+            client=self.c_refugee_m_child,
+            user=self.user,
+            zone=self.z2,
+            created_at=now_ms,
+            health=True,
+        )
+        create_visit(
+            client=self.c_refugee_m_child,
+            user=self.user,
+            zone=self.z2,
+            created_at=now_ms,
+            health=True,
+        )
+        create_visit(
+            client=self.c_refugee_m_child,
+            user=self.user,
+            zone=self.z2,
+            created_at=now_ms,
+            health=True,
+        )
+        create_visit(
+            client=self.c_host_f_child,
+            user=self.user,
+            zone=self.z2,
+            created_at=now_ms,
+            mental=True,
+        )
+
+        Referral.objects.create(
+            id=uuid.uuid4(),
+            user_id=self.user,
+            client_id=self.c_host_m_adult,
+            date_referred=now_ms,
+            resolved=True,
+            outcome="ok",
+        )
+        Referral.objects.create(
+            id=uuid.uuid4(),
+            user_id=self.user,
+            client_id=self.c_host_f_adult,
+            date_referred=now_ms,
+            resolved=False,
+            outcome="tbd",
+        )
+
+        # ---- Disabilities (M2M) so disability stats return > 0 ----
+        self.dis_mobility = Disability.objects.create(disability_type="Mobility")
+        self.dis_mental = Disability.objects.create(disability_type="Mental")
+
+        # Attach disabilities to clients
+        self.c_host_m_adult.disability.add(self.dis_mobility)
+        self.c_host_f_adult.disability.add(self.dis_mental)
+        self.c_refugee_m_child.disability.add(self.dis_mobility, self.dis_mental)
+        self.c_host_f_child.disability.add(self.dis_mobility)

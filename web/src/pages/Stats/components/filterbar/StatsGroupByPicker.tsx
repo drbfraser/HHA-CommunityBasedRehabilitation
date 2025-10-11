@@ -11,7 +11,6 @@ import {
     Typography,
 } from "@mui/material";
 import React from "react";
-import { useTranslation } from "react-i18next";
 import type { GroupDim } from "./FilterBar";
 import { DIM_LABEL } from "./FilterBar";
 

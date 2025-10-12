@@ -124,7 +124,7 @@ const handleNewMobileClientSubmit = async (
                 health.risk_level,
                 health.requirement,
                 health.goal_name,
-                OutcomeGoalMet.ONGOING,
+                health.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -144,7 +144,7 @@ const handleNewMobileClientSubmit = async (
                 social.risk_level,
                 social.requirement,
                 social.goal_name,
-                OutcomeGoalMet.ONGOING,
+                social.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -163,7 +163,7 @@ const handleNewMobileClientSubmit = async (
                 educat.risk_level,
                 educat.requirement,
                 educat.goal_name,
-                OutcomeGoalMet.ONGOING,
+                educat.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -182,7 +182,7 @@ const handleNewMobileClientSubmit = async (
                 nutrit.risk_level,
                 nutrit.requirement,
                 nutrit.goal_name,
-                OutcomeGoalMet.ONGOING,
+                nutrit.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -201,7 +201,7 @@ const handleNewMobileClientSubmit = async (
                 mental.risk_level,
                 mental.requirement,
                 mental.goal_name,
-                OutcomeGoalMet.ONGOING,
+                mental.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt

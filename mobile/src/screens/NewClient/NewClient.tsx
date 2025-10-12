@@ -51,6 +51,7 @@ const RiskForm = ({
     riskType: RiskType;
     containerStyle?: ViewStyle | false;
 }) => {
+    const isFocused = useIsFocused();
     const [showOtherInputRequirement, setShowOtherInputRequirement] = useState(false);
     const [showOtherInputGoal, setShowOtherInputGoal] = useState(false);
     const { t } = useTranslation();
@@ -107,6 +108,16 @@ const RiskForm = ({
         }
     };
 
+    useEffect(() => {
+        if (!isFocused) {
+            formikProps.resetForm();
+            formikProps.setFieldTouched(`${riskPrefix}Requirements`, false);
+            formikProps.setFieldTouched(`${riskPrefix}Goals`, false);
+            setShowOtherInputRequirement(false);
+            setShowOtherInputGoal(false);
+        }
+    }, [isFocused]);
+
     return (
         <View style={containerStyle}>
             <TextCheckBox
@@ -115,7 +126,7 @@ const RiskForm = ({
                 setFieldTouched={formikProps.setFieldTouched}
                 setFieldValue={formikProps.setFieldValue}
                 value={isChecked}
-                disabled={formikProps.isSubmitting}
+                disabled={!formikProps.values.interviewConsent}
             />
 
             {isChecked && (

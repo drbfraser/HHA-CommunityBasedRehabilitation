@@ -90,7 +90,11 @@ export const FormikTextInput = <T,>({
 };
 
 const isCustomValue = (value: string, options: Record<string, string>) =>
-    value && !Object.keys(options).includes(value) && value !== "other";
+    value &&
+    !Object.keys(options).includes(value) &&
+    value !== "other" &&
+    value !== "No requirement" &&
+    value != "No goal";
 
 export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
     const styles = useStyles();

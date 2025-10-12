@@ -229,84 +229,92 @@ const NewClient = () => {
                     }}
                     enableReinitialize
                 >
-                    {(formikProps) => (
-                        <View style={styles.container}>
-                            <View style={styles.imageContainer}>
-                                <TouchableRipple onPress={() => setShowImagePickerModal(true)}>
-                                    <Card.Cover
-                                        style={styles.image}
-                                        source={
-                                            formikProps.values.picture
-                                                ? {
-                                                      uri: formikProps.values.picture,
-                                                  }
-                                                : defaultProfilePicture
-                                        }
-                                    />
-                                </TouchableRipple>
-                                <Text style={styles.imageSubtitle}>
-                                    {t("clientFields.imageSubtitle")}
-                                </Text>
-                            </View>
-                            <FormikImageModal
-                                field={ClientField.picture}
-                                fieldLabels={clientFieldLabels}
-                                formikProps={formikProps}
-                                visible={showImagePickerModal}
-                                onPictureChange={() => {}}
-                                onDismiss={() => setShowImagePickerModal(false)}
-                            />
-                            <TextCheckBox
-                                field={ClientField.interviewConsent}
-                                label={clientFieldLabels[ClientField.interviewConsent]}
-                                setFieldTouched={formikProps.setFieldTouched}
-                                setFieldValue={formikProps.setFieldValue}
-                                value={formikProps.values.interviewConsent}
-                                disabled={formikProps.isSubmitting}
-                            />
-                            <FieldError
-                                formikProps={formikProps}
-                                field={ClientField.interviewConsent}
-                            />
-                            <ClientForm
-                                isNewClient={true}
-                                formikProps={formikProps}
-                                disabled={!formikProps.values.interviewConsent}
-                            />
-                            <Divider style={styles.divider} />
-                            {Object.entries(RiskType).map(([key, val], i) => (
-                                <RiskForm
-                                    key={key}
+                    {(formikProps) => {
+                        const isFocused = useIsFocused();
+                        useEffect(() => {
+                            if (!isFocused) {
+                                formikProps.resetForm();
+                            }
+                        }, [isFocused]);
+                        return (
+                            <View style={styles.container}>
+                                <View style={styles.imageContainer}>
+                                    <TouchableRipple onPress={() => setShowImagePickerModal(true)}>
+                                        <Card.Cover
+                                            style={styles.image}
+                                            source={
+                                                formikProps.values.picture
+                                                    ? {
+                                                          uri: formikProps.values.picture,
+                                                      }
+                                                    : defaultProfilePicture
+                                            }
+                                        />
+                                    </TouchableRipple>
+                                    <Text style={styles.imageSubtitle}>
+                                        {t("clientFields.imageSubtitle")}
+                                    </Text>
+                                </View>
+                                <FormikImageModal
+                                    field={ClientField.picture}
+                                    fieldLabels={clientFieldLabels}
                                     formikProps={formikProps}
-                                    riskPrefix={key.toLowerCase()}
-                                    riskType={val}
-                                    containerStyle={i !== 0 && styles.section}
+                                    visible={showImagePickerModal}
+                                    onPictureChange={() => {}}
+                                    onDismiss={() => setShowImagePickerModal(false)}
                                 />
-                            ))}
-                            <View style={styles.submitButtonContainer}>
-                                {formikProps.errors && formikProps.submitCount > 0 && (
-                                    <View style={styles.errorWrapper}>
-                                        <Text style={styles.errorText}>
-                                            {formikProps.errors.hasRisk}
-                                        </Text>
-                                    </View>
-                                )}
+                                <TextCheckBox
+                                    field={ClientField.interviewConsent}
+                                    label={clientFieldLabels[ClientField.interviewConsent]}
+                                    setFieldTouched={formikProps.setFieldTouched}
+                                    setFieldValue={formikProps.setFieldValue}
+                                    value={formikProps.values.interviewConsent}
+                                    disabled={formikProps.isSubmitting}
+                                />
+                                <FieldError
+                                    formikProps={formikProps}
+                                    field={ClientField.interviewConsent}
+                                />
+                                <ClientForm
+                                    isNewClient={true}
+                                    formikProps={formikProps}
+                                    disabled={!formikProps.values.interviewConsent}
+                                />
+                                <Divider style={styles.divider} />
+                                {Object.entries(RiskType).map(([key, val], i) => (
+                                    <RiskForm
+                                        key={key}
+                                        formikProps={formikProps}
+                                        riskPrefix={key.toLowerCase()}
+                                        riskType={val}
+                                        containerStyle={i !== 0 && styles.section}
+                                    />
+                                ))}
+                                <View style={styles.submitButtonContainer}>
+                                    {formikProps.errors && formikProps.submitCount > 0 && (
+                                        <View style={styles.errorWrapper}>
+                                            <Text style={styles.errorText}>
+                                                {formikProps.errors.hasRisk}
+                                            </Text>
+                                        </View>
+                                    )}
 
-                                <View style={styles.submitButtonWrapper}>
-                                    <Button
-                                        labelStyle={styles.submitButtonLabel}
-                                        mode="contained"
-                                        disabled={formikProps.isSubmitting}
-                                        onPress={() => {
-                                            formikProps.submitForm();
-                                        }}
-                                    >
-                                        {t("general.create")}
-                                    </Button>
+                                    <View style={styles.submitButtonWrapper}>
+                                        <Button
+                                            labelStyle={styles.submitButtonLabel}
+                                            mode="contained"
+                                            disabled={formikProps.isSubmitting}
+                                            onPress={() => {
+                                                formikProps.submitForm();
+                                            }}
+                                        >
+                                            {t("general.create")}
+                                        </Button>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    )}
+                        );
+                    }}
                 </Formik>
             </KeyboardAwareScrollView>
         </SafeAreaView>

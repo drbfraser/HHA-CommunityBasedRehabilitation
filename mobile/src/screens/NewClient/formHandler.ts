@@ -59,12 +59,12 @@ const handleNewMobileClientSubmit = async (
         riskPrefix: keyof typeof riskDropdownOptions
     ) => {
         const requirement =
-            riskDropdownOptions[riskPrefix]?.requirement?.[requirementKey] || "No requirement";
-        const goal = riskDropdownOptions[riskPrefix]?.goal?.[goalKey] || "No goal";
+            riskDropdownOptions[riskPrefix]?.requirement?.[requirementKey] || requirementKey;
+        const goal = riskDropdownOptions[riskPrefix]?.goal?.[goalKey] || goalKey;
         return {
             risk_level: level || "NA",
-            requirement: requirement,
-            goal_name: goal,
+            requirement: requirement || "No requirement",
+            goal_name: goal || "No goal",
         };
     };
 

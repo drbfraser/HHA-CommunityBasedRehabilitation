@@ -32,6 +32,7 @@ import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { handleSubmit } from "./formHandler";
 import useStyles from "./NewClient.styles";
+import { FormikTextInput } from "../ClientDetails/Risks/ClientRiskFormModal";
 
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels)
@@ -50,6 +51,8 @@ const RiskForm = ({
     riskType: RiskType;
     containerStyle?: ViewStyle | false;
 }) => {
+    const [showOtherInputRequirement, setShowOtherInputRequirement] = useState(false);
+    const [showOtherInputGoal, setShowOtherInputGoal] = useState(false);
     const { t } = useTranslation();
     const styles = useStyles();
 
@@ -60,8 +63,19 @@ const RiskForm = ({
     const translatedGoals = t(goalKey, { returnObjects: true });
 
     const localizedRequirements =
-        typeof translatedRequirements === "object" ? translatedRequirements : {};
-    const localizedGoals = typeof translatedGoals === "object" ? translatedGoals : {};
+        typeof translatedRequirements === "object"
+            ? {
+                  ...translatedRequirements,
+                  other: t("disabilities.other"),
+              }
+            : {};
+    const localizedGoals =
+        typeof translatedGoals === "object"
+            ? {
+                  ...translatedGoals,
+                  other: t("disabilities.other"),
+              }
+            : {};
 
     const isFieldDisabled = useCallback(
         () => formikProps.isSubmitting || !formikProps.values.interviewConsent,
@@ -70,6 +84,28 @@ const RiskForm = ({
 
     const checkedField = `${riskPrefix}Checked` as keyof TClientValues;
     const isChecked = !!formikProps.values[checkedField];
+
+    const handleRequirementChange = (value: string) => {
+        if (value === "other") {
+            setShowOtherInputRequirement(true);
+            formikProps.setFieldValue(`${riskPrefix}Requirements`, "");
+            formikProps.setFieldTouched(`${riskPrefix}Requirements`, false);
+        } else {
+            setShowOtherInputRequirement(false);
+            formikProps.setFieldValue(`${riskPrefix}Requirements`, value);
+        }
+    };
+
+    const handleGoalChange = (value: string) => {
+        if (value === "other") {
+            setShowOtherInputGoal(true);
+            formikProps.setFieldValue(`${riskPrefix}Goals`, "");
+            formikProps.setFieldTouched(`${riskPrefix}Goals`, false);
+        } else {
+            setShowOtherInputGoal(false);
+            formikProps.setFieldValue(`${riskPrefix}Goals`, value);
+        }
+    };
 
     return (
         <View style={containerStyle}>
@@ -103,7 +139,19 @@ const RiskForm = ({
                         formikProps={formikProps}
                         mode="outlined"
                         disabled={isFieldDisabled()}
+                        otherOnKeyChange={handleRequirementChange}
+                        currentValueOverride={showOtherInputRequirement ? "other" : undefined}
                     />
+
+                    {showOtherInputRequirement && (
+                        <FormikTextInput
+                            formikProps={formikProps}
+                            field={`${riskPrefix}Requirements`}
+                            label={t("risks.specify")}
+                            style={styles.field}
+                        />
+                    )}
+
                     <FormikExposedDropdownMenu
                         style={styles.field}
                         valuesType="record-string"
@@ -113,7 +161,18 @@ const RiskForm = ({
                         formikProps={formikProps}
                         mode="outlined"
                         disabled={isFieldDisabled()}
+                        otherOnKeyChange={handleGoalChange}
+                        currentValueOverride={showOtherInputGoal ? "other" : undefined}
                     />
+
+                    {showOtherInputGoal && (
+                        <FormikTextInput
+                            formikProps={formikProps}
+                            field={`${riskPrefix}Goals`}
+                            label={t("risks.specify")}
+                            style={styles.field}
+                        />
+                    )}
                 </>
             )}
         </View>

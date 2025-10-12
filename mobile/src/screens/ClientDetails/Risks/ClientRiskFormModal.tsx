@@ -46,9 +46,9 @@ interface ClientRiskFormModalProps {
 }
 
 // reusable text input component for risk form
-interface FormikTextInputProps {
-    formikProps: FormikProps<IRisk>;
-    field: FormField;
+interface FormikTextInputProps<T> {
+    formikProps: FormikProps<T>;
+    field: keyof T | string;
     label: string;
     style?: any;
 }
@@ -62,24 +62,25 @@ const toastValidationError = () => {
     }
 };
 
-export const FormikTextInput: React.FC<FormikTextInputProps> = ({
+export const FormikTextInput = <T,>({
     formikProps,
     field,
     label,
     style,
-}) => {
-    const value = getIn(formikProps.values, field);
-    const errorMsg = getIn(formikProps.errors, field);
-    const touched = getIn(formikProps.touched, field);
+}: FormikTextInputProps<T>) => {
+    const value = getIn(formikProps.values, field as string);
+    const errorMsg = getIn(formikProps.errors, field as string);
+    const touched = getIn(formikProps.touched, field as string);
     const showError = !!(touched && errorMsg);
+
     return (
         <>
             <TextInput
                 mode="outlined"
                 label={label}
                 value={value}
-                onChangeText={formikProps.handleChange(field)}
-                onBlur={() => formikProps.setFieldTouched(field)}
+                onChangeText={formikProps.handleChange(field as string)}
+                onBlur={() => formikProps.setFieldTouched(field as string)}
                 error={showError}
                 style={style}
             />
@@ -232,6 +233,7 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                     if (value === "other") {
                         setShowOtherInputGoal(true);
                         formikProps.setFieldValue(FormField.goal_name, "");
+                        formikProps.setFieldTouched(FormField.goal_name, false);
                     } else {
                         setShowOtherInputGoal(false);
                         formikProps.setFieldValue(FormField.goal_name, value);

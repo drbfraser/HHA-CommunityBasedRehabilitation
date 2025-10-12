@@ -3,7 +3,9 @@ import React from "react";
 import { HelperText } from "react-native-paper";
 
 export const shouldShowError = (formikProps: FormikProps<any>, field: string): boolean =>
-    formikProps.errors[field] !== undefined && formikProps.touched[field] !== false;
+    formikProps.errors[field] !== undefined &&
+    formikProps.touched[field] !== false &&
+    formikProps.touched[field] !== undefined;
 
 export type TFormikComponentProps<Field extends string> = {
     fieldLabels: Record<Field, string>;

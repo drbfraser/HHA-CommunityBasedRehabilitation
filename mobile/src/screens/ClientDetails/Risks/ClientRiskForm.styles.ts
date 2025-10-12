@@ -15,10 +15,10 @@ const useStyles = () =>
             flexDirection: "column",
         },
         modalContentStyle: {
-            gap: 10,
+            gap: 8,
         },
         riskInputStyle: {
-            marginBottom: 8,
+            marginBottom: 0,
         },
         riskModalStyle: {
             alignContent: "center",

@@ -35,6 +35,7 @@ import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { database } from "@/src/util/watermelonDatabase";
 import UpdateGoalStatusModal from "./UpdateGoalStatusModal";
+import { t } from "i18next";
 
 interface ClientRiskFormModalProps {
     showModal: boolean;
@@ -82,12 +83,13 @@ export const FormikTextInput: React.FC<FormikTextInputProps> = ({
                 error={showError}
                 style={style}
             />
-            <HelperText type="error" visible={showError}>
-                {errorMsg as string}
-            </HelperText>
+            {showError && <HelperText type="error">{errorMsg as string}</HelperText>}
         </>
     );
 };
+
+const isCustomValue = (value: string, options: Record<string, string>) =>
+    value && !Object.keys(options).includes(value) && value !== "other";
 
 export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
     const styles = useStyles();
@@ -105,8 +107,21 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
     const translatedGoals = t(goalKey, { returnObjects: true });
 
     const localizedRequirements =
-        typeof translatedRequirements === "object" ? translatedRequirements : {};
-    const localizedGoals = typeof translatedGoals === "object" ? translatedGoals : {};
+        typeof translatedRequirements === "object"
+            ? { ...translatedRequirements, other: t("disabilities.other") }
+            : {};
+    const localizedGoals =
+        typeof translatedGoals === "object"
+            ? { ...translatedGoals, other: t("disabilities.other") }
+            : {};
+
+    const [showOtherInputRequirement, setShowOtherInputRequirement] = React.useState(
+        isCustomValue(props.riskData.requirement, localizedRequirements)
+    );
+
+    const [showOtherInputGoal, setShowOtherInputGoal] = React.useState(
+        isCustomValue(props.riskData.goal_name, localizedGoals)
+    );
 
     const getHeaderText = () => {
         switch (props.riskType) {
@@ -202,6 +217,27 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
             enableReinitialize={true}
         >
             {(formikProps) => {
+                const handleRequirementChange = (value: string) => {
+                    if (value === "other") {
+                        setShowOtherInputRequirement(true);
+                        formikProps.setFieldValue(FormField.requirement, "");
+                        formikProps.setFieldTouched(FormField.requirement, false);
+                    } else {
+                        setShowOtherInputRequirement(false);
+                        formikProps.setFieldValue(FormField.requirement, value);
+                    }
+                };
+
+                const handleGoalChange = (value: string) => {
+                    if (value === "other") {
+                        setShowOtherInputGoal(true);
+                        formikProps.setFieldValue(FormField.goal_name, "");
+                    } else {
+                        setShowOtherInputGoal(false);
+                        formikProps.setFieldValue(FormField.goal_name, value);
+                    }
+                };
+
                 const openGoalStatusModal = () => {
                     setPendingGoalStatus(formikProps.values.goal_status);
                     setShowGoalStatusModal(true);
@@ -229,6 +265,12 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                             onDismiss={() => {
                                 props.setShowModal(false);
                                 formikProps.resetForm();
+                                setShowOtherInputRequirement(
+                                    isCustomValue(props.riskData.requirement, localizedRequirements)
+                                );
+                                setShowOtherInputGoal(
+                                    isCustomValue(props.riskData.goal_name, localizedGoals)
+                                );
                             }}
                         >
                             {/* Scroll view needed for modal to dynamically grow in height when textarea inputs being to take up more lines */}
@@ -307,7 +349,20 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                                     field={FormField.requirement}
                                     formikProps={formikProps}
                                     mode="outlined"
+                                    otherOnKeyChange={handleRequirementChange}
+                                    currentValueOverride={
+                                        showOtherInputRequirement ? "other" : undefined
+                                    }
                                 />
+
+                                {showOtherInputRequirement && (
+                                    <FormikTextInput
+                                        formikProps={formikProps}
+                                        field={FormField.requirement}
+                                        label={t("risks.specify")}
+                                        style={styles.riskInputStyle}
+                                    />
+                                )}
 
                                 <FormikExposedDropdownMenu
                                     style={styles.riskInputStyle}
@@ -317,7 +372,18 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                                     field={FormField.goal_name}
                                     formikProps={formikProps}
                                     mode="outlined"
+                                    otherOnKeyChange={handleGoalChange}
+                                    currentValueOverride={showOtherInputGoal ? "other" : undefined}
                                 />
+
+                                {showOtherInputGoal && (
+                                    <FormikTextInput
+                                        formikProps={formikProps}
+                                        field={FormField.goal_name}
+                                        label={t("risks.specify")}
+                                        style={styles.riskInputStyle}
+                                    />
+                                )}
 
                                 <Button
                                     style={styles.submitButtonStyle}

@@ -13,7 +13,7 @@ const LanguagePicker = () => {
     //array with all supported languages
     const languages = [
         { name: "en", label: "English" },
-        { name: "bari", label: "Bari" },
+        { name: "bari", label: "Katuk na Bari" },
     ];
 
     const saveLanguage = async (name: string) => {

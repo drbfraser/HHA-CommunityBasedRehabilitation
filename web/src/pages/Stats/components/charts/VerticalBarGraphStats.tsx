@@ -59,13 +59,13 @@ const VerticalBarGraphStats = ({
             <Box>
                 <Stack direction="row" spacing={4} justifyContent="center" alignItems="center">
                     <Stack spacing={1} alignItems="center">
-                        {gender.female && age.child && (
+                        {gender.female && age.demographic === "child" && (
                             <Typography>
                                 <b>{subheadings?.[0]?.label ?? t("statistics.totalFChild")}</b>{" "}
                                 {subheadings?.[0]?.total ?? totals.female_child}
                             </Typography>
                         )}
-                        {gender.male && age.child && (
+                        {gender.male && age.demographic === "child" && (
                             <Typography>
                                 <b>{subheadings?.[1]?.label ?? t("statistics.totalMChild")}</b>{" "}
                                 {subheadings?.[1]?.total ?? totals.male_child}
@@ -73,13 +73,13 @@ const VerticalBarGraphStats = ({
                         )}
                     </Stack>
                     <Stack spacing={1} alignItems="center">
-                        {gender.female && age.adult && (
+                        {gender.female && age.demographic === "adult" && (
                             <Typography>
                                 <b>{subheadings?.[2]?.label ?? t("statistics.totalFAdult")}</b>{" "}
                                 {subheadings?.[2]?.total ?? totals.female_adult}
                             </Typography>
                         )}
-                        {gender.male && age.adult && (
+                        {gender.male && age.demographic === "adult" && (
                             <Typography>
                                 <b>{subheadings?.[3]?.label ?? t("statistics.totalMAdult")}</b>{" "}
                                 {subheadings?.[3]?.total ?? totals.male_adult}
@@ -99,28 +99,28 @@ const VerticalBarGraphStats = ({
                         dataKey="female_adult"
                         name={t("statistics.femaleAdult")}
                         fill={themeColors.hhaPurple}
-                        hide={!gender.female || !age.adult}
+                        hide={!gender.female || age.demographic !== "adult"}
                         barSize={80}
                     />
                     <Bar
                         dataKey="male_adult"
                         name={t("statistics.maleAdult")}
                         fill={themeColors.hhaBlue}
-                        hide={!gender.male || !age.adult}
+                        hide={!gender.male || age.demographic !== "adult"}
                         barSize={80}
                     />
                     <Bar
                         dataKey="female_child"
                         name={t("statistics.femaleChild")}
                         fill={themeColors.lilac}
-                        hide={!gender.female || !age.child}
+                        hide={!gender.female || age.demographic !== "child"}
                         barSize={80}
                     />
                     <Bar
                         dataKey="male_child"
                         name={t("statistics.maleChild")}
                         fill={themeColors.pistachio}
-                        hide={!gender.male || !age.child}
+                        hide={!gender.male || age.demographic !== "child"}
                         barSize={80}
                     />
                 </BarChart>

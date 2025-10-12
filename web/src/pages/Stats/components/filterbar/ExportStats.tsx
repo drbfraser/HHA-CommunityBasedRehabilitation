@@ -103,10 +103,10 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
 
         const demographicRows = (title?: string) => {
             const row = [title];
-            if (age.adult && gender.male) row.push("ADULT MALE");
-            if (age.adult && gender.female) row.push("ADULT FEMALE");
-            if (age.child && gender.male) row.push("CHILD MALE");
-            if (age.child && gender.female) row.push("CHILD FEMALE");
+            if (age.demographic === "adult" && gender.male) row.push("ADULT MALE");
+            if (age.demographic === "adult" && gender.female) row.push("ADULT FEMALE");
+            if (age.demographic === "child" && gender.male) row.push("CHILD MALE");
+            if (age.demographic === "child" && gender.female) row.push("CHILD FEMALE");
             row.push("Total");
             return row;
         };
@@ -208,10 +208,14 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
                 const dData = c.demographicData;
 
                 const dataRow = [visitCategoryMappings[c.category]];
-                if (age.adult && gender.male) dataRow.push(dData.male_adult_total.toString());
-                if (age.adult && gender.female) dataRow.push(dData.female_adult_total.toString());
-                if (age.child && gender.male) dataRow.push(dData.male_child_total.toString());
-                if (age.child && gender.female) dataRow.push(dData.female_child_total.toString());
+                if (age.demographic === "adult" && gender.male)
+                    dataRow.push(dData.male_adult_total.toString());
+                if (age.demographic === "adult" && gender.female)
+                    dataRow.push(dData.female_adult_total.toString());
+                if (age.demographic === "child" && gender.male)
+                    dataRow.push(dData.male_child_total.toString());
+                if (age.demographic === "child" && gender.female)
+                    dataRow.push(dData.female_child_total.toString());
 
                 dataRow.push(dData.total!.toString());
                 rows.push(dataRow);
@@ -219,10 +223,14 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
 
             const totalRow = ["Total"];
 
-            if (age.adult && gender.male) totalRow.push(v.totals.male_adult_total.toString());
-            if (age.adult && gender.female) totalRow.push(v.totals.female_adult_total.toString());
-            if (age.child && gender.male) totalRow.push(v.totals.male_child_total.toString());
-            if (age.child && gender.female) totalRow.push(v.totals.female_child_total.toString());
+            if (age.demographic === "adult" && gender.male)
+                totalRow.push(v.totals.male_adult_total.toString());
+            if (age.demographic === "adult" && gender.female)
+                totalRow.push(v.totals.female_adult_total.toString());
+            if (age.demographic === "child" && gender.male)
+                totalRow.push(v.totals.male_child_total.toString());
+            if (age.demographic === "child" && gender.female)
+                totalRow.push(v.totals.female_child_total.toString());
 
             totalRow.push(v.total.toString());
             rows.push(totalRow);
@@ -301,19 +309,23 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
 
         resolvedStats.forEach((stat) => {
             const dataRow = [stat.category];
-            if (age.adult && gender.male) dataRow.push(stat.male_adult.toString());
-            if (age.adult && gender.female) dataRow.push(stat.female_adult.toString());
-            if (age.child && gender.male) dataRow.push(stat.male_child.toString());
-            if (age.child && gender.female) dataRow.push(stat.female_child.toString());
+            if (age.demographic === "adult" && gender.male)
+                dataRow.push(stat.male_adult.toString());
+            if (age.demographic === "adult" && gender.female)
+                dataRow.push(stat.female_adult.toString());
+            if (age.demographic === "child" && gender.male)
+                dataRow.push(stat.male_child.toString());
+            if (age.demographic === "child" && gender.female)
+                dataRow.push(stat.female_child.toString());
             dataRow.push(stat.total.toString());
             rows.push(dataRow);
         });
 
         const resolvedTotals = ["Total"];
-        if (age.adult && gender.male) resolvedTotals.push(rMAdult.toString());
-        if (age.adult && gender.female) resolvedTotals.push(rFAdult.toString());
-        if (age.child && gender.male) resolvedTotals.push(rMChild.toString());
-        if (age.child && gender.female) resolvedTotals.push(rFChild.toString());
+        if (age.demographic === "adult" && gender.male) resolvedTotals.push(rMAdult.toString());
+        if (age.demographic === "adult" && gender.female) resolvedTotals.push(rFAdult.toString());
+        if (age.demographic === "child" && gender.male) resolvedTotals.push(rMChild.toString());
+        if (age.demographic === "child" && gender.female) resolvedTotals.push(rFChild.toString());
         resolvedTotals.push(rTotal.toString());
         rows.push(resolvedTotals);
 
@@ -323,19 +335,25 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
 
         unresolvedStats.forEach((stat) => {
             const dataRow = [stat.category];
-            if (age.adult && gender.male) dataRow.push(stat.male_adult.toString());
-            if (age.adult && gender.female) dataRow.push(stat.female_adult.toString());
-            if (age.child && gender.male) dataRow.push(stat.male_child.toString());
-            if (age.child && gender.female) dataRow.push(stat.female_child.toString());
+            if (age.demographic === "adult" && gender.male)
+                dataRow.push(stat.male_adult.toString());
+            if (age.demographic === "adult" && gender.female)
+                dataRow.push(stat.female_adult.toString());
+            if (age.demographic === "child" && gender.male)
+                dataRow.push(stat.male_child.toString());
+            if (age.demographic === "child" && gender.female)
+                dataRow.push(stat.female_child.toString());
             dataRow.push(stat.total.toString());
             rows.push(dataRow);
         });
 
         const unresolvedTotals = ["Total"];
-        if (age.adult && gender.male) unresolvedTotals.push(unMAdult.toString());
-        if (age.adult && gender.female) unresolvedTotals.push(unFAdult.toString());
-        if (age.child && gender.male) unresolvedTotals.push(unMChild.toString());
-        if (age.child && gender.female) unresolvedTotals.push(unFChild.toString());
+        if (age.demographic === "adult" && gender.male) unresolvedTotals.push(unMAdult.toString());
+        if (age.demographic === "adult" && gender.female)
+            unresolvedTotals.push(unFAdult.toString());
+        if (age.demographic === "child" && gender.male) unresolvedTotals.push(unMChild.toString());
+        if (age.demographic === "child" && gender.female)
+            unresolvedTotals.push(unFChild.toString());
         unresolvedTotals.push(unTotal.toString());
         rows.push(unresolvedTotals);
 
@@ -365,10 +383,10 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
             const maleChildTotal =
                 stats?.disabilities.find((item) => item.disability_id === v)?.male_child_total ?? 0;
 
-            if (age.adult && gender.male) data.push(maleAdultTotal);
-            if (age.adult && gender.female) data.push(femaleAdultTotal);
-            if (age.child && gender.male) data.push(maleChildTotal);
-            if (age.child && gender.female) data.push(femaleChildTotal);
+            if (age.demographic === "adult" && gender.male) data.push(maleAdultTotal);
+            if (age.demographic === "adult" && gender.female) data.push(femaleAdultTotal);
+            if (age.demographic === "child" && gender.male) data.push(maleChildTotal);
+            if (age.demographic === "child" && gender.female) data.push(femaleChildTotal);
 
             fATotal += femaleAdultTotal;
             mATotal += maleAdultTotal;
@@ -384,10 +402,12 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
         });
 
         const totalDisabilityRow = ["Total"];
-        if (age.adult && gender.male) totalDisabilityRow.push(mATotal.toString());
-        if (age.adult && gender.female) totalDisabilityRow.push(fATotal.toString());
-        if (age.child && gender.male) totalDisabilityRow.push(mCTotal.toString());
-        if (age.child && gender.female) totalDisabilityRow.push(fCTotal.toString());
+        if (age.demographic === "adult" && gender.male) totalDisabilityRow.push(mATotal.toString());
+        if (age.demographic === "adult" && gender.female)
+            totalDisabilityRow.push(fATotal.toString());
+        if (age.demographic === "child" && gender.male) totalDisabilityRow.push(mCTotal.toString());
+        if (age.demographic === "child" && gender.female)
+            totalDisabilityRow.push(fCTotal.toString());
         totalDisabilityRow.push(totals.toString());
         rows.push([""]);
 
@@ -440,28 +460,28 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
 
                     const rowData = [`${label} (${groupLabel})`];
 
-                    if (age.adult && gender.male) {
+                    if (age.demographic === "adult" && gender.male) {
                         rowData.push(data.maleAdult);
                         totals.adult_male_total += data.maleAdult;
                     }
-                    if (age.adult && gender.female) {
+                    if (age.demographic === "adult" && gender.female) {
                         rowData.push(data.femaleAdult);
                         totals.adult_female_total += data.femaleAdult;
                     }
-                    if (age.child && gender.male) {
+                    if (age.demographic === "child" && gender.male) {
                         rowData.push(data.maleChild);
                         totals.child_male_total += data.maleChild;
                     }
-                    if (age.child && gender.female) {
+                    if (age.demographic === "child" && gender.female) {
                         rowData.push(data.femaleChild);
                         totals.child_female_total += data.femaleChild;
                     }
 
                     const filteredTotal =
-                        (age.adult && gender.male ? data.maleAdult : 0) +
-                        (age.adult && gender.female ? data.femaleAdult : 0) +
-                        (age.child && gender.male ? data.maleChild : 0) +
-                        (age.child && gender.female ? data.femaleChild : 0);
+                        (age.demographic === "adult" && gender.male ? data.maleAdult : 0) +
+                        (age.demographic === "adult" && gender.female ? data.femaleAdult : 0) +
+                        (age.demographic === "child" && gender.male ? data.maleChild : 0) +
+                        (age.demographic === "child" && gender.female ? data.femaleChild : 0);
 
                     rowData.push(filteredTotal);
                     runningTotal += filteredTotal;
@@ -471,10 +491,14 @@ const ExportStats = ({ open, onClose, stats, age, gender, date }: IProps) => {
             });
 
             const totalRow = ["Total"];
-            if (age.adult && gender.male) totalRow.push(totals.adult_male_total.toString());
-            if (age.adult && gender.female) totalRow.push(totals.adult_female_total.toString());
-            if (age.child && gender.male) totalRow.push(totals.child_male_total.toString());
-            if (age.child && gender.female) totalRow.push(totals.child_female_total.toString());
+            if (age.demographic === "adult" && gender.male)
+                totalRow.push(totals.adult_male_total.toString());
+            if (age.demographic === "adult" && gender.female)
+                totalRow.push(totals.adult_female_total.toString());
+            if (age.demographic === "child" && gender.male)
+                totalRow.push(totals.child_male_total.toString());
+            if (age.demographic === "child" && gender.female)
+                totalRow.push(totals.child_female_total.toString());
             totalRow.push(runningTotal.toString());
 
             rows.push(totalRow);

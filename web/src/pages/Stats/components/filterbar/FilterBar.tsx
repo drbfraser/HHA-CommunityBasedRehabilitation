@@ -206,6 +206,10 @@ const FilterBar = ({
                 age={age}
                 gender={gender}
                 date={dateRange}
+                user={user}
+                archiveMode={archiveMode}
+                categorizeBy={categorizeBy}
+                groupBy={groupBy}
             />
         </menu>
     );

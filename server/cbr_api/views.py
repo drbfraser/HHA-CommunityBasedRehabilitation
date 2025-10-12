@@ -125,7 +125,8 @@ class AdminStats(generics.RetrieveAPIView):
         # Normalize categorize_by/group_by per-stat so unsupported fields (like
         # "resolved" for non-referral stats) don't cause builder errors.
         common_cat = {"zone", "gender", "host_status"}
-        common_grp = {"gender", "host_status", "age_band"}
+        # Allow grouping by zone as well, to support UI selection
+        common_grp = {"zone", "gender", "host_status", "age_band"}
         ref_cat = common_cat | {"resolved"}
         ref_grp = common_grp | {"resolved"}
 

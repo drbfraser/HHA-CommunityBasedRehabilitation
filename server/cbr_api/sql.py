@@ -34,6 +34,9 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
 
     def label(r):
         parts = []
+        # If grouping includes zone, show it in the label to distinguish bars
+        if "zone" in group_by and r.get("zone"):
+            parts.append(str(r["zone"]))
         if "gender" in group_by and r.get("gender") is not None:
             parts.append(GENDER_LABEL.get(r["gender"], str(r["gender"])))
         if "host_status" in group_by and r.get("host_status") is not None:
@@ -52,8 +55,13 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
         result = []
         for cat, v in by_cat.items():
             display = str(cat)
+            # Pretty-print category values where applicable
             if categorize_by == "resolved":
                 display = "Resolved" if bool(cat) else "Unresolved"
+            elif categorize_by == "host_status":
+                display = HCR_LABEL.get(cat, str(cat))
+            elif categorize_by == "gender":
+                display = GENDER_LABEL.get(cat, str(cat))
             result.append({"name": display, "data": sorted(v, key=lambda x: x["name"])})
         return result
     else:

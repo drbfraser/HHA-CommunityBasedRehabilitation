@@ -93,12 +93,60 @@ const ExportStats = ({
         else rows.push(["DATE RANGE: ", date.from, date.to]);
         rows.push([""]);
 
+        const DIM_ORDER: Array<NonNullable<IProps["categorizeBy"]>> = [
+            "gender",
+            "host_status",
+            "age_band",
+            "zone",
+        ];
+        const DIM_LABEL_MAP: Record<string, string> = {
+            gender: "Gender",
+            host_status: "Host/Refugee",
+            age_band: "Age range",
+            zone: "Zone",
+        };
+        const AGE_BANDS = ["0-5", "6-10", "11-17", "18-25", "26-30", "31-45", "46+"];
+        const ORDER: Record<string, string[]> = {
+            gender: ["Male", "Female", "not set"],
+            host_status: ["host", "refugee", "not set"],
+            age_band: AGE_BANDS,
+        };
+
+        const parseName = (name: string) => {
+            const out: any = {};
+            if (/\bMale\b/i.test(name)) out.gender = "Male";
+            else if (/\bFemale\b/i.test(name)) out.gender = "Female";
+            if (/\bhost\b/i.test(name)) out.host_status = "host";
+            else if (/\brefugee\b/i.test(name)) out.host_status = "refugee";
+            const m = name.match(/Age\s+([0-9]+-[0-9]+|46\+)/i);
+            if (m) out.age_band = m[1];
+            return out;
+        };
+
+        const orderedGroups = Array.from(groupBy ?? new Set())
+            .filter((d): d is NonNullable<IProps["categorizeBy"]> => !!d)
+            .sort((a, b) => DIM_ORDER.indexOf(a) - DIM_ORDER.indexOf(b));
+
+        const buildHeader = (base: string) => {
+            const DIM_LABEL_MAP: Record<string, string> = {
+                gender: "Gender",
+                host_status: "Host/Refugee",
+                age_band: "Age range",
+                zone: "Zone",
+            };
+
+            // Primary dimension = categorizeBy if set; otherwise first group_by
+            const primaryDim = categorizeBy ?? (orderedGroups.length ? orderedGroups[0] : null);
+            if (primaryDim) return `***${base} (Grouped by ${DIM_LABEL_MAP[primaryDim]})***`;
+            return `***${base}***`;
+        };
+
         const pushSeriesSection = (title: string, series: any) => {
             if (!Array.isArray(series) || series.length === 0) return;
             const categorized = series.length > 0 && series[0] && Array.isArray(series[0].data);
-            rows.push([`***${title} (Grouped)***`]);
+            rows.push([buildHeader(title)]);
             if (categorized) {
-                // Zero-fill by zone: include all zones even if missing in data
+                // Zero-fill by zone if needed (keep your existing logic)
                 let catSeries = series;
                 if (categorizeBy === "zone" && zones.size) {
                     const zoneNames = Array.from(zones.values());
@@ -114,14 +162,74 @@ const ExportStats = ({
                     );
                 }
 
+                // Optional stable ordering for some dims
+                const ORDER: Record<string, string[]> = {
+                    gender: ["Male", "Female", "not set"],
+                    host_status: ["host", "refugee", "not set"],
+                    age_band: ["0-5", "6-10", "11-17", "18-25", "26-30", "31-45", "46+"],
+                };
+                if (categorizeBy && ORDER[categorizeBy]) {
+                    const order = ORDER[categorizeBy];
+                    catSeries = [...catSeries].sort(
+                        (a, b) => order.indexOf(String(a.name)) - order.indexOf(String(b.name))
+                    );
+                }
+
+                // Header row shows the dimension label, NOT the category value
+                rows.push([DIM_LABEL_MAP[categorizeBy!], "Name", "Value"]);
+
+                // For each category: print one row with just the category, then its grouped rows
                 catSeries.forEach((cat: any) => {
-                    rows.push([cat.name, "Name", "Value"]);
+                    rows.push([String(cat.name)]);
                     (cat.data || []).forEach((d: any) => rows.push(["", d.name, String(d.value)]));
-                    rows.push([""]);
                 });
+
+                // One blank line after the whole section
+                rows.push([""]);
+                return;
             } else {
-                rows.push(["Name", "Value"]);
-                series.forEach((d: any) => rows.push([d.name, String(d.value)]));
+                if (orderedGroups.length === 0) {
+                    rows.push(["Name", "Value"]);
+                    series.forEach((d: any) => rows.push([d.name, String(d.value)]));
+                    rows.push([""]);
+                    return;
+                }
+
+                // Build hierarchical output: primary group on its own line, then secondary rows
+                const primary = orderedGroups[0];
+                const secondary = orderedGroups.length > 1 ? orderedGroups[1] : null;
+
+                // Map primary -> (secondary -> value)
+                const byPrimary = new Map<string, Map<string, number>>();
+                series.forEach((d: any) => {
+                    const parts = parseName(d.name || "");
+                    const pval = parts[primary] ?? "not set";
+                    const sval = secondary
+                        ? parts[secondary] ?? (secondary === "age_band" ? AGE_BANDS[0] : "not set")
+                        : "Total";
+                    if (!byPrimary.has(pval)) byPrimary.set(pval, new Map());
+                    byPrimary.get(pval)!.set(sval, Number(d.value) || 0);
+                });
+
+                rows.push([DIM_LABEL_MAP[primary], "Name", "Value"]);
+                const pOrder = ORDER[primary] || Array.from(byPrimary.keys()).sort();
+                const sOrder = secondary
+                    ? ORDER[secondary] ||
+                      Array.from(
+                          new Set(
+                              Array.from(byPrimary.values()).flatMap((m) => Array.from(m.keys()))
+                          )
+                      ).sort()
+                    : ["Total"];
+
+                pOrder.forEach((p) => {
+                    rows.push([p]);
+                    const inner = byPrimary.get(p) || new Map();
+                    sOrder.forEach((s) => {
+                        const val = inner.has(s) ? inner.get(s)! : 0;
+                        rows.push(["", s, String(val)]);
+                    });
+                });
                 rows.push([""]);
             }
         };
@@ -135,7 +243,7 @@ const ExportStats = ({
         pushSeriesSection("DISABILITIES", groupedStats?.disabilities);
 
         return rows;
-    }, [open, groupedStats, date.from, date.to, categorizeBy, zones]);
+    }, [open, groupedStats, date.from, date.to, groupBy, categorizeBy, zones]);
 
     return (
         <Dialog open={open} onClose={onClose}>

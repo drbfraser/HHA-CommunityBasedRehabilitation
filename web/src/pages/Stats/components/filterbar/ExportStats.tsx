@@ -181,7 +181,83 @@ const ExportStats = ({
                 // For each category: print one row with just the category, then its grouped rows
                 catSeries.forEach((cat: any) => {
                     rows.push([String(cat.name)]);
-                    (cat.data || []).forEach((d: any) => rows.push(["", d.name, String(d.value)]));
+
+                    const bars: Array<{ name: string; value: number }> = Array.isArray(cat.data)
+                        ? [...cat.data]
+                        : [];
+
+                    // If exactly one group dimension is selected, zero-fill the full domain
+                    if (orderedGroups.length === 1) {
+                        const dim = orderedGroups[0];
+                        if (dim === "age_band") {
+                            const byAge = new Map<string, number>();
+                            bars.forEach((d) => {
+                                const m = (d.name || "").match(/Age\s+([0-9]+-[0-9]+|46\+)/i);
+                                const band = m ? m[1] : undefined;
+                                if (band) byAge.set(band, Number(d.value) || 0);
+                            });
+                            ["0-5", "6-10", "11-17", "18-25", "26-30", "31-45", "46+"].forEach(
+                                (band) => {
+                                    const v = byAge.has(band) ? byAge.get(band)! : 0;
+                                    rows.push(["", `Age ${band}`, String(v)]);
+                                }
+                            );
+                        } else if (dim === "gender") {
+                            const byG = new Map<string, number>();
+                            bars.forEach((d) => {
+                                if (/^Male\b/i.test(d.name)) byG.set("Male", Number(d.value) || 0);
+                                if (/^Female\b/i.test(d.name)) byG.set("Female", Number(d.value) || 0);
+                            });
+                            ["Male", "Female"].forEach((g) => {
+                                const v = byG.has(g) ? byG.get(g)! : 0;
+                                rows.push(["", g, String(v)]);
+                            });
+                        } else if (dim === "host_status") {
+                            const byH = new Map<string, number>();
+                            bars.forEach((d) => {
+                                if (/^host\b/i.test(d.name)) byH.set("host", Number(d.value) || 0);
+                                if (/^refugee\b/i.test(d.name)) byH.set("refugee", Number(d.value) || 0);
+                            });
+                            ["host", "refugee"].forEach((h) => {
+                                const v = byH.has(h) ? byH.get(h)! : 0;
+                                rows.push(["", h, String(v)]);
+                            });
+                        } else if (dim === "zone") {
+                            // Not typical: if bars are zones, list all from zones hook
+                            const zoneNames = Array.from(zones.values());
+                            const byZ = new Map<string, number>();
+                            bars.forEach((d) => byZ.set(String(d.name), Number(d.value) || 0));
+                            zoneNames.forEach((zn) => {
+                                const v = byZ.has(String(zn)) ? byZ.get(String(zn))! : 0;
+                                rows.push(["", String(zn), String(v)]);
+                            });
+                        } else {
+                            // Fallback: print as-is
+                            bars.forEach((d) => rows.push(["", d.name, String(d.value)]));
+                        }
+                    } else {
+                        // Multi-dimension bars: keep deterministic order, print as-is
+                        const AGE_BANDS_ORDER = [
+                            "0-5",
+                            "6-10",
+                            "11-17",
+                            "18-25",
+                            "26-30",
+                            "31-45",
+                            "46+",
+                        ];
+                        const orderIndex = (name: string): number => {
+                            if (/^Male\b/i.test(name)) return 0;
+                            if (/^Female\b/i.test(name)) return 1;
+                            if (/^host\b/i.test(name)) return 0;
+                            if (/^refugee\b/i.test(name)) return 1;
+                            const m = name.match(/Age\s+([0-9]+-[0-9]+|46\+)/i);
+                            if (m) return AGE_BANDS_ORDER.indexOf(m[1]);
+                            return 99;
+                        };
+                        bars.sort((a, b) => orderIndex(a.name) - orderIndex(b.name));
+                        bars.forEach((d) => rows.push(["", d.name, String(d.value)]));
+                    }
                 });
 
                 // One blank line after the whole section

@@ -24,7 +24,10 @@ class Command(BaseCommand):
             "Orthotic",
             "Other",
         ]
-        hcr_types = [models.Client.HCRType.HOST_COMMUNITY, models.Client.HCRType.REFUGEE]
+        hcr_types = [
+            models.Client.HCRType.HOST_COMMUNITY,
+            models.Client.HCRType.REFUGEE,
+        ]
         zones = models.Zone.objects.all()
         users = models.UserCBR.objects.all()
         disabilities = models.Disability.objects.all()

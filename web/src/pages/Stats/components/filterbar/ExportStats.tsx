@@ -151,7 +151,9 @@ const ExportStats = ({
 
         const pushSeriesSection = (title: string, series: any) => {
             const seriesArr: any[] = Array.isArray(series) ? series : [];
-            const categorized = Boolean(categorizeBy) || (seriesArr.length > 0 && seriesArr[0] && Array.isArray(seriesArr[0].data));
+            const categorized =
+                Boolean(categorizeBy) ||
+                (seriesArr.length > 0 && seriesArr[0] && Array.isArray(seriesArr[0].data));
             rows.push([buildHeader(title)]);
             if (categorized) {
                 // Zero-fill by zone if needed (keep your existing logic)
@@ -189,16 +191,16 @@ const ExportStats = ({
                         catSeries.map((c: any) => [String(c.name), c])
                     );
                     const domain = ["Male", "Female"]; // fixed order
-                    catSeries = domain.map((label) =>
-                        byName.get(label) || { name: label, data: [] }
+                    catSeries = domain.map(
+                        (label) => byName.get(label) || { name: label, data: [] }
                     );
                 } else if (categorizeBy === "host_status") {
                     const byName = new Map<string, any>(
                         catSeries.map((c: any) => [String(c.name), c])
                     );
                     const domain = ["host", "refugee"]; // fixed order
-                    catSeries = domain.map((label) =>
-                        byName.get(label) || { name: label, data: [] }
+                    catSeries = domain.map(
+                        (label) => byName.get(label) || { name: label, data: [] }
                     );
                 }
 

@@ -113,9 +113,13 @@ const FilterBar = ({
                     <Button
                         variant="outlined"
                         onClick={() => setExportOpen(true)}
-                        disabled={ageFilterActive && (groupBy.has("age_band") || categorizeBy === "age_band")}
+                        disabled={
+                            ageFilterActive &&
+                            (groupBy.has("age_band") || categorizeBy === "age_band")
+                        }
                         title={
-                            ageFilterActive && (groupBy.has("age_band") || categorizeBy === "age_band")
+                            ageFilterActive &&
+                            (groupBy.has("age_band") || categorizeBy === "age_band")
                                 ? "Cannot export: Age range grouping conflicts with active age filter"
                                 : undefined
                         }

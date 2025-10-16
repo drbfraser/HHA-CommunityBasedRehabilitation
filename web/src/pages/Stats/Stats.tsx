@@ -72,6 +72,12 @@ const Stats = () => {
             urlParams.append("user_id", String(user.id));
         }
 
+        // Apply gender filter to backend (M/F) for consistency with grouped/export paths
+        const genders: string[] = [];
+        if (gender.male) genders.push("M");
+        if (gender.female) genders.push("F");
+        if (genders.length) urlParams.append("genders", genders.join(","));
+
         apiFetch(Endpoint.STATS, `?${urlParams.toString()}`)
             .then((resp) => resp.json())
             .then((stats) => setStats(stats))

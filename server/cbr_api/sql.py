@@ -34,6 +34,9 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
 
     def label(r):
         parts = []
+        # If grouping includes zone, show it in the label to distinguish bars
+        if "zone" in group_by and r.get("zone"):
+            parts.append(str(r["zone"]))
         if "gender" in group_by and r.get("gender") is not None:
             parts.append(GENDER_LABEL.get(r["gender"], str(r["gender"])))
         if "host_status" in group_by and r.get("host_status") is not None:
@@ -52,8 +55,15 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
         result = []
         for cat, v in by_cat.items():
             display = str(cat)
+            # Pretty-print category values where applicable
             if categorize_by == "resolved":
                 display = "Resolved" if bool(cat) else "Unresolved"
+            elif categorize_by == "host_status":
+                display = HCR_LABEL.get(cat, str(cat))
+            elif categorize_by == "gender":
+                display = GENDER_LABEL.get(cat, str(cat))
+            elif categorize_by == "age_band":
+                display = f"Age {cat}"
             result.append({"name": display, "data": sorted(v, key=lambda x: x["name"])})
         return result
     else:
@@ -110,21 +120,23 @@ def getDisabilityStats(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    selected_genders=None,
 ):
 
-    select_from, group_keys, age_clause = demographicStatsBuilder(
+    select_from, group_keys, filter_clause = demographicStatsBuilder(
         option="disability_stats",
         is_active=is_active,
         categorize_by=categorize_by,
         group_by=group_by or [],
         demographics=demographics,
         selected_age_bands=selected_age_bands,
+        selected_genders=selected_genders,
     )
 
     sql = select_from
     where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
-    if age_clause:
-        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    if filter_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + filter_clause
     sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
@@ -137,7 +149,9 @@ def getDisabilityStats(
     return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
-def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
+def getNumClientsWithDisabilities(
+    user_id, from_time, to_time, is_active, *, selected_genders=None
+):
     from_join = (
         "FROM cbr_api_client_disability AS d "
         "JOIN cbr_api_client AS c ON d.client_id = c.id"
@@ -146,7 +160,18 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active):
         from_join += " AND c.is_active = True"
 
     sql = "SELECT COUNT(DISTINCT d.client_id) AS total\n" + from_join
-    sql += whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
+    if not sql.endswith("\n"):
+        sql += "\n"
+    where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
+    if selected_genders:
+        allowed = {"M", "F"}
+        gens = [g for g in selected_genders if g in allowed]
+        if gens:
+            in_list = ", ".join(["'" + g + "'" for g in gens])
+            where_sql += (
+                " AND " if where_sql else "WHERE "
+            ) + f"c.gender IN ({in_list})"
+    sql += where_sql
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
@@ -163,21 +188,23 @@ def getVisitStats(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    selected_genders=None,
 ):
 
-    select_from, group_keys, age_clause = demographicStatsBuilder(
+    select_from, group_keys, filter_clause = demographicStatsBuilder(
         option="visit_stats",
         is_active=is_active,
         categorize_by=categorize_by,  # e.g. "zone" or None
         group_by=group_by or [],  # e.g. ["gender","host_status","age_band"]
         demographics=demographics,  # "child" | "adult" | None
         selected_age_bands=selected_age_bands,  # optional set like {"0-5","6-10"}
+        selected_genders=selected_genders,
     )
 
     sql = select_from
     where_sql = whereStatsBuilder(user_id, "v.created_at", from_time, to_time)
-    if age_clause:
-        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    if filter_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + filter_clause
     sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
@@ -200,15 +227,17 @@ def getReferralStats(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    selected_genders=None,
     resolved=None,
 ):
-    select_from, group_keys, age_clause = demographicStatsBuilder(
+    select_from, group_keys, filter_clause = demographicStatsBuilder(
         option="referral_stats",
         is_active=is_active,
         categorize_by=categorize_by,
         group_by=group_by or [],
         demographics=demographics,
         selected_age_bands=selected_age_bands,
+        selected_genders=selected_genders,
     )
 
     where_sql = whereStatsBuilder(user_id, "r.date_referred", from_time, to_time)
@@ -216,8 +245,8 @@ def getReferralStats(
         where_sql += (" AND " if where_sql else "WHERE ") + (
             "r.resolved = TRUE" if resolved else "r.resolved = FALSE"
         )
-    if age_clause:
-        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    if filter_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + filter_clause
 
     sql = select_from + where_sql
     if group_keys:
@@ -241,20 +270,22 @@ def getNewClients(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    selected_genders=None,
 ):
-    select_from, group_keys, age_clause = demographicStatsBuilder(
+    select_from, group_keys, filter_clause = demographicStatsBuilder(
         option="new_clients",
         is_active=is_active,
         categorize_by=categorize_by,
         group_by=group_by or [],
         demographics=demographics,
         selected_age_bands=selected_age_bands,
+        selected_genders=selected_genders,
     )
 
     sql = select_from
     where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
-    if age_clause:
-        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    if filter_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + filter_clause
     sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
@@ -277,20 +308,22 @@ def getFollowUpVisits(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    selected_genders=None,
 ):
-    select_from, group_keys, age_clause = demographicStatsBuilder(
+    select_from, group_keys, filter_clause = demographicStatsBuilder(
         option="follow_up",
         is_active=is_active,
         categorize_by=categorize_by,
         group_by=group_by or [],
         demographics=demographics,
         selected_age_bands=selected_age_bands,
+        selected_genders=selected_genders,
     )
 
     sql = select_from
     where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
-    if age_clause:
-        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    if filter_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + filter_clause
     sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
@@ -314,6 +347,7 @@ def getDischargedClients(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    selected_genders=None,
 ):
     cte = """
     WITH latest_risks AS (
@@ -333,20 +367,21 @@ def getDischargedClients(
     )
     """
 
-    select_from, group_keys, age_clause = demographicStatsBuilder(
+    select_from, group_keys, filter_clause = demographicStatsBuilder(
         option="new_clients",
         is_active=is_active,
         categorize_by=categorize_by,
         group_by=group_by or [],
         demographics=demographics,
         selected_age_bands=selected_age_bands,
+        selected_genders=selected_genders,
     )
 
     sql = cte + select_from + " JOIN discharged_clients d ON c.id = d.client_id_id\n"
 
     where_sql = whereStatsBuilder(user_id, "c.created_at", from_time, to_time)
-    if age_clause:
-        where_sql += (" AND " if where_sql else "WHERE ") + age_clause
+    if filter_clause:
+        where_sql += (" AND " if where_sql else "WHERE ") + filter_clause
     sql += where_sql
     if group_keys:
         sql += "\nGROUP BY " + ", ".join(group_keys)
@@ -430,6 +465,7 @@ def demographicStatsBuilder(
     group_by=None,
     demographics=None,
     selected_age_bands=None,
+    selected_genders=None,
 ):
     group_by = group_by or []
 
@@ -464,16 +500,25 @@ def demographicStatsBuilder(
     select_fields, group_keys = [], []
     needs_zone_join = False
 
+    # Precompute age band CASE expression for reuse
+    age_case_expr = _age_band_case(active_bands)
+
     if categorize_by:
-        if categorize_by not in colmap:
-            raise ValueError(f"Unsupported categorize_by: {categorize_by}")
-        if categorize_by == "zone":
-            needs_zone_join = True
-        select_fields.append(f"{colmap[categorize_by]} AS category")
-        group_keys.append(colmap[categorize_by])
+        if categorize_by == "age_band":
+            # Categorize by computed age band label
+            select_fields.append(f"{age_case_expr} AS category")
+            # Group by the same CASE expression to avoid relying on alias resolution
+            group_keys.append(age_case_expr)
+        else:
+            if categorize_by not in colmap:
+                raise ValueError(f"Unsupported categorize_by: {categorize_by}")
+            if categorize_by == "zone":
+                needs_zone_join = True
+            select_fields.append(f"{colmap[categorize_by]} AS category")
+            group_keys.append(colmap[categorize_by])
 
     if include_age_band_col:
-        select_fields.append(f"{_age_band_case(active_bands)} AS age_band")
+        select_fields.append(f"{age_case_expr} AS age_band")
         group_keys.append("age_band")
 
     for g in group_by:
@@ -502,14 +547,26 @@ def demographicStatsBuilder(
         sql += "\n"
 
     # Return a bare age clause (no WHERE/AND prefix)
-    age_filter_clause = ""
+    # Build combined filter clause (age and gender)
+    filters = []
     if demographics or selected_age_bands:
-        clauses = [
+        age_clauses = [
             f"({AGE_EXPR} BETWEEN {lo} AND {hi})"
             for name, (lo, hi) in AGE_BANDS
             if name in active_bands
         ]
-        if clauses:
-            age_filter_clause = "(" + " OR ".join(clauses) + ")"
+        if age_clauses:
+            filters.append("(" + " OR ".join(age_clauses) + ")")
 
-    return sql, group_keys, age_filter_clause
+    if selected_genders:
+        # Expecting values like {'M','F'}
+        # Sanitize to allowed values and build IN clause
+        allowed = {"M", "F"}
+        gens = [g for g in selected_genders if g in allowed]
+        if gens:
+            in_list = ", ".join(["'" + g + "'" for g in gens])
+            filters.append(f"c.gender IN ({in_list})")
+
+    filter_clause = " AND ".join(filters) if filters else ""
+
+    return sql, group_keys, filter_clause

@@ -21,6 +21,7 @@ type StatsGroupByPickerProps = {
     groupBy: Set<GroupDim>;
     onApply: (categorizeBy: GroupDim | null, groupBy: Set<GroupDim>) => void;
     disableAgeBand?: boolean;
+    disableGender?: boolean;
 };
 
 const ALL_DIMS: GroupDim[] = ["zone", "gender", "host_status", "age_band"];
@@ -32,6 +33,7 @@ function StatsGroupByPicker({
     groupBy,
     onApply,
     disableAgeBand,
+    disableGender,
 }: StatsGroupByPickerProps) {
     const [left, setLeft] = React.useState<GroupDim | null>(categorizeBy);
     const [right, setRight] = React.useState<Set<GroupDim>>(new Set(groupBy));
@@ -41,7 +43,8 @@ function StatsGroupByPicker({
         setRight(new Set(groupBy));
     }, [categorizeBy, groupBy, open]);
 
-    const isDisabled = (dim: GroupDim) => dim === "age_band" && !!disableAgeBand;
+    const isDisabled = (dim: GroupDim) =>
+        (dim === "age_band" && !!disableAgeBand) || (dim === "gender" && !!disableGender);
 
     const toggleLeft = (dim: GroupDim) => {
         if (isDisabled(dim)) return;
@@ -72,7 +75,17 @@ function StatsGroupByPicker({
         setRight(new Set());
     };
 
-    const apply = () => onApply(left, right);
+    const apply = () => {
+        let nextLeft: GroupDim | null = left;
+        const nextRight: Set<GroupDim> = new Set(right);
+        // Fallback: if no category selected, default to Zone (if not disabled)
+        if (!nextLeft && !isDisabled("zone")) {
+            nextLeft = "zone";
+        }
+        // Ensure mutual exclusion: remove chosen category from right
+        if (nextLeft) nextRight.delete(nextLeft);
+        onApply(nextLeft, nextRight);
+    };
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
@@ -122,7 +135,7 @@ function StatsGroupByPicker({
                 </Grid>
                 <Typography variant="caption" sx={{ mt: 2, display: "block" }}>
                     {
-                        "Left is single-select. Right is multi-select. A dimension cannot be on both sides. Age range is disabled while an Age filter (Child/Adult or ranges) is active."
+                        "Left is single-select. Right is multi-select. A dimension cannot be on both sides. Age range is disabled while an Age filter (Child/Adult or ranges) is active. Gender is disabled while a specific gender filter (only Male or only Female) is active."
                     }
                 </Typography>
             </DialogContent>

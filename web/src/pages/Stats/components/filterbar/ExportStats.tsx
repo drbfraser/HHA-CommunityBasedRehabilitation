@@ -212,22 +212,15 @@ const ExportStats = ({
                     );
                 } else if (categorizeBy === "age_band") {
                     // Determine which age bands should be shown based on filters
-                    const defaultBands = [
-                        "0-5",
-                        "6-10",
-                        "11-17",
-                        "18-25",
-                        "26-30",
-                        "31-45",
-                        "46+",
-                    ];
-                    const bandsFromFilter = Array.isArray(age.bands) && age.bands.length > 0
-                        ? age.bands
-                        : age.demographic === "child"
-                        ? ["0-5", "6-10", "11-17"]
-                        : age.demographic === "adult"
-                        ? ["18-25", "26-30", "31-45", "46+"]
-                        : defaultBands;
+                    const defaultBands = ["0-5", "6-10", "11-17", "18-25", "26-30", "31-45", "46+"];
+                    const bandsFromFilter =
+                        Array.isArray(age.bands) && age.bands.length > 0
+                            ? age.bands
+                            : age.demographic === "child"
+                            ? ["0-5", "6-10", "11-17"]
+                            : age.demographic === "adult"
+                            ? ["18-25", "26-30", "31-45", "46+"]
+                            : defaultBands;
 
                     // Backend returns names like "Age 0-5" — normalize to bare band for matching
                     const byBand = new Map<string, any>(
@@ -284,7 +277,8 @@ const ExportStats = ({
                     const extractZone = (label: string): string | null => {
                         // Try known zone names first
                         for (const zn of zoneNames) {
-                            if (label.startsWith(String(zn) + " ") || label === String(zn)) return String(zn);
+                            if (label.startsWith(String(zn) + " ") || label === String(zn))
+                                return String(zn);
                         }
                         // Fallback: split before trailing host/refugee or Age ...
                         const m = label.match(/^(.*)\s+(host|refugee|Male|Female|Age\s+.*)$/i);
@@ -342,7 +336,9 @@ const ExportStats = ({
                                     return;
                                 }
                                 const dim = orderDims[idx];
-                                domains[dim].forEach((val) => emitLoop(idx + 1, { ...acc, [dim]: val }));
+                                domains[dim].forEach((val) =>
+                                    emitLoop(idx + 1, { ...acc, [dim]: val })
+                                );
                             };
                             if (orderDims.length === 0) {
                                 // No other dims: print Total only
@@ -377,7 +373,8 @@ const ExportStats = ({
                         if (dim === "age_band") {
                             ["0-5", "6-10", "11-17", "18-25", "26-30", "31-45", "46+"].forEach(
                                 (band) => {
-                                    const v = agg.get(normalizeOther({ age_band: band } as any)) || 0;
+                                    const v =
+                                        agg.get(normalizeOther({ age_band: band } as any)) || 0;
                                     rows.push(["", `Age ${band}`, String(v)]);
                                 }
                             );

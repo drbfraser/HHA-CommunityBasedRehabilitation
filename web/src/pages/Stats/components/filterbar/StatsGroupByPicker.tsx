@@ -134,7 +134,9 @@ function StatsGroupByPicker({
                     </Grid>
                 </Grid>
                 <Typography variant="caption" sx={{ mt: 2, display: "block" }}>
-                    {"Left is single-select. Right is multi-select. A dimension cannot be on both sides. Age range is disabled while an Age filter (Child/Adult or ranges) is active. Gender is disabled while a specific gender filter (only Male or only Female) is active."}
+                    {
+                        "Left is single-select. Right is multi-select. A dimension cannot be on both sides. Age range is disabled while an Age filter (Child/Adult or ranges) is active. Gender is disabled while a specific gender filter (only Male or only Female) is active."
+                    }
                 </Typography>
             </DialogContent>
             <DialogActions>

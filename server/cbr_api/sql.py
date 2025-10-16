@@ -149,7 +149,9 @@ def getDisabilityStats(
     return _format_rows_for_frontend(rows, categorize_by, group_by or [])
 
 
-def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active, *, selected_genders=None):
+def getNumClientsWithDisabilities(
+    user_id, from_time, to_time, is_active, *, selected_genders=None
+):
     from_join = (
         "FROM cbr_api_client_disability AS d "
         "JOIN cbr_api_client AS c ON d.client_id = c.id"
@@ -166,7 +168,9 @@ def getNumClientsWithDisabilities(user_id, from_time, to_time, is_active, *, sel
         gens = [g for g in selected_genders if g in allowed]
         if gens:
             in_list = ", ".join(["'" + g + "'" for g in gens])
-            where_sql += (" AND " if where_sql else "WHERE ") + f"c.gender IN ({in_list})"
+            where_sql += (
+                " AND " if where_sql else "WHERE "
+            ) + f"c.gender IN ({in_list})"
     sql += where_sql
 
     with connection.cursor() as cursor:

@@ -211,7 +211,11 @@ class AdminStats(generics.RetrieveAPIView):
         return {
             "disabilities": disabilities,
             "clients_with_disabilities": getNumClientsWithDisabilities(
-                user_id, from_time, to_time, is_active, selected_genders=selected_genders
+                user_id,
+                from_time,
+                to_time,
+                is_active,
+                selected_genders=selected_genders,
             ),
             "visits": visits,
             "referrals_resolved": referrals_resolved,

@@ -76,6 +76,7 @@ const FilterBar = ({
     const ageFilterActive =
         (age.demographic && (age.demographic === "child" || age.demographic === "adult")) ||
         (Array.isArray(age.bands) && age.bands.length > 0);
+    const genderFilterNarrowed = !(gender.female && gender.male);
     const { t } = useTranslation();
 
     // If an age filter is active, automatically clear any existing "age_band" grouping
@@ -92,6 +93,36 @@ const FilterBar = ({
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ageFilterActive]);
+
+    // If gender filter is narrowed (not both selected), clear any existing "gender" grouping/categorization
+    useEffect(() => {
+        if (genderFilterNarrowed) {
+            if (groupBy.has("gender")) {
+                const next = new Set(groupBy);
+                next.delete("gender");
+                setGroupBy(next);
+            }
+            if (categorizeBy === "gender") {
+                setCategorizeBy(null);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [genderFilterNarrowed]);
+
+    // Fallback: always keep a category selected. If cleared by disables or user, default to Zone
+    useEffect(() => {
+        if (!categorizeBy) {
+            // If Zone is currently in groupBy, move it to categorizeBy
+            const hasZoneGroup = groupBy.has("zone");
+            if (hasZoneGroup) {
+                const next = new Set(groupBy);
+                next.delete("zone");
+                setGroupBy(next);
+            }
+            setCategorizeBy("zone");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [categorizeBy]);
 
     return (
         <menu>
@@ -205,6 +236,8 @@ const FilterBar = ({
                 }}
                 // disable 'age_band' grouping when an age filter (child/adult OR ranges) is active
                 disableAgeBand={!!ageFilterActive}
+                // disable 'gender' grouping when gender filter is narrowed to a subset
+                disableGender={!!genderFilterNarrowed}
             />
             <StatsDemographicFilter
                 open={demographicOpen}

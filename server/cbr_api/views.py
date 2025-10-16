@@ -121,10 +121,13 @@ class AdminStats(generics.RetrieveAPIView):
         demographics = get_str_or_none("demographics")  # "child"|"adult"|None
         age_bands = parse_csv("age_bands")  # list[str] or None
         selected_age_bands = set(age_bands) if age_bands else None
+        # Optional gender filter: expects values like M,F
+        genders = parse_csv("genders")
+        selected_genders = set(genders) if genders else None
 
         # Normalize categorize_by/group_by per-stat so unsupported fields (like
         # "resolved" for non-referral stats) don't cause builder errors.
-        common_cat = {"zone", "gender", "host_status"}
+        common_cat = {"zone", "gender", "host_status", "age_band"}
         # Allow grouping by zone as well, to support UI selection
         common_grp = {"zone", "gender", "host_status", "age_band"}
         ref_cat = common_cat | {"resolved"}
@@ -146,6 +149,7 @@ class AdminStats(generics.RetrieveAPIView):
             group_by=grp_for(group_by, common_grp),
             demographics=demographics,
             selected_age_bands=selected_age_bands,
+            selected_genders=selected_genders,
         )
 
         visits = getVisitStats(
@@ -157,6 +161,7 @@ class AdminStats(generics.RetrieveAPIView):
             group_by=grp_for(group_by, common_grp),
             demographics=demographics,
             selected_age_bands=selected_age_bands,
+            selected_genders=selected_genders,
         )
 
         resolved = get_bool_or_none("resolved")
@@ -170,6 +175,7 @@ class AdminStats(generics.RetrieveAPIView):
                 group_by=grp_for(group_by, ref_grp),
                 demographics=demographics,
                 selected_age_bands=selected_age_bands,
+                selected_genders=selected_genders,
                 resolved=True,
             )
             referrals_unresolved = getReferralStats(
@@ -181,6 +187,7 @@ class AdminStats(generics.RetrieveAPIView):
                 group_by=grp_for(group_by, ref_grp),
                 demographics=demographics,
                 selected_age_bands=selected_age_bands,
+                selected_genders=selected_genders,
                 resolved=False,
             )
         else:
@@ -193,6 +200,7 @@ class AdminStats(generics.RetrieveAPIView):
                 group_by=grp_for(group_by, ref_grp),
                 demographics=demographics,
                 selected_age_bands=selected_age_bands,
+                selected_genders=selected_genders,
                 resolved=resolved,
             )
             if resolved:
@@ -203,7 +211,7 @@ class AdminStats(generics.RetrieveAPIView):
         return {
             "disabilities": disabilities,
             "clients_with_disabilities": getNumClientsWithDisabilities(
-                user_id, from_time, to_time, is_active
+                user_id, from_time, to_time, is_active, selected_genders=selected_genders
             ),
             "visits": visits,
             "referrals_resolved": referrals_resolved,
@@ -217,6 +225,7 @@ class AdminStats(generics.RetrieveAPIView):
                 group_by=grp_for(group_by, common_grp),
                 demographics=demographics,
                 selected_age_bands=selected_age_bands,
+                selected_genders=selected_genders,
             ),
             "discharged_clients": getDischargedClients(
                 user_id,
@@ -227,6 +236,7 @@ class AdminStats(generics.RetrieveAPIView):
                 group_by=grp_for(group_by, common_grp),
                 demographics=demographics,
                 selected_age_bands=selected_age_bands,
+                selected_genders=selected_genders,
             ),
             "follow_up_visits": getFollowUpVisits(
                 user_id,
@@ -237,6 +247,7 @@ class AdminStats(generics.RetrieveAPIView):
                 group_by=grp_for(group_by, common_grp),
                 demographics=demographics,
                 selected_age_bands=selected_age_bands,
+                selected_genders=selected_genders,
             ),
         }
 

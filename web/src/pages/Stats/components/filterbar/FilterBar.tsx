@@ -1,5 +1,5 @@
 import { Button, Chip, styled } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IStats } from "@cbr/common/util/stats";
@@ -78,6 +78,21 @@ const FilterBar = ({
         (Array.isArray(age.bands) && age.bands.length > 0);
     const { t } = useTranslation();
 
+    // If an age filter is active, automatically clear any existing "age_band" grouping
+    useEffect(() => {
+        if (ageFilterActive) {
+            if (groupBy.has("age_band")) {
+                const next = new Set(groupBy);
+                next.delete("age_band");
+                setGroupBy(next);
+            }
+            if (categorizeBy === "age_band") {
+                setCategorizeBy(null);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ageFilterActive]);
+
     return (
         <menu>
             <FilterControls>
@@ -95,7 +110,16 @@ const FilterBar = ({
                     <Button variant="outlined" onClick={() => setUserFilterOpen(true)}>
                         {t("statistics.filterByUser")}
                     </Button>
-                    <Button variant="outlined" onClick={() => setExportOpen(true)}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setExportOpen(true)}
+                        disabled={ageFilterActive && (groupBy.has("age_band") || categorizeBy === "age_band")}
+                        title={
+                            ageFilterActive && (groupBy.has("age_band") || categorizeBy === "age_band")
+                                ? "Cannot export: Age range grouping conflicts with active age filter"
+                                : undefined
+                        }
+                    >
                         {t("dashboard.csvExport")}
                     </Button>
                 </FilterButtons>

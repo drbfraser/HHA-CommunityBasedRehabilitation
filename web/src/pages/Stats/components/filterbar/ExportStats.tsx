@@ -91,6 +91,14 @@ const ExportStats = ({
         // DATE range header
         if (!date.from && !date.to) rows.push(["DATE RANGE: All Time"]);
         else rows.push(["DATE RANGE: ", date.from, date.to]);
+        // Filters summary for clarity in downloads
+        const activeFilters: string[] = [];
+        if (age.demographic) activeFilters.push(`Demographics: ${age.demographic}`);
+        if (age.bands && age.bands.length) activeFilters.push(`Age bands: ${age.bands.join(", ")}`);
+        if (categorizeBy) activeFilters.push(`Categorized by: ${categorizeBy}`);
+        if (groupBy && groupBy.size)
+            activeFilters.push(`Group bars: ${Array.from(groupBy).filter(Boolean).join(", ")}`);
+        if (activeFilters.length) rows.push(["FILTERS:", activeFilters.join(" | ")]);
         rows.push([""]);
 
         const DIM_ORDER: Array<NonNullable<IProps["categorizeBy"]>> = [
@@ -142,16 +150,16 @@ const ExportStats = ({
         };
 
         const pushSeriesSection = (title: string, series: any) => {
-            if (!Array.isArray(series) || series.length === 0) return;
-            const categorized = series.length > 0 && series[0] && Array.isArray(series[0].data);
+            const seriesArr: any[] = Array.isArray(series) ? series : [];
+            const categorized = Boolean(categorizeBy) || (seriesArr.length > 0 && seriesArr[0] && Array.isArray(seriesArr[0].data));
             rows.push([buildHeader(title)]);
             if (categorized) {
                 // Zero-fill by zone if needed (keep your existing logic)
-                let catSeries = series;
+                let catSeries = seriesArr;
                 if (categorizeBy === "zone" && zones.size) {
                     const zoneNames = Array.from(zones.values());
                     const byName = new Map<string, any>(
-                        series.map((c: any) => [String(c.name), c])
+                        seriesArr.map((c: any) => [String(c.name), c])
                     );
                     catSeries = zoneNames.map(
                         (zn) =>
@@ -175,6 +183,25 @@ const ExportStats = ({
                     );
                 }
 
+                // Zero-fill missing categories for gender/host_status so both appear even when absent
+                if (categorizeBy === "gender") {
+                    const byName = new Map<string, any>(
+                        catSeries.map((c: any) => [String(c.name), c])
+                    );
+                    const domain = ["Male", "Female"]; // fixed order
+                    catSeries = domain.map((label) =>
+                        byName.get(label) || { name: label, data: [] }
+                    );
+                } else if (categorizeBy === "host_status") {
+                    const byName = new Map<string, any>(
+                        catSeries.map((c: any) => [String(c.name), c])
+                    );
+                    const domain = ["host", "refugee"]; // fixed order
+                    catSeries = domain.map((label) =>
+                        byName.get(label) || { name: label, data: [] }
+                    );
+                }
+
                 // Header row shows the dimension label, NOT the category value
                 rows.push([DIM_LABEL_MAP[categorizeBy!], "Name", "Value"]);
 
@@ -186,57 +213,53 @@ const ExportStats = ({
                         ? [...cat.data]
                         : [];
 
+                    // Aggregate by normalized label that omits zone so we sum across zones
+                    const norm = (vals: Record<string, string>) => {
+                        const parts: string[] = [];
+                        if (vals.gender) parts.push(vals.gender);
+                        if (vals.host_status) parts.push(vals.host_status);
+                        if (vals.age_band) parts.push(`Age ${vals.age_band}`);
+                        return parts.join(" ");
+                    };
+                    const agg = new Map<string, number>();
+                    bars.forEach((d) => {
+                        const p = parseName(d.name || "");
+                        const key = norm(p);
+                        agg.set(key, (agg.get(key) || 0) + (Number(d.value) || 0));
+                    });
+
                     // If exactly one group dimension is selected, zero-fill the full domain
                     if (orderedGroups.length === 1) {
                         const dim = orderedGroups[0];
                         if (dim === "age_band") {
-                            const byAge = new Map<string, number>();
-                            bars.forEach((d) => {
-                                const m = (d.name || "").match(/Age\s+([0-9]+-[0-9]+|46\+)/i);
-                                const band = m ? m[1] : undefined;
-                                if (band) byAge.set(band, Number(d.value) || 0);
-                            });
                             ["0-5", "6-10", "11-17", "18-25", "26-30", "31-45", "46+"].forEach(
                                 (band) => {
-                                    const v = byAge.has(band) ? byAge.get(band)! : 0;
+                                    const v = agg.get(norm({ age_band: band } as any)) || 0;
                                     rows.push(["", `Age ${band}`, String(v)]);
                                 }
                             );
                         } else if (dim === "gender") {
-                            const byG = new Map<string, number>();
-                            bars.forEach((d) => {
-                                if (/^Male\b/i.test(d.name)) byG.set("Male", Number(d.value) || 0);
-                                if (/^Female\b/i.test(d.name)) byG.set("Female", Number(d.value) || 0);
-                            });
                             ["Male", "Female"].forEach((g) => {
-                                const v = byG.has(g) ? byG.get(g)! : 0;
+                                const v = agg.get(norm({ gender: g } as any)) || 0;
                                 rows.push(["", g, String(v)]);
                             });
                         } else if (dim === "host_status") {
-                            const byH = new Map<string, number>();
-                            bars.forEach((d) => {
-                                if (/^host\b/i.test(d.name)) byH.set("host", Number(d.value) || 0);
-                                if (/^refugee\b/i.test(d.name)) byH.set("refugee", Number(d.value) || 0);
-                            });
                             ["host", "refugee"].forEach((h) => {
-                                const v = byH.has(h) ? byH.get(h)! : 0;
+                                const v = agg.get(norm({ host_status: h } as any)) || 0;
                                 rows.push(["", h, String(v)]);
                             });
                         } else if (dim === "zone") {
-                            // Not typical: if bars are zones, list all from zones hook
+                            // Bars by zone: list all zones
                             const zoneNames = Array.from(zones.values());
-                            const byZ = new Map<string, number>();
-                            bars.forEach((d) => byZ.set(String(d.name), Number(d.value) || 0));
                             zoneNames.forEach((zn) => {
-                                const v = byZ.has(String(zn)) ? byZ.get(String(zn))! : 0;
+                                const v = agg.get(String(zn)) || 0;
                                 rows.push(["", String(zn), String(v)]);
                             });
                         } else {
-                            // Fallback: print as-is
                             bars.forEach((d) => rows.push(["", d.name, String(d.value)]));
                         }
                     } else {
-                        // Multi-dimension bars: keep deterministic order, print as-is
+                        // Multi-dimension bars: zero-fill gender x age bands (ignore host_status; it's the category)
                         const AGE_BANDS_ORDER = [
                             "0-5",
                             "6-10",
@@ -246,17 +269,27 @@ const ExportStats = ({
                             "31-45",
                             "46+",
                         ];
-                        const orderIndex = (name: string): number => {
-                            if (/^Male\b/i.test(name)) return 0;
-                            if (/^Female\b/i.test(name)) return 1;
-                            if (/^host\b/i.test(name)) return 0;
-                            if (/^refugee\b/i.test(name)) return 1;
-                            const m = name.match(/Age\s+([0-9]+-[0-9]+|46\+)/i);
-                            if (m) return AGE_BANDS_ORDER.indexOf(m[1]);
-                            return 99;
+                        const dims = orderedGroups.filter((d) => d !== "zone");
+                        const domains: Record<string, string[]> = {
+                            gender: ["Male", "Female"],
+                            host_status: ["host", "refugee"],
+                            age_band: AGE_BANDS_ORDER,
                         };
-                        bars.sort((a, b) => orderIndex(a.name) - orderIndex(b.name));
-                        bars.forEach((d) => rows.push(["", d.name, String(d.value)]));
+                        const order = ["gender", "host_status", "age_band"].filter((d) =>
+                            dims.includes(d as any)
+                        ) as Array<"gender" | "host_status" | "age_band">;
+
+                        const loop = (idx: number, acc: Record<string, string>) => {
+                            if (idx >= order.length) {
+                                const label = norm(acc);
+                                const v = agg.get(label) || 0;
+                                rows.push(["", label, String(v)]);
+                                return;
+                            }
+                            const dim = order[idx];
+                            domains[dim].forEach((val) => loop(idx + 1, { ...acc, [dim]: val }));
+                        };
+                        loop(0, {});
                     }
                 });
 
@@ -266,7 +299,12 @@ const ExportStats = ({
             } else {
                 if (orderedGroups.length === 0) {
                     rows.push(["Name", "Value"]);
-                    series.forEach((d: any) => rows.push([d.name, String(d.value)]));
+                    // No grouping: if no data, show a Total 0 row
+                    if (seriesArr.length === 0) {
+                        rows.push(["Total", "0"]);
+                    } else {
+                        seriesArr.forEach((d: any) => rows.push([d.name, String(d.value)]));
+                    }
                     rows.push([""]);
                     return;
                 }
@@ -277,7 +315,7 @@ const ExportStats = ({
 
                 // Map primary -> (secondary -> value)
                 const byPrimary = new Map<string, Map<string, number>>();
-                series.forEach((d: any) => {
+                seriesArr.forEach((d: any) => {
                     const parts = parseName(d.name || "");
                     const pval = parts[primary] ?? "not set";
                     const sval = secondary
@@ -319,7 +357,17 @@ const ExportStats = ({
         pushSeriesSection("DISABILITIES", groupedStats?.disabilities);
 
         return rows;
-    }, [open, groupedStats, date.from, date.to, groupBy, categorizeBy, zones]);
+    }, [
+        open,
+        groupedStats,
+        date.from,
+        date.to,
+        age.demographic,
+        age.bands,
+        categorizeBy,
+        groupBy,
+        zones,
+    ]);
 
     return (
         <Dialog open={open} onClose={onClose}>

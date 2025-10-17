@@ -1,5 +1,5 @@
 import { Button, Chip, styled } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IStats } from "@cbr/common/util/stats";
@@ -10,6 +10,7 @@ import ExportStats from "./ExportStats";
 import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
 import StatsUserFilter from "./StatsUserFilter";
+import StatsGroupByPicker from "./StatsGroupByPicker";
 
 const FilterControls = styled("div")({
     display: "flex",
@@ -43,6 +44,14 @@ interface IProps {
     onArchiveModeChange: (val: boolean) => void;
 }
 
+export type GroupDim = "zone" | "gender" | "host_status" | "age_band";
+export const DIM_LABEL: Record<GroupDim, string> = {
+    zone: "Zone",
+    gender: "Gender",
+    host_status: "Host/Refugee",
+    age_band: "Age range",
+};
+
 const FilterBar = ({
     user,
     users,
@@ -57,16 +66,72 @@ const FilterBar = ({
     archiveMode,
     onArchiveModeChange,
 }: IProps) => {
+    const [groupByOpen, setGroupByOpen] = useState(false);
     const [dateFilterOpen, setDateFilterOpen] = useState(false);
     const [demographicOpen, setDemographicOpen] = useState(false);
     const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [exportOpen, setExportOpen] = useState(false);
+    const [categorizeBy, setCategorizeBy] = useState<GroupDim | null>("zone");
+    const [groupBy, setGroupBy] = useState<Set<GroupDim>>(new Set());
+    const ageFilterActive =
+        (age.demographic && (age.demographic === "child" || age.demographic === "adult")) ||
+        (Array.isArray(age.bands) && age.bands.length > 0);
+    const genderFilterNarrowed = !(gender.female && gender.male);
     const { t } = useTranslation();
+
+    // If an age filter is active, automatically clear any existing "age_band" grouping
+    useEffect(() => {
+        if (ageFilterActive) {
+            if (groupBy.has("age_band")) {
+                const next = new Set(groupBy);
+                next.delete("age_band");
+                setGroupBy(next);
+            }
+            if (categorizeBy === "age_band") {
+                setCategorizeBy(null);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ageFilterActive]);
+
+    // If gender filter is narrowed (not both selected), clear any existing "gender" grouping/categorization
+    useEffect(() => {
+        if (genderFilterNarrowed) {
+            if (groupBy.has("gender")) {
+                const next = new Set(groupBy);
+                next.delete("gender");
+                setGroupBy(next);
+            }
+            if (categorizeBy === "gender") {
+                setCategorizeBy(null);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [genderFilterNarrowed]);
+
+    // Fallback: always keep a category selected. If cleared by disables or user, default to Zone
+    useEffect(() => {
+        if (!categorizeBy) {
+            // If Zone is currently in groupBy, move it to categorizeBy
+            const hasZoneGroup = groupBy.has("zone");
+            if (hasZoneGroup) {
+                const next = new Set(groupBy);
+                next.delete("zone");
+                setGroupBy(next);
+            }
+            setCategorizeBy("zone");
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [categorizeBy]);
 
     return (
         <menu>
             <FilterControls>
                 <FilterButtons>
+                    <Button variant="outlined" onClick={() => setGroupByOpen(true)}>
+                        {/* TODO: add translation */}
+                        {"Group By"}
+                    </Button>
                     <Button variant="outlined" onClick={() => setDemographicOpen(true)}>
                         {t("statistics.filterByDemographic")}
                     </Button>
@@ -76,7 +141,20 @@ const FilterBar = ({
                     <Button variant="outlined" onClick={() => setUserFilterOpen(true)}>
                         {t("statistics.filterByUser")}
                     </Button>
-                    <Button variant="outlined" onClick={() => setExportOpen(true)}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => setExportOpen(true)}
+                        disabled={
+                            ageFilterActive &&
+                            (groupBy.has("age_band") || categorizeBy === "age_band")
+                        }
+                        title={
+                            ageFilterActive &&
+                            (groupBy.has("age_band") || categorizeBy === "age_band")
+                                ? "Cannot export: Age range grouping conflicts with active age filter"
+                                : undefined
+                        }
+                    >
                         {t("dashboard.csvExport")}
                     </Button>
                 </FilterButtons>
@@ -124,7 +202,43 @@ const FilterBar = ({
                         </Typography>
                     </menu>
                 </FilterLabels>
+                <FilterLabels>
+                    {categorizeBy ? (
+                        <Chip
+                            label={`Categorized by ${DIM_LABEL[categorizeBy]}`}
+                            onDelete={() => setCategorizeBy(null)}
+                        />
+                    ) : (
+                        <Chip label={"No category"} />
+                    )}
+
+                    {groupBy.size ? (
+                        <Chip
+                            label={`Grouped by ${Array.from(groupBy)
+                                .map((d) => DIM_LABEL[d])
+                                .join(" + ")}`}
+                            onDelete={() => setGroupBy(new Set())}
+                        />
+                    ) : (
+                        <Chip label={"No groups"} />
+                    )}
+                </FilterLabels>
             </FilterControls>
+            <StatsGroupByPicker
+                open={groupByOpen}
+                onClose={() => setGroupByOpen(false)}
+                categorizeBy={categorizeBy}
+                groupBy={groupBy}
+                onApply={(cat, groups) => {
+                    setCategorizeBy(cat);
+                    setGroupBy(groups);
+                    setGroupByOpen(false);
+                }}
+                // disable 'age_band' grouping when an age filter (child/adult OR ranges) is active
+                disableAgeBand={!!ageFilterActive}
+                // disable 'gender' grouping when gender filter is narrowed to a subset
+                disableGender={!!genderFilterNarrowed}
+            />
             <StatsDemographicFilter
                 open={demographicOpen}
                 onClose={() => setDemographicOpen(false)}
@@ -153,6 +267,10 @@ const FilterBar = ({
                 age={age}
                 gender={gender}
                 date={dateRange}
+                user={user}
+                archiveMode={archiveMode}
+                categorizeBy={categorizeBy}
+                groupBy={groupBy}
             />
         </menu>
     );

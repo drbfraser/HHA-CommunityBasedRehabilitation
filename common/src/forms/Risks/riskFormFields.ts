@@ -6,7 +6,6 @@ export enum FormField {
     risk_type = "risk_type",
     risk_level = "risk_level",
     requirement = "requirement",
-    goal = "goal",
     goal_name = "goal_name",
     goal_status = "goal_status",
     update_goal_status = "update_goal_status",

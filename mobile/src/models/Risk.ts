@@ -14,7 +14,6 @@ export default class Risk extends Model implements SyncableModel {
     @text(FormField.risk_type) risk_type;
     @text(FormField.risk_level) risk_level;
     @text(FormField.requirement) requirement;
-    @text(FormField.goal) goal;
     @text(FormField.goal_name) goal_name;
     @text("goal_status") goal_status;
     @text("cancellation_reason") cancellation_reason;

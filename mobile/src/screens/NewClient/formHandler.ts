@@ -26,7 +26,6 @@ export const addRisk = async (
         risk.risk_type = type;
         risk.risk_level = level;
         risk.requirement = req;
-        risk.goal = goalName;
         risk.goal_name = goalName;
         risk.goal_status = goalStatus;
         risk.cancellation_reason = cancellationReason;

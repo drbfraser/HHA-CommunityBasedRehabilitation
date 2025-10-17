@@ -24,6 +24,10 @@ class Command(BaseCommand):
             "Orthotic",
             "Other",
         ]
+        hcr_types = [
+            models.Client.HCRType.HOST_COMMUNITY,
+            models.Client.HCRType.REFUGEE,
+        ]
         zones = models.Zone.objects.all()
         users = models.UserCBR.objects.all()
         disabilities = models.Disability.objects.all()
@@ -116,6 +120,7 @@ class Command(BaseCommand):
                 longitude=0.0,
                 latitude=0.0,
                 village=village,
+                hcr_type=random.choice(hcr_types),
                 other_disability=other_disability,
                 health_risk_level=health_risk,
                 social_risk_level=social_risk,

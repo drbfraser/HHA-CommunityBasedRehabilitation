@@ -1,5 +1,5 @@
 import { Alert, Divider, styled } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { timestampFromFormDate } from "@cbr/common/util/dates";
@@ -7,122 +7,156 @@ import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IStats } from "@cbr/common/util/stats";
 import { IUser } from "@cbr/common/util/users";
 import {
-    DisabilityStats,
-    FilterBar,
-    FollowUpVistsStats,
-    NewClientsStats,
-    ReferralStats,
-    VisitStats,
+  DisabilityStats,
+  FilterBar,
+  FollowUpVistsStats,
+  NewClientsStats,
+  ReferralStats,
+  VisitStats,
 } from "./components";
-import { blankDateRange, IDateRange } from "./components/filterbar/StatsDateFilter";
+import { blankDateRange } from "./components/filterbar/StatsDateFilter";
 import {
-    defaultAgeConfigs,
-    defaultGenderConfigs,
+  defaultAgeConfigs,
+  defaultGenderConfigs,
+  type IGender,
+  type IAge,
 } from "./components/filterbar/StatsDemographicFilter";
 import DischargedClientsStats from "./components/charts/DischargedClientsStats";
 
+// keep aligned with backend accepted dims
+export type GroupDim = "zone" | "gender" | "host_status" | "age_band";
+
 const Container = styled("div")({
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem",
+  display: "flex",
+  flexDirection: "column",
+  gap: "1rem",
 });
 
 const Stats = () => {
-    const [dateRange, setDateRange] = useState(blankDateRange);
-    const [users, setUsers] = useState<IUser[]>([]);
-    const [user, setUser] = useState<IUser | null>(null);
+  const [dateRange, setDateRange] = useState(blankDateRange);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [user, setUser] = useState<IUser | null>(null);
 
-    // Filtering the demographic will not call on the API
-    // It will return the demographic statistics by default. This was done in order to prevent recalls for a large amount of data
-    const [gender, setGender] = useState(defaultGenderConfigs);
-    const [age, setAge] = useState(defaultAgeConfigs);
-    const [stats, setStats] = useState<IStats>();
-    const [errorLoading, setErrorLoading] = useState(false);
-    const [archiveMode, setArchiveMode] = useState(false);
+  // Demographic UI state (unchanged)
+  const [gender, setGender] = useState<IGender>(defaultGenderConfigs);
+  const [age, setAge] = useState<IAge>(defaultAgeConfigs);
 
-    const { t } = useTranslation();
+  // NEW: grouping state lives here so we can include it in API calls
+  const [categorizeBy, setCategorizeBy] = useState<GroupDim | null>("zone");
+  const [groupBy, setGroupBy] = useState<Set<GroupDim>>(new Set());
 
-    useEffect(() => {
-        apiFetch(Endpoint.USERS)
-            .then((resp) => resp.json())
-            .then((users) => setUsers(users))
-            .catch(() => setErrorLoading(true));
-    }, []);
+  const [stats, setStats] = useState<IStats>();
+  const [errorLoading, setErrorLoading] = useState(false);
+  const [archiveMode, setArchiveMode] = useState(false);
 
-    useEffect(() => {
-        const milliSecondPerDay = 86400000;
-        const urlParams = new URLSearchParams();
-        urlParams.append("is_active", String(archiveMode));
+  const { t } = useTranslation();
 
-        ["from", "to"].forEach((field) => {
-            const fieldVal = dateRange[field as keyof IDateRange];
-            if (!fieldVal) return;
+  useEffect(() => {
+    apiFetch(Endpoint.USERS)
+      .then((resp) => resp.json())
+      .then((users) => setUsers(users))
+      .catch(() => setErrorLoading(true));
+  }, []);
 
-            if (field === "from") {
-                urlParams.append(field, String(timestampFromFormDate(fieldVal)));
-            } else {
-                urlParams.append(
-                    field,
-                    String(timestampFromFormDate(fieldVal) + milliSecondPerDay)
-                );
-            }
-        });
+  // Build the query string from all filters (including new grouping + age filters)
+  const queryString = useMemo(() => {
+    const msPerDay = 86400000;
+    const urlParams = new URLSearchParams();
+    urlParams.append("is_active", String(archiveMode));
 
-        if (user) {
-            urlParams.append("user_id", String(user.id));
-        }
+    if (dateRange.from) urlParams.append("from", String(timestampFromFormDate(dateRange.from)));
+    if (dateRange.to) urlParams.append("to", String(timestampFromFormDate(dateRange.to) + msPerDay));
 
-        // Apply gender filter to backend (M/F) for consistency with grouped/export paths
-        const genders: string[] = [];
-        if (gender.male) genders.push("M");
-        if (gender.female) genders.push("F");
-        if (genders.length) urlParams.append("genders", genders.join(","));
+    if (user) urlParams.append("user_id", String(user.id));
 
-        apiFetch(Endpoint.STATS, `?${urlParams.toString()}`)
-            .then((resp) => resp.json())
-            .then((stats) => setStats(stats))
-            .catch(() => setErrorLoading(true));
-    }, [dateRange, user, archiveMode, gender, age]);
-
-    if (errorLoading) {
-        return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
+    // Age filter: either demographic or explicit bands (mutually exclusive)
+    // (This matches your backend contract.)
+    if (Array.isArray((age as any).bands) && (age as any).bands.length > 0) {
+      urlParams.append("age_bands", (age as any).bands.join(","));
+    } else if ((age as any).demographic) {
+      urlParams.append("demographics", (age as any).demographic);
     }
-    return (
-        <Container>
-            <FilterBar
-                user={user}
-                users={users}
-                age={age}
-                gender={gender}
-                dateRange={dateRange}
-                stats={stats}
-                setDateRange={setDateRange}
-                setUser={setUser}
-                setGender={setGender}
-                setAge={setAge}
-                archiveMode={archiveMode}
-                onArchiveModeChange={setArchiveMode}
-            />
-            <Divider />
 
-            <VisitStats stats={stats} age={age} gender={gender} />
-            <Divider />
+    // If you still want to filter by gender M/F at the backend level, keep this block:
+    const genders: string[] = [];
+    if (gender.male) genders.push("M");
+    if (gender.female) genders.push("F");
+    if (genders.length) urlParams.append("genders", genders.join(","));
 
-            <NewClientsStats stats={stats} age={age} gender={gender} />
-            <Divider />
+    // NEW: grouping params
+    if (categorizeBy) urlParams.append("categorize_by", categorizeBy);
+    const groupDims = Array.from(groupBy ?? new Set());
+    if (groupDims.length > 0) urlParams.append("group_by", groupDims.join(","));
 
-            <DischargedClientsStats stats={stats} age={age} gender={gender} />
-            <Divider />
+    return `?${urlParams.toString()}`;
+  }, [
+    archiveMode,
+    dateRange.from,
+    dateRange.to,
+    user,
+    age,          // demographic/bands
+    gender,       // if you keep gender filter
+    categorizeBy,
+    groupBy,
+  ]);
 
-            <FollowUpVistsStats stats={stats} age={age} gender={gender} />
-            <Divider />
+  useEffect(() => {
+    setErrorLoading(false);
+    apiFetch(Endpoint.STATS, queryString)
+      .then((resp) => resp.json())
+      .then((data) => setStats(data))
+      .catch(() => setErrorLoading(true));
+  }, [queryString]);
 
-            <ReferralStats stats={stats} age={age} gender={gender} />
-            <Divider />
+  if (errorLoading) {
+    return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
+  }
 
-            <DisabilityStats stats={stats} age={age} gender={gender} />
-        </Container>
-    );
+  return (
+    <Container>
+      <FilterBar
+        user={user}
+        users={users}
+        age={age}
+        gender={gender}
+        dateRange={dateRange}
+        stats={stats}
+        setDateRange={setDateRange}
+        setUser={setUser}
+        setGender={setGender}
+        setAge={setAge}
+        archiveMode={archiveMode}
+        onArchiveModeChange={setArchiveMode}
+        // NEW: pass grouping state down so the Group By modal/chips operate on this source of truth
+        categorizeBy={categorizeBy}
+        groupBy={groupBy}
+        setCategorizeBy={setCategorizeBy}
+        setGroupBy={setGroupBy}
+      />
+      <Divider />
+
+      <VisitStats
+        stats={stats}
+        age={age}
+        gender={gender}
+      />
+      <Divider />
+
+      <NewClientsStats stats={stats} age={age} gender={gender} />
+      <Divider />
+
+      <DischargedClientsStats stats={stats} age={age} gender={gender} />
+      <Divider />
+
+      <FollowUpVistsStats stats={stats} age={age} gender={gender} />
+      <Divider />
+
+      <ReferralStats stats={stats} age={age} gender={gender} />
+      <Divider />
+
+      <DisabilityStats stats={stats} age={age} gender={gender} />
+    </Container>
+  );
 };
 
 export default Stats;

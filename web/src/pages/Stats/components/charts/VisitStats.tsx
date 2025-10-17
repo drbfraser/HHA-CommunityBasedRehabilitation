@@ -37,16 +37,18 @@ function isCategorized(arr: any[]): arr is Categorized[] {
 }
 
 const palette = [
-    "#1976d2",
-    "#9c27b0",
-    "#2e7d32",
-    "#ed6c02",
-    "#d32f2f",
-    "#00838f",
-    "#5d4037",
-    "#455a64",
-    "#7cb342",
-    "#6d1b7b",
+    "#1976d2", // blue
+    "#9c27b0", // purple
+    "#2e7d32", // green
+    "#ed6c02", // orange
+    "#d32f2f", // red
+    "#00838f", // teal
+    "#5d4037", // brown
+    "#455a64", // blue grey
+    "#7cb342", // light green
+    "#6d1b7b", // deep purple
+    "#c0ca33", // lime
+    "#0288d1", // light blue
 ];
 
 function AllBarsTooltip({ active, payload, label, seriesKeys }: any & { seriesKeys: string[] }) {
@@ -76,24 +78,39 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
     const visits = useMemo(() => stats?.visits || [], [stats]);
 
-    // Are we in the specific case: groupBy == {zone, host_status}?
     const isZoneHostGrouping = useMemo(() => {
         const set = groupBy ?? new Set<GroupDim>();
         return set.size === 2 && set.has("zone") && set.has("host_status");
     }, [groupBy]);
 
-    // Build the EXACT series keys we want: "<Zone> host" and "<Zone> refugee" for every zone
+    const inferredZoneHostGrouping = useMemo(() => {
+        if (isZoneHostGrouping) return true;
+        const list = Array.isArray(visits) ? (visits as any[]) : [];
+        if (!isCategorized(list as any)) return false;
+        const keys = new Set<string>(
+            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
+        );
+        const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
+        if (!hasHostRefugee) return false;
+        const hasAnyZone = zoneNames.some((zn) =>
+            Array.from(keys).some((k) => k.startsWith(String(zn)))
+        );
+        return hasAnyZone;
+    }, [isZoneHostGrouping, visits, zoneNames]);
+
+    const wantZoneHostDomain = isZoneHostGrouping || inferredZoneHostGrouping;
+
     const exactSeriesKeys = useMemo(() => {
-        if (!isZoneHostGrouping) return [] as string[];
+        if (!wantZoneHostDomain) return [] as string[];
         const keys: string[] = [];
         for (const zn of zoneNames) {
             keys.push(`${zn} host`);
             keys.push(`${zn} refugee`);
         }
         return keys;
-    }, [isZoneHostGrouping, zoneNames]);
+    }, [wantZoneHostDomain, zoneNames]);
 
-    const { chartData, seriesKeys, yKey, header, subline } = useMemo(() => {
+    const { chartData, seriesKeys, tooltipKeys, yKey, header, subline } = useMemo(() => {
         const header = t("statistics.visits") || "Visits";
 
         const groupList = Array.from(groupBy ?? new Set<GroupDim>());
@@ -103,22 +120,16 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
             sublineParts.push(`Grouped by ${groupList.map((g) => DIM_LABEL[g]).join(" + ")}`);
         const subline = sublineParts.join(" · ");
 
-        // If backend returns categorized shape:
         if (isCategorized(visits)) {
-            // Decide which series to use.
-            // If zone×host grouping: use the exact 2×zones list (guarantees presence)
-            // Else: fall back to detected keys from payload.
             let keys: string[];
-            if (isZoneHostGrouping && exactSeriesKeys.length) {
+            if (exactSeriesKeys.length) {
                 keys = exactSeriesKeys;
             } else {
-                // fallback: use what appears in the data
                 keys = Array.from(
                     new Set(visits.flatMap((c: Categorized) => (c.data || []).map((d) => d.name)))
                 );
             }
 
-            // Build rows and zero-fill for any missing key
             const rows = visits.map((cat: Categorized) => {
                 const row: Record<string, any> = { category: String(cat.name) };
                 const lookup = new Map<string, number>(
@@ -130,16 +141,18 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
                 return row;
             });
 
+            const keysWithData = keys.filter((k) => rows.some((r) => Number(r[k]) > 0));
+
             return {
                 chartData: rows,
-                seriesKeys: keys,
+                seriesKeys: keysWithData,
+                tooltipKeys: keys,
                 yKey: "category",
                 header,
                 subline,
             };
         }
 
-        // Flat array -> simple bar
         const rows: Array<{ name: string; value: number }> = Array.isArray(visits)
             ? visits.map((d: any) => ({
                   name: String(d?.name ?? ""),
@@ -149,60 +162,110 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
         return {
             chartData: rows,
             seriesKeys: ["value"],
+            tooltipKeys: ["value"],
             yKey: "name",
             header,
             subline,
         };
-    }, [visits, categorizeBy, groupBy, t, isZoneHostGrouping, exactSeriesKeys]);
+    }, [visits, categorizeBy, groupBy, t, exactSeriesKeys]);
+
+    const xMax = React.useMemo(() => {
+        if (!chartData || chartData.length === 0) return 0;
+        if (seriesKeys.length === 1 && seriesKeys[0] === "value") {
+            return Math.max(0, ...chartData.map((r: any) => Number(r.value) || 0));
+        }
+        return Math.max(
+            0,
+            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0)))
+        );
+    }, [chartData, seriesKeys]);
+
+    const xTicks = React.useMemo(() => {
+        const m = Math.ceil(xMax);
+        const limit = Math.max(1, m);
+        return Array.from({ length: limit + 1 }, (_, i) => i);
+    }, [xMax]);
+
+    // Dynamic Y axis width based on longest label to remove excess left padding
+    const yAxisWidth = useMemo(() => {
+        if (!chartData || chartData.length === 0) return 80;
+        const maxLabelLen = Math.max(...chartData.map((r: any) => String(r[yKey] ?? "").length));
+        // 8px per char approximated, clamp to a reasonable range
+        return Math.min(220, Math.max(60, maxLabelLen * 8 + 12));
+    }, [chartData, yKey]);
 
     if (!visits || visits.length === 0) {
         return (
-            <Box>
-                <Typography variant="h3">{t("statistics.visits") || "Visits"}</Typography>
-                <Typography variant="body2">
-                    {t("statistics.noVisitsFound") || "No visits found."}
-                </Typography>
+            <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                <Box sx={{ width: "100%", maxWidth: 1100 }}>
+                    <Typography variant="h3" align="center">
+                        {t("statistics.visits") || "Visits"}
+                    </Typography>
+                    <Typography variant="body2" align="center">
+                        {t("statistics.noVisitsFound") || "No visits found."}
+                    </Typography>
+                </Box>
             </Box>
         );
     }
 
     return (
-        <Box>
-            <Typography variant="h3" gutterBottom>
-                {header}
-            </Typography>
-            {subline && (
-                <Typography variant="body2" sx={{ mb: 1 }}>
-                    {subline}
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+            <Box sx={{ width: "100%", maxWidth: 1100 }}>
+                <Typography variant="h3" align="center" gutterBottom>
+                    {header}
                 </Typography>
-            )}
+                {subline && (
+                    <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
+                        {subline}
+                    </Typography>
+                )}
 
-            <Box sx={{ width: "100%", height: 460 }}>
-                <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                        data={chartData}
-                        layout="vertical"
-                        margin={{ top: 8, right: 16, bottom: 8, left: 16 }}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" />
-                        <YAxis type="category" dataKey={yKey} width={180} tick={{ fontSize: 12 }} />
-                        <Tooltip
-                            content={(p) => <AllBarsTooltip {...p} seriesKeys={seriesKeys} />}
-                        />
-                        {seriesKeys.length > 1 && <Legend />}
-
-                        {seriesKeys.map((key, idx) => (
-                            <Bar
-                                key={key}
-                                dataKey={key}
-                                name={key}
-                                // stackId="1"  // uncomment if you prefer stacked bars
-                                fill={palette[idx % palette.length]}
+                <Box sx={{ width: "100%", height: 460 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            data={chartData}
+                            layout="vertical"
+                            margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                                type="number"
+                                domain={[0, Math.ceil(xMax)]}
+                                ticks={xTicks}
+                                allowDecimals={false}
                             />
-                        ))}
-                    </BarChart>
-                </ResponsiveContainer>
+                            <YAxis
+                                type="category"
+                                dataKey={yKey}
+                                width={yAxisWidth}
+                                tick={{ fontSize: 12, textAnchor: "end" }}
+                            />
+                            <Tooltip
+                                content={(p) => <AllBarsTooltip {...p} seriesKeys={tooltipKeys} />}
+                            />
+                            {seriesKeys.length > 1 && <Legend />}
+
+                            {seriesKeys.map((key, idx) => {
+                                const m = String(key).match(/^(.*)\s+(host|refugee)$/i);
+                                const zoneLabel = m ? m[1] : String(key);
+                                const status = (m ? m[2] : "host").toLowerCase();
+                                const zoneIndex = Math.max(0, zoneNames.indexOf(zoneLabel));
+                                const color = palette[zoneIndex % palette.length];
+                                const opacity = status === "refugee" ? 0.55 : 1;
+                                return (
+                                    <Bar
+                                        key={key}
+                                        dataKey={key}
+                                        name={key}
+                                        fill={color}
+                                        fillOpacity={opacity}
+                                    />
+                                );
+                            })}
+                        </BarChart>
+                    </ResponsiveContainer>
+                </Box>
             </Box>
         </Box>
     );

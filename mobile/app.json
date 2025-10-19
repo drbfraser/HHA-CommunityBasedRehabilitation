@@ -27,12 +27,14 @@
         },
         "plugins": [
             "expo-router",
-            "expo-build-properties",
-            {
-                "android": {
-                    "targetSdkVersion": 35
+            [
+                "expo-build-properties",
+                {
+                    "android": {
+                        "targetSdkVersion": 35
+                    }
                 }
-            },
+            ],
             "expo-localization",
             "./plugins/withAndroidSigningConfig.ts"
         ],

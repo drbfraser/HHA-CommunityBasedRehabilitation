@@ -44,7 +44,7 @@
         "@types/react-native-vector-icons": "^6.4.6",
         "async-mutex": "0.5.0",
         "events": "^3.3.0",
-        "expo": "~51.0.28",
+        "expo": "^52.0.0",
         "expo-application": "^6.0.2",
         "expo-background-fetch": "~12.0.1",
         "expo-build-properties": "~0.12.5",
@@ -93,6 +93,8 @@
     "devDependencies": {
         "@babel/core": "^7.20.0",
         "@babel/plugin-proposal-decorators": "^7.25.9",
+        "@expo/config-plugins": "~9.0.0",
+        "@expo/prebuild-config": "^8.2.0",
         "@types/jest": "^29.5.12",
         "@types/node": "^15.12.2",
         "@types/react": "^18.3.3",
@@ -100,14 +102,18 @@
         "@types/react-router-dom": "^5.1.7",
         "@types/react-test-renderer": "^18.0.7",
         "better-sqlite3": "^11.5.0",
+        "expo-modules-autolinking": "~2.0.0",
         "jest": "^29.2.1",
         "jest-expo": "~51.0.3",
+        "metro": "^0.81.5",
+        "metro-config": "^0.81.5",
+        "metro-resolver": "^0.81.5",
         "prettier": "2.3.0",
         "react-native-vector-icons": "^8.1.0",
         "react-test-renderer": "18.2.0",
         "typescript": "^5.6.2"
     },
     "private": true,
-    "name": "mobile",
+    "name": "cbr-mobile",
     "version": "1.0.0"
 }

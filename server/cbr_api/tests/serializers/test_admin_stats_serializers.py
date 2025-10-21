@@ -1,6 +1,7 @@
 from django.test import TestCase
 from cbr_api.models import Zone
 from cbr_api.serializers import (
+    AdminStatsDischargedClientsSerializer,
     AdminStatsFollowUpVisitsSerializer,
     AdminStatsNewClientsSerializer,
 )
@@ -65,3 +66,23 @@ class AdminStatsFollowUpVisitsSerializerTests(TestCase):
         serializer = AdminStatsFollowUpVisitsSerializer(data=data)
         self.assertTrue(serializer.is_valid(), serializer.errors)
         self.assertEqual(serializer.validated_data["total"], 120)
+
+
+class AdminStatsDischargedClientsSerializerTests(TestCase):
+    def setUp(self):
+        self.zone = Zone.objects.create(zone_name="Test Zone")
+
+    def test_serialization_with_valid_data(self):
+        data = {
+            "zone_id": self.zone.id,
+            "total": 30,
+            "hcr_type": "CBR",
+            "female_adult_total": 10,
+            "male_adult_total": 8,
+            "female_child_total": 6,
+            "male_child_total": 6,
+        }
+
+        serializer = AdminStatsDischargedClientsSerializer(data=data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        self.assertEqual(serializer.validated_data["total"], 30)

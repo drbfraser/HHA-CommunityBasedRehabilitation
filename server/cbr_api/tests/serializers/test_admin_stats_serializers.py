@@ -1,6 +1,7 @@
 from django.test import TestCase
 from cbr_api.models import Zone
 from cbr_api.serializers import (
+    AdminStatsDisabilitySerializer,
     AdminStatsDischargedClientsSerializer,
     AdminStatsFollowUpVisitsSerializer,
     AdminStatsNewClientsSerializer,
@@ -86,3 +87,35 @@ class AdminStatsDischargedClientsSerializerTests(TestCase):
         serializer = AdminStatsDischargedClientsSerializer(data=data)
         self.assertTrue(serializer.is_valid(), serializer.errors)
         self.assertEqual(serializer.validated_data["total"], 30)
+
+
+class AdminStatsDisabilitySerializerTests(TestCase):
+    def setUp(self):
+        self.zone = Zone.objects.create(zone_name="Test Zone")
+
+    def test_serialization_with_valid_data(self):
+        data = {
+            "disability_id": 1,
+            "total": 45,
+            "zone_id": self.zone.id,
+            "hcr_type": "CBR",
+            "female_adult_total": 10,
+            "male_adult_total": 12,
+            "female_child_total": 11,
+            "male_child_total": 12,
+        }
+
+        serializer = AdminStatsDisabilitySerializer(data=data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        self.assertEqual(serializer.validated_data["disability_id"], 1)
+        self.assertEqual(serializer.validated_data["total"], 45)
+
+    def test_missing_required_fields(self):
+        data = {
+            "disability_id": 1,
+            # missing total
+        }
+
+        serializer = AdminStatsDisabilitySerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("total", serializer.errors)

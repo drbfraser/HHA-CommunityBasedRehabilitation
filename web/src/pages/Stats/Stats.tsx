@@ -112,7 +112,7 @@ const Stats = () => {
     return <Alert severity="error">{t("alert.loadStatsFailure")}</Alert>;
   }
 
-  return (
+   return (
     <Container>
       <FilterBar
         user={user}
@@ -127,7 +127,6 @@ const Stats = () => {
         setAge={setAge}
         archiveMode={archiveMode}
         onArchiveModeChange={setArchiveMode}
-        // NEW: pass grouping state down so the Group By modal/chips operate on this source of truth
         categorizeBy={categorizeBy}
         groupBy={groupBy}
         setCategorizeBy={setCategorizeBy}
@@ -135,28 +134,37 @@ const Stats = () => {
       />
       <Divider />
 
-      <VisitStats
+      <VisitStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
+      <Divider />
+
+      <NewClientsStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
+      <Divider />
+
+      <DischargedClientsStats
         stats={stats}
         age={age}
         gender={gender}
+        user={user}
+        dateRange={dateRange}
       />
       <Divider />
 
-      <NewClientsStats stats={stats} age={age} gender={gender} />
+      <FollowUpVistsStats
+        stats={stats}
+        age={age}
+        gender={gender}
+        user={user}
+        dateRange={dateRange}
+      />
       <Divider />
 
-      <DischargedClientsStats stats={stats} age={age} gender={gender} />
+      <ReferralStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
       <Divider />
 
-      <FollowUpVistsStats stats={stats} age={age} gender={gender} />
-      <Divider />
-
-      <ReferralStats stats={stats} age={age} gender={gender} />
-      <Divider />
-
-      <DisabilityStats stats={stats} age={age} gender={gender} />
+      <DisabilityStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
     </Container>
   );
+
 };
 
 export default Stats;

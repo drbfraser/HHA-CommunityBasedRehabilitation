@@ -12,6 +12,10 @@ import {
     CartesianGrid,
 } from "recharts";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import { IUser } from "@cbr/common/util/users";
+import { IDateRange } from "../filterbar/StatsDateFilter";
+import FilterHeaders from "./FilterHeaders";
 
 type FlatPoint = { name: string; value: number };
 type Categorized = { name: string; data: FlatPoint[] };
@@ -21,8 +25,10 @@ interface IProps {
     stats?: { referrals_resolved?: any; referrals_unresolved?: any };
     categorizeBy?: GroupDim | null;
     groupBy?: Set<GroupDim>;
-    age?: any; // legacy, unused here
-    gender?: any; // legacy, unused here
+    age?: IAge; // legacy, unused here
+    gender?: IGender; // legacy, unused here
+    user?: IUser | null; // legacy, unused here
+    dateRange?: IDateRange; // legacy, unused here
 }
 
 const palette = [
@@ -56,7 +62,15 @@ function AllBarsTooltip({ active, payload, label, seriesKeys }: any & { seriesKe
     );
 }
 
-const ReferralStats: React.FC<IProps> = ({ stats, groupBy }) => {
+const ReferralStats: React.FC<IProps> = ({
+    stats,
+    categorizeBy,
+    groupBy,
+    user,
+    age,
+    gender,
+    dateRange,
+}) => {
     const { t } = useTranslation();
     const zonesMap = useZones();
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
@@ -243,6 +257,8 @@ const ReferralStats: React.FC<IProps> = ({ stats, groupBy }) => {
                     <Typography variant="h3" align="center">
                         {t("statistics.referrals") || "Referrals"}
                     </Typography>
+                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+
                     <Typography variant="body2" align="center">
                         {"No referrals found."}
                     </Typography>
@@ -266,6 +282,8 @@ const ReferralStats: React.FC<IProps> = ({ stats, groupBy }) => {
                 <Typography variant="h3" align="center" gutterBottom>
                     Unresolved Referrals
                 </Typography>
+                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+
                 {!unresolvedChart.chartData || unresolvedChart.chartData.length === 0 ? (
                     <Typography variant="body2" align="center">
                         No unresolved referrals found.
@@ -285,6 +303,8 @@ const ReferralStats: React.FC<IProps> = ({ stats, groupBy }) => {
                 <Typography variant="h3" align="center" gutterBottom>
                     Resolved Referrals
                 </Typography>
+                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+
                 {!resolvedChart.chartData || resolvedChart.chartData.length === 0 ? (
                     <Typography variant="body2" align="center">
                         No resolved referrals found.

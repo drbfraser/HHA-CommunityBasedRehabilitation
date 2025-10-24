@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Chip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
     ResponsiveContainer,
@@ -12,6 +12,10 @@ import {
     CartesianGrid,
 } from "recharts";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import { IUser } from "@cbr/common/util/users";
+import { IDateRange } from "../filterbar/StatsDateFilter";
+import FilterHeaders from "./FilterHeaders";
 
 type FlatPoint = { name: string; value: number };
 type Categorized = { name: string; data: FlatPoint[] };
@@ -19,10 +23,12 @@ type GroupDim = "zone" | "gender" | "host_status" | "age_band";
 
 interface IProps {
     stats?: { discharged_clients?: any };
-    age?: any; // legacy props for consistency
-    gender?: any;
+    age?: IAge; // legacy props for consistency
+    gender?: IGender;
     categorizeBy?: GroupDim | null;
     groupBy?: Set<GroupDim>;
+    user?: IUser | null;
+    dateRange?: IDateRange;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -72,7 +78,15 @@ function AllBarsTooltip({ active, payload, label, seriesKeys }: any & { seriesKe
     );
 }
 
-const DischargedClientsStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
+const DischargedClientsStats: React.FC<IProps> = ({
+    stats,
+    categorizeBy,
+    groupBy,
+    user,
+    age,
+    gender,
+    dateRange,
+}) => {
     const { t } = useTranslation();
     const zonesMap = useZones();
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
@@ -203,6 +217,7 @@ const DischargedClientsStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy
                     <Typography variant="h3" align="center">
                         {"Discharged Clients"}
                     </Typography>
+                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
                     <Typography variant="body2" align="center">
                         {"No discharged clients found."}
                     </Typography>
@@ -217,6 +232,7 @@ const DischargedClientsStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
+                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
                         {subline}

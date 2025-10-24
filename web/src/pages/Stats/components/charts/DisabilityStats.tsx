@@ -12,6 +12,10 @@ import {
     CartesianGrid,
 } from "recharts";
 import { useDisabilities } from "@cbr/common/util/hooks/disabilities";
+import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import { IUser } from "@cbr/common/util/users";
+import { IDateRange } from "../filterbar/StatsDateFilter";
+import FilterHeaders from "./FilterHeaders";
 
 type FlatPoint = { name: string; value: number };
 type Categorized = { name: string; data: FlatPoint[] };
@@ -21,8 +25,10 @@ interface IProps {
     stats?: { disabilities?: any };
     categorizeBy?: GroupDim | null;
     groupBy?: Set<GroupDim>;
-    age?: any; // legacy props for consistency
-    gender?: any;
+    age?: IAge; // legacy props for consistency
+    gender?: IGender;
+    user?: IUser | null; // legacy props for consistency
+    dateRange?: IDateRange;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -72,7 +78,15 @@ function AllBarsTooltip({ active, payload, label, seriesKeys }: any & { seriesKe
     );
 }
 
-const DisabilityStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
+const DisabilityStats: React.FC<IProps> = ({
+    stats,
+    categorizeBy,
+    groupBy,
+    user,
+    age,
+    gender,
+    dateRange,
+}) => {
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
     const disabilityNames = useMemo(() => Array.from(disabilities.values()), [disabilities]);
@@ -202,6 +216,8 @@ const DisabilityStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => 
                     <Typography variant="h3" align="center">
                         {t("statistics.disabilities") || "Disabilities"}
                     </Typography>
+                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+
                     <Typography variant="body2" align="center">
                         {"No disability data found."}
                     </Typography>
@@ -216,6 +232,8 @@ const DisabilityStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => 
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
+                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
                         {subline}

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Chip } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
     ResponsiveContainer,
@@ -12,6 +12,10 @@ import {
     CartesianGrid,
 } from "recharts";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import { IUser } from "@cbr/common/util/users";
+import { IDateRange } from "../filterbar/StatsDateFilter";
+import FilterHeaders from "./FilterHeaders";
 
 type FlatPoint = { name: string; value: number };
 type Categorized = { name: string; data: FlatPoint[] };
@@ -19,10 +23,12 @@ type GroupDim = "zone" | "gender" | "host_status" | "age_band";
 
 interface IProps {
     stats?: { visits?: any };
-    age?: any; // legacy, unused here
-    gender?: any; // legacy, unused here
+    age?: IAge; // legacy, unused here
+    gender?: IGender; // legacy, unused here
     categorizeBy?: GroupDim | null;
     groupBy?: Set<GroupDim>;
+    user?: IUser | null;
+    dateRange?: IDateRange;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -72,7 +78,15 @@ function AllBarsTooltip({ active, payload, label, seriesKeys }: any & { seriesKe
     );
 }
 
-const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
+const VisitStats: React.FC<IProps> = ({
+    stats,
+    categorizeBy,
+    groupBy,
+    user,
+    age,
+    gender,
+    dateRange,
+}) => {
     const { t } = useTranslation();
     const zonesMap = useZones(); // Map<number, string>
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
@@ -201,6 +215,7 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
                     <Typography variant="h3" align="center">
                         {t("statistics.visits") || "Visits"}
                     </Typography>
+                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
                     <Typography variant="body2" align="center">
                         {t("statistics.noVisitsFound") || "No visits found."}
                     </Typography>
@@ -215,12 +230,15 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
+                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                {/* Existing subline (categorization info) */}
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
                         {subline}
                     </Typography>
                 )}
 
+                {/* Chart remains the same */}
                 <Box sx={{ width: "100%", height: 460 }}>
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart
@@ -251,12 +269,10 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
                                 const zoneLabel = m ? m[1] : String(key);
                                 const status = (m ? m[2] : "host").toLowerCase();
 
-                                // ✅ Case-insensitive + trimmed matching for zone names
                                 const zoneIndex = zoneNames.findIndex(
                                     (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
                                 );
 
-                                // ✅ Fallback to idx to ensure distinct colors if not found
                                 const color =
                                     palette[(zoneIndex >= 0 ? zoneIndex : idx) % palette.length];
                                 const opacity = status === "refugee" ? 0.55 : 1;

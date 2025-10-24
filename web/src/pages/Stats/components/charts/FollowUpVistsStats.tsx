@@ -12,6 +12,10 @@ import {
     Legend,
 } from "recharts";
 import { useZones } from "@cbr/common/util/hooks/zones";
+import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
+import { IUser } from "@cbr/common/util/users";
+import { IDateRange } from "../filterbar/StatsDateFilter";
+import FilterHeaders from "./FilterHeaders";
 
 type FlatPoint = { name: string; value: number };
 type Categorized = { name: string; data: FlatPoint[] };
@@ -21,8 +25,10 @@ interface IProps {
     stats?: { follow_up_visits?: any };
     categorizeBy?: GroupDim | null;
     groupBy?: Set<GroupDim>;
-    age?: any;
-    gender?: any;
+    age?: IAge;
+    gender?: IGender;
+    user?: IUser | null;
+    dateRange?: IDateRange;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -72,7 +78,15 @@ function AllBarsTooltip({ active, payload, label, seriesKeys }: any & { seriesKe
     );
 }
 
-const FollowUpVisitsStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
+const FollowUpVisitsStats: React.FC<IProps> = ({
+    stats,
+    categorizeBy,
+    groupBy,
+    user,
+    age,
+    gender,
+    dateRange,
+}) => {
     const { t } = useTranslation();
     const zonesMap = useZones();
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
@@ -201,6 +215,8 @@ const FollowUpVisitsStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy })
                     <Typography variant="h3" align="center">
                         {t("statistics.followUpVisits") || "Follow-up Visits"}
                     </Typography>
+                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+
                     <Typography variant="body2" align="center">
                         {t("statistics.noVisitsFound") || "No data found."}
                     </Typography>
@@ -215,6 +231,8 @@ const FollowUpVisitsStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy })
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
+                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
                         {subline}

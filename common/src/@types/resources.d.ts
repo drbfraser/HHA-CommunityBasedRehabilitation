@@ -372,7 +372,8 @@ interface Resources {
       "archive": "&archive",
       "dearchive": "&dearchive",
       "cannotEditArchived": "&You cannot edit clients while they are archived",
-      "sureToClearForm": "&Are you sure you want to clear the form?"
+      "sureToClearForm": "&Are you sure you want to clear the form?",
+      "imageSubtitle": "&Press the icon to upload an image."
     },
     "referral": {
       "client_id": "Ngutuu' lo Ngangaraki'",
@@ -488,7 +489,8 @@ interface Resources {
       "nutritionChanged": "&<1>Nutrition</1> risk changed to",
       "mentalSet": "&<1>Mental health</1> risk set to",
       "mentalChanged": "&<1>Mental health</1> risk changed to",
-      "area": "&Area"
+      "area": "&Area",
+      "specify": "&Please specify"
     },
     "riskLevelsAbbreviated": {
       "low": "GK",
@@ -846,81 +848,81 @@ interface Resources {
       "mentalSet": "&<1>Mental Health</1> goal status set to"
     },
     "cancellation": {
-      "dead": "&Patient has died",
-      "moved": "&Patient has moved away",
-      "circumstances": "&Patient's circumstances have changed",
-      "abandoned": "&Patient has abandoned this goal",
-      "unwilling": "&Patient is no longer willing to work with us"
+      "_$dead": "&Patient has died",
+      "_$moved": "&Patient has moved away",
+      "_$circumstances": "&Patient's circumstances have changed",
+      "_$abandoned": "&Patient has abandoned this goal",
+      "_$unwilling": "&Patient is no longer willing to work with us"
     },
     "risk": {
       "health": {
         "requirement": {
-          "Malaria": "&Malaria treatment",
-          "Medical": "&Medical assistance",
-          "Wound": "&Wound care for pressure sores",
-          "Mobility": "&Mobility device - crutches",
-          "Physiotherapy": "&Physiotherapy"
+          "_$Malaria": "&Malaria treatment",
+          "_$Medical": "&Medical assistance",
+          "_$Wound": "&Wound care for pressure sores",
+          "_$Mobility": "&Mobility device - crutches",
+          "_$Physiotherapy": "&Physiotherapy"
         },
         "goal": {
-          "Medical": "&Medical treatment provided",
-          "Sores": "&Sores managed/healed",
-          "Mobility": "&Mobility device provided",
-          "Pain": "&Pain managed"
+          "_$Medical": "&Medical treatment provided",
+          "_$Sores": "&Sores managed/healed",
+          "_$Mobility": "&Mobility device provided",
+          "_$Pain": "&Pain managed"
         }
       },
       "social": {
         "requirement": {
-          "Contact": "&Contact with community",
-          "Inclusion": "&Inclusion in family",
-          "Training": "&Training for family members"
+          "_$Contact": "&Contact with community",
+          "_$Inclusion": "&Inclusion in family",
+          "_$Training": "&Training for family members"
         },
         "goal": {
-          "Community": "&Take part in a community event",
-          "Inclusion": "&Inclusion in family time"
+          "_$Community": "&Take part in a community event",
+          "_$Inclusion": "&Inclusion in family time"
         }
       },
       "nutrition": {
         "requirement": {
-          "Diabetic": "&Special dietary need - diabetic",
-          "Allergies": "&Special dietary need - allergies",
-          "Malnutrition": "&Special dietary need - malnutrition",
-          "Training": "&Nutrition training",
-          "Agricultural": "&Inclusion in Agricultural project"
+          "_$Diabetic": "&Special dietary need - diabetic",
+          "_$Allergies": "&Special dietary need - allergies",
+          "_$Malnutrition": "&Special dietary need - malnutrition",
+          "_$Training": "&Nutrition training",
+          "_$Agricultural": "&Inclusion in Agricultural project"
         },
         "goal": {
-          "ManageDiet": "&Manage diet to meet needs",
-          "Sustainable": "&Sustainable food source"
+          "_$ManageDiet": "&Manage diet to meet needs",
+          "_$Sustainable": "&Sustainable food source"
         }
       },
       "education": {
         "requirement": {
-          "School": "&Attend school",
-          "Vocational": "&Vocational training",
-          "Family": "&Training for family - learning through play"
+          "_$School": "&Attend school",
+          "_$Vocational": "&Vocational training",
+          "_$Family": "&Training for family - learning through play"
         },
         "goal": {
-          "Education": "&Have an education",
-          "Income": "&Sustainable source of income",
-          "Child": "&Child ready to start school"
+          "_$Education": "&Have an education",
+          "_$Income": "&Sustainable source of income",
+          "_$Child": "&Child ready to start school"
         }
       },
       "mental": {
         "requirement": {
-          "Medical": "&Needs medical attention",
-          "Family": "&Promote understanding in the family",
-          "Community": "&Promote understanding in the community",
-          "Refer": "&Refer to mental health agencies",
-          "CounsellingStressTrauma": "&Advice and counselling - stress and trauma",
-          "CounsellingOther": "&Advice and counselling - other"
+          "_$Medical": "&Needs medical attention",
+          "_$Family": "&Promote understanding in the family",
+          "_$Community": "&Promote understanding in the community",
+          "_$Refer": "&Refer to mental health agencies",
+          "_$CounsellingStressTrauma": "&Advice and counselling - stress and trauma",
+          "_$CounsellingOther": "&Advice and counselling - other"
         },
         "goal": {
-          "Family": "&Inclusion in family",
-          "Community": "&Inclusion in community",
-          "Medical": "&Medical assistance provided",
-          "Agency": "&Seen by mental health agency",
-          "Improvement": "&Improvement in mental health",
-          "Reduction": "&Reduction of stress and trauma",
-          "Improvements": "&Improvements"
+          "_$Family": "&Inclusion in family",
+          "_$Community": "&Inclusion in community",
+          "_$Medical": "&Medical assistance provided",
+          "_$Agency": "&Seen by mental health agency",
+          "_$Improvement": "&Improvement in mental health",
+          "_$Reduction": "&Reduction of stress and trauma",
+          "_$Improvements": "&Improvements"
         }
       }
     }
@@ -1298,7 +1300,8 @@ interface Resources {
       "archive": "archive",
       "dearchive": "dearchive",
       "cannotEditArchived": "You cannot edit clients while they are archived",
-      "sureToClearForm": "Are you sure you want to clear the form?"
+      "sureToClearForm": "Are you sure you want to clear the form?",
+      "imageSubtitle": "Press the icon to upload an image."
     },
     "referral": {
       "client_id": "Client",
@@ -1414,7 +1417,8 @@ interface Resources {
       "nutritionChanged": "<1>Nutrition</1> risk changed to",
       "mentalSet": "<1>Mental health</1> risk set to",
       "mentalChanged": "<1>Mental health</1> risk changed to",
-      "area": "Area"
+      "area": "Area",
+      "specify": "Please specify"
     },
     "riskLevelsAbbreviated": {
       "low": "LO",
@@ -1772,81 +1776,81 @@ interface Resources {
       "mentalSet": "<1>Mental Health</1> goal status set to"
     },
     "cancellation": {
-      "dead": "Patient has died",
-      "moved": "Patient has moved away",
-      "circumstances": "Patient's circumstances have changed",
-      "abandoned": "Patient has abandoned this goal",
-      "unwilling": "Patient is no longer willing to work with us"
+      "_$dead": "Patient has died",
+      "_$moved": "Patient has moved away",
+      "_$circumstances": "Patient's circumstances have changed",
+      "_$abandoned": "Patient has abandoned this goal",
+      "_$unwilling": "Patient is no longer willing to work with us"
     },
     "risk": {
       "health": {
         "requirement": {
-          "Malaria": "Malaria treatment",
-          "Medical": "Medical assistance",
-          "Wound": "Wound care for pressure sores",
-          "Mobility": "Mobility device - crutches",
-          "Physiotherapy": "Physiotherapy"
+          "_$Malaria": "Malaria treatment",
+          "_$Medical": "Medical assistance",
+          "_$Wound": "Wound care for pressure sores",
+          "_$Mobility": "Mobility device - crutches",
+          "_$Physiotherapy": "Physiotherapy"
         },
         "goal": {
-          "Medical": "Medical treatment provided",
-          "Sores": "Sores managed/healed",
-          "Mobility": "Mobility device provided",
-          "Pain": "Pain managed"
+          "_$Medical": "Medical treatment provided",
+          "_$Sores": "Sores managed/healed",
+          "_$Mobility": "Mobility device provided",
+          "_$Pain": "Pain managed"
         }
       },
       "social": {
         "requirement": {
-          "Contact": "Contact with community",
-          "Inclusion": "Inclusion in family",
-          "Training": "Training for family members"
+          "_$Contact": "Contact with community",
+          "_$Inclusion": "Inclusion in family",
+          "_$Training": "Training for family members"
         },
         "goal": {
-          "Community": "Take part in a community event",
-          "Inclusion": "Inclusion in family time"
+          "_$Community": "Take part in a community event",
+          "_$Inclusion": "Inclusion in family time"
         }
       },
       "nutrition": {
         "requirement": {
-          "Diabetic": "Special dietary need - diabetic",
-          "Allergies": "Special dietary need - allergies",
-          "Malnutrition": "Special dietary need - malnutrition",
-          "Training": "Nutrition training",
-          "Agricultural": "Inclusion in Agricultural project"
+          "_$Diabetic": "Special dietary need - diabetic",
+          "_$Allergies": "Special dietary need - allergies",
+          "_$Malnutrition": "Special dietary need - malnutrition",
+          "_$Training": "Nutrition training",
+          "_$Agricultural": "Inclusion in Agricultural project"
         },
         "goal": {
-          "ManageDiet": "Manage diet to meet needs",
-          "Sustainable": "Sustainable food source"
+          "_$ManageDiet": "Manage diet to meet needs",
+          "_$Sustainable": "Sustainable food source"
         }
       },
       "education": {
         "requirement": {
-          "School": "Attend school",
-          "Vocational": "Vocational training",
-          "Family": "Training for family - learning through play"
+          "_$School": "Attend school",
+          "_$Vocational": "Vocational training",
+          "_$Family": "Training for family - learning through play"
         },
         "goal": {
-          "Education": "Have an education",
-          "Income": "Sustainable source of income",
-          "Child": "Child ready to start school"
+          "_$Education": "Have an education",
+          "_$Income": "Sustainable source of income",
+          "_$Child": "Child ready to start school"
         }
       },
       "mental": {
         "requirement": {
-          "Medical": "Needs medical attention",
-          "Family": "Promote understanding in the family",
-          "Community": "Promote understanding in the community",
-          "Refer": "Refer to mental health agencies",
-          "CounsellingStressTrauma": "Advice and counselling - stress and trauma",
-          "CounsellingOther": "Advice and counselling - other"
+          "_$Medical": "Needs medical attention",
+          "_$Family": "Promote understanding in the family",
+          "_$Community": "Promote understanding in the community",
+          "_$Refer": "Refer to mental health agencies",
+          "_$CounsellingStressTrauma": "Advice and counselling - stress and trauma",
+          "_$CounsellingOther": "Advice and counselling - other"
         },
         "goal": {
-          "Family": "Inclusion in family",
-          "Community": "Inclusion in community",
-          "Medical": "Medical assistance provided",
-          "Agency": "Seen by mental health agency",
-          "Improvement": "Improvement in mental health",
-          "Reduction": "Reduction of stress and trauma",
-          "Improvements": "Improvements"
+          "_$Family": "Inclusion in family",
+          "_$Community": "Inclusion in community",
+          "_$Medical": "Medical assistance provided",
+          "_$Agency": "Seen by mental health agency",
+          "_$Improvement": "Improvement in mental health",
+          "_$Reduction": "Reduction of stress and trauma",
+          "_$Improvements": "Improvements"
         }
       }
     }

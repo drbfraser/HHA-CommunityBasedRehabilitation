@@ -148,6 +148,7 @@ const refreshArrays = () => {
         [ClientField.mentalGoals]: i18n.t("clientFields.mentalGoals"),
         [ClientField.hcrType]: i18n.t("clientFields.hcrType"),
         [ClientField.hasRisk]: i18n.t("clientFields.healthRisk"),
+        cancellation_reason: i18n.t("risks.cancelReason"),
     };
 
     updateClientfieldLabels = {

@@ -17,6 +17,10 @@ const useStyles = () =>
             height: "auto",
             aspectRatio: 1,
         },
+        imageSubtitle: {
+            marginTop: 4,
+            textAlign: "center",
+        },
         field: {
             marginTop: 5,
         },

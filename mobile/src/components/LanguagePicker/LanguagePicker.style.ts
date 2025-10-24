@@ -25,8 +25,21 @@ const useStyles = () =>
             fontWeight: "bold",
             color: themeColors.textGray,
         },
+        languageDisplayContainer: {
+            borderWidth: 1,
+            borderColor: themeColors.textGray,
+            borderRadius: 8,
+            padding: 4,
+            marginHorizontal: 10,
+            marginVertical: 5,
+        },
+        pressedContainer: {
+            backgroundColor: "#dcdcdc",
+        },
         textGray: {
             color: themeColors.textGray,
+            borderColor: "black",
+            borderWidth: 1,
         },
         selectTitle: {
             fontSize: 20,

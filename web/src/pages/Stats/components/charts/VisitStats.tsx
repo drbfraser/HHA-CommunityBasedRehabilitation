@@ -250,9 +250,17 @@ const VisitStats: React.FC<IProps> = ({ stats, categorizeBy, groupBy }) => {
                                 const m = String(key).match(/^(.*)\s+(host|refugee)$/i);
                                 const zoneLabel = m ? m[1] : String(key);
                                 const status = (m ? m[2] : "host").toLowerCase();
-                                const zoneIndex = Math.max(0, zoneNames.indexOf(zoneLabel));
-                                const color = palette[zoneIndex % palette.length];
+
+                                // ✅ Case-insensitive + trimmed matching for zone names
+                                const zoneIndex = zoneNames.findIndex(
+                                    (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
+                                );
+
+                                // ✅ Fallback to idx to ensure distinct colors if not found
+                                const color =
+                                    palette[(zoneIndex >= 0 ? zoneIndex : idx) % palette.length];
                                 const opacity = status === "refugee" ? 0.55 : 1;
+
                                 return (
                                     <Bar
                                         key={key}

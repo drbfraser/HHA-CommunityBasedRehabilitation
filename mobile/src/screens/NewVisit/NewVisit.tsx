@@ -20,7 +20,7 @@ import {
     visitTypeValidationSchema,
 } from "@cbr/common";
 import { StackParamList } from "../../util/stackScreens";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/native-stack";
 import { StackScreenName } from "../../util/StackScreenName";
 import { RouteProp } from "@react-navigation/native";
 

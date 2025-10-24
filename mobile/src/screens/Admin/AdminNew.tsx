@@ -1,4 +1,4 @@
-import { StackScreenProps } from "@react-navigation/stack";
+import { StackScreenProps } from "@react-navigation/native-stack";
 import { Formik, FormikProps } from "formik";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";

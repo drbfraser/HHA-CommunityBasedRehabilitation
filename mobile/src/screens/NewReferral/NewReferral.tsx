@@ -33,7 +33,7 @@ import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { StackScreenName } from "../../util/StackScreenName";
 import { StackParamList } from "../../util/stackScreens";
 import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/native-stack";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import { useDatabase } from "@nozbe/watermelondb/hooks";

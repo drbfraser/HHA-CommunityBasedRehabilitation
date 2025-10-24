@@ -30,7 +30,7 @@ import FoodForm from "./SurveyForm/FoodForm";
 import { handleSubmit } from "./formHandler";
 import { RouteProp } from "@react-navigation/native";
 import { StackParamList } from "../../util/stackScreens";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/native-stack";
 import { StackScreenName } from "../../util/StackScreenName";
 import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";

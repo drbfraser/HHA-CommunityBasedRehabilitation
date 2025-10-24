@@ -19,7 +19,7 @@ import { ClientRisk } from "./Risks/ClientRisk";
 import { ClientForm } from "../../components/ClientForm/ClientForm";
 import { RecentActivity } from "./ClientTimeline/RecentActivity";
 import { RouteProp, useNavigation, useIsFocused } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { Formik, FormikHelpers } from "formik";

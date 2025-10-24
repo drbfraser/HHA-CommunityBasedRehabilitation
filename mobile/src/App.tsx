@@ -3,10 +3,10 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { enableScreens } from "react-native-screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer, useNavigationContainerRef } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
-import { io } from "socket.io-client/dist/socket.io";
+import { io } from "socket.io-client";
 import DatabaseProvider from "@nozbe/watermelondb/react/DatabaseProvider";
 
 import {
@@ -37,6 +37,7 @@ import { AutoSyncDB } from "./util/syncHandler";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
 import { StatusBar } from "react-native";
+import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -72,7 +73,7 @@ declare global {
     }
 }
 
-const Stack = createStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 const styles = globalStyle();
 
 /**
@@ -189,15 +190,31 @@ export default function App() {
                 return updateAuthStateIfNeeded(authState, setAuthState, false);
             });
 
-        const socket = io(`${commonConfiguration.socketIOUrl}`, {
-            transports: ["websocket"], // explicitly use websockets
+        const socket = io(commonConfiguration.socketIOUrl, {
+            transports: ["websocket"],
             autoConnect: true,
-            jsonp: false, // avoid manipulation of DOM
         });
 
         socket.on("connect", () => {
+            // derive host/port from your configured URL instead of socket internals
+            let host = "unknown";
+            let port = "";
+            try {
+                const u = new URL(commonConfiguration.socketIOUrl);
+                host = u.hostname;
+                // if no explicit port, infer a default for display
+                port =
+                    u.port ||
+                    (u.protocol === "https:" ? "443" : u.protocol === "http:" ? "80" : "");
+            } catch {
+                // URL may be relative; just show the raw value
+                host = String(commonConfiguration.socketIOUrl);
+            }
+
             console.log(
-                `[SocketIO] Mobile user connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
+                `[SocketIO] Mobile user connected to ${host}${port ? `:${port}` : ""}. SocketID: ${
+                    socket.id
+                }`
             );
         });
 
@@ -250,67 +267,69 @@ export default function App() {
     );
 
     return (
-        <SafeAreaView style={styles.safeApp}>
-            <I18nextProvider i18n={getI18nInstance()}>
-                <StoreProvider store={store}>
-                    <PaperProvider theme={theme}>
-                        <NavigationContainer theme={theme}>
-                            <StatusBar
-                                backgroundColor={themeColors.statusBarBgGray}
-                                barStyle="light-content"
-                            />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaView style={styles.safeApp}>
+                <I18nextProvider i18n={getI18nInstance()}>
+                    <StoreProvider store={store}>
+                        <PaperProvider theme={theme}>
+                            <NavigationContainer theme={theme}>
+                                <StatusBar
+                                    backgroundColor={themeColors.statusBarBgGray}
+                                    barStyle="light-content"
+                                />
 
-                            <AuthContext.Provider value={authContext}>
-                                <SyncContext.Provider
-                                    value={{
-                                        unSyncedChanges: syncAlert,
-                                        setUnSyncedChanges: setSyncAlert,
-                                        autoSync: autoSync,
-                                        setAutoSync: setAutoSync,
-                                        cellularSync: cellularSync,
-                                        setCellularSync: setCellularSync,
-                                        screenRefresh: screenRefresh,
-                                        setScreenRefresh: setScreenRefresh,
-                                    }}
-                                >
-                                    <DatabaseProvider database={database}>
-                                        <Stack.Navigator>
-                                            {authState.state === "loggedIn" ? (
-                                                Object.values(StackScreenName).map((name) => (
+                                <AuthContext.Provider value={authContext}>
+                                    <SyncContext.Provider
+                                        value={{
+                                            unSyncedChanges: syncAlert,
+                                            setUnSyncedChanges: setSyncAlert,
+                                            autoSync: autoSync,
+                                            setAutoSync: setAutoSync,
+                                            cellularSync: cellularSync,
+                                            setCellularSync: setCellularSync,
+                                            screenRefresh: screenRefresh,
+                                            setScreenRefresh: setScreenRefresh,
+                                        }}
+                                    >
+                                        <DatabaseProvider database={database}>
+                                            <Stack.Navigator>
+                                                {authState.state === "loggedIn" ? (
+                                                    Object.values(StackScreenName).map((name) => (
+                                                        <Stack.Screen
+                                                            key={name}
+                                                            name={name}
+                                                            component={stackScreenProps[name]}
+                                                            // @ts-ignore
+                                                            options={stackScreenOptions[name]}
+                                                        />
+                                                    ))
+                                                ) : authState.state === "loggedOut" ||
+                                                  authState.state === "previouslyLoggedIn" ? (
+                                                    Object.values(NoAuthScreenName).map((name) => (
+                                                        <Stack.Screen
+                                                            key={name}
+                                                            name={name}
+                                                            component={stackScreenProps[name]}
+                                                            // @ts-ignore
+                                                            options={stackScreenOptions[name]}
+                                                        />
+                                                    ))
+                                                ) : (
                                                     <Stack.Screen
-                                                        key={name}
-                                                        name={name}
-                                                        component={stackScreenProps[name]}
-                                                        // @ts-ignore
-                                                        options={stackScreenOptions[name]}
+                                                        name="Loading"
+                                                        component={Loading}
+                                                        options={{ headerShown: false }}
                                                     />
-                                                ))
-                                            ) : authState.state === "loggedOut" ||
-                                              authState.state === "previouslyLoggedIn" ? (
-                                                Object.values(NoAuthScreenName).map((name) => (
-                                                    <Stack.Screen
-                                                        key={name}
-                                                        name={name}
-                                                        component={stackScreenProps[name]}
-                                                        // @ts-ignore
-                                                        options={stackScreenOptions[name]}
-                                                    />
-                                                ))
-                                            ) : (
-                                                <Stack.Screen
-                                                    name="Loading"
-                                                    component={Loading}
-                                                    options={{ headerShown: false }}
-                                                />
-                                            )}
-                                        </Stack.Navigator>
-                                    </DatabaseProvider>
-                                </SyncContext.Provider>
-                            </AuthContext.Provider>
-                        </NavigationContainer>
-                    </PaperProvider>
-                </StoreProvider>
-            </I18nextProvider>
-        </SafeAreaView>
+                                                )}
+                                            </Stack.Navigator>
+                                        </DatabaseProvider>
+                                    </SyncContext.Provider>
+                                </AuthContext.Provider>
+                            </NavigationContainer>
+                        </PaperProvider>
+                    </StoreProvider>
+                </I18nextProvider>
+            </SafeAreaView>
+        </GestureHandlerRootView>
     );
 }

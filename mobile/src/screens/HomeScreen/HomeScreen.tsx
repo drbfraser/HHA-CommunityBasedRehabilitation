@@ -2,9 +2,9 @@ import React, { useContext, useState } from "react";
 import { Button, Provider } from "react-native-paper";
 import theme from "../../util/theme.styles";
 import { AppStackNavProp, StackParamList } from "../../util/stackScreens";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthContext } from "../../context/AuthContext/AuthContext";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import useStyles from "./HomeScreen.style";
 import { IUser, TAPILoadError, APILoadError, useZones } from "@cbr/common";
 import { screens } from "../../util/screens";
@@ -17,9 +17,10 @@ import { Icon, IconProps, withBadge } from "react-native-elements";
 import { SyncModalIcon } from "./ModalIcon";
 import { useTranslation } from "react-i18next";
 import { Text } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface IHomeScreenProps {
-    navigation: StackNavigationProp<StackParamList, StackScreenName.HOME>;
+    navigation: NativeStackNavigationProp<StackParamList, StackScreenName.HOME>;
 }
 
 const SyncIcon = () => {
@@ -48,7 +49,7 @@ const screensForUser = (user: IUser | TAPILoadError | undefined) => {
 const HomeScreen = (props: IHomeScreenProps) => {
     const styles = useStyles();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
-    const Tab = createMaterialBottomTabNavigator();
+    const Tab = createBottomTabNavigator();
     const navigation = useNavigation<AppStackNavProp>();
     const { authState } = useContext(AuthContext);
     const syncAlert = useContext(SyncContext);
@@ -68,7 +69,11 @@ const HomeScreen = (props: IHomeScreenProps) => {
     return (
         <BottomSheetModalProvider>
             <Provider theme={theme}>
-                <Tab.Navigator>
+                <Tab.Navigator
+                    screenOptions={{
+                        headerShown: false,
+                    }}
+                >
                     {screenList.map((screen) => (
                         <Tab.Screen
                             key={screen.name}
@@ -82,16 +87,16 @@ const HomeScreen = (props: IHomeScreenProps) => {
                                     }
                                 },
                             })}
-                            // TODO: The current approach to change font size is not ideal. We should use a custom tab bar.
                             options={{
-                                tabBarIcon: screen.iconName,
-                                tabBarBadge: screen.iconBadge,
-                                tabBarLabel:
-                                    screen.name === "Dashboard" ? (
-                                        <Text style={{ fontSize: 11 }}>Dashboard</Text>
-                                    ) : (
-                                        (undefined as any)
-                                    ),
+                                tabBarIcon: ({ color, size }) => (
+                                    <MaterialCommunityIcons
+                                        name={screen.iconName as any}
+                                        color={color}
+                                        size={size}
+                                    />
+                                ),
+                                tabBarBadge: screen.iconBadge ? "" : undefined,
+                                tabBarLabel: screen.name === "Dashboard" ? "Dashboard" : undefined,
                             }}
                         />
                     ))}

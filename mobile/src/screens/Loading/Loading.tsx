@@ -2,7 +2,7 @@ import { Image, View } from "react-native";
 import React from "react";
 import { ActivityIndicator } from "react-native-paper";
 import useStyles from "./Loading.styles";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { useAppTheme } from "@/src/util/theme.styles";

@@ -15,10 +15,10 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"           
+        "backgroundColor": "#ffffff"
       },
       "package": "org.hopehealthaction.cbrapp",
-      "versionCode": 17     
+      "versionCode": 17
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +29,9 @@
       "expo-router",
       "expo-build-properties",
       "expo-localization",
-      "./plugins/withAndroidSigningConfig.ts"
+      "./plugins/withAndroidSigningConfig.ts",
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true

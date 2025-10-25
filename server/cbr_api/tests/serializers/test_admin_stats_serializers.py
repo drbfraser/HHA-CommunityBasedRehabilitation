@@ -179,3 +179,43 @@ class AdminStatsSerializerTests(TestCase):
         self.assertTrue(serializer.is_valid(), serializer.errors)
         self.assertEqual(serializer.validated_data["clients_with_disabilities"], 35)
         self.assertEqual(len(serializer.validated_data["disabilities"]), 2)
+
+    def test_json_field_validation(self):
+        data = {
+            "disabilities": {"invalid": "structure"},  # Should still be valid JSON
+            "clients_with_disabilities": 10,
+            "visits": [],
+            "referrals_resolved": [],
+            "referrals_unresolved": [],
+            "new_clients": [],
+            "discharged_clients": [],
+            "follow_up_visits": [],
+        }
+
+        serializer = AdminStatsSerializer(data=data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+
+    def test_missing_required_fields(self):
+        data = {
+            "disabilities": [],
+            # missing other required fields
+        }
+
+        serializer = AdminStatsSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("clients_with_disabilities", serializer.errors)
+
+    def test_empty_lists_are_valid(self):
+        data = {
+            "disabilities": [],
+            "clients_with_disabilities": 0,
+            "visits": [],
+            "referrals_resolved": [],
+            "referrals_unresolved": [],
+            "new_clients": [],
+            "discharged_clients": [],
+            "follow_up_visits": [],
+        }
+
+        serializer = AdminStatsSerializer(data=data)
+        self.assertTrue(serializer.is_valid(), serializer.errors)

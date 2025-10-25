@@ -219,3 +219,49 @@ class AdminStatsSerializerTests(TestCase):
 
         serializer = AdminStatsSerializer(data=data)
         self.assertTrue(serializer.is_valid(), serializer.errors)
+
+
+class IntegrationTests(TestCase):
+    # Integration tests for stats serializers working together
+
+    def setUp(self):
+        self.zone = Zone.objects.create(zone_name="Test Zone")
+
+    def test_full_stats_pipeline(self):
+        # Create individual stat components
+        new_clients_data = {
+            "zone_id": self.zone.id,
+            "total": 25,
+            "hcr_type": "CBR",
+            "female_adult_total": 8,
+            "male_adult_total": 9,
+            "female_child_total": 4,
+            "male_child_total": 4,
+        }
+
+        disabilities_data = [
+            {"disability_id": 1, "total": 10},
+            {"disability_id": 2, "total": 15},
+        ]
+
+        # Build complete admin stats
+        admin_stats_data = {
+            "disabilities": disabilities_data,
+            "clients_with_disabilities": 25,
+            "visits": [],
+            "referrals_resolved": [],
+            "referrals_unresolved": [],
+            "new_clients": [new_clients_data],
+            "discharged_clients": [],
+            "follow_up_visits": [],
+        }
+
+        # Validate complete structure
+        admin_serializer = AdminStatsSerializer(data=admin_stats_data)
+        self.assertTrue(admin_serializer.is_valid(), admin_serializer.errors)
+
+        # Verify nested data integrity
+        validated = admin_serializer.validated_data
+        self.assertEqual(len(validated["new_clients"]), 1)
+        self.assertEqual(validated["new_clients"][0]["total"], 25)
+        self.assertEqual(len(validated["disabilities"]), 2)

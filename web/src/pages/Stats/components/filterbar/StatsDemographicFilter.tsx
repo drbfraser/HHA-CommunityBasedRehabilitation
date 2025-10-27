@@ -42,8 +42,10 @@ export const CHILD_BANDS: AgeBand[] = ["0-5", "6-10", "11-17"];
 export const ADULT_BANDS: AgeBand[] = ["18-25", "26-30", "31-45", "46+"];
 
 export const defaultGenderConfigs: IGender = { female: true, male: true };
-export const defaultAgeConfigs: IAge = { demographic: null, bands: [] };
-
+export const defaultAgeConfigs: IAge = {
+    demographic: null, // set to null since both child + adult are covered
+    bands: [...CHILD_BANDS, ...ADULT_BANDS],
+};
 interface IProps {
     open: boolean;
     onClose: () => void;
@@ -67,7 +69,8 @@ const StatsDemographicFilter = ({ open, onClose, gender, age, setGender, setAge 
 
     const onSubmit = () => {
         // Only validation we keep: at least one gender (age filter can be empty = no age filter)
-        if (!selectedGender.female && !selectedGender.male) return;
+        if ((!selectedGender.female && !selectedGender.male) || selectedAge.bands.length === 0)
+            return;
         setGender(selectedGender);
         setAge(selectedAge);
         onClose();

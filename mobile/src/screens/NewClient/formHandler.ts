@@ -48,7 +48,7 @@ const handleNewMobileClientSubmit = async (
     cellularSync: boolean
 ) => {
     enum CancellationReason {
-        NONE = "None",
+        NONE = "",
     }
 
     const buildRiskValues = (
@@ -58,12 +58,12 @@ const handleNewMobileClientSubmit = async (
         riskPrefix: keyof typeof riskDropdownOptions
     ) => {
         const requirement =
-            riskDropdownOptions[riskPrefix]?.requirement?.[requirementKey] || "No requirement";
-        const goal = riskDropdownOptions[riskPrefix]?.goal?.[goalKey] || "No goal";
+            riskDropdownOptions[riskPrefix]?.requirement?.[requirementKey] || requirementKey;
+        const goal = riskDropdownOptions[riskPrefix]?.goal?.[goalKey] || goalKey;
         return {
             risk_level: level || "NA",
-            requirement: requirement,
-            goal_name: goal,
+            requirement: requirement || "No requirement",
+            goal_name: goal || "No goal",
         };
     };
 
@@ -123,7 +123,7 @@ const handleNewMobileClientSubmit = async (
                 health.risk_level,
                 health.requirement,
                 health.goal_name,
-                OutcomeGoalMet.ONGOING,
+                health.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -143,7 +143,7 @@ const handleNewMobileClientSubmit = async (
                 social.risk_level,
                 social.requirement,
                 social.goal_name,
-                OutcomeGoalMet.ONGOING,
+                social.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -162,7 +162,7 @@ const handleNewMobileClientSubmit = async (
                 educat.risk_level,
                 educat.requirement,
                 educat.goal_name,
-                OutcomeGoalMet.ONGOING,
+                educat.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -181,7 +181,7 @@ const handleNewMobileClientSubmit = async (
                 nutrit.risk_level,
                 nutrit.requirement,
                 nutrit.goal_name,
-                OutcomeGoalMet.ONGOING,
+                nutrit.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt
@@ -200,7 +200,7 @@ const handleNewMobileClientSubmit = async (
                 mental.risk_level,
                 mental.requirement,
                 mental.goal_name,
-                OutcomeGoalMet.ONGOING,
+                mental.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
                 newClient.createdAt

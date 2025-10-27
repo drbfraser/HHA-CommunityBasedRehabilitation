@@ -64,7 +64,7 @@ const BaseFormikExposedDropdownMenu = <T extends string>(props: TFormikMenuProps
             formikProps.setFieldValue(field, key);
             // Due to https://github.com/formium/formik/issues/2457, we delay and then validate as a
             // workaround.
-            if (!formikProps.touched[field]) {
+            if (!formikProps.touched[field] && key !== "other") {
                 setTimeout(() => formikProps.setFieldTouched(field, true, true), 150);
             }
 

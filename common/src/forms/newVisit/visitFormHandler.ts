@@ -21,10 +21,12 @@ const addVisit = async (visitInfo: string) => {
 export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
     // Sanitize improvements to only send fields accepted by the API
     const sanitizedImprovements = Object.values(values[VisitFormField.improvements])
-        .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement), [] as any[])
+        .reduce(
+            (improvements, typedImprovement) => improvements.concat(typedImprovement),
+            [] as any[]
+        )
         .filter(
-            (improvement) =>
-                improvement !== undefined && improvement[ImprovementFormField.enabled]
+            (improvement) => improvement !== undefined && improvement[ImprovementFormField.enabled]
         )
         .map((imp) => ({
             risk_type: imp[ImprovementFormField.riskType],

@@ -19,6 +19,19 @@ const addVisit = async (visitInfo: string) => {
 
 // TODO: implement latitude/longitude functionality (Added 0.0 for now as they are required fields in the database.)
 export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
+    // Sanitize improvements to only send fields accepted by the API
+    const sanitizedImprovements = Object.values(values[VisitFormField.improvements])
+        .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement), [] as any[])
+        .filter(
+            (improvement) =>
+                improvement !== undefined && improvement[ImprovementFormField.enabled]
+        )
+        .map((imp) => ({
+            risk_type: imp[ImprovementFormField.riskType],
+            provided: imp[ImprovementFormField.provided],
+            desc: imp[ImprovementFormField.description] ?? "",
+        }));
+
     const newVisit = JSON.stringify({
         client_id: values[VisitFormField.client_id],
         health_visit: values[VisitFormField.health],
@@ -30,12 +43,7 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
         village: values[VisitFormField.village],
         longitude: 0.0,
         latitude: 0.0,
-        improvements: Object.values(values[VisitFormField.improvements])
-            .reduce((improvements, typedImprovement) => improvements.concat(typedImprovement))
-            .filter(
-                (improvement) =>
-                    improvement !== undefined && improvement[ImprovementFormField.enabled]
-            ),
+        improvements: sanitizedImprovements,
     });
 
     return await addVisit(newVisit);

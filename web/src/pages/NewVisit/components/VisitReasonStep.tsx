@@ -39,8 +39,7 @@ const VisitReasonStep = (
 
         if (checked) {
             const providedList: string[] = provisionals[visitType] ?? [];
-            const seeded = providedList.map((provided, idx) => ({
-                [ImprovementFormField.id]: `tmp-${visitType}-${idx}`,
+            const seeded = providedList.map((provided) => ({
                 [ImprovementFormField.enabled]: false,
                 [ImprovementFormField.riskType]: visitType,
                 [ImprovementFormField.provided]: provided,

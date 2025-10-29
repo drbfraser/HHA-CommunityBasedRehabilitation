@@ -16,15 +16,26 @@ const resources = {
 export const initI18n = () => {
     console.log("===> COMMON: i18n.config.ts: Start");
     i18n.use(initReactI18next).init({
-        debug: true, // TODO: Remove this line in production!
+        debug: false, // TODO: this should be false only in production
         compatibilityJSON: "v3",
         resources,
+        lng: "en",
         fallbackLng: "en",
         interpolation: {
             escapeValue: false,
         },
         returnEmptyString: false,
     });
+
+    // Silence "no plural rule found for: bari" warning,
+    if (!i18n.services?.pluralResolver?.rules?.bari) {
+        i18n.services?.pluralResolver?.addRule("bari", {
+            name: "bari",
+            numbers: [1],
+            plurals: () => 0, // no plural distinction
+        });
+    }
+
     console.log("===> COMMON: i18n.config.ts: End");
 };
 

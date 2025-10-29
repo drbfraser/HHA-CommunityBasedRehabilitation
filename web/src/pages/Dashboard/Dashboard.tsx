@@ -300,9 +300,12 @@ const Dashboard = () => {
             {unreadAlertsCount > 0 && (
                 <Alert severity="info">
                     <Typography variant="body1">
-                        <Trans i18nKey="dashboard.newInboxMessages" count={unreadAlertsCount}>
-                            -You have <b>{unreadAlertsCount}</b> new message
-                            {unreadAlertsCount > 1 && "s"} in your inbox
+                        <Trans
+                            i18nKey="dashboard.newInboxMessages"
+                            values={{ count: unreadAlertsCount }}
+                        >
+                            {"You have <1>{{count}}</1> new messages in your inbox"}
+                            <b></b>
                         </Trans>
                     </Typography>
                 </Alert>

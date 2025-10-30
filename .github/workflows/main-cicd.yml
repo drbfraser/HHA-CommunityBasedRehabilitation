@@ -63,7 +63,7 @@ jobs:
     env:
       # Keep Gradle's settings file out of home directory (mounted from host)
       GRADLE_USER_HOME: /isolated_build/.gradle
-      EXPO_CLI_HOME: /isolated_build/.expo
+      EXPO_CLI_HOME: ${{ github.workspace }}/.expo
     steps:
       - name: Checkout code into container
         uses: bfraser/cicd/actions/checkout@v1

@@ -69,8 +69,7 @@ const StatsDemographicFilter = ({ open, onClose, gender, age, setGender, setAge 
 
     const onSubmit = () => {
         // Only validation we keep: at least one gender (age filter can be empty = no age filter)
-        if ((!selectedGender.female && !selectedGender.male) || selectedAge.bands.length === 0)
-            return;
+        if (!selectedGender.female && !selectedGender.male) return;
         setGender(selectedGender);
         setAge(selectedAge);
         onClose();

@@ -23,15 +23,19 @@ import {
     riskLevels,
     RiskType,
     validationSchema,
+    getRiskRequirementsTranslationKey,
+    getRiskGoalsTranslationKey,
 } from "@cbr/common";
 import { SyncContext } from "../../../context/SyncContext/SyncContext";
 import useStyles, { riskRadioButtonStyles } from "./ClientRiskForm.styles";
+import FormikExposedDropdownMenu from "@/src/components/ExposedDropdownMenu/FormikExposedDropdownMenu";
 
 import { handleRiskSubmit } from "./ClientRiskFormHandler";
 import GoalStatusChip from "@/src/components/GoalStatusChip/GoalStatusChip";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { database } from "@/src/util/watermelonDatabase";
 import UpdateGoalStatusModal from "./UpdateGoalStatusModal";
+import { t } from "i18next";
 
 interface ClientRiskFormModalProps {
     showModal: boolean;
@@ -42,9 +46,9 @@ interface ClientRiskFormModalProps {
 }
 
 // reusable text input component for risk form
-interface FormikTextInputProps {
-    formikProps: FormikProps<IRisk>;
-    field: FormField;
+interface FormikTextInputProps<T> {
+    formikProps: FormikProps<T>;
+    field: keyof T | string;
     label: string;
     style?: any;
 }
@@ -58,33 +62,39 @@ const toastValidationError = () => {
     }
 };
 
-export const FormikTextInput: React.FC<FormikTextInputProps> = ({
+export const FormikTextInput = <T,>({
     formikProps,
     field,
     label,
     style,
-}) => {
-    const value = getIn(formikProps.values, field);
-    const errorMsg = getIn(formikProps.errors, field);
-    const touched = getIn(formikProps.touched, field);
+}: FormikTextInputProps<T>) => {
+    const value = getIn(formikProps.values, field as string);
+    const errorMsg = getIn(formikProps.errors, field as string);
+    const touched = getIn(formikProps.touched, field as string);
     const showError = !!(touched && errorMsg);
+
     return (
         <>
             <TextInput
                 mode="outlined"
                 label={label}
                 value={value}
-                onChangeText={formikProps.handleChange(field)}
-                onBlur={() => formikProps.setFieldTouched(field)}
+                onChangeText={formikProps.handleChange(field as string)}
+                onBlur={() => formikProps.setFieldTouched(field as string)}
                 error={showError}
                 style={style}
             />
-            <HelperText type="error" visible={showError}>
-                {errorMsg as string}
-            </HelperText>
+            {showError && <HelperText type="error">{errorMsg as string}</HelperText>}
         </>
     );
 };
+
+const isCustomValue = (value: string, options: Record<string, string>) =>
+    value &&
+    !Object.keys(options).includes(value) &&
+    value !== "other" &&
+    value !== "No requirement" &&
+    value != "No goal";
 
 export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
     const styles = useStyles();
@@ -94,6 +104,29 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
         props.riskData.goal_status as OutcomeGoalMet
     );
     const { t } = useTranslation();
+
+    const requirementKey = getRiskRequirementsTranslationKey(props.riskData.risk_type);
+    const goalKey = getRiskGoalsTranslationKey(props.riskData.risk_type);
+
+    const translatedRequirements = t(requirementKey, { returnObjects: true });
+    const translatedGoals = t(goalKey, { returnObjects: true });
+
+    const localizedRequirements =
+        typeof translatedRequirements === "object"
+            ? { ...translatedRequirements, other: t("disabilities.other") }
+            : {};
+    const localizedGoals =
+        typeof translatedGoals === "object"
+            ? { ...translatedGoals, other: t("disabilities.other") }
+            : {};
+
+    const [showOtherInputRequirement, setShowOtherInputRequirement] = React.useState(
+        isCustomValue(props.riskData.requirement, localizedRequirements)
+    );
+
+    const [showOtherInputGoal, setShowOtherInputGoal] = React.useState(
+        isCustomValue(props.riskData.goal_name, localizedGoals)
+    );
 
     const getHeaderText = () => {
         switch (props.riskType) {
@@ -187,6 +220,28 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
             enableReinitialize={true}
         >
             {(formikProps) => {
+                const handleRequirementChange = (value: string) => {
+                    if (value === "other") {
+                        setShowOtherInputRequirement(true);
+                        formikProps.setFieldValue(FormField.requirement, "");
+                        formikProps.setFieldTouched(FormField.requirement, false);
+                    } else {
+                        setShowOtherInputRequirement(false);
+                        formikProps.setFieldValue(FormField.requirement, value);
+                    }
+                };
+
+                const handleGoalChange = (value: string) => {
+                    if (value === "other") {
+                        setShowOtherInputGoal(true);
+                        formikProps.setFieldValue(FormField.goal_name, "");
+                        formikProps.setFieldTouched(FormField.goal_name, false);
+                    } else {
+                        setShowOtherInputGoal(false);
+                        formikProps.setFieldValue(FormField.goal_name, value);
+                    }
+                };
+
                 const openGoalStatusModal = () => {
                     setPendingGoalStatus(formikProps.values.goal_status);
                     setShowGoalStatusModal(true);
@@ -214,6 +269,12 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                             onDismiss={() => {
                                 props.setShowModal(false);
                                 formikProps.resetForm();
+                                setShowOtherInputRequirement(
+                                    isCustomValue(props.riskData.requirement, localizedRequirements)
+                                );
+                                setShowOtherInputGoal(
+                                    isCustomValue(props.riskData.goal_name, localizedGoals)
+                                );
                             }}
                         >
                             {/* Scroll view needed for modal to dynamically grow in height when textarea inputs being to take up more lines */}
@@ -284,19 +345,49 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                                     </View>
                                 </RadioButton.Group>
 
-                                <FormikTextInput
-                                    formikProps={formikProps}
-                                    field={FormField.requirement}
-                                    label={fieldLabels[FormField.requirement]}
+                                <FormikExposedDropdownMenu
                                     style={styles.riskInputStyle}
+                                    valuesType="record-string"
+                                    values={localizedRequirements}
+                                    fieldLabels={fieldLabels}
+                                    field={FormField.requirement}
+                                    formikProps={formikProps}
+                                    mode="outlined"
+                                    otherOnKeyChange={handleRequirementChange}
+                                    currentValueOverride={
+                                        showOtherInputRequirement ? "other" : undefined
+                                    }
                                 />
 
-                                <FormikTextInput
-                                    formikProps={formikProps}
-                                    field={FormField.goal_name}
-                                    label={fieldLabels[FormField.goal_name]}
+                                {showOtherInputRequirement && (
+                                    <FormikTextInput
+                                        formikProps={formikProps}
+                                        field={FormField.requirement}
+                                        label={t("risks.specify")}
+                                        style={styles.riskInputStyle}
+                                    />
+                                )}
+
+                                <FormikExposedDropdownMenu
                                     style={styles.riskInputStyle}
+                                    valuesType="record-string"
+                                    values={localizedGoals}
+                                    fieldLabels={fieldLabels}
+                                    field={FormField.goal_name}
+                                    formikProps={formikProps}
+                                    mode="outlined"
+                                    otherOnKeyChange={handleGoalChange}
+                                    currentValueOverride={showOtherInputGoal ? "other" : undefined}
                                 />
+
+                                {showOtherInputGoal && (
+                                    <FormikTextInput
+                                        formikProps={formikProps}
+                                        field={FormField.goal_name}
+                                        label={t("risks.specify")}
+                                        style={styles.riskInputStyle}
+                                    />
+                                )}
 
                                 <Button
                                     style={styles.submitButtonStyle}

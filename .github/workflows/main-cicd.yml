@@ -63,7 +63,7 @@ jobs:
     env:
       # Keep Gradle's settings file out of home directory (mounted from host)
       GRADLE_USER_HOME: /isolated_build/.gradle
-      EXPO_HOME: /isolated_build/.expo
+      EXPO_CLI_HOME: /isolated_build/.expo
     steps:
       - name: Checkout code into container
         uses: bfraser/cicd/actions/checkout@v1
@@ -100,7 +100,7 @@ jobs:
 
       # todosd: remove need for sudo?
       - name: Prebuild android folder
-        run: npm run prebuild
+        run: sudo npm run prebuild
         working-directory: /isolated_build/repo/mobile
 
       - name: Setup Release Keystore for Play Store

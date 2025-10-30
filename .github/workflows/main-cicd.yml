@@ -100,7 +100,7 @@ jobs:
 
       # todosd: remove need for sudo?
       - name: Prebuild android folder
-        run: sudo npm run prebuild
+        run: npm run prebuild
         working-directory: /isolated_build/repo/mobile
 
       - name: Setup Release Keystore for Play Store

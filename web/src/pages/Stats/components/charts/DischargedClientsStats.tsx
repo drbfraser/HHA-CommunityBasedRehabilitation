@@ -28,6 +28,7 @@ interface IProps {
     groupBy?: Set<GroupDim>;
     user?: IUser | null;
     dateRange?: IDateRange;
+    archiveMode?: boolean;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -85,6 +86,7 @@ const DischargedClientsStats: React.FC<IProps> = ({
     age,
     gender,
     dateRange,
+    archiveMode,
 }) => {
     const zonesMap = useZones();
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
@@ -230,7 +232,13 @@ const DischargedClientsStats: React.FC<IProps> = ({
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
-                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
                         {subline}
@@ -267,12 +275,10 @@ const DischargedClientsStats: React.FC<IProps> = ({
                                 const zoneLabel = m ? m[1] : String(key);
                                 const status = (m ? m[2] : "host").toLowerCase();
 
-                                // ✅ Robust case-insensitive matching for zone names
                                 const zoneIndex = zoneNames.findIndex(
                                     (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
                                 );
 
-                                // ✅ Use idx as fallback so all bars still get unique colors
                                 const color =
                                     palette[(zoneIndex >= 0 ? zoneIndex : idx) % palette.length];
                                 const opacity = status === "refugee" ? 0.55 : 1;

@@ -5,10 +5,9 @@ import {
     DialogContent,
     DialogActions,
     Button,
-    Tabs,
-    Tab,
     Box,
     Typography,
+    Divider,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import IOSSwitch from "components/IOSSwitch/IOSSwitch";
@@ -53,15 +52,22 @@ const StatsUnifiedFilter = ({
     onArchiveModeChange,
 }: IProps) => {
     const { t } = useTranslation();
-    const [tab, setTab] = React.useState(0);
 
     return (
         <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-            <DialogTitle>{"Filter"}</DialogTitle>
+            <DialogTitle sx={{ pb: 0 }}>{"Filters"}</DialogTitle>
 
-            <Box sx={{ px: 3, pb: 1 }}>
-                <FilterLabels>
-                    <menu>
+            <Box sx={{ pl: 3, pt: 1, pb: 2 }}>
+                <FilterLabels sx={{ m: 0, p: 0 }}>
+                    <menu
+                        style={{
+                            margin: 0,
+                            padding: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 8,
+                        }}
+                    >
                         <Typography
                             color={archiveMode ? "textSecondary" : "textPrimary"}
                             component="span"
@@ -84,14 +90,11 @@ const StatsUnifiedFilter = ({
                 </FilterLabels>
             </Box>
 
-            <DialogContent dividers>
-                <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="fullWidth" sx={{ mb: 2 }}>
-                    <Tab label="Filter by Demographic" />
-                    <Tab label="Filter by Date" />
-                    <Tab label="Filter by User" />
-                </Tabs>
-
-                {tab === 0 && (
+            <DialogContent dividers sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                <Box>
+                    <Typography variant="h6" gutterBottom>
+                        {t("statistics.filterByDemographic")}
+                    </Typography>
                     <StatsDemographicFilter
                         gender={gender}
                         age={age}
@@ -99,9 +102,25 @@ const StatsUnifiedFilter = ({
                         setAge={setAge}
                         compact
                     />
-                )}
-                {tab === 1 && <StatsDateFilter range={dateRange} setRange={setDateRange} />}
-                {tab === 2 && <StatsUserFilter users={users} user={user} setUser={setUser} />}
+                </Box>
+
+                <Divider />
+
+                <Box>
+                    <Typography variant="h6" gutterBottom>
+                        {t("statistics.filterByDate")}
+                    </Typography>
+                    <StatsDateFilter range={dateRange} setRange={setDateRange} />
+                </Box>
+
+                <Divider />
+
+                <Box>
+                    <Typography variant="h6" gutterBottom>
+                        {t("statistics.filterByUser")}
+                    </Typography>
+                    <StatsUserFilter users={users} user={user} setUser={setUser} />
+                </Box>
             </DialogContent>
 
             <DialogActions>

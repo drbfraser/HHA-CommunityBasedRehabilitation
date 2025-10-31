@@ -28,6 +28,7 @@ interface IProps {
     gender?: IGender; // legacy, unused here
     user?: IUser | null; // legacy, unused here
     dateRange?: IDateRange; // legacy, unused here
+    archiveMode?: boolean;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -85,6 +86,7 @@ const NewClientsStats: React.FC<IProps> = ({
     age,
     gender,
     dateRange,
+    archiveMode,
 }) => {
     const zonesMap = useZones();
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
@@ -212,7 +214,13 @@ const NewClientsStats: React.FC<IProps> = ({
                     <Typography variant="h3" align="center">
                         {"New Clients"}
                     </Typography>
-                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                    <FilterHeaders
+                        user={user}
+                        gender={gender}
+                        age={age}
+                        dateRange={dateRange}
+                        archiveMode={archiveMode}
+                    />
                     <Typography variant="body2" align="center">
                         {"No new clients found."}
                     </Typography>
@@ -227,7 +235,13 @@ const NewClientsStats: React.FC<IProps> = ({
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
-                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
                         {subline}

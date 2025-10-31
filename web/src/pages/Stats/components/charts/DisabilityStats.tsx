@@ -29,6 +29,7 @@ interface IProps {
     gender?: IGender;
     user?: IUser | null; // legacy props for consistency
     dateRange?: IDateRange;
+    archiveMode?: boolean;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -86,6 +87,7 @@ const DisabilityStats: React.FC<IProps> = ({
     age,
     gender,
     dateRange,
+    archiveMode,
 }) => {
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
@@ -232,7 +234,13 @@ const DisabilityStats: React.FC<IProps> = ({
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
-                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
 
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useCallback } from "react";
 import { Typography, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
@@ -29,6 +29,7 @@ interface IProps {
     gender?: IGender; // legacy, unused here
     user?: IUser | null; // legacy, unused here
     dateRange?: IDateRange; // legacy, unused here
+    archiveMode?: boolean;
 }
 
 const palette = [
@@ -70,6 +71,7 @@ const ReferralStats: React.FC<IProps> = ({
     age,
     gender,
     dateRange,
+    archiveMode,
 }) => {
     const { t } = useTranslation();
     const zonesMap = useZones();
@@ -83,45 +85,53 @@ const ReferralStats: React.FC<IProps> = ({
         return set.size === 2 && set.has("zone") && set.has("host_status");
     }, [groupBy]);
 
-    const inferZoneHostFromList = (list: any[]) => {
-        if (isZoneHostGrouping) return true;
-        if (!Array.isArray(list) || list.length === 0 || !Array.isArray(list[0]?.data))
-            return false;
+    // ✅ useCallback to stabilize this function for dependency tracking
+    const inferZoneHostFromList = useCallback(
+        (list: any[]) => {
+            if (isZoneHostGrouping) return true;
+            if (!Array.isArray(list) || list.length === 0 || !Array.isArray(list[0]?.data))
+                return false;
 
-        const keys = new Set<string>(
-            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
-        );
-        const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
-        if (!hasHostRefugee) return false;
-        return zoneNames.some((zn) => Array.from(keys).some((k) => k.startsWith(String(zn))));
-    };
+            const keys = new Set<string>(
+                list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
+            );
+            const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
+            if (!hasHostRefugee) return false;
+            return zoneNames.some((zn) => Array.from(keys).some((k) => k.startsWith(String(zn))));
+        },
+        [isZoneHostGrouping, zoneNames]
+    );
 
     const resolvedWantZoneHostDomain = useMemo(
         () => inferZoneHostFromList(resolved),
-        [resolved, isZoneHostGrouping, zoneNames]
+        [resolved, inferZoneHostFromList]
     );
     const unresolvedWantZoneHostDomain = useMemo(
         () => inferZoneHostFromList(unresolved),
-        [unresolved, isZoneHostGrouping, zoneNames]
+        [unresolved, inferZoneHostFromList]
     );
 
-    const makeSeriesKeys = (wantDomain: boolean) => {
-        if (!wantDomain) return [] as string[];
-        const keys: string[] = [];
-        for (const zn of zoneNames) {
-            keys.push(`${zn} host`);
-            keys.push(`${zn} refugee`);
-        }
-        return keys;
-    };
+    // ✅ same fix: stabilize with useCallback
+    const makeSeriesKeys = useCallback(
+        (wantDomain: boolean) => {
+            if (!wantDomain) return [] as string[];
+            const keys: string[] = [];
+            for (const zn of zoneNames) {
+                keys.push(`${zn} host`);
+                keys.push(`${zn} refugee`);
+            }
+            return keys;
+        },
+        [zoneNames]
+    );
 
     const resolvedExactSeriesKeys = useMemo(
         () => makeSeriesKeys(resolvedWantZoneHostDomain),
-        [resolvedWantZoneHostDomain, zoneNames]
+        [resolvedWantZoneHostDomain, makeSeriesKeys]
     );
     const unresolvedExactSeriesKeys = useMemo(
         () => makeSeriesKeys(unresolvedWantZoneHostDomain),
-        [unresolvedWantZoneHostDomain, zoneNames]
+        [unresolvedWantZoneHostDomain, makeSeriesKeys]
     );
 
     const buildPropsFrom = (list: any[], exactSeriesKeys: string[], heading: string) => {
@@ -257,7 +267,13 @@ const ReferralStats: React.FC<IProps> = ({
                     <Typography variant="h3" align="center">
                         {t("statistics.referrals") || "Referrals"}
                     </Typography>
-                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                    <FilterHeaders
+                        user={user}
+                        gender={gender}
+                        age={age}
+                        dateRange={dateRange}
+                        archiveMode={archiveMode}
+                    />
 
                     <Typography variant="body2" align="center">
                         {"No referrals found."}
@@ -282,7 +298,13 @@ const ReferralStats: React.FC<IProps> = ({
                 <Typography variant="h3" align="center" gutterBottom>
                     Unresolved Referrals
                 </Typography>
-                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
 
                 {!unresolvedChart.chartData || unresolvedChart.chartData.length === 0 ? (
                     <Typography variant="body2" align="center">
@@ -303,7 +325,13 @@ const ReferralStats: React.FC<IProps> = ({
                 <Typography variant="h3" align="center" gutterBottom>
                     Resolved Referrals
                 </Typography>
-                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
 
                 {!resolvedChart.chartData || resolvedChart.chartData.length === 0 ? (
                     <Typography variant="body2" align="center">

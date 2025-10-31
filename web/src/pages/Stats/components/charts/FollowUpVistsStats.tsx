@@ -29,6 +29,7 @@ interface IProps {
     gender?: IGender;
     user?: IUser | null;
     dateRange?: IDateRange;
+    archiveMode?: boolean;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -86,6 +87,7 @@ const FollowUpVisitsStats: React.FC<IProps> = ({
     age,
     gender,
     dateRange,
+    archiveMode,
 }) => {
     const { t } = useTranslation();
     const zonesMap = useZones();
@@ -231,7 +233,13 @@ const FollowUpVisitsStats: React.FC<IProps> = ({
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
-                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
 
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
@@ -269,12 +277,10 @@ const FollowUpVisitsStats: React.FC<IProps> = ({
                                 const zoneLabel = m ? m[1] : String(key);
                                 const status = (m ? m[2] : "host").toLowerCase();
 
-                                // ✅ Case-insensitive, trimmed matching for zone names
                                 const zoneIndex = zoneNames.findIndex(
                                     (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
                                 );
 
-                                // ✅ Fallback to idx for unique color assignment if no match found
                                 const color =
                                     palette[(zoneIndex >= 0 ? zoneIndex : idx) % palette.length];
                                 const opacity = status === "refugee" ? 0.55 : 1;

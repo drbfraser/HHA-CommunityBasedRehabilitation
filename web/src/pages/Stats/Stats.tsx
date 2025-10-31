@@ -134,10 +134,10 @@ const Stats = () => {
       />
       <Divider />
 
-      <VisitStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
+      <VisitStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} archiveMode={archiveMode} />
       <Divider />
 
-      <NewClientsStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
+      <NewClientsStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} archiveMode={archiveMode} />
       <Divider />
 
       <DischargedClientsStats
@@ -146,6 +146,7 @@ const Stats = () => {
         gender={gender}
         user={user}
         dateRange={dateRange}
+        archiveMode={archiveMode}
       />
       <Divider />
 
@@ -155,13 +156,14 @@ const Stats = () => {
         gender={gender}
         user={user}
         dateRange={dateRange}
+        archiveMode={archiveMode}
       />
       <Divider />
 
-      <ReferralStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
+      <ReferralStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} archiveMode={archiveMode} />
       <Divider />
 
-      <DisabilityStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} />
+      <DisabilityStats stats={stats} age={age} gender={gender} user={user} dateRange={dateRange} archiveMode={archiveMode} />
     </Container>
   );
 

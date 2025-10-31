@@ -15,19 +15,27 @@ interface FilterHeadersProps {
     gender?: IGender;
     age?: IAge;
     dateRange?: IDateRange;
+    archiveMode?: boolean;
 }
 
-const FilterHeaders: React.FC<FilterHeadersProps> = ({ user, gender, age, dateRange }) => {
+const FilterHeaders: React.FC<FilterHeadersProps> = ({
+    archiveMode,
+    user,
+    gender,
+    age,
+    dateRange,
+}) => {
     // Return null if no filters are provided
     if (
         !user &&
         !gender &&
         !age?.demographic &&
         (!age?.bands || age.bands.length === 0) &&
-        !dateRange
+        !dateRange &&
+        !archiveMode
     )
         return null;
-
+    console.log(archiveMode);
     const chipColors: Record<string, "primary" | "secondary" | "success" | "warning"> = {
         user: "primary",
         gender: "secondary",
@@ -134,6 +142,9 @@ const FilterHeaders: React.FC<FilterHeadersProps> = ({ user, gender, age, dateRa
                     variant="outlined"
                     size="small"
                 />
+            )}
+            {archiveMode && (
+                <Chip label="Clients: Active" color="info" variant="filled" size="small" />
             )}
         </Box>
     );

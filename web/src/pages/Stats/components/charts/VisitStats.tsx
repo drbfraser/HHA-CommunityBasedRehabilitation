@@ -29,6 +29,7 @@ interface IProps {
     groupBy?: Set<GroupDim>;
     user?: IUser | null;
     dateRange?: IDateRange;
+    archiveMode?: boolean;
 }
 
 const DIM_LABEL: Record<GroupDim, string> = {
@@ -86,6 +87,7 @@ const VisitStats: React.FC<IProps> = ({
     age,
     gender,
     dateRange,
+    archiveMode,
 }) => {
     const { t } = useTranslation();
     const zonesMap = useZones(); // Map<number, string>
@@ -230,7 +232,13 @@ const VisitStats: React.FC<IProps> = ({
                 <Typography variant="h3" align="center" gutterBottom>
                     {header}
                 </Typography>
-                <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
                 {/* Existing subline (categorization info) */}
                 {subline && (
                     <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>

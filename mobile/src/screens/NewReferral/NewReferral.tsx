@@ -42,7 +42,7 @@ import { string } from "yup";
 import { useTranslation } from "react-i18next";
 
 interface INewReferralProps {
-    clientID: number;
+    clientID: string;
     route: RouteProp<StackParamList, StackScreenName.REFERRAL>;
     navigation: StackNavigationProp<StackParamList, StackScreenName.REFERRAL>;
 }

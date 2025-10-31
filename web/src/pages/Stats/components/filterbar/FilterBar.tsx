@@ -1,14 +1,11 @@
-import { Button, Chip, styled, Typography } from "@mui/material";
+import { Button, Chip, styled } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 import { IStats } from "@cbr/common/util/stats";
 import { IUser } from "@cbr/common/util/users";
-import IOSSwitch from "components/IOSSwitch/IOSSwitch";
 import ExportStats from "./ExportStats";
-import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
-import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
-import StatsUserFilter from "./StatsUserFilter";
+import { blankDateRange, IDateRange } from "./StatsDateFilter";
+import { IAge, IGender } from "./StatsDemographicFilter";
 import StatsGroupByPicker from "./StatsGroupByPicker";
 import StatsUnifiedFilter from "./StatsUnifiedFilter";
 

@@ -63,6 +63,7 @@ jobs:
     env:
       # Keep Gradle's settings file out of home directory (mounted from host)
       GRADLE_USER_HOME: /isolated_build/.gradle
+      EXPO_CLI_HOME: ${{ github.workspace }}/.expo
     steps:
       - name: Checkout code into container
         uses: bfraser/cicd/actions/checkout@v1
@@ -93,6 +94,9 @@ jobs:
       - name: Run TypeScript compiler
         run: npx tsc --noEmit
         working-directory: /isolated_build/repo/mobile
+        
+      - name: Create Expo home
+        run: mkdir -p /isolated_build/.expo
 
       # todosd: remove need for sudo?
       - name: Prebuild android folder

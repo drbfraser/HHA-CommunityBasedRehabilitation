@@ -5,7 +5,7 @@ import { IStats } from "@cbr/common/util/stats";
 import { IUser } from "@cbr/common/util/users";
 import ExportStats from "./ExportStats";
 import { blankDateRange, IDateRange } from "./StatsDateFilter";
-import { IAge, IGender } from "./StatsDemographicFilter";
+import { IAge, IGender, AGE_BANDS } from "./StatsDemographicFilter";
 import StatsGroupByPicker from "./StatsGroupByPicker";
 import StatsUnifiedFilter from "./StatsUnifiedFilter";
 
@@ -79,16 +79,22 @@ const FilterBar = ({
     const [filterOpen, setFilterOpen] = useState(false);
     const { t } = useTranslation();
 
-    // age filter active = demographic selected OR any explicit bands
-    const ageFilterActive = useMemo(
-        () =>
-            Boolean(
-                (age.demographic && (age.demographic === "child" || age.demographic === "adult")) ||
-                    (Array.isArray(age.bands) && age.bands.length > 0)
-            ),
-        [age.demographic, age.bands]
-    );
+    const ageFilterActive = useMemo(() => {
+        if (!Array.isArray(age.bands)) return false;
 
+        // True if at least 2 age bands are selected
+        if (age.bands.length >= 2) return true;
+
+        const allLabels = AGE_BANDS.map((band) => band.label);
+
+        return !allLabels.every((label) => age.bands.includes(label));
+    }, [age.bands]);
+
+    const genderFilterActive = useMemo(() => {
+        if (!gender) return false;
+        const selectedCount = [gender.male, gender.female].filter(Boolean).length;
+        return selectedCount === 1; // true if only one is selected
+    }, [gender]);
     return (
         <menu>
             <FilterControls>
@@ -192,8 +198,8 @@ const FilterBar = ({
                     setGroupBy(new Set(groups)); // ensure a Set instance
                     setGroupByOpen(false);
                 }}
-                // disable 'age_band' when an age filter is active
-                disableAgeBand={ageFilterActive}
+                disableAgeBand={!ageFilterActive}
+                disableGender={genderFilterActive}
             />
         </menu>
     );

@@ -196,7 +196,14 @@ const StatsDemographicFilter = ({
 
             <Box display="flex" justifyContent="flex-end" gap={1} mt={2}>
                 <Button onClick={onReset}>{t("sync.reset") || "Reset"}</Button>
-                <Button onClick={onSubmit} variant="contained">
+                <Button
+                    onClick={onSubmit}
+                    variant="contained"
+                    disabled={
+                        !selectedAge.bands.length ||
+                        (!selectedGender.female && !selectedGender.male)
+                    }
+                >
                     {t("general.filter") || "Filter"}
                 </Button>
             </Box>

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Typography, Box, Skeleton } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import {
     ResponsiveContainer,

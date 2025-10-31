@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
-import { Typography, Box, Chip } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { Typography, Box } from "@mui/material";
 import {
     ResponsiveContainer,
     BarChart,
@@ -87,7 +86,6 @@ const NewClientsStats: React.FC<IProps> = ({
     gender,
     dateRange,
 }) => {
-    const { t } = useTranslation();
     const zonesMap = useZones();
     const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
     const newClients = useMemo(() => stats?.new_clients || [], [stats]);
@@ -182,7 +180,7 @@ const NewClientsStats: React.FC<IProps> = ({
             header,
             subline,
         };
-    }, [newClients, categorizeBy, groupBy, t, exactSeriesKeys]);
+    }, [newClients, categorizeBy, groupBy, exactSeriesKeys]);
 
     const xMax = React.useMemo(() => {
         if (!chartData || chartData.length === 0) return 0;

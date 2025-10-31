@@ -10,6 +10,7 @@ import StatsDateFilter, { blankDateRange, IDateRange } from "./StatsDateFilter";
 import StatsDemographicFilter, { IAge, IGender } from "./StatsDemographicFilter";
 import StatsUserFilter from "./StatsUserFilter";
 import StatsGroupByPicker from "./StatsGroupByPicker";
+import StatsUnifiedFilter from "./StatsUnifiedFilter";
 
 export type GroupDim = "zone" | "gender" | "host_status" | "age_band";
 
@@ -25,7 +26,7 @@ const FilterButtons = styled("div")({
     gap: "1em",
 });
 
-const FilterLabels = styled("div")({
+export const FilterLabels = styled("div")({
     display: "flex",
     gap: "1em",
 });
@@ -76,12 +77,9 @@ const FilterBar = ({
     setCategorizeBy,
     setGroupBy,
 }: IProps) => {
-    const [dateFilterOpen, setDateFilterOpen] = useState(false);
-    const [demographicOpen, setDemographicOpen] = useState(false);
-    const [userFilterOpen, setUserFilterOpen] = useState(false);
     const [exportOpen, setExportOpen] = useState(false);
     const [groupByOpen, setGroupByOpen] = useState(false);
-
+    const [filterOpen, setFilterOpen] = useState(false);
     const { t } = useTranslation();
 
     // age filter active = demographic selected OR any explicit bands
@@ -101,14 +99,8 @@ const FilterBar = ({
                     <Button variant="outlined" onClick={() => setGroupByOpen(true)}>
                         {"Group By"}
                     </Button>
-                    <Button variant="outlined" onClick={() => setDemographicOpen(true)}>
-                        {t("statistics.filterByDemographic")}
-                    </Button>
-                    <Button variant="outlined" onClick={() => setDateFilterOpen(true)}>
-                        {t("statistics.filterByDate")}
-                    </Button>
-                    <Button variant="outlined" onClick={() => setUserFilterOpen(true)}>
-                        {t("statistics.filterByUser")}
+                    <Button variant="outlined" onClick={() => setFilterOpen(true)}>
+                        {"Filter By"}
                     </Button>
                     <Button variant="outlined" onClick={() => setExportOpen(true)}>
                         {t("dashboard.csvExport")}
@@ -161,55 +153,24 @@ const FilterBar = ({
                 </FilterLabels>
 
                 {/* active/archived toggle */}
-                <FilterLabels>
-                    <menu>
-                        <Typography
-                            color={archiveMode ? "textSecondary" : "textPrimary"}
-                            component={"span"}
-                            variant={"body2"}
-                        >
-                            {t("statistics.allClients")}
-                        </Typography>
-                        <IOSSwitch
-                            checked={archiveMode}
-                            onChange={(event) => onArchiveModeChange(event.target.checked)}
-                        />
-                        <Typography
-                            color={archiveMode ? "textPrimary" : "textSecondary"}
-                            component={"span"}
-                            variant={"body2"}
-                        >
-                            {t("statistics.activeClients")}
-                        </Typography>
-                    </menu>
-                </FilterLabels>
             </FilterControls>
 
             {/* dialogs/modals */}
-            <StatsDemographicFilter
-                open={demographicOpen}
-                onClose={() => setDemographicOpen(false)}
+            <StatsUnifiedFilter
+                open={filterOpen}
+                onClose={() => setFilterOpen(false)}
+                users={users}
+                user={user}
+                setUser={setUser}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
                 gender={gender}
                 age={age}
                 setGender={setGender}
                 setAge={setAge}
+                archiveMode={archiveMode}
+                onArchiveModeChange={onArchiveModeChange}
             />
-
-            <StatsDateFilter
-                open={dateFilterOpen}
-                onClose={() => setDateFilterOpen(false)}
-                range={dateRange}
-                setRange={setDateRange}
-            />
-
-            <StatsUserFilter
-                open={userFilterOpen}
-                onClose={() => setUserFilterOpen(false)}
-                users={users}
-                user={user}
-                setUser={setUser}
-            />
-
             <ExportStats
                 open={exportOpen}
                 onClose={() => setExportOpen(false)}

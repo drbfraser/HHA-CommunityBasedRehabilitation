@@ -3,11 +3,8 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
     styled,
     Typography,
 } from "@mui/material";
@@ -30,135 +27,125 @@ export const blankDateRange: IDateRange = {
     to: "",
 };
 
-const StyledDialogContent = styled(DialogContent)({
+const StyledContent = styled(Box)({
     display: "flex",
     flexDirection: "column",
     gap: "1.5rem",
 });
 
 interface IProps {
-    open: boolean;
-    onClose: () => void;
     range: IDateRange;
     setRange: (range: IDateRange) => void;
 }
 
-const StatsDateFilter = ({ open, onClose, range, setRange }: IProps) => {
+const StatsDateFilter = ({ range, setRange }: IProps) => {
     const { t } = useTranslation();
-    const [accordianExpanded, setExpanded] = useState<string | false>("byMonth");
+    const [accordionExpanded, setExpanded] = useState<string | false>("byMonth");
 
     const handleSubmit = (values: IDateRange) => {
         setRange({ ...values });
-        onClose();
     };
 
-    const handleClear = () => {
+    const handleClear = (resetForm: (args?: any) => void) => {
+        resetForm({ values: blankDateRange });
         setRange({ ...blankDateRange });
-        onClose();
     };
 
-    const handleAccordianChange =
-        (panel: string) => (event: SyntheticEvent, newExpanded: boolean) => {
-            setExpanded(newExpanded ? panel : false);
-        };
+    const handleAccordionChange = (panel: string) => (_: SyntheticEvent, newExpanded: boolean) => {
+        setExpanded(newExpanded ? panel : false);
+    };
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>{t("statistics.filterByDate")}</DialogTitle>
-            <Formik initialValues={range} onSubmit={handleSubmit} enableReinitialize={true}>
-                {({ values, setFieldValue, resetForm }) => (
-                    <Form>
-                        <StyledDialogContent>
-                            <Accordion
-                                expanded={accordianExpanded === "byMonth"}
-                                onChange={handleAccordianChange("byMonth")}
-                            >
-                                <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
-                                    <Typography>{t("statistics.monthly")}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker
-                                            disableFuture
-                                            label="By Month"
-                                            openTo="year"
-                                            views={["year", "month"]}
-                                            value={values.from ? dayjs(values.from) : null}
-                                            onChange={(newValue) => {
-                                                if (newValue) {
-                                                    const start = newValue
-                                                        .clone()
-                                                        .startOf("month")
-                                                        .format("YYYY-MM-DD");
-                                                    const end = newValue
-                                                        .clone()
-                                                        .endOf("month")
-                                                        .format("YYYY-MM-DD");
-                                                    setFieldValue("from", start);
-                                                    setFieldValue("to", end);
-                                                } else {
-                                                    setFieldValue("from", "");
-                                                    setFieldValue("to", "");
-                                                }
-                                            }}
-                                            slotProps={{ textField: { fullWidth: true } }}
-                                        />
-                                    </LocalizationProvider>
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion
-                                expanded={accordianExpanded === "specific"}
-                                onChange={handleAccordianChange("specific")}
-                            >
-                                <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
-                                    <Typography>{t("statistics.specificDate")}</Typography>
-                                </AccordionSummary>
+        <Formik initialValues={range} onSubmit={handleSubmit} enableReinitialize>
+            {({ values, setFieldValue, resetForm }) => (
+                <Form>
+                    <StyledContent>
+                        {/* Month filter */}
+                        <Accordion
+                            expanded={accordionExpanded === "byMonth"}
+                            onChange={handleAccordionChange("byMonth")}
+                        >
+                            <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
+                                <Typography>{t("statistics.monthly")}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DatePicker
+                                        disableFuture
+                                        label="By Month"
+                                        openTo="year"
+                                        views={["year", "month"]}
+                                        value={values.from ? dayjs(values.from) : null}
+                                        onChange={(newValue) => {
+                                            if (newValue) {
+                                                const start = newValue
+                                                    .clone()
+                                                    .startOf("month")
+                                                    .format("YYYY-MM-DD");
+                                                const end = newValue
+                                                    .clone()
+                                                    .endOf("month")
+                                                    .format("YYYY-MM-DD");
+                                                setFieldValue("from", start);
+                                                setFieldValue("to", end);
+                                            } else {
+                                                setFieldValue("from", "");
+                                                setFieldValue("to", "");
+                                            }
+                                        }}
+                                        slotProps={{ textField: { fullWidth: true } }}
+                                    />
+                                </LocalizationProvider>
+                            </AccordionDetails>
+                        </Accordion>
 
-                                <StyledDialogContent>
+                        {/* Specific date filter */}
+                        <Accordion
+                            expanded={accordionExpanded === "specific"}
+                            onChange={handleAccordionChange("specific")}
+                        >
+                            <AccordionSummary expandIcon={<KeyboardArrowDownIcon />}>
+                                <Typography>{t("statistics.specificDate")}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <StyledContent>
                                     <Field
                                         name="from"
                                         label={t("general.from")}
                                         type="date"
                                         variant="outlined"
-                                        required={accordianExpanded === "specific"}
+                                        required={accordionExpanded === "specific"}
                                         component={FormikTextField}
                                         InputLabelProps={{ shrink: true }}
-                                        inputProps={{
-                                            max: values.to || undefined,
-                                        }}
+                                        inputProps={{ max: values.to || undefined }}
                                     />
                                     <Field
                                         name="to"
                                         label={t("general.to")}
                                         type="date"
                                         variant="outlined"
-                                        required={accordianExpanded === "specific"}
+                                        required={accordionExpanded === "specific"}
                                         component={FormikTextField}
                                         InputLabelProps={{ shrink: true }}
-                                        inputProps={{
-                                            min: values.from || undefined,
-                                        }}
+                                        inputProps={{ min: values.from || undefined }}
                                     />
-                                </StyledDialogContent>
-                            </Accordion>
-                        </StyledDialogContent>
-                        <DialogActions>
-                            <Button
-                                onClick={() => {
-                                    resetForm({ values: blankDateRange });
-                                    handleClear();
-                                }}
-                            >
+                                </StyledContent>
+                            </AccordionDetails>
+                        </Accordion>
+
+                        {/* Buttons */}
+                        <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+                            <Button onClick={() => handleClear(resetForm)}>
                                 {t("general.clear")}
                             </Button>
-                            <Button color="primary" type="submit">
+                            <Button color="primary" type="submit" variant="contained">
                                 {t("general.filter")}
                             </Button>
-                        </DialogActions>
-                    </Form>
-                )}
-            </Formik>
-        </Dialog>
+                        </Box>
+                    </StyledContent>
+                </Form>
+            )}
+        </Formik>
     );
 };
 

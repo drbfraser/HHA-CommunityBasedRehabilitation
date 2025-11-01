@@ -23,35 +23,35 @@ env:
   HOME: /isolated_build/
 
 jobs:
-  display_github_contexts:
-    runs-on: [self-hosted, docker]
-    steps:
-      - uses: bfraser/cicd/actions/debug_display_contexts@v1
-      - name: Echo environment info
-        run: |
-          node --version
-          npm --version
-          java -version
-          echo "GRADLE_USER_HOME = $GRADLE_USER_HOME"
-          echo "EXPO_CLI_HOME = $EXPO_CLI_HOME"
-          echo "HOME = $HOME"
-      - name: Change HOME by export
-        run: |
-          echo "HOME before: $HOME"
-          echo "Setting HOME to /isolated_build/repo/home"
-          export HOME=/isolated_build/repo/home
-          echo "HOME after: $HOME"
-      - name: Check HOME in next step
-        run: |
-          echo "HOME in next step: $HOME"
-      - name: Set HOME in GITHUB_ENV
-        run: |
-          echo "HOME before: $HOME"
-          echo "HOME=/isolated_build/repo/home" >> $GITHUB_ENV
-          echo "HOME after: $HOME"
-      - name: Check HOME in next step
-        run: |
-          echo "HOME in next step: $HOME"
+  # display_github_contexts:
+  #   runs-on: [self-hosted, docker]
+  #   steps:
+  #     - uses: bfraser/cicd/actions/debug_display_contexts@v1
+  #     - name: Echo environment info
+  #       run: |
+  #         node --version
+  #         npm --version
+  #         java -version
+  #         echo "GRADLE_USER_HOME = $GRADLE_USER_HOME"
+  #         echo "EXPO_CLI_HOME = $EXPO_CLI_HOME"
+  #         echo "HOME = $HOME"
+  #     - name: Change HOME by export
+  #       run: |
+  #         echo "HOME before: $HOME"
+  #         echo "Setting HOME to /isolated_build/repo/home"
+  #         export HOME=/isolated_build/repo/home
+  #         echo "HOME after: $HOME"
+  #     - name: Check HOME in next step
+  #       run: |
+  #         echo "HOME in next step: $HOME"
+  #     - name: Set HOME in GITHUB_ENV
+  #       run: |
+  #         echo "HOME before: $HOME"
+  #         echo "HOME=/isolated_build/repo/home" >> $GITHUB_ENV
+  #         echo "HOME after: $HOME"
+  #     - name: Check HOME in next step
+  #       run: |
+  #         echo "HOME in next step: $HOME"
 
   # build-common:
   #   runs-on: [self-hosted, docker]
@@ -78,23 +78,49 @@ jobs:
   #       run: npm run test-ci
   #       working-directory: /isolated_build/repo/common
 
-  # build-mobile:
-  #   runs-on: [self-hosted, docker]
-  #   container:
-  #     # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
-  #     # TODO: Update this version to support Android tools version 34?
-  #     # image: reactnativecommunity/react-native-android:6.2
-  #     # todosd: bump this more?  for now, support for Node 18.20
-  #     image: reactnativecommunity/react-native-android:13.2.1
-  #   timeout-minutes: 60
-  #   env:
-  #     # Keep Gradle's settings file out of home directory (mounted from host)
-  #     GRADLE_USER_HOME: /isolated_build/.gradle
-  #   steps:
-  #     - name: Checkout code into container
-  #       uses: bfraser/cicd/actions/checkout@v1
-  #       with:
-  #         path: /isolated_build/repo/
+  build-mobile:
+    runs-on: [self-hosted, docker]
+    container:
+      # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
+      # TODO: Update this version to support Android tools version 34?
+      # image: reactnativecommunity/react-native-android:6.2
+      # todosd: bump this more?  for now, support for Node 18.20
+      image: reactnativecommunity/react-native-android:13.2.1
+    timeout-minutes: 60
+    env:
+      # Keep Gradle's settings file out of home directory (mounted from host)
+      GRADLE_USER_HOME: /isolated_build/.gradle
+    steps:
+      - name: Checkout code into container
+        uses: bfraser/cicd/actions/checkout@v1
+        with:
+          path: /isolated_build/repo/
+
+
+
+      - uses: bfraser/cicd/actions/debug_display_contexts@v1
+      - name: Echo environment info
+        run: |
+          echo "GRADLE_USER_HOME = $GRADLE_USER_HOME"
+          echo "EXPO_CLI_HOME = $EXPO_CLI_HOME"
+          echo "HOME = $HOME"
+      - name: Change HOME by export
+        run: |
+          echo "HOME before: $HOME"
+          echo "Setting HOME to /isolated_build/repo/home"
+          export HOME=/isolated_build/repo/home
+          echo "HOME after: $HOME"
+      - name: Check HOME in next step
+        run: |
+          echo "HOME in next step: $HOME"
+      - name: Set HOME in GITHUB_ENV
+        run: |
+          echo "HOME before: $HOME"
+          echo "HOME=/isolated_build/repo/home" >> $GITHUB_ENV
+          echo "HOME after: $HOME"
+      - name: Check HOME in next step
+        run: |
+          echo "HOME in next step: $HOME"          
 
   #     - name: Build Date String
   #       id: date_str

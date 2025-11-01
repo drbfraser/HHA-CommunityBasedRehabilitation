@@ -1,4 +1,4 @@
-import { Chip } from "@rneui/themed";
+import { Chip } from "react-native-paper";
 import { goalStatuses, OutcomeGoalMet } from "@cbr/common";
 import React from "react";
 import i18n from "i18next";
@@ -12,21 +12,18 @@ export default function GoalStatusChip(props: GoalChipProps) {
 
     return (
         <Chip
-            title={goalStatus ? goalStatus.name : i18n.t("newVisit.PLACEHOLDER-socialGoals.1")}
-            type="solid"
-            buttonStyle={{
+            style={{
                 backgroundColor: goalStatus ? goalStatus.color : "primary",
                 borderRadius: 2.5,
-                paddingVertical: 2,
-                paddingHorizontal: 6,
                 height: 24,
+                justifyContent: "center",
             }}
-            containerStyle={{
-                borderRadius: 0,
-            }}
-            titleStyle={{
+            textStyle={{
+                color: "white",
                 fontSize: 12,
             }}
-        />
+        >
+            {goalStatus ? goalStatus.name : i18n.t("newVisit.PLACEHOLDER-socialGoals.1")}
+        </Chip>
     );
 }

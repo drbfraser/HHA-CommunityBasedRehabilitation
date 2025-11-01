@@ -102,6 +102,26 @@ const ExportStats = ({
         else rows.push(["DATE RANGE: ", date.from, date.to]);
         // Filters summary for clarity in downloads
         const activeFilters: string[] = [];
+        // Human‑readable export date (e.g., "Nov 1st, 2025")
+        const now = new Date();
+        const monthShort = now.toLocaleString(undefined, { month: "short" });
+        const dayNum = now.getDate();
+        const yearNum = now.getFullYear();
+        const ordinal = (n: number) => {
+            const v = n % 100;
+            if (v >= 11 && v <= 13) return "th";
+            switch (n % 10) {
+                case 1:
+                    return "st";
+                case 2:
+                    return "nd";
+                case 3:
+                    return "rd";
+                default:
+                    return "th";
+            }
+        };
+        const exportedOn = `${monthShort} ${dayNum}${ordinal(dayNum)}, ${yearNum}`;
         // Combine gender + demographic into a single Demographics label when possible
         const demoParts: string[] = [];
         if (gender?.male && !gender?.female) demoParts.push("male");
@@ -113,6 +133,8 @@ const ExportStats = ({
         if (groupBy && groupBy.size)
             activeFilters.push(`Group bars: ${Array.from(groupBy).filter(Boolean).join(", ")}`);
         if (activeFilters.length) rows.push(["FILTERS:", activeFilters.join(" | ")]);
+        // Put export date on its own line
+        rows.push(["EXPORTED:", exportedOn]);
         rows.push([""]);
 
         const DIM_ORDER: Array<NonNullable<IProps["categorizeBy"]>> = [

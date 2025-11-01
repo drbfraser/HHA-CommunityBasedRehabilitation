@@ -1,294 +1,305 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useMemo } from "react";
+import { Typography, Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
-
-import { themeColors } from "@cbr/common/util/colors";
+import {
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Legend,
+    CartesianGrid,
+} from "recharts";
 import { useZones } from "@cbr/common/util/hooks/zones";
-import { IStats, StatsVisitCategory } from "@cbr/common/util/stats";
-import { Grid, Link, Skeleton, Typography } from "@mui/material";
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { IAge, IGender } from "../filterbar/StatsDemographicFilter";
-import HorizontalBarGraphStats, {
-    IDemographicTotals,
-    IHBarGraphStatsData,
-    ISubheadings,
-} from "./HorizontalBarGraphStats";
+import { IUser } from "@cbr/common/util/users";
+import { IDateRange } from "../filterbar/StatsDateFilter";
+import FilterHeaders from "./FilterHeaders";
+
+type FlatPoint = { name: string; value: number };
+type Categorized = { name: string; data: FlatPoint[] };
+type GroupDim = "zone" | "gender" | "host_status" | "age_band";
 
 interface IProps {
-    stats?: IStats;
-    age: IAge;
-    gender: IGender;
+    stats?: { visits?: any };
+    age?: IAge; // legacy, unused here
+    gender?: IGender; // legacy, unused here
+    categorizeBy?: GroupDim | null;
+    groupBy?: Set<GroupDim>;
+    user?: IUser | null;
+    dateRange?: IDateRange;
+    archiveMode?: boolean;
 }
 
-interface ZoneTotals {
-    zone_id: number;
-    key?: string;
-    label?: string;
-    health?: number;
-    educat?: number;
-    social?: number;
-    nutrit?: number;
-    mental?: number;
+const DIM_LABEL: Record<GroupDim, string> = {
+    zone: "Zone",
+    gender: "Gender",
+    host_status: "Host/Refugee",
+    age_band: "Age range",
+};
+
+function isCategorized(arr: any[]): arr is Categorized[] {
+    return Array.isArray(arr) && arr.length > 0 && Array.isArray(arr[0]?.data);
 }
 
-export interface CategoryTotals {
-    mental: number;
-    nutrit: number;
-    social: number;
-    educat: number;
-    health: number;
+const palette = [
+    "#1976d2", // blue
+    "#9c27b0", // purple
+    "#2e7d32", // green
+    "#ed6c02", // orange
+    "#d32f2f", // red
+    "#00838f", // teal
+    "#5d4037", // brown
+    "#455a64", // blue grey
+    "#7cb342", // light green
+    "#6d1b7b", // deep purple
+    "#c0ca33", // lime
+    "#0288d1", // light blue
+];
+
+function AllBarsTooltip({ active, payload, label, seriesKeys }: any & { seriesKeys: string[] }) {
+    if (!active || !payload || payload.length === 0) return null;
+    const row = payload[0].payload || {};
+    return (
+        <div
+            className="recharts-default-tooltip"
+            style={{ background: "#fff", padding: 8, border: "1px solid #ccc" }}
+        >
+            <div style={{ fontWeight: 600, marginBottom: 6 }}>{label}</div>
+            <div>
+                {seriesKeys.map((k: number) => (
+                    <div key={k} style={{ display: "flex", gap: 8, fontSize: 12 }}>
+                        <span style={{ minWidth: 190 }}>{k}</span>
+                        <span>{row[k] ?? 0}</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 }
 
-const visitsCategoryLabels = ["Health", "Education", "Social", "Nutrition", "Mental"];
-const visitCategories: StatsVisitCategory[] = ["health", "educat", "social", "nutrit", "mental"];
-
-const VisitStats = ({ stats, age, gender }: IProps) => {
-    const [totalFAdults, setTotalFAdults] = useState(0);
-    const [totalMAdults, setTotalMAdults] = useState(0);
-    const [totalFChild, setTotalFChild] = useState(0);
-    const [totalMChild, setTotalMChild] = useState(0);
-    const [totalData, setTotalData] = useState<IHBarGraphStatsData[]>([]);
-    const [totalCategory, setTotalCategory] = useState<CategoryTotals>({
-        mental: 0,
-        nutrit: 0,
-        social: 0,
-        educat: 0,
-        health: 0,
-    });
-
-    const [breakdownZoneId, setBreakdownZoneId] = useState(0);
-    const [totalPieData, setTotalPieData] = useState<ZoneTotals[]>([]);
-    const breakdownZone = totalPieData.find((d) => d.zone_id === breakdownZoneId);
-    const zones = useZones();
-    const zoneToName = useCallback((id: number) => zones.get(id) ?? "", [zones]);
-
-    useEffect(() => {
-        setBreakdownZoneId(0);
-    }, [stats]);
-
-    type BreakdownKey = keyof ZoneTotals | keyof CategoryTotals;
-
-    const getBreakdownCount = (key: BreakdownKey) => {
-        if (breakdownZone) {
-            return breakdownZone[key] ?? 0;
-        }
-
-        return totalCategory[key as keyof CategoryTotals] ?? 0;
-    };
-
+const VisitStats: React.FC<IProps> = ({
+    stats,
+    categorizeBy,
+    groupBy,
+    user,
+    age,
+    gender,
+    dateRange,
+    archiveMode,
+}) => {
     const { t } = useTranslation();
-    const CHART_HEIGHT = 400;
+    const zonesMap = useZones(); // Map<number, string>
+    const zoneNames = useMemo(() => Array.from(zonesMap.values()), [zonesMap]);
+    const visits = useMemo(() => stats?.visits || [], [stats]);
 
-    const demographicTotalsRef = useRef<IDemographicTotals>({
-        female_adult: 0,
-        male_adult: 0,
-        female_child: 0,
-        male_child: 0,
-    });
+    const isZoneHostGrouping = useMemo(() => {
+        const set = groupBy ?? new Set<GroupDim>();
+        return set.size === 2 && set.has("zone") && set.has("host_status");
+    }, [groupBy]);
 
-    useEffect(() => {
-        if (stats) {
-            let fAdults = 0;
-            let mAdults = 0;
-            let fChild = 0;
-            let mChild = 0;
+    const inferredZoneHostGrouping = useMemo(() => {
+        if (isZoneHostGrouping) return true;
+        const list = Array.isArray(visits) ? (visits as any[]) : [];
+        if (!isCategorized(list as any)) return false;
+        const keys = new Set<string>(
+            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
+        );
+        const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
+        if (!hasHostRefugee) return false;
+        const hasAnyZone = zoneNames.some((zn) =>
+            Array.from(keys).some((k) => k.startsWith(String(zn)))
+        );
+        return hasAnyZone;
+    }, [isZoneHostGrouping, visits, zoneNames]);
 
-            const { pieData, categoryTotals } = stats.visits.reduce(
-                (acc, v) => {
-                    const zoneTotals: ZoneTotals = {
-                        zone_id: v.zone_id,
-                        label: zoneToName(v.zone_id),
-                    };
+    const wantZoneHostDomain = isZoneHostGrouping || inferredZoneHostGrouping;
 
-                    visitCategories.forEach((category, index) => {
-                        acc.categoryTotals[category] = acc.categoryTotals[category] || 0;
+    const exactSeriesKeys = useMemo(() => {
+        if (!wantZoneHostDomain) return [] as string[];
+        const keys: string[] = [];
+        for (const zn of zoneNames) {
+            keys.push(`${zn} host`);
+            keys.push(`${zn} refugee`);
+        }
+        return keys;
+    }, [wantZoneHostDomain, zoneNames]);
 
-                        const categoryTotal =
-                            (v[`${category}_female_adult_total`] ?? 0) +
-                            (v[`${category}_male_adult_total`] ?? 0) +
-                            (v[`${category}_female_child_total`] ?? 0) +
-                            (v[`${category}_male_child_total`] ?? 0);
+    const { chartData, seriesKeys, tooltipKeys, yKey, header, subline } = useMemo(() => {
+        const header = t("statistics.visits") || "Visits";
 
-                        zoneTotals[`${category}`] = categoryTotal;
-                        zoneTotals.key = visitsCategoryLabels[index];
+        const groupList = Array.from(groupBy ?? new Set<GroupDim>());
+        const sublineParts: string[] = [];
+        if (categorizeBy) sublineParts.push(`Categorized by ${DIM_LABEL[categorizeBy]}`);
+        if (groupList.length > 0)
+            sublineParts.push(`Grouped by ${groupList.map((g) => DIM_LABEL[g]).join(" + ")}`);
+        const subline = sublineParts.join(" · ");
 
-                        acc.categoryTotals[category] += categoryTotal;
-                    });
+        if (isCategorized(visits)) {
+            let keys: string[];
+            if (exactSeriesKeys.length) {
+                keys = exactSeriesKeys;
+            } else {
+                keys = Array.from(
+                    new Set(visits.flatMap((c: Categorized) => (c.data || []).map((d) => d.name)))
+                );
+            }
 
-                    acc.pieData.push(zoneTotals);
-                    return acc;
-                },
-                {
-                    pieData: [],
-                    categoryTotals: { mental: 0, nutrit: 0, social: 0, educat: 0, health: 0 },
-                } as {
-                    pieData: ZoneTotals[];
-                    categoryTotals: CategoryTotals;
-                }
-            );
-
-            // Aggregate bar graph data by zone
-            const zoneMap: Record<number, IHBarGraphStatsData> = {};
-
-            stats.visits.forEach((v) => {
-                const id = v.zone_id;
-                if (!zoneMap[id]) {
-                    zoneMap[id] = {
-                        femaleAdult: 0,
-                        maleAdult: 0,
-                        femaleChild: 0,
-                        maleChild: 0,
-                        label: zoneToName(id),
-                        zone_id: id,
-                    };
-                }
-
-                visitCategories.forEach((category) => {
-                    zoneMap[id].femaleAdult += v[`${category}_female_adult_total`] ?? 0;
-                    zoneMap[id].maleAdult += v[`${category}_male_adult_total`] ?? 0;
-                    zoneMap[id].femaleChild += v[`${category}_female_child_total`] ?? 0;
-                    zoneMap[id].maleChild += v[`${category}_male_child_total`] ?? 0;
-
-                    fAdults += v[`${category}_female_adult_total`] ?? 0;
-                    mAdults += v[`${category}_male_adult_total`] ?? 0;
-                    fChild += v[`${category}_female_child_total`] ?? 0;
-                    mChild += v[`${category}_male_child_total`] ?? 0;
+            const rows = visits.map((cat: Categorized) => {
+                const row: Record<string, any> = { category: String(cat.name) };
+                const lookup = new Map<string, number>(
+                    (cat.data || []).map((d) => [d.name, d.value])
+                );
+                keys.forEach((k) => {
+                    row[k] = lookup.get(k) ?? 0;
                 });
+                return row;
             });
 
-            const totalData = Object.values(zoneMap).sort((a, b) => a.label.localeCompare(b.label));
+            const keysWithData = keys.filter((k) => rows.some((r) => Number(r[k]) > 0));
 
-            setTotalCategory(categoryTotals);
-            setTotalPieData(pieData);
-            setTotalData(totalData);
-            setTotalFAdults(fAdults);
-            setTotalMAdults(mAdults);
-            setTotalFChild(fChild);
-            setTotalMChild(mChild);
-
-            demographicTotalsRef.current = {
-                female_adult: fAdults,
-                male_adult: mAdults,
-                female_child: fChild,
-                male_child: mChild,
+            return {
+                chartData: rows,
+                seriesKeys: keysWithData,
+                tooltipKeys: keys,
+                yKey: "category",
+                header,
+                subline,
             };
         }
-    }, [stats, zoneToName]);
 
-    const subheadings: ISubheadings[] = [
-        {
-            label: t("statistics.totalFChild"),
-            total: totalFChild,
-        },
-        {
-            label: t("statistics.totalMChild"),
-            total: totalMChild,
-        },
-        {
-            label: t("statistics.totalFAdult"),
-            total: totalFAdults,
-        },
-        {
-            label: t("statistics.totalMAdult"),
-            total: totalMAdults,
-        },
-    ];
+        const rows: Array<{ name: string; value: number }> = Array.isArray(visits)
+            ? visits.map((d: any) => ({
+                  name: String(d?.name ?? ""),
+                  value: Number(d?.value ?? 0),
+              }))
+            : [];
+        return {
+            chartData: rows,
+            seriesKeys: ["value"],
+            tooltipKeys: ["value"],
+            yKey: "name",
+            header,
+            subline,
+        };
+    }, [visits, categorizeBy, groupBy, t, exactSeriesKeys]);
 
-    const breakdownData = [
-        {
-            label: t("general.health"),
-            count: getBreakdownCount("health"),
-            color: themeColors.hhaGreen,
-        },
-        {
-            label: t("general.education"),
-            count: getBreakdownCount("educat"),
-            color: themeColors.hhaPurple,
-        },
-        {
-            label: t("general.social"),
-            count: getBreakdownCount("social"),
-            color: themeColors.hhaBlue,
-        },
-        {
-            label: t("general.nutrition"),
-            count: getBreakdownCount("nutrit"),
-            color: themeColors.yellow,
-        },
-        {
-            label: t("general.mental"),
-            count: getBreakdownCount("mental"),
-            color: themeColors.bluePale,
-        },
-    ].filter((z) => z.count);
-
-    const handleChartClick = (e: any) => {
-        if (!e || !Array.isArray(e.activePayload) || e.activePayload.length === 0) {
-            return;
+    const xMax = React.useMemo(() => {
+        if (!chartData || chartData.length === 0) return 0;
+        if (seriesKeys.length === 1 && seriesKeys[0] === "value") {
+            return Math.max(0, ...chartData.map((r: any) => Number(r.value) || 0));
         }
+        return Math.max(
+            0,
+            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0)))
+        );
+    }, [chartData, seriesKeys]);
 
-        setBreakdownZoneId(e.activePayload[0].payload?.zone_id);
-    };
+    const xTicks = React.useMemo(() => {
+        const m = Math.ceil(xMax);
+        const limit = Math.max(1, m);
+        return Array.from({ length: limit + 1 }, (_, i) => i);
+    }, [xMax]);
+
+    // Dynamic Y axis width based on longest label to remove excess left padding
+    const yAxisWidth = useMemo(() => {
+        if (!chartData || chartData.length === 0) return 80;
+        const maxLabelLen = Math.max(...chartData.map((r: any) => String(r[yKey] ?? "").length));
+        // 8px per char approximated, clamp to a reasonable range
+        return Math.min(220, Math.max(60, maxLabelLen * 8 + 12));
+    }, [chartData, yKey]);
+
+    if (!visits || visits.length === 0) {
+        return (
+            <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+                <Box sx={{ width: "100%", maxWidth: 1100 }}>
+                    <Typography variant="h3" align="center">
+                        {t("statistics.visits") || "Visits"}
+                    </Typography>
+                    <FilterHeaders user={user} gender={gender} age={age} dateRange={dateRange} />
+                    <Typography variant="body2" align="center">
+                        {t("statistics.noVisitsFound") || "No visits found."}
+                    </Typography>
+                </Box>
+            </Box>
+        );
+    }
 
     return (
-        <>
-            <Typography variant="h3">{t("statistics.byZone")}</Typography>
-            {Boolean(!stats || stats.visits.length)
-                ? t("statistics.onlyZonesWithVisits")
-                : t("statistics.noVisitsFound")}
-            <HorizontalBarGraphStats
-                title={t("statistics.visits")}
-                data={totalData}
-                age={age}
-                gender={gender}
-                subheadings={subheadings}
-                totals={demographicTotalsRef.current}
-                onBarClick={handleChartClick}
-            />
-
-            <Grid item xs={12} lg={5} xl={4}>
-                <Typography variant="h3">{t("statistics.byType")}</Typography>
-                <Typography variant="body1">
-                    {t("statistics.showingDataFor")}:{" "}
-                    <b>{zones.get(breakdownZoneId) ?? t("statistics.allZones")}</b>.
+        <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+            <Box sx={{ width: "100%", maxWidth: 1100 }}>
+                <Typography variant="h3" align="center" gutterBottom>
+                    {header}
                 </Typography>
-
-                <Typography variant="body2">
-                    {Boolean(!breakdownZone) ? (
-                        t("statistics.clickForZoneSpecificData")
-                    ) : (
-                        <Link
-                            component="button"
-                            variant="body1"
-                            onClick={() => setBreakdownZoneId(0)}
-                        >
-                            {t("statistics.viewAllZoneData")}
-                        </Link>
-                    )}
-                </Typography>
-
-                {Boolean(!stats || stats.visits.length) ? (
-                    <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-                        <PieChart>
-                            <Pie
-                                data={breakdownData}
-                                dataKey="count"
-                                nameKey="label"
-                                label={(a) => a.label}
-                                labelLine={true}
-                                innerRadius={60}
-                            >
-                                {breakdownData.map((entry, i) => (
-                                    <Cell key={i} fill={entry.color} />
-                                ))}
-                            </Pie>
-                            <Tooltip />
-                        </PieChart>
-                    </ResponsiveContainer>
-                ) : (
-                    <Skeleton variant="rectangular" height={0} />
+                <FilterHeaders
+                    user={user}
+                    gender={gender}
+                    age={age}
+                    dateRange={dateRange}
+                    archiveMode={archiveMode}
+                />
+                {/* Existing subline (categorization info) */}
+                {subline && (
+                    <Typography variant="body2" sx={{ mb: 1, textAlign: "center" }}>
+                        {subline}
+                    </Typography>
                 )}
-            </Grid>
-        </>
+
+                {/* Chart remains the same */}
+                <Box sx={{ width: "100%", height: 460 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                            data={chartData}
+                            layout="vertical"
+                            margin={{ top: 8, right: 16, bottom: 8, left: 0 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                                type="number"
+                                domain={[0, Math.ceil(xMax)]}
+                                ticks={xTicks}
+                                allowDecimals={false}
+                            />
+                            <YAxis
+                                type="category"
+                                dataKey={yKey}
+                                width={yAxisWidth}
+                                tick={{ fontSize: 12, textAnchor: "end" }}
+                            />
+                            <Tooltip
+                                content={(p) => <AllBarsTooltip {...p} seriesKeys={tooltipKeys} />}
+                            />
+                            {seriesKeys.length > 1 && <Legend />}
+
+                            {seriesKeys.map((key, idx) => {
+                                const m = String(key).match(/^(.*)\s+(host|refugee)$/i);
+                                const zoneLabel = m ? m[1] : String(key);
+                                const status = (m ? m[2] : "host").toLowerCase();
+
+                                const zoneIndex = zoneNames.findIndex(
+                                    (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
+                                );
+
+                                const color =
+                                    palette[(zoneIndex >= 0 ? zoneIndex : idx) % palette.length];
+                                const opacity = status === "refugee" ? 0.55 : 1;
+
+                                return (
+                                    <Bar
+                                        key={key}
+                                        dataKey={key}
+                                        name={key}
+                                        fill={color}
+                                        fillOpacity={opacity}
+                                    />
+                                );
+                            })}
+                        </BarChart>
+                    </ResponsiveContainer>
+                </Box>
+            </Box>
+        </Box>
     );
 };
 

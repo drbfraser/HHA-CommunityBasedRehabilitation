@@ -26,7 +26,6 @@ const ImprovementField = (props: {
     ) {
         // Since this component is dynamically generated we need to set its initial values
         props.formikProps.setFieldValue(`${fieldName}`, {
-            [ImprovementFormField.id]: "tmp",
             [ImprovementFormField.enabled]: false,
             [ImprovementFormField.description]: "",
             [ImprovementFormField.riskType]: props.visitType,

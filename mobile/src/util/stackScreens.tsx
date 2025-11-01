@@ -68,6 +68,7 @@ const refreshArrays = () => {
             header: DefaultHeader(
                 i18n.t("clientAttr.viewClient"),
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
+                    (route as TAppRouteProp<StackScreenName.CLIENT>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID
                 }`
             ),
@@ -89,6 +90,7 @@ const refreshArrays = () => {
             header: DefaultHeader(
                 i18n.t("screenNames.newVisit"),
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
+                    (route as TAppRouteProp<StackScreenName.VISIT>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.VISIT>).params.clientID
                 }`
             ),
@@ -98,6 +100,7 @@ const refreshArrays = () => {
             header: DefaultHeader(
                 i18n.t("screenNames.newReferral"),
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
+                    (route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID
                 }`
             ),
@@ -107,6 +110,7 @@ const refreshArrays = () => {
             header: DefaultHeader(
                 i18n.t("screenNames.newBaselineSurvey"),
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
+                    (route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID
                 }`
             ),
@@ -137,15 +141,19 @@ export type StackParamList = {
     [StackScreenName.HOME]: undefined;
     [StackScreenName.CLIENT]: {
         clientID: string;
+        clientName?: string;
     };
     [StackScreenName.VISIT]: {
         clientID: string;
+        clientName?: string;
     };
     [StackScreenName.REFERRAL]: {
         clientID: string;
+        clientName?: string;
     };
     [StackScreenName.BASE_SURVEY]: {
         clientID: string;
+        clientName?: string;
     };
     [StackScreenName.ADMIN_VIEW]: {
         userID: string;

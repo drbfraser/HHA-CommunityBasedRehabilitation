@@ -37,7 +37,7 @@ function StatsGroupByPicker({
 }: StatsGroupByPickerProps) {
     const [left, setLeft] = React.useState<GroupDim | null>(categorizeBy);
     const [right, setRight] = React.useState<Set<GroupDim>>(new Set(groupBy));
-
+    console.log(disableAgeBand, disableGender);
     React.useEffect(() => {
         setLeft(categorizeBy);
         setRight(new Set(groupBy));
@@ -135,7 +135,7 @@ function StatsGroupByPicker({
                 </Grid>
                 <Typography variant="caption" sx={{ mt: 2, display: "block" }}>
                     {
-                        "Left is single-select. Right is multi-select. A dimension cannot be on both sides. Age range is disabled while an Age filter (Child/Adult or ranges) is active. Gender is disabled while a specific gender filter (only Male or only Female) is active."
+                        "Left is single-select. Right is multi-select. A dimension cannot be on both sides. Age range is disabled while only one age-range is selected in the Age Filter. Gender is disabled while a specific gender filter (only Male or only Female) is active."
                     }
                 </Typography>
             </DialogContent>

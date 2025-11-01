@@ -65,6 +65,14 @@ jobs:
       GRADLE_USER_HOME: /isolated_build/.gradle
       EXPO_CLI_HOME: /isolated_build/repo/.expo
     steps:
+      - name: Echo environment info
+        run: |
+          node --version
+          npm --version
+          java -version
+          echo "GRADLE_USER_HOME = $GRADLE_USER_HOME"
+          echo "EXPO_CLI_HOME = $EXPO_CLI_HOME"
+          
       - name: Checkout code into container
         uses: bfraser/cicd/actions/checkout@v1
         with:

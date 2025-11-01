@@ -72,7 +72,7 @@ jobs:
 
       - name: Build Date String
         id: date_str
-        run: echo "stdout=$(date -u +%Y-%m-%d-%H%M%S%z)" >> "$GITHUB_OUTPUT"
+        run: echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
 
       - name: Install NPM version & Build Common
         run: |
@@ -254,8 +254,11 @@ jobs:
         run: |
           export IMAGE_TAG=v$(git show -s --format=%cs ${{ github.sha }}).`git rev-parse --short=8 ${{ github.sha }}`
           echo "IMAGE_TAG = '$IMAGE_TAG'"
-          echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
-
+          # NOTE: On github action runner v2.297 or higher, should redirect echo output to GITHUB_OUTPUT:
+          #    `echo "tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"`
+          # However, as of July 2023, SFU's GitHub runner is v2.296.x, so using old syntax (which works on newer)
+          # https://github.blog/changelog/2022-10-11-github-actions-deprecating-save-state-and-set-output-commands/
+          echo "::set-output name=tag::$IMAGE_TAG"
   build-docker-publish-docker-images:
     needs: [build-common, build-web, build-server, export-image-tag]
     # needs: [export-image-tag]   # Used for faking and testing

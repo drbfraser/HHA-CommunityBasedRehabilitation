@@ -45,7 +45,7 @@ interface ISurvey {
     validationSchema: () => any;
 }
 interface IBaseSurveyProps {
-    clientID: number;
+    clientID: string;
     route: RouteProp<StackParamList, StackScreenName.BASE_SURVEY>;
     navigation: StackNavigationProp<StackParamList, StackScreenName.BASE_SURVEY>;
 }

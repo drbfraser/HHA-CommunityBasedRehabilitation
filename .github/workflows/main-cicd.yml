@@ -19,8 +19,6 @@ env:
   # otherwise, NPM gives EACCES error trying to mkdir /github/home/.npm
   # Using the /isolated_build/ folder (inside the container) keeps permissions straight
   npm_config_cache: /isolated_build/.npm-cache
-  EXPO_CLI_HOME: /isolated_build/.expo
-  HOME: /isolated_build/
 
 jobs:
   # display_github_contexts:
@@ -90,6 +88,7 @@ jobs:
     env:
       # Keep Gradle's settings file out of home directory (mounted from host)
       GRADLE_USER_HOME: /isolated_build/.gradle
+      HOME: /isolated_build/
     steps:
       - name: Checkout code into container
         uses: bfraser/cicd/actions/checkout@v1
@@ -147,8 +146,8 @@ jobs:
         run: npx tsc --noEmit
         working-directory: /isolated_build/repo/mobile
         
-      - name: Create Expo home
-        run: mkdir -p /isolated_build/.expo
+      # - name: Create Expo home
+      #   run: mkdir -p /isolated_build/.expo
 
       # todosd: remove need for sudo?
       - name: Prebuild android folder
@@ -167,7 +166,7 @@ jobs:
 
       # NOTE: Artifact upload *was previously* disabled because builds from the CI/CD server seem
       #       to not work. Specifically, creating a client on mobile and then
-      #       trying to sync results in a "Inalid Date" sync error.
+      #       trying to sync results in a "Invalid Date" sync error.
       #       Since these builds cannot be trusted, they are disabled.
       #       Instead, the builds must be done locally.
       # - uses: actions/upload-artifact@v3
@@ -185,6 +184,11 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: 'CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Prod.aab'
+
+          # If the HOME folder is left as the default /github/home, then the build
+          # fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
+          # from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
+          
           path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 60
           if-no-files-found: error

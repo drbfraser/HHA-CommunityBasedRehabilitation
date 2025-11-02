@@ -23,9 +23,11 @@ import { AppStackNavProp } from "../../util/stackScreens";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 const styles = useStyles();
 
 const ClientList = () => {
+    const insets = useSafeAreaInsets();
     const navigation = useNavigation<AppStackNavProp>();
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
     const [selectedSearchOption, setSearchOption] = useState(SearchOption.NAME);
@@ -167,7 +169,7 @@ const ClientList = () => {
         showSelectedColumn();
     }, [selectedColumn]);
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <View style={styles.row}>
                 <View style={styles.rowItem}>
                     {selectedSearchOption === SearchOption.ZONE ? (
@@ -386,7 +388,7 @@ const ClientList = () => {
                     })}
                 </DataTable>
             </ScrollView>
-        </View>
+        </SafeAreaView>
     );
 };
 export default ClientList;

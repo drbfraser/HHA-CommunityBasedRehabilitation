@@ -6,6 +6,7 @@ const useStyles = () =>
         container: {
             margin: 5,
             justifyContent: "center",
+            flex: 1,
         },
         item: {
             padding: 3,

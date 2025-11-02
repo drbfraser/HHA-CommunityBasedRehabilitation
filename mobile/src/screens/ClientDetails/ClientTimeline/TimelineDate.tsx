@@ -10,7 +10,7 @@ interface SummaryProps {
     date: Date;
 }
 
-const locale = NativeModules.I18nManager.localeIdentifier;
+const locale = Localization.locale;
 const timezone = Localization.timezone; // todo: deprecated
 
 export const TimelineDate = (props: SummaryProps) => {

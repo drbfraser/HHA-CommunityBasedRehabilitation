@@ -97,7 +97,7 @@ const Referrals = () => {
         );
     };
 
-    const locale = NativeModules.I18nManager.localeIdentifier;
+    const locale = Localization.locale;
     const timezone = Localization.timezone;
 
     return (

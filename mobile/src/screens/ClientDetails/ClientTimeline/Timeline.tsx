@@ -45,7 +45,7 @@ const Timeline = (props: ISummaryProps) => {
     const styles = useStyles();
     const [icon, setIcon] = useState("");
 
-    const locale = NativeModules.I18nManager.localeIdentifier;
+    const locale = Localization.locale;
     const timezone = Localization.timezone; // todo: update deprecated
 
     const database = useDatabase();

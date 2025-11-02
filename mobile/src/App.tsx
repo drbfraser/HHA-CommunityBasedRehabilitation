@@ -6,7 +6,7 @@ import { NavigationContainer, useNavigationContainerRef } from "@react-navigatio
 import { createStackNavigator } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Provider as StoreProvider } from "react-redux";
-import { io } from "socket.io-client/dist/socket.io";
+import { io } from "socket.io-client/";
 import DatabaseProvider from "@nozbe/watermelondb/react/DatabaseProvider";
 import "expo-font";
 import {
@@ -192,13 +192,11 @@ export default function App() {
         const socket = io(`${commonConfiguration.socketIOUrl}`, {
             transports: ["websocket"], // explicitly use websockets
             autoConnect: true,
-            jsonp: false, // avoid manipulation of DOM
+            // jsonp: false, // avoid manipulation of DOM
         });
 
         socket.on("connect", () => {
-            console.log(
-                `[SocketIO] Mobile user connected on ${socket.io.engine.hostname}:${socket.io.engine.port}. SocketID: ${socket.id}`
-            );
+            console.log(`[SocketIO] Mobile user connected. SocketID: ${socket.id}`);
         });
 
         socket.on("disconnect", () => {

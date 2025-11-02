@@ -140,7 +140,7 @@ const Dashboard = () => {
         userId,
     ]);
 
-    const locale = NativeModules.I18nManager.localeIdentifier;
+    const locale = Localization.locale;
     const timezone = Localization.timezone; // todo: resolve deprecated
 
     return (

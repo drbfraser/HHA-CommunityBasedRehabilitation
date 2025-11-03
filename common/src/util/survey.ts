@@ -127,8 +127,8 @@ const refreshArrays = () => {
 
     deviceTypes = {
         [DeviceType.WHEELCHAIR]: i18n.t("survey.wheelchair"),
-        [DeviceType.PROSTHETIC]: i18n.t("survey.prosthetic"),
-        [DeviceType.ORTHOTIC]: i18n.t("survey.orthotic"),
+        [DeviceType.PROSTHETIC]: i18n.t("general.prosthetic"),
+        [DeviceType.ORTHOTIC]: i18n.t("general.orthotic"),
         [DeviceType.CRUTCH]: i18n.t("survey.crutch"),
         [DeviceType.WALKING_STICK]: i18n.t("survey.walkingStick"),
         [DeviceType.HEARING_AID]: i18n.t("survey.hearingAid"),

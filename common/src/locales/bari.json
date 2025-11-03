@@ -35,7 +35,7 @@
     "testServer": "Teme tem ngo lo wuwuju",
     "noInternet": "Boyi na 'ban na pupuru'",
     "unableToReachServer": "Nyobulo yenga yi ngo' lo wuwuju lo",
-    "changePasswordFor": "&Change password for {{username}} (ID {{userID}})"
+    "changePasswordFor": "Leuse kulyaet lo  {{username}} (Tokoret{{userID}})"
   },
   "dashboard": {
     "clientListPriority": "Ngutu lo nyume a ti kokuwe",
@@ -48,9 +48,8 @@
     "noPriorityClients": "Kwake 'bayin na ŋodeki a ryö",
     "noOutstandingReferrals": "Laset bayin na mömundyö nagwon a je ryei I sonyon ŋerot",
     "csvExport": "Sonye I (titimesi) pirit tetenet",
-    "noClients": "&No Clients Found",
-    "newInboxMessages": "&You have <1>1</1> new message in your inbox",
-    "newInboxMessages_plural": "&You have <1>{{count}}</1> new messages in your inbox"
+    "noClients": "Ŋutu logilö bayin logwon arye/apö",
+    "newInboxMessages": "Do gwon <1>{{count}}</1> Loŋio Ludukö ko nuk  I sanduk"
   },
   "disabilities": {
     "amputee": "Lo 'dungo",
@@ -60,9 +59,9 @@
     "paralysisCases": "Kulya/ kepesi' likun na mugun",
     "dontKnow": "A denda/ 'ba den",
     "other": "Lele' / nene'",
-    "cerebralPalsy": "&Cerebral Palsy",
-    "spinaBifida": "&Spina Bifida",
-    "hydrocephalus": "&Hydrocephalus"
+    "cerebralPalsy": "Gilioti lo Boŋödede parik",
+    "spinaBifida": "Gilioti lo lokir'bibi",
+    "hydrocephalus": "Gilioti lo kuwe duma ko pioŋ kata yu"
   },
   "clientAttr": {
     "lastVisitDate": "Yolit na 'dutet/  'yolit na 'dungoddu na",
@@ -193,15 +192,15 @@
     "dataGridLabelRowsPerPage": "Loresi I pele na manini:",
     "dataGridLabelDisplayedRows": "{{from}}–{{to}} of {{count}}",
     "areYouSureYouWantTo": "A to'diri do mindi",
-    "all": "&All",
-    "dashboard": "&Dashboard",
-    "prosthetic": "&Prosthetic",
-    "orthotic": "&Orthotic",
-    "requestTokenFailureHttp": "&Request token failure: request failed with HTTP status {{respStatus}}.",
-    "requestTokenFailureInvalid": "&Request token failure: the access and/or refresh token(s) received were invalid.",
-    "startDate": "&Start date",
-    "endDate": "&End date",
-    "goBackWarning": "&You may have unsaved changes. Are you sure you want to go back?"
+    "all": "Liŋ",
+    "dashboard": "Gobor natundya ŋa lin",
+    "prosthetic": "Nota/Siyö",
+    "orthotic": "Suki na mokot node könin ludukö",
+    "requestTokenFailureHttp": "Mo'yi doro I ŋariyet:Molet na 'doro ko {{respStatus}}.",
+    "requestTokenFailureInvalid": "Do ako tiki kido I sondo na ŋutu logilö (ŋodeki) böŋö pini pi, duma I lot",
+    "startDate": "Perok suluesi",
+    "endDate": "Perok dutesi",
+    "goBackWarning": "You may have unsaved changes. Are you sure you want to go back?"
   },
   "alert": {
     "generalFailure": "Lyanget a konda 'borik",
@@ -223,14 +222,14 @@
     "submitVisitError": "Lyaŋet a kondya borik, I diŋit nagon ködyö wukini 'yölit",
     "loadStatsFailure": "Nene ŋo naron akondya borik, i sondu I pirit kenet, boŋo nyöki koti.",
     "editUserFailure": "Nene ŋo a wuddya börik a naron, I diŋit na wurö na kakitanit.Böŋö nyöki köti.",
-    "unauthorizedArchive": "&You are not authorized to archive/dearchive clients. Please ask an administrator",
-    "obsoleteDataForServerUpdating": "&Our servers are undergoing major changes. As a result, any old data is now obsolete and cannot be synced. If you would still like to sync, then any local changes on your device must first be destroyed.",
-    "directUserToWebapp": "&You should use the web app to recreate any local changes, any changes on the following entities will be lost:",
-    "localDataAffectOnlyNotice": "&Note that this will only affect local data, any settings that have previously been set will be unaffected.",
-    "timeDataUsageNotice": "&This action may take awhile, and a considerable amount of cellular data may be used.",
-    "clearLocalDataConfirmation": "&If you understand and would still like to proceed with the sync, type \"clear local data\" to confirm.",
-    "newVersionAvailability": "&A new version of the HHA CBR app is available on the Google Play Store. Please update your app now, or you will be unable to sync.",
-    "reinstallingSuggestion": "&If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app."
+    "unauthorizedArchive": "Ŋutu lo ŋarakindya yi  kulo, gwon ko leusi temejik,gwoso a ruket, ama loŋio ti 'beron kulo, tiyana gwe bak bulit, ko gwe ti bulo kitanikin.  A mano do 'denuri kita, ti nene na leusesi nonuk tito kitayit nodo tukarani koke.",
+    "obsoleteDataForServerUpdating": "Kakitak kayaŋ gwe ko leusesi  dumalak.Ko ŋina kuwe,denesi liŋ ti ’beron kune gwe ’bain tokitai.  Ama ko do ’de’dekan tokitaju,a kokwe ti leusesi liŋ na gwon konut I tito kitaet kune köröni kaŋo.",
+    "directUserToWebapp": "Ti do tokitaji tito ti loŋio I kobuŋöt,a nyen jojo jondya leusesi I lukata, koti leusesi nagwon nekebbu I mukok kune lilikin.",
+    "localDataAffectOnlyNotice": "Dene den adi kune de pujö liŋiö lo kata kulo ka'de,  ama kune togwidiesi nagwon beron kata kune , bayin'bolo kwoŋ",
+    "timeDataUsageNotice": "Na nonet gwon ko diŋit a naŋötut ka'de , koti ti loŋio lo tetemakindya lo kitarinkin",
+    "clearLocalDataConfirmation": "Ama kodo kukurudyö do nyo tutu ŋerot ko kita nanyit na , ''wurji loŋio lo kata rigwo'' I dena",
+    "newVersionAvailability": "Tokoret luduko lo HHA no nakitak gwe kata songinana(Tiyana) I kobuŋot ni , a'delaki ki yu . Böŋö tolu duke tito ilot kitayet songinana/node tiyana , node a do de gwe ti bulo kitani.",
+    "reinstallingSuggestion": "Ko do gwon ko tito kitayet lo beron (App) ko koti meddy a loŋe , iti ŋerot I tolupö kindyö ko I nyöggu na tolupokinyo na ŋilo tito (App)"
   },
   "admin": {
     "username": "Karin ti katokitayinit",
@@ -335,44 +334,44 @@
     "gallery": "’Delet na ŋöjino",
     "camera": "Miraya (Moket) na ŋöjino",
     "na": "Ti temakindya",
-    "hcrType": "&HCR Type",
-    "hostCommunity": "&Host Community",
-    "refugee": "&Refugee",
-    "sureToCancelEditClient": "&Are you sure you want to cancel editing the client?\n Clicking OK will not save any edited information.",
-    "healthRisk": "&Health Risk",
-    "healthRequirements": "&Health Requirement(s)",
-    "healthGoals": "&Health Goal(s)",
-    "educationRisk": "&Education Risk",
-    "educationRequirements": "&Education Requirement(s)",
-    "educationGoals": "&Education Goal(s)",
-    "socialRisk": "&Social Risk",
-    "socialRequirements": "&Social Requirement(s)",
-    "socialGoals": "&Social Goal(s)",
-    "nutritionRisk": "&Nutrition Risk",
-    "nutritionRequirements": "&Nutrition Requirement(s)",
-    "nutritionGoals": "&Nutrition Goal(s)",
-    "mentalRisk": "&Mental Health Risk",
-    "mentalRequirements": "&Mental Health Requirement(s)",
-    "mentalGoals": "&Mental Health Goal(s)",
-    "female": "&Female",
-    "male": "&Male",
-    "birthdayNotFuture": "&Birthdate cannot be in the future",
-    "phoneNumberNotValid": "&Phone number is not valid",
-    "emailAddressNotValid": "&Email address is not valid",
-    "disabilityRequired": "&Disability is required",
-    "otherDisabilityRequired": "&Other disabilities is required",
-    "otherDisabilityTooLong": "&Other Disability must be at most 100 characters",
-    "consentToInterviewRequired": "&Consent to Interview is required",
-    "errorCreatingClient": "&Encountered an error while trying to create the client!",
-    "errorEditingClient": "&Encountered an error while trying to edit the client!",
-    "errorFetching": "&Encountered an error fetching your user information. Please try again\n {{loadingError}}",
-    "notAuthorizedToArchive": "&You are not authorized to archive/dearchive clients. Please ask an administrator",
-    "sureToArchiveClient": "&Are you sure you want to {{action}} {{first_name}} {{last_name}}?\n {{client_active_error}}",
-    "archive": "&archive",
-    "dearchive": "&dearchive",
-    "cannotEditArchived": "&You cannot edit clients while they are archived",
-    "sureToClearForm": "&Are you sure you want to clear the form?",
-    "imageSubtitle": "&Press the icon to upload an image."
+    "hcrType": "''Gwiyari'' Monye jur/iwakatyo",
+    "hostCommunity": "Ko monye pirit/monye jur",
+    "refugee": "Luwaka",
+    "sureToCancelEditClient": "A gwak 'diri doti 'denuri wurjö ŋutu lo/na gilö?\n Nya'dote yee, anyen do gwon ti de loŋio lowuro.",
+    "healthRisk": "Yoŋit na kelan",
+    "healthRequirements": "Titojin ti kelan lo 'de'dekurikin",
+    "healthGoals": "Moluwajin/Togwidiesi ti kelan",
+    "educationRisk": "'Yoŋesi ti kendya",
+    "educationRequirements": "Titojin ti kendya lo 'de'dekurikin",
+    "educationGoals": "Moluwajin/Togwidiesi ti kendya",
+    "socialRisk": "'Yoŋesi ti lodir/momore na ŋutu",
+    "socialRequirements": "Togwidiesi ti lodir /momore na ŋutu",
+    "socialGoals": "Moluwajin ti lodir /momore na ŋutu",
+    "nutritionRisk": "'Yoŋesi ti Nyesu",
+    "nutritionRequirements": "Titojin ti Nyesu lo 'de'dekurikin",
+    "nutritionGoals": "Moluwajin/Togwidiesi ti Nyesu",
+    "mentalRisk": "'Yoŋesi ti kelan na yeyeisi",
+    "mentalRequirements": "Titojin ti kelan na yeseisi lo 'de'dekurikin",
+    "mentalGoals": "Moluwajin/Togwidiesi ti kelan na yeyesi",
+    "female": "Ŋutu narakwan/ Na nakwan",
+    "male": "Ŋuto lulalet",
+    "birthdayNotFuture": "Perok ti yuŋwe ti bulo gwon I diŋit na popo",
+    "phoneNumberNotValid": "Numba ti tito jamet ti kita kwoŋ",
+    "emailAddressNotValid": "Wuröt titimesi ti kita kwoŋ",
+    "disabilityRequired": "Toŋodeyan a 'dekurikin",
+    "otherDisabilityRequired": "Toŋodeyan ka'de ka'de  dekurikin",
+    "otherDisabilityTooLong": "Ye I pipija I not a dekurikin",
+    "consentToInterviewRequired": "Dene bura adi to ryerye to kobuket , I diŋit na do gwewundye ŋuto lo gilo lo ki",
+    "errorCreatingClient": "Dene koti bura , adi do rurumbi lyaŋaet I diŋit na do wurji ŋuto lo gilö /ŋode.",
+    "errorEditingClient": "Pone po lyaŋaet I diŋit na do puji loŋio ko ŋuto lo gilö boŋo nyoki köti.",
+    "errorFetching": "Toj'ure'yo lyaŋaet {{loadingError}}",
+    "notAuthorizedToArchive": "Do a ko tiki kido I laundya na ŋutu lo gilo kulo, böŋö pi nepi duma ilot",
+    "sureToArchiveClient": "Do gwak dekuri (kondya) {{action}} {{first_name}} {{last_name}}?\n {{client_active_error}}",
+    "archive": "Laundya",
+    "dearchive": "Titimakindya",
+    "cannotEditArchived": "Doti bulo dendya ŋutu lo gilö kulu , ko lepeŋat alayi",
+    "sureToClearForm": "Do gwak dekuri seja nana manini?",
+    "imageSubtitle": "Press the icon to upload an image."
   },
   "referral": {
     "client_id": "Ngutuu' lo Ngangaraki'",
@@ -446,17 +445,17 @@
     "selectReferralServices": "Wulu kitajin ti sonyo na lepeŋ",
     "pending": "Ŋo ti ŋerot na mömönundyö",
     "filterByType": "Liline ko ŋo ti ŋerot ka'de kad'e",
-    "filterByStatus": "&Filter by Status",
-    "filterByTypeDescription": "&Referrals that match at least one of the selected types will be displayed.",
-    "hoverDetails": "&Hover over the details to see more information about each referral.",
-    "hipWidth": "&Hip Width",
-    "prosthetic": "&Prosthetic",
-    "prostheticInjuryLocation": "&Prosthetic Injury Location",
-    "orthotic": "&Orthotic",
-    "orthoticInjuryLocation": "&Orthotic Injury Location",
-    "clubFoot": "Dapanit na du'yo ??",
-    "injectionNeuritis": "Wini Suwet lo murilot ??",
-    "autism": "&Autism"
+    "filterByStatus": "Liline ko tokoresi",
+    "filterByTypeDescription": "Ŋo nagwon a sonyoji ŋerot, ti geleŋ nase tetemakindya I gwiyarijin logwon gwigwiya",
+    "hoverDetails": "Ma'di nagwon togulu I meddya na kulya jore I sonyo nase ngerot",
+    "hipWidth": "Kune ki tajin ka'de-ka'de a dekurikin",
+    "prosthetic": "Tugalaŋ na nyuti",
+    "prostheticInjuryLocation": "Pirit na Adeŋgu",
+    "orthotic": "Pirit gwak a deŋgu na",
+    "orthoticInjuryLocation": "Suki na tito lo luduk",
+    "clubFoot": "Dapanit na mokot ludukö",
+    "injectionNeuritis": "Gilioti lo'bo'boŋötu parik ko nyarju na geleŋ lwölwöŋ kuleliŋ",
+    "autism": "Gilöti Lo kwiŋit."
   },
   "risks": {
     "riskLevel": "Ngo' naron na gba da",
@@ -478,18 +477,18 @@
     "previousGoals": "Tirikwesi ti 'beron",
     "goalDescription": "Tokoret na tirikuet",
     "noCurrentGoal": "Tirikwet na, na diŋit 'bayin",
-    "healthSet": "&<1>Health</1> risk set to",
-    "healthChanged": "&<1>Health risk</1> changed to",
-    "educationSet": "&<1>Education</1> risk set to",
-    "educationChanged": "&<1>Education</1> risk changed to",
-    "socialSet": "&<1>Social</1> risk set to",
-    "socialChanged": "&<1>Social</1> risk changed to",
-    "nutritionSet": "&<1>Nutrition</1> risk set to",
-    "nutritionChanged": "&<1>Nutrition</1> risk changed to",
-    "mentalSet": "&<1>Mental health</1> risk set to",
-    "mentalChanged": "&<1>Mental health</1> risk changed to",
-    "area": "&Area",
-    "specify": "&Please specify"
+    "healthSet": "<1>Kelan</1> yöŋit nagwon a togwidiki kata",
+    "healthChanged": "<1>Kelan Yöŋit</1> a lewusaji i",
+    "educationSet": "<1>Kendya</1> Yöŋit a togwidiki kata",
+    "educationChanged": "<1>Kendya</1> Yöŋit a lewusaji i",
+    "socialSet": "<1>Lodir (momore nagutu)</1> Yöŋit a togwidiki kata",
+    "socialChanged": "<1>Lodir (momore nagutu)</1> Yöŋit a lewusaji i",
+    "nutritionSet": "<1>Nyesu</1>Yöŋit a togwidiki kata",
+    "nutritionChanged": "<1>Nyesu</1> Yöŋit a lewusaji i",
+    "mentalSet": "<1>Kelan na yeyeisi (kwinit)</1> Yöŋit a togwidiki kata",
+    "mentalChanged": "<1>Kelan na yeyeisi (kwinit)</1> Yöŋit a lewusaji i",
+    "area": "Gwoke / Pirit",
+    "specify": "Please specify"
   },
   "riskLevelsAbbreviated": {
     "low": "GK",
@@ -503,13 +502,11 @@
     "fine": "Na'but",
     "good": "Na'but",
     "wheelchair": "Si'det na jijiko",
-    "prosthetic": "&Prosthetic",
-    "orthotic": "&Orthotic",
     "crutch": "Tokesi",
     "walkingStick": "Ture woriyet/ turiya woriyesi'",
     "hearingAid": "Ngo' lo ngarakinda ngutu' yi yinga",
     "glasses": "Gilasiyat",
-    "standingFrame": "Sa'ba' lo totoliwayi ??",
+    "standingFrame": "Sa'ba' lo totoliwayi",
     "cornerSeat": "Si'det na sunga",
     "lackOfFunding": "Bakan na tokit na gurusu/ Gurusu 'bayin",
     "myDisabilityStopsMe": "Bata niyo' na na teteng nan",
@@ -546,7 +543,7 @@
     "foodAndNutrition": "Doti ko kinyojin",
     "education": "Kenda/ todino/ jujumbu (ti nyu' 'ba 'dur !8)",
     "livelihood": "Gbolong (lwolwong 16)",
-    "errorOccurred": "&Error occurred when submitting the survey:"
+    "errorOccurred": "Lyaŋaet a kondya berik, I diŋit na tindyo na tokoret:"
   },
   "users": {
     "admin": "Ka'dolanit/ duma'",
@@ -585,8 +582,6 @@
     "advice": "Kukuwet/ kukuwesi'",
     "advocacy": "Togolet/ Ngarakinda/ toli'diyan",
     "encouragement": "Kunyaresi'/ kunyaret",
-    "orthotic": "&Orthotic",
-    "prosthetic": "&Prosthetic",
     "referralToHealthCentre": "Sonyo na ngutuu' yi kadi na wini/ jibitaliya",
     "wheelchair": "Si'det na jijiko",
     "wheelchairRepair": "Tetenaki  si'det na jijiko",
@@ -612,63 +607,63 @@
     "clientNutritionGoalStatus": "Tirikwesi ti nyesu na ŋuto ŋode",
     "clientMentalHealthGoalStatus": "Tirikwesi ti yeyesi ko kelan na ŋuto ŋode",
     "PLACEHOLDER-socialRequirements": {
-      "0": "&Improve connection with community",
-      "1": "&Improve connection with family",
-      "2": "&Be more social with others"
+      "0": "Improve connection with community",
+      "1": "Improve connection with family",
+      "2": "Be more social with others"
     },
     "PLACEHOLDER-nutritionRequirements": {
-      "0": "&Obtain additional food supplies",
-      "1": "&Have a balanced diet"
+      "0": "Obtain additional food supplies",
+      "1": "Have a balanced diet"
     },
     "PLACEHOLDER-mentalRequirements": {
-      "0": "&Recieve counselling",
-      "1": "&Recieve medication"
+      "0": "Recieve counselling",
+      "1": "Recieve medication"
     },
     "PLACEHOLDER-healthRequirements": {
-      "0": "&Recieve medication",
-      "1": "&Recieve wheelchair",
-      "2": "&Recieve crutches",
-      "3": "&Improve personal hygeine"
+      "0": "Recieve medication",
+      "1": "Recieve wheelchair",
+      "2": "Recieve crutches",
+      "3": "Improve personal hygeine"
     },
     "PLACEHOLDER-educationRequirements": {
-      "0": "&Recieve technical training",
-      "1": "&Enroll in a skills development course"
+      "0": "Recieve technical training",
+      "1": "Enroll in a skills development course"
     },
     "PLACEHOLDER-socialGoals": {
-      "0": "&Achieved",
-      "1": "&In progress",
-      "2": "&Not Achieved",
-      "3": "&No goals"
+      "0": "Achieved",
+      "1": "In progress",
+      "2": "Not Achieved",
+      "3": "No goals"
     },
     "PLACEHOLDER-nutritionGoals": {
-      "0": "&Achieved",
-      "1": "&In progress",
-      "2": "&Not Achieved",
-      "3": "&No goals"
+      "0": "Achieved",
+      "1": "In progress",
+      "2": "Not Achieved",
+      "3": "No goals"
     },
     "PLACEHOLDER-mentalGoals": {
-      "0": "&Achieved",
-      "1": "&In progress",
-      "2": "&Not Achieved",
-      "3": "&No goals"
+      "0": "Achieved",
+      "1": "In progress",
+      "2": "Not Achieved",
+      "3": "No goals"
     },
     "PLACEHOLDER-healthGoals": {
-      "0": "&Achieved",
-      "1": "&In progress",
-      "2": "&Not Achieved",
-      "3": "&No goals"
+      "0": "Achieved",
+      "1": "In progress",
+      "2": "Not Achieved",
+      "3": "No goals"
     },
     "PLACEHOLDER-educationGoals": {
-      "0": "&Achieved",
-      "1": "&In progress",
-      "2": "&Not Achieved",
-      "3": "&No goals"
+      "0": "Achieved",
+      "1": "In progress",
+      "2": "Not Achieved",
+      "3": "No goals"
     },
-    "clientHealthGoalRequirement": "&Client's Health Goal Requirements",
-    "clientEducationGoalRequirement": "&Client's Education Goal Requirements",
-    "clientSocialGoalRequirement": "&Client's Social Goal Requirements",
-    "clientNutritionGoalRequirement": "&Client's Nutrition Goal Requirements",
-    "clientMentalHealthGoalRequirement": "&Client's Mental Health Goal Requirements"
+    "clientHealthGoalRequirement": "Tirikuesi na 'dede kurikin ti kelan na ŋutu lo gilö",
+    "clientEducationGoalRequirement": "Tirikuesi na 'dede kurikin ti kendya na ŋutu lo gilö",
+    "clientSocialGoalRequirement": "Tirikuesi na 'dede kurikin ti lodir na ŋutu lo gilö",
+    "clientNutritionGoalRequirement": "Tirikuesi na 'dede kurikin ti Nyesu na ŋutu lo gilö",
+    "clientMentalHealthGoalRequirement": "Tirikuesi na 'dede kurikin ti kelan na Yeyesi ti ŋutu lo gilö"
   },
   "screenNames": {
     "viewClient": "Mete met ngutu' lo ngangaraki lo",
@@ -724,44 +719,44 @@
     "dateRange": "Suluja I (suluji) I (dutet)",
     "filterByDate": "Liline ko perok kanyit",
     "filterByUser": "Liline ko kakitanit",
-    "totalFollowedUpFAdult": "&Total Followed Up Female Adult Clients:",
-    "totalFollowedUpMAdult": "&Total Followed Up Male Adult Clients:",
-    "totalFollowedUpFChild": "&Total Followed Up Female Child Clients:",
-    "totalFollowedUpMChild": "&Total Followed Up Male Child Clients:",
-    "followUpVisits": "&Follow Up Visits:",
-    "newClients": "&New Clients:",
-    "totalNewFAdult": "&Total New Female Adult Clients:",
-    "totalNewMAdult": "&Total New Male Adult Clients:",
-    "totalNewFChild": "&Total New Female Child Clients:",
-    "totalNewMChild": "&Total New Male Child Clients:",
-    "allChildren": "&All Children",
-    "allAdults": "&All Adults",
-    "adult": "&Adult",
-    "child": "&Child",
-    "age": "&Age",
-    "filterByDemographic": "&Filter by Demographic",
-    "femaleChild": "&Female Child",
-    "maleChild": "&Male Child",
-    "femaleAdult": "&Female Adult",
-    "maleAdult": "&Male Adult",
-    "totalFChild": "&Total Female Children:",
-    "totalMChild": "&Total Male Children:",
-    "totalFAdult": "&Total Female Adults:",
-    "totalMAdult": "&Total Male Adults:",
-    "totalFChildFollowUpVisits": "&Total Female Children Follow Up Visits:",
-    "totalMChildFollowUpVisits": "&Total Male Children Follow Up Visits:",
-    "totalFAdultFollowUpVisits": "&Total Female Adult Follow Up Visits:",
-    "totalMAdultFollowUpVisits": "&Total Male Adult Follow Up Visits:",
-    "selectAtLeastOne": "&Select at least one Gender and Age option",
-    "warning": "&Warning",
-    "totalDisFChild": "&Total Female Children With Disabilities:",
-    "totalDisMChild": "&Total Male Chidlren With Disabilities:",
-    "totalDisFAdult": "&Total Female Adults With Disabilities:",
-    "totalDisMAdult": "&Total Male Adults With Disabilities:",
-    "specificDate": "&Specific Date",
-    "monthly": "&By Month",
-    "downloadAsCSV": "&<1>Download statistics</1> as a CSV file.",
-    "clickBarToFilter": "&Click on bar to filter by zone"
+    "totalFollowedUpFAdult": "Ŋo na kekepo 'bu kuluŋ ti ŋutu wate nawora nagilö node (ŋodeki)",
+    "totalFollowedUpMAdult": "Kepo na ηutu ling laliyan lo wuju ηaried kode todinet",
+    "totalFollowedUpFChild": "Kepo na ηwajik nawate liƞ na wuju ƞariet kode todinet",
+    "totalFollowedUpMChild": "Kepo na nwajik laliyan liƞ lo wuju ƞariet  kode todinet",
+    "followUpVisits": "Kepesi 'yolesi",
+    "newClients": "ƞutu lo wuju ƞariesi kode todinet luduko:",
+    "totalNewMAdult": "ƞutu luduko laliyan ling lo wuju ƞariet kode todinesi",
+    "totalNewFChild": "ƞwajik luduko nawate ling lo wuju ƞariesi kode todinesi",
+    "totalNewMChild": "ƞwajik luduko nawate ling lo wuju ngariesi kode todinesi",
+    "allChildren": "Ŋwajik liŋ",
+    "allAdults": "Ŋutu luworö/ko na wora liŋ",
+    "adult": "Temejik",
+    "child": "Ŋuro",
+    "age": "Kingajin",
+    "filterByDemographic": "Liline I gwiyari lo nyit",
+    "femaleChild": "Ŋuro na nakwan",
+    "maleChild": "Ŋuro lo lalet",
+    "femaleAdult": "Ŋuto na wora",
+    "maleAdult": "Ŋuto lo wora",
+    "totalFChild": "Liƞ na ƞwajik nawate",
+    "totalMChild": "Liƞ na ƞwajik laliyan",
+    "totalFAdult": "Liƞ na wate nawora",
+    "totalMAdult": "Liƞ na liyan lowora",
+    "totalFChildFollowUpVisits": "Kepesi 'yolesi ti ƞwajik wate liƞ",
+    "totalMChildFollowUpVisits": "Kepesi `yölisi ni ƞwajik liyan liƞ",
+    "totalFAdultFollowUpVisits": "Kepesi `yolisi ti ƞutu wate nawora liƞ",
+    "totalMAdultFollowUpVisits": "Kepesi `yolisi ti ƞutu liyan lowora liƞ",
+    "selectAtLeastOne": "Wulu `ban`ban na gwiyari lo ŋutu geleŋ, ko toberon na nyit:",
+    "warning": "Tokujonit",
+    "totalDisFChild": "Liƞ na ƞwajik wate nagwon a ƞodeki",
+    "totalDisMChild": "Liƞ na ƞwajik  liyan logwon a ƞodeki",
+    "totalDisFAdult": "Liƞ na wate nawora nagwon a ƞodeki",
+    "totalDisMAdult": "Liƞ na liyan lowora logwon a ƞodeki",
+    "specificDate": "Perok kanyit gwak",
+    "monthly": "Ko yapa",
+    "downloadAsCSV": "Suki na mokot node könin ludukös",
+    "clickBarToFilter": "Nyadote I wuriot anyen lili piriton/no tumiton ka'de-ka'de",
+    "totalNewFAdult": "Total New Female Adult Clients:"
   },
   "sync": {
     "sureResetLocalDB": "A to'diri do mimindi nyogu tunda/ pedda/ tetenakinda 'bura'",
@@ -808,120 +803,120 @@
   "referralAttr": {
     "resolutionStatus_resolved_bold": "<1>Sonye ŋerot</1> Tobulene",
     "resolutionStatus_pending_bold": "<1>Sonye ŋerot</1> Momonundyö",
-    "dateReferred": "&Date Referred",
-    "newReferral": "&New Referral",
-    "referralPosted": "&Referral Posted",
-    "referralResolutionFailureAlert": "&Something went wrong when submitting the outcome and resolving the referral. Please try that again.",
-    "resolveVerb": "&Resolve",
-    "markResolved": "&Mark Resolved",
-    "referralDate": "&Referral Date",
-    "resolutionDate": "&Resolution Date",
-    "resolutionStatus_pending": "&Referral Pending",
-    "resolutionStatus_resolved": "&Referral Resolved",
-    "condition_physiotherapy": "&Physiotherapy Condition",
-    "condition_mental": "&Mental Health Condition",
-    "injuryLocation_prosthetic": "&Prosthetic Injury Location",
-    "injuryLocation_orthotic": "&Orthotic Injury Location",
-    "otherServiceRequired": "&Other Services Required"
+    "dateReferred": "Perok logwon a sonyoni ŋerot",
+    "newReferral": "Sonyet ŋerot na lu'duk",
+    "referralPosted": "Sonyet ŋerot a sonyo",
+    "referralResolutionFailureAlert": "Nene ŋo naron a kondya 'berik I diŋit sonyet na ŋo nagwon aryi /apo , ko I tokitaju na ŋo na sosonyo kune",
+    "resolveVerb": "Böŋö nyoki koti",
+    "markResolved": "Tokitane/Tobulene",
+    "referralDate": "Geteadi aje tobulee/Tubuŋö",
+    "resolutionDate": "Perok sonyesi",
+    "resolutionStatus_pending": "perok sonyes lo mömöndu",
+    "resolutionStatus_resolved": "Sonyo na mömöndu",
+    "condition_physiotherapy": "Kulya ti sonyo ŋerot a tutuŋö",
+    "condition_mental": "Gwiyari lo mugun",
+    "injuryLocation_prosthetic": "Gwiyari lo kelan na yeyeisi",
+    "injuryLocation_orthotic": "Pirit  gwak na (kuyutö kuyu) lo 'deŋgu",
+    "otherServiceRequired": "Pirit gwak na 'dekuri sukini na tito lo luduk"
   },
   "goals": {
-    "notActive": "&Not active",
-    "currentGoal": "&Current goal",
-    "previousGoals": "&View previous goals",
-    "viewingPreviousGoals": "&Viewing previous goals",
-    "goalStatus": "&Goal status",
-    "unsavedChangesWarning": "&You have unsaved changes. Do you want to save the changes?",
-    "unsavedChanges": "&Unsaved changes",
-    "updateGoalStatus": "&Update goal status",
-    "visitFocus": "&Visit focus",
-    "setStatusTo": "&Goal status set to {{status}}",
-    "noCurrentGoalSet": "&No current goal set",
-    "createNewGoal": "&Create new goal",
-    "createNew": "&Create new",
-    "viewPrevious": "&View previous",
-    "noCurrentOngoingGoals": "&No current ongoing goals",
-    "healthSet": "&<1>Health</1> goal status set to",
-    "educationSet": "&<1>Education</1> goal status set to",
-    "socialSet": "&<1>Social</1> goal status set to",
-    "nutritionSet": "&<1>Nutrition</1> goal status set to",
-    "mentalSet": "&<1>Mental Health</1> goal status set to"
+    "notActive": "`Bayin kita",
+    "currentGoal": "Tirikwet na sonŋinana",
+    "previousGoals": "Meddi togwidiesiti beron",
+    "viewingPreviousGoals": "Meddi tirikesi ti beron",
+    "goalStatus": "Tirikuet nato gwidiet",
+    "unsavedChangesWarning": "Do gwon ko leusesi nagwon a ko 'dela . Do ŋona dedekuri de'ya na leusesi?",
+    "unsavedChanges": "Leusesi nagwona ko nyöŋ 'dela",
+    "updateGoalStatus": "Tokore tirikuet togwidiet",
+    "visitFocus": "'Yoli Metet",
+    "setStatusTo": "Tirikuet togwidiet a petaki I {{status}}",
+    "noCurrentGoalSet": "Togwidiet bayin na petaki tiyana",
+    "createNewGoal": "Gweyu togwidiet luduko",
+    "createNew": "Gweyu liduko",
+    "viewPrevious": "Mete ŋo ti bot",
+    "noCurrentOngoingGoals": "Togwidiesi ti yana 'bayin na tu ŋerot",
+    "healthSet": "<1>Health</1> goal status set to",
+    "educationSet": "<1>Education</1> goal status set to",
+    "socialSet": "<1>Social</1> goal status set to",
+    "nutritionSet": "<1>Nutrition</1> goal status set to",
+    "mentalSet": "<1>Mental Health</1> goal status set to"
   },
   "cancellation": {
-    "_$dead": "&Patient has died",
-    "_$moved": "&Patient has moved away",
-    "_$circumstances": "&Patient's circumstances have changed",
-    "_$abandoned": "&Patient has abandoned this goal",
-    "_$unwilling": "&Patient is no longer willing to work with us"
+    "_$dead": "Patient has died",
+    "_$moved": "Patient has moved away",
+    "_$circumstances": "Patient's circumstances have changed",
+    "_$abandoned": "Patient has abandoned this goal",
+    "_$unwilling": "Patient is no longer willing to work with us"
   },
   "risk": {
     "health": {
       "requirement": {
-        "_$Malaria": "&Malaria treatment",
-        "_$Medical": "&Medical assistance",
-        "_$Wound": "&Wound care for pressure sores",
-        "_$Mobility": "&Mobility device - crutches",
-        "_$Physiotherapy": "&Physiotherapy"
+        "_$Malaria": "Malaria treatment",
+        "_$Medical": "Medical assistance",
+        "_$Wound": "Wound care for pressure sores",
+        "_$Mobility": "Mobility device - crutches",
+        "_$Physiotherapy": "Physiotherapy"
       },
       "goal": {
-        "_$Medical": "&Medical treatment provided",
-        "_$Sores": "&Sores managed/healed",
-        "_$Mobility": "&Mobility device provided",
-        "_$Pain": "&Pain managed"
+        "_$Medical": "Medical treatment provided",
+        "_$Sores": "Sores managed/healed",
+        "_$Mobility": "Mobility device provided",
+        "_$Pain": "Pain managed"
       }
     },
     "social": {
       "requirement": {
-        "_$Contact": "&Contact with community",
-        "_$Inclusion": "&Inclusion in family",
-        "_$Training": "&Training for family members"
+        "_$Contact": "Contact with community",
+        "_$Inclusion": "Inclusion in family",
+        "_$Training": "Training for family members"
       },
       "goal": {
-        "_$Community": "&Take part in a community event",
-        "_$Inclusion": "&Inclusion in family time"
+        "_$Community": "Take part in a community event",
+        "_$Inclusion": "Inclusion in family time"
       }
     },
     "nutrition": {
       "requirement": {
-        "_$Diabetic": "&Special dietary need - diabetic",
-        "_$Allergies": "&Special dietary need - allergies",
-        "_$Malnutrition": "&Special dietary need - malnutrition",
-        "_$Training": "&Nutrition training",
-        "_$Agricultural": "&Inclusion in Agricultural project"
+        "_$Diabetic": "Special dietary need - diabetic",
+        "_$Allergies": "Special dietary need - allergies",
+        "_$Malnutrition": "Special dietary need - malnutrition",
+        "_$Training": "Nutrition training",
+        "_$Agricultural": "Inclusion in Agricultural project"
       },
       "goal": {
-        "_$ManageDiet": "&Manage diet to meet needs",
-        "_$Sustainable": "&Sustainable food source"
+        "_$ManageDiet": "Manage diet to meet needs",
+        "_$Sustainable": "Sustainable food source"
       }
     },
     "education": {
       "requirement": {
-        "_$School": "&Attend school",
-        "_$Vocational": "&Vocational training",
-        "_$Family": "&Training for family - learning through play"
+        "_$School": "Attend school",
+        "_$Vocational": "Vocational training",
+        "_$Family": "Training for family - learning through play"
       },
       "goal": {
-        "_$Education": "&Have an education",
-        "_$Income": "&Sustainable source of income",
-        "_$Child": "&Child ready to start school"
+        "_$Education": "Have an education",
+        "_$Income": "Sustainable source of income",
+        "_$Child": "Child ready to start school"
       }
     },
     "mental": {
       "requirement": {
-        "_$Medical": "&Needs medical attention",
-        "_$Family": "&Promote understanding in the family",
-        "_$Community": "&Promote understanding in the community",
-        "_$Refer": "&Refer to mental health agencies",
-        "_$CounsellingStressTrauma": "&Advice and counselling - stress and trauma",
-        "_$CounsellingOther": "&Advice and counselling - other"
+        "_$Medical": "Needs medical attention",
+        "_$Family": "Promote understanding in the family",
+        "_$Community": "Promote understanding in the community",
+        "_$Refer": "Refer to mental health agencies",
+        "_$CounsellingStressTrauma": "Advice and counselling - stress and trauma",
+        "_$CounsellingOther": "Advice and counselling - other"
       },
       "goal": {
-        "_$Family": "&Inclusion in family",
-        "_$Community": "&Inclusion in community",
-        "_$Medical": "&Medical assistance provided",
-        "_$Agency": "&Seen by mental health agency",
-        "_$Improvement": "&Improvement in mental health",
-        "_$Reduction": "&Reduction of stress and trauma",
-        "_$Improvements": "&Improvements"
+        "_$Family": "Inclusion in family",
+        "_$Community": "Inclusion in community",
+        "_$Medical": "Medical assistance provided",
+        "_$Agency": "Seen by mental health agency",
+        "_$Improvement": "Improvement in mental health",
+        "_$Reduction": "Reduction of stress and trauma",
+        "_$Improvements": "Improvements"
       }
     }
   }

@@ -104,6 +104,8 @@ const AlertList = ({ alertData, userID, selectAlert, onAlertSelectionEvent }: Al
                                         </Typography>
                                     </div>
                                 }
+                                // Note: overriding here to avoid HTML nested <p> warning
+                                secondaryTypographyProps={{ component: "div" }}
                                 onClick={() => onAlertSelectionEvent(alert.id)}
                                 sx={{
                                     ...(alert.id === selectAlert

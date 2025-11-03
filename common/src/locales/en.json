@@ -49,8 +49,7 @@
     "noOutstandingReferrals": "No Outstanding Referrals Found",
     "csvExport": "EXPORT TO CSV",
     "noClients": "No Clients Found",
-    "newInboxMessages": "You have <1>1</1> new message in your inbox",
-    "newInboxMessages_plural": "You have <1>{{count}}</1> new messages in your inbox"
+    "newInboxMessages": "You have <1>{{count}}</1> new messages in your inbox"
   },
   "disabilities": {
     "amputee": "Amputee",
@@ -338,7 +337,7 @@
     "hcrType": "HCR Type",
     "hostCommunity": "Host Community",
     "refugee": "Refugee",
-    "sureToCancelEditClient": "Are you sure you want to cancel editing the client?\n Clicking OK will not save any edited information.",
+    "sureToCancelEditClient": "Are you sure you want to cancel editing the client?\nClicking OK will not save any edited information.",
     "healthRisk": "Health Risk",
     "healthRequirements": "Health Requirement(s)",
     "healthGoals": "Health Goal(s)",
@@ -503,8 +502,6 @@
     "fine": "Fine",
     "good": "Good",
     "wheelchair": "Wheelchair",
-    "prosthetic": "Prosthetic",
-    "orthotic": "Orthotic",
     "crutch": "Crutch",
     "walkingStick": "Walking Stick",
     "hearingAid": "Hearing Aid",
@@ -585,8 +582,6 @@
     "advice": "Advice",
     "advocacy": "Advocacy",
     "encouragement": "Encouragement",
-    "orthotic": "Orthotic",
-    "prosthetic": "Prosthetic",
     "referralToHealthCentre": "Referral to Health Centre",
     "wheelchair": "Wheelchair",
     "wheelchairRepair": "Wheelchair Repair",
@@ -730,7 +725,6 @@
     "totalFollowedUpMChild": "Total Followed Up Male Child Clients:",
     "followUpVisits": "Follow Up Visits:",
     "newClients": "New Clients:",
-    "totalNewFAdult": "Total New Female Adult Clients:",
     "totalNewMAdult": "Total New Male Adult Clients:",
     "totalNewFChild": "Total New Female Child Clients:",
     "totalNewMChild": "Total New Male Child Clients:",
@@ -761,7 +755,8 @@
     "specificDate": "Specific Date",
     "monthly": "By Month",
     "downloadAsCSV": "<1>Download statistics</1> as a CSV file.",
-    "clickBarToFilter": "Click on bar to filter by zone"
+    "clickBarToFilter": "Click on bar to filter by zone",
+    "totalNewFAdult": "Total New Female Adult Clients:"
   },
   "sync": {
     "sureResetLocalDB": "Are you sure you want to reset local database",

@@ -95,7 +95,10 @@ export const ProfilePicCard = (props: IProps) => {
                     hasLoadedImage.current = true;
                     dispatchImgSrcState({ newImgSrc: URL.createObjectURL(blob) });
                 })
-                .catch((e) => console.error(e));
+                .catch((e) => {
+                    console.error(e);
+                    dispatchImgSrcState({ newImgSrc: DEFAULT_IMAGE_PATH });
+                });
 
             return () => abortController.abort();
         }
@@ -110,6 +113,12 @@ export const ProfilePicCard = (props: IProps) => {
                         sx={photoViewUploadStyles.pictureModal}
                         src={imgSrcState}
                         alt="user-profile-pic"
+                        onError={(e) => {
+                            const target = e.currentTarget;
+                            if (target.src !== DEFAULT_IMAGE_PATH) {
+                                dispatchImgSrcState({ newImgSrc: DEFAULT_IMAGE_PATH });
+                            }
+                        }}
                     />
                 </DialogContent>
                 <DialogActions>
@@ -260,6 +269,12 @@ export const ProfilePicCard = (props: IProps) => {
                             sx={photoViewUploadStyles.profilePicture}
                             src={imgSrcState}
                             alt="user-icon"
+                            onError={(e) => {
+                                const target = e.currentTarget;
+                                if (target.src !== DEFAULT_IMAGE_PATH) {
+                                    dispatchImgSrcState({ newImgSrc: DEFAULT_IMAGE_PATH });
+                                }
+                            }}
                         />
                     )}
                     <Box id="uploadIcon" sx={photoViewUploadStyles.uploadIcon}>

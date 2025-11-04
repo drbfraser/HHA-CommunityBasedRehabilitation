@@ -7,6 +7,8 @@ from django.views.generic.detail import SingleObjectMixin
 
 from downloadview.base import AuthenticatedBaseDownloadView
 from django_downloadview.exceptions import FileNotFound
+from django.http import HttpResponseNotFound
+import os
 
 
 class AuthenticatedObjectDownloadView(SingleObjectMixin, AuthenticatedBaseDownloadView):
@@ -97,6 +99,18 @@ class AuthenticatedObjectDownloadView(SingleObjectMixin, AuthenticatedBaseDownlo
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
+        file_instance = getattr(self.object, self.file_field, None)
+
+        # Check if file exists on disk
+        if not file_instance or not file_instance.name:
+            return HttpResponseNotFound("File not found (empty field).")
+
+        file_path = file_instance.path
+        if not os.path.exists(file_path):
+            # logger.warning(f"Missing file for object {self.object}: {file_path}")
+            return HttpResponseNotFound("File not found on server.")
+
+        # Everything okay — proceed with normal download behavior
         return super(AuthenticatedObjectDownloadView, self).get(
             request, *args, **kwargs
         )

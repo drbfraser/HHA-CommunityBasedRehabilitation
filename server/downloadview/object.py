@@ -10,6 +10,7 @@ from django_downloadview.exceptions import FileNotFound
 from django.http import HttpResponseNotFound
 import os
 
+
 class AuthenticatedObjectDownloadView(SingleObjectMixin, AuthenticatedBaseDownloadView):
     """Serve file fields from models.
 
@@ -110,4 +111,6 @@ class AuthenticatedObjectDownloadView(SingleObjectMixin, AuthenticatedBaseDownlo
             return HttpResponseNotFound("File not found on server.")
 
         # Everything okay — proceed with normal download behavior
-        return super(AuthenticatedObjectDownloadView, self).get(request, *args, **kwargs)
+        return super(AuthenticatedObjectDownloadView, self).get(
+            request, *args, **kwargs
+        )

@@ -22,7 +22,7 @@ In `mobile/app.json`, update `expo.version` to a semantically appropriate new ve
 In `mobile/app.json`, update `expo.android.versionCode` by incrementing to the next largest integer. This is used by the Play store to uniquely track each uploaded version, and **must** be new for each uploaded bundle.
 
 **Update the API Version Number:**
-The API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server. Changing the major version number of the `API_VERSION` will cause the web client to wipe its database when syncing.
+The API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server. Changing the major version number of the `API_VERSION` will cause the mobile client to wipe its database when syncing.
 
 ### 1.3: Ensure `android` Directory is Updated
 1. In `mobile/`, run `npm run prebuild` to ensure that the project is up to date.

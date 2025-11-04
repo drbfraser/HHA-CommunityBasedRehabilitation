@@ -21,12 +21,7 @@ interface ILoadError {
 /**
  * A component for an Admin's view of a user's profile.
  */
-const AdminView = ({
-    navigation,
-    route,
-}: StackScreenProps<StackParamList, StackScreenName.ADMIN_VIEW>) => {
-    const authContext = useContext<IAuthContext>(AuthContext);
-
+const AdminView = ({ route }: StackScreenProps<StackParamList, StackScreenName.ADMIN_VIEW>) => {
     const [isUserChangeSnackbarVisible, setUserChangeSnackbarVisible] = useState(false);
 
     const [user, setUser] = useState<IUser>();

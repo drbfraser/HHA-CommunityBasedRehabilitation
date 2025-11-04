@@ -13,6 +13,7 @@ import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { dbType } from "../../util/watermelonDatabase";
 import { logger, SyncDB } from "../../util/syncHandler";
 import { useTranslation } from "react-i18next";
+import LanguagePicker from "../LanguagePicker/LanguagePicker";
 
 export interface Props {
     user: IUser | null;
@@ -111,6 +112,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                         </Portal>
 
                         <View style={styles.profileInfoContainer}>
+                            <LanguagePicker />
                             <Title style={styles.userFirstLastNameTitle}>
                                 {user.first_name} {user.last_name}
                             </Title>

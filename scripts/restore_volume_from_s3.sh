@@ -38,6 +38,7 @@ if [ -z "$backups" ]; then
 fi
 
 echo "Available backups:"
+echo "YYYY-MM-DD  TIME        #BYTES FILENAME-OF-BACKUP
 echo "$backups"
 read -p "Enter the name of the backup you want to restore: " selected_backup
 
@@ -73,8 +74,15 @@ echo "        docker exec cbr_postgres    psql -U $POSTGRES_USER $DB_NAME -f /re
 echo "# 6. Restart all the containers:"
 echo "        docker compose -f docker-compose.yml -f docker-compose.deploy.yml down"
 echo "        docker compose -f docker-compose.yml -f docker-compose.deploy.yml up -d"
-echo "# 7. Copy /uploads/ directory from extracted backup to the cbr_django container (may report 0B copied):"
+echo "# 7. Copy /uploads/ directory from extracted backup to the cbr_django container; "
+echo "#    it will report 0B copied even if data is copied:"
 echo "        docker cp - cbr_django:/  <  ~/restore/uploads.tar"
+echo "#    If you get 'Error response from daemon: container ID 165536 cannot be mapped to a host ID'"
+echo "#    Extract and re-tar uploads.tar removing user/group IDs:"
+echo "        cd ~/restore/"
+echo "        tar --no-same-owner -xvf uploads.tar"
+echo "        tar -cvf uploads_stripuser.tar uploads/"
+echo "        docker cp - cbr_django:/  <  ~/restore/uploads_stripuser.tar"
 echo "# 8. Run data migration:"
 echo "        docker exec cbr_django python manage.py migrate"
 echo "#"

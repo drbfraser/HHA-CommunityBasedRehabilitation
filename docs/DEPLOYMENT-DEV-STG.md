@@ -46,11 +46,3 @@ POSTGRES_PASSWORD=[a secure, long password]
 ## Done!
 
 Now just trigger the deployment by merging to the appropriate branch in SFU's GitHub.
-
-# Deployment to Production Server
-
-To deploy to a new production server, run the contents of:  
-   `scripts/setup_production.sh`
-
-To update an existing production server, run:  
-   `scripts/update.sh`

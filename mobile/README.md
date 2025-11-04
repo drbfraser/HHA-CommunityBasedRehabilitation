@@ -96,6 +96,7 @@ After the app is up and running the first time, after you make a change to the c
 # Troubleshooting
 
 <!-- TODOSD: clean up all this to update relevance -->
+-   If you are attempting upgrades to packages and you mess up, a clean reset can be deleting node_modules, package-lock.json, and android folder before running `npm run refresh-common` and `npm run prebuild` in the mobile directory
 
 -   You **MUST** be using a `development build`, and **NOT** Expo Go. Pressing `s` when you see the QR code after building will toggle between these options, and Expo Go is not supported in our current configuration.
 

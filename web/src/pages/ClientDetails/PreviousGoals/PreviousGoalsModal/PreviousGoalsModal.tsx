@@ -1,4 +1,4 @@
-import { RiskType } from "@cbr/common/util/risks";
+import { getRiskGoalsTranslationKey, RiskType } from "@cbr/common/util/risks";
 import {
     Alert,
     Button,
@@ -140,7 +140,14 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                                             <TableCell>
                                                 {getDialogTitleText(data.risk_type)}
                                             </TableCell>
-                                            <TableCell>{data.goal_name}</TableCell>
+                                            <TableCell>
+                                                {t(
+                                                    `${getRiskGoalsTranslationKey(
+                                                        data.risk_type
+                                                    )}.${data.goal_name}`,
+                                                    { defaultValue: data.goal_name }
+                                                )}
+                                            </TableCell>
                                             <TableCell>
                                                 {timestampToFormDate(data.start_date, true)}
                                             </TableCell>

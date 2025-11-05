@@ -43,8 +43,23 @@ const Login = () => {
             // The App component handles navigation to dashboard
             loginState.emit(true);
         } catch (e) {
-            const errorMessage = e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
-            setStatus({ status: "failed", error: errorMessage });
+            if (APIFetchFailError.isFetchError(e)) {
+                const fetchError = e as APIFetchFailError;
+                const errorMessage = fetchError.details ?? fetchError.message;
+                setStatus({ status: "failed", error: errorMessage });
+                return;
+            }
+
+            if (e instanceof Error) {
+                const errorMessage =
+                    e.message && e.message.includes("Failed to fetch")
+                        ? t("login.unableToReachServer")
+                        : e.message;
+                setStatus({ status: "failed", error: errorMessage });
+                return;
+            }
+
+            setStatus({ status: "failed", error: `${e}` });
         }
     };
 

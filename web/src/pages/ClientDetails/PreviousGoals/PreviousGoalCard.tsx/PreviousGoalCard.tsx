@@ -159,7 +159,12 @@ const PreviousGoalCard = (props: IModalProps) => {
                                 <TextField
                                     id="cancellation-reason-readonly"
                                     label={fieldLabels[FormField.cancellation_reason]}
-                                    defaultValue={props.risk.cancellation_reason}
+                                    defaultValue={t(
+                                        `cancellation.${props.risk.cancellation_reason}`,
+                                        {
+                                            defaultValue: props.risk.cancellation_reason,
+                                        }
+                                    )}
                                     InputProps={{
                                         readOnly: true,
                                     }}

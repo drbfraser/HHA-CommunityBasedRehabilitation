@@ -334,7 +334,11 @@ const NewVisit = (props: INewVisitProps) => {
     };
 
     const [hasSubmitted, setHasSubmitted] = useState(false);
-
+    useEffect(() => {
+        if (hasSubmitted) {
+            props.navigation.navigate(StackScreenName.CLIENT, { clientID: clientId });
+        }
+    }, [hasSubmitted]);
     const nextStep = async (values: any, helpers: FormikHelpers<any>) => {
         const errors = await helpers.validateForm();
         const hasErrors = Object.keys(errors).length > 0;
@@ -356,9 +360,6 @@ const NewVisit = (props: INewVisitProps) => {
             handleSubmit(values, helpers, user!.username, database, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
-                    props.navigation.navigate(StackScreenName.CLIENT, {
-                        clientID: clientId,
-                    });
                 })
                 .catch((e) => {
                     setSaveError(

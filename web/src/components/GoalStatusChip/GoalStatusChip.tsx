@@ -10,7 +10,6 @@ interface GoalChipProps extends ChipProps {
 
 export default function GoalStatusChip(props: GoalChipProps) {
     const goalStatus = goalStatuses[props.goalStatus];
-    console.log(goalStatus);
 
     return (
         <Chip

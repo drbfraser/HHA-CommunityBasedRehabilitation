@@ -51,9 +51,10 @@ const Login = () => {
             }
 
             if (e instanceof Error) {
-                const errorMessage = e.message && e.message.includes("Failed to fetch")
-                    ? t("login.unableToReachServer")
-                    : e.message;
+                const errorMessage =
+                    e.message && e.message.includes("Failed to fetch")
+                        ? t("login.unableToReachServer")
+                        : e.message;
                 setStatus({ status: "failed", error: errorMessage });
                 return;
             }

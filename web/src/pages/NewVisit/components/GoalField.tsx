@@ -10,7 +10,12 @@ import {
     getVisitGoalRequirementLabel,
     visitFieldLabels,
 } from "@cbr/common/forms/newVisit/visitFormFields";
-import { getRiskGoalsTranslationKey, IRisk, RiskType } from "@cbr/common/util/risks";
+import {
+    getRiskGoalsTranslationKey,
+    getRiskRequirementsTranslationKey,
+    IRisk,
+    RiskType,
+} from "@cbr/common/util/risks";
 import UpdateGoalStatus from "../../../pages/ClientDetails/Risks/UpdateGoalStatus";
 import { RiskLevel } from "@cbr/common/util/risks";
 import { OutcomeGoalMet } from "@cbr/common/util/visits";
@@ -82,7 +87,17 @@ const GoalField = (props: IModalProps) => {
             <Box mt={1} />
 
             <FormLabel focused={false}>{getVisitGoalLabel(t, props.visitType)}</FormLabel>
-            <Typography variant={"body1"}>{matchingRisk?.goal_name}</Typography>
+            <Typography variant={"body1"}>
+                {matchingRisk &&
+                    t(
+                        `${getRiskGoalsTranslationKey(matchingRisk.risk_type)}.${
+                            matchingRisk.goal_name
+                        }`,
+                        {
+                            defaultValue: matchingRisk.goal_name,
+                        }
+                    )}
+            </Typography>
             <Box mt={1} />
 
             <FormLabel focused={false}>{getVisitGoalStatusLabel(t, props.visitType)}</FormLabel>
@@ -99,7 +114,18 @@ const GoalField = (props: IModalProps) => {
                 <FormLabel focused={false}>
                     {getVisitGoalRequirementLabel(t, props.visitType)}
                 </FormLabel>
-                <Typography variant={"body1"}>{matchingRisk?.requirement}</Typography>
+                <Typography variant={"body1"}>
+                    {" "}
+                    {matchingRisk &&
+                        t(
+                            `${getRiskRequirementsTranslationKey(matchingRisk.risk_type)}.${
+                                matchingRisk.requirement
+                            }`,
+                            {
+                                defaultValue: matchingRisk.requirement,
+                            }
+                        )}
+                </Typography>
             </div>
         </>
     );

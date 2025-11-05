@@ -1,5 +1,10 @@
 import { fieldLabels, FormField } from "@cbr/common/forms/Risks/riskFormFields";
-import { RiskType } from "@cbr/common/util/risks";
+import {
+    getRiskGoalsTranslationKey,
+    getRiskRequirementsTranslationKey,
+    riskLevels,
+    RiskType,
+} from "@cbr/common/util/risks";
 import {
     Button,
     Dialog,
@@ -46,6 +51,16 @@ const PreviousGoalCard = (props: IModalProps) => {
         }
     };
 
+    const risk = props.risk;
+    const translatedRequirement = t(
+        `${getRiskRequirementsTranslationKey(risk.risk_type)}.${risk.requirement}`,
+        { defaultValue: risk.requirement }
+    );
+    const translatedGoalName = t(
+        `${getRiskGoalsTranslationKey(risk.risk_type)}.${risk.goal_name}`,
+        { defaultValue: risk.goal_name }
+    );
+
     return (
         <Dialog
             fullWidth
@@ -78,7 +93,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                             <TextField
                                 id="risk-level-readonly"
                                 label={fieldLabels[FormField.risk_level]}
-                                defaultValue={props.risk.risk_level}
+                                defaultValue={riskLevels[props.risk.risk_level].name}
                                 InputProps={{
                                     readOnly: true,
                                 }}
@@ -94,7 +109,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                             <TextField
                                 id="requirement-readonly"
                                 label={fieldLabels[FormField.requirement]}
-                                defaultValue={props.risk.requirement}
+                                defaultValue={translatedRequirement}
                                 InputProps={{
                                     readOnly: true,
                                 }}
@@ -110,7 +125,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                             <TextField
                                 id="goal-name-readonly"
                                 label={fieldLabels[FormField.goal_name]}
-                                defaultValue={props.risk.goal_name}
+                                defaultValue={translatedGoalName}
                                 InputProps={{
                                     readOnly: true,
                                 }}
@@ -126,7 +141,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                             <TextField
                                 id="comment-readonly"
                                 label={fieldLabels[FormField.comments]}
-                                defaultValue={props.risk.risk_level}
+                                defaultValue={riskLevels[props.risk.risk_level].name}
                                 variant="outlined"
                                 InputProps={{
                                     readOnly: true,

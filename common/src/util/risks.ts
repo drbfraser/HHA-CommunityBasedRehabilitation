@@ -127,7 +127,7 @@ const refreshArrays = () => {
             color: themeColors.goalBlue,
         },
         [OutcomeGoalMet.CONCLUDED]: {
-            name: i18n.t("newVisit.PLACEHOLDER-socialGoals.0"),
+            name: i18n.t("newVisit.concluded"),
             color: themeColors.goalGreen,
         },
         [OutcomeGoalMet.NOTSET]: {

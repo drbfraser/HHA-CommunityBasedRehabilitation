@@ -71,16 +71,29 @@ const Login = () => {
         try {
             await login(usernameToUse, password);
             // Navigation is handled by App component as it updates the AuthState.
-        } catch (e) {
-            if (e instanceof Error || e instanceof APIFetchFailError) {
-                if (e.name === "AbortError") {
-                    setStatus({ status: "failed", error: t("login.requestTimeout") });
-                } else {
-                    const errorMessage =
-                        e instanceof APIFetchFailError && e.details ? e.details : `${e}`;
-                    setStatus({ status: "failed", error: errorMessage });
-                }
+        } catch (e: any) {
+            // Handle request timeout specifically
+            if (e && typeof e === "object" && e.name === "AbortError") {
+                setStatus({ status: "failed", error: t("login.requestTimeout") });
+                return;
             }
+
+            if (APIFetchFailError.isFetchError(e)) {
+                const fetchError = e as APIFetchFailError;
+                const errorMessage = fetchError.details ?? fetchError.message;
+                setStatus({ status: "failed", error: errorMessage });
+                return;
+            }
+
+            if (e instanceof Error) {
+                const errorMessage = e.message && e.message.includes("Failed to fetch")
+                    ? t("login.unableToReachServer")
+                    : e.message;
+                setStatus({ status: "failed", error: errorMessage });
+                return;
+            }
+
+            setStatus({ status: "failed", error: `${e}` });
         }
     };
 

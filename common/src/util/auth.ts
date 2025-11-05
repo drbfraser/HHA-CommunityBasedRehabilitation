@@ -95,13 +95,13 @@ const requestTokens = async (
                 i18n.t("general.requestTokenFailureInvalid", { respStatus: resp.status })
             );
         }
-    } catch (e) {
+    } catch (e: any) {
         console.error(e);
-        if (e instanceof DOMException && e.name === "AbortError") {
+        // Avoid referencing DOMException directly (not available in React Native/Hermes)
+        if (e && typeof e === "object" && (e as any).name === "AbortError") {
             throw new Error(i18n.t("general.requestTimedOut"));
-        } else {
-            throw e;
         }
+        throw e;
     }
 };
 

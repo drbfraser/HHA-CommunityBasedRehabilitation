@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { Text, Divider, Appbar } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
@@ -109,7 +109,11 @@ const NewReferral = (props: INewReferralProps) => {
         setActiveStep(activeStep - 1);
         props.setErrors({});
     };
-
+    useEffect(() => {
+        if (hasSubmitted) {
+            props.navigation.navigate(StackScreenName.CLIENT, { clientID: clientId });
+        }
+    }, [hasSubmitted]);
     const database = useDatabase();
     const nextStep = async (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
@@ -117,9 +121,6 @@ const NewReferral = (props: INewReferralProps) => {
             handleSubmit(values, database, helpers, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
-                    props.navigation.navigate(StackScreenName.CLIENT, {
-                        clientID: clientId,
-                    });
                 })
                 .catch((e) => {
                     setSaveError(

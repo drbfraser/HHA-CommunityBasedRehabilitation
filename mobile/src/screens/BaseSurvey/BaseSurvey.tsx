@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { Divider, Text } from "react-native-paper";
 import {
@@ -64,7 +64,11 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
         setStep(step - 1);
     };
     const { t } = useTranslation();
-
+    useEffect(() => {
+        if (hasSubmitted) {
+            props.navigation.navigate(StackScreenName.CLIENT, { clientID: clientId });
+        }
+    }, [hasSubmitted]);
     const database = useDatabase();
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {
@@ -72,9 +76,6 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
             handleSubmit(values, database, helpers, autoSync, cellularSync)
                 .then(() => {
                     setHasSubmitted(true);
-                    props.navigation.navigate(StackScreenName.CLIENT, {
-                        clientID: clientId,
-                    });
                 })
                 .catch((e) => {
                     setSaveError(

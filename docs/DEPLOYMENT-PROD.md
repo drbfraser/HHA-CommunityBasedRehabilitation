@@ -61,16 +61,16 @@ Note that the code in GitHub.sfu.ca (private repo) is continually mirrored to th
     Prepare block storage for use:  
     Create new empty partitions & file system  
     ```bash
-    # parted -s /dev/vdb mklabel gpt
-    # parted -s /dev/vdb unit mib mkpart primary 0% 100%
-    # mkfs.ext4 /dev/vdb1
+    parted -s /dev/vdb mklabel gpt
+    parted -s /dev/vdb unit mib mkpart primary 0% 100%
+    mkfs.ext4 /dev/vdb1
     ```  
     Mount block storage:  
     ```bash
-    # mkdir /mnt/blockstorage
-    # echo >> /etc/fstab
-    # echo UUID=$(blkid -s UUID -o value /dev/vdb1)               /mnt/blockstorage       ext4    defaults,noatime,nofail 0 0 >> /etc/fstab
-    # mount /mnt/blockstorage
+    mkdir /mnt/blockstorage
+    echo >> /etc/fstab
+    echo UUID=$(blkid -s UUID -o value /dev/vdb1)               /mnt/blockstorage       ext4    defaults,noatime,nofail 0 0 >> /etc/fstab
+    mount /mnt/blockstorage
     ```
 
 3. Install Server

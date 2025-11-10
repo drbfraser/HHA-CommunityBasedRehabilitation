@@ -37,7 +37,6 @@ function StatsGroupByPicker({
 }: StatsGroupByPickerProps) {
     const [left, setLeft] = React.useState<GroupDim | null>(categorizeBy);
     const [right, setRight] = React.useState<Set<GroupDim>>(new Set(groupBy));
-    console.log(disableAgeBand, disableGender);
     React.useEffect(() => {
         setLeft(categorizeBy);
         setRight(new Set(groupBy));

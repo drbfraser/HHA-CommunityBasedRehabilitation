@@ -35,7 +35,6 @@ const FilterHeaders: React.FC<FilterHeadersProps> = ({
         !archiveMode
     )
         return null;
-    console.log(archiveMode);
     const chipColors: Record<string, "primary" | "secondary" | "success" | "warning"> = {
         user: "primary",
         gender: "secondary",

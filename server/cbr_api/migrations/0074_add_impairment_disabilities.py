@@ -26,4 +26,3 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(ensure_impairments, migrations.RunPython.noop),
     ]
-

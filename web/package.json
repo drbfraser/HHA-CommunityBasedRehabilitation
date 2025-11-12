@@ -73,6 +73,7 @@
     },
     "devDependencies": {
         "prettier": "2.3.0",
-        "typescript": "^5.6.2"
+        "typescript": "^5.6.2",
+        "@babel/plugin-proposal-private-property-in-object": "^7"
     }
 }

@@ -99,6 +99,8 @@ enum PhysiotherapyConditions {
     HYDROCEPHALUS = "hydrocephalus",
     CONGENITAL_ABNORMALITY = "congenital abnormality",
     CONGENITAL_ABNORMALITIES = "congenital abnormalities",
+    HEARING_IMPAIRMENT = "hearing impairment",
+    VISUAL_IMPAIRMENT = "visual impairment",
     PARALYSIS_CASES = "paralysis cases",
     DONT_KNOW = "don't know",
     OTHER = "other",
@@ -115,6 +117,8 @@ export const physiotherapyConditions = (t: TFunction): { [key: string]: string }
         [PhysiotherapyConditions.PARALYSIS_CASES]: t("disabilities.paralysisCases"),
         [PhysiotherapyConditions.CONGENITAL_ABNORMALITY]: t("disabilities.congenitalAbnormality"),
         [PhysiotherapyConditions.CONGENITAL_ABNORMALITIES]: t("disabilities.congenitalAbnormality"),
+        [PhysiotherapyConditions.HEARING_IMPAIRMENT]: t("referral.hearingImpairment"),
+        [PhysiotherapyConditions.VISUAL_IMPAIRMENT]: t("referral.visualImpairment"),
         [PhysiotherapyConditions.DONT_KNOW]: t("disabilities.dontKnow"),
         [PhysiotherapyConditions.OTHER]: t("disabilities.other"),
     };

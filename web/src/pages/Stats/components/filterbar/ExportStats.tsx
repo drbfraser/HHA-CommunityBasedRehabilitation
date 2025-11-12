@@ -162,6 +162,7 @@ const ExportStats = ({
             else if (/\bFemale\b/i.test(name)) out.gender = "Female";
             if (/\bhost\b/i.test(name)) out.host_status = "host";
             else if (/\brefugee\b/i.test(name)) out.host_status = "refugee";
+            else if (/\bnot\s*set\b/i.test(name)) out.host_status = "not set";
             const m = name.match(/Age\s+([0-9]+-[0-9]+|46\+)/i);
             if (m) out.age_band = m[1];
             return out;
@@ -228,7 +229,7 @@ const ExportStats = ({
                     const byName = new Map<string, any>(
                         catSeries.map((c: any) => [String(c.name), c])
                     );
-                    const domain = ["host", "refugee"]; // fixed order
+                    const domain = ["host", "refugee", "not set"]; // include unset
                     catSeries = domain.map(
                         (label) => byName.get(label) || { name: label, data: [] }
                     );
@@ -303,7 +304,7 @@ const ExportStats = ({
                                 return String(zn);
                         }
                         // Fallback: split before trailing host/refugee or Age ...
-                        const m = label.match(/^(.*)\s+(host|refugee|Male|Female|Age\s+.*)$/i);
+                        const m = label.match(/^(.*)\s+(host|refugee|not\s+set|Male|Female|Age\s+.*)$/i);
                         if (m) return m[1];
                         return null;
                     };
@@ -337,7 +338,7 @@ const ExportStats = ({
                         ];
                         const domains: Record<string, string[]> = {
                             gender: ["Male", "Female"],
-                            host_status: ["host", "refugee"],
+                            host_status: ["host", "refugee", "not set"],
                             age_band: AGE_BANDS_ORDER,
                         };
                         const orderDims = ["gender", "host_status", "age_band"].filter((d) =>
@@ -406,7 +407,7 @@ const ExportStats = ({
                                 rows.push(["", g, String(v)]);
                             });
                         } else if (dim === "host_status") {
-                            ["host", "refugee"].forEach((h) => {
+                            ["host", "refugee", "not set"].forEach((h) => {
                                 const v = agg.get(normalizeOther({ host_status: h } as any)) || 0;
                                 rows.push(["", h, String(v)]);
                             });
@@ -434,7 +435,7 @@ const ExportStats = ({
                         const dims = orderedGroups.filter((d) => d !== "zone");
                         const domains: Record<string, string[]> = {
                             gender: ["Male", "Female"],
-                            host_status: ["host", "refugee"],
+                            host_status: ["host", "refugee", "not set"],
                             age_band: AGE_BANDS_ORDER,
                         };
                         const order = ["gender", "host_status", "age_band"].filter((d) =>

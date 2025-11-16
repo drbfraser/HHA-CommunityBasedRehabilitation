@@ -304,7 +304,9 @@ const ExportStats = ({
                                 return String(zn);
                         }
                         // Fallback: split before trailing host/refugee or Age ...
-                        const m = label.match(/^(.*)\s+(host|refugee|not\s+set|Male|Female|Age\s+.*)$/i);
+                        const m = label.match(
+                            /^(.*)\s+(host|refugee|not\s+set|Male|Female|Age\s+.*)$/i
+                        );
                         if (m) return m[1];
                         return null;
                     };

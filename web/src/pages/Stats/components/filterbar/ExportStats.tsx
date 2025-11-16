@@ -547,13 +547,30 @@ const ExportStats = ({
                 </Typography>
 
                 <Typography variant="body1">
-                    <Trans i18nKey="statistics.downloadAsCSV">
-                        {"-"}
-                        <CSVLink filename="CBRStats.csv" data={data}>
-                            Download statistics
-                        </CSVLink>{" "}
-                        as a CSV file.
-                    </Trans>
+                    {(() => {
+                        const raw = t("statistics.downloadAsCSV") as string;
+                        const hasComponentPlaceholder = /<\s*1\s*>/i.test(raw);
+                        if (hasComponentPlaceholder) {
+                            return (
+                                <Trans i18nKey="statistics.downloadAsCSV">
+                                    {"-"}
+                                    <CSVLink filename="CBRStats.csv" data={data}>
+                                        Download statistics
+                                    </CSVLink>{" "}
+                                    as a CSV file.
+                                </Trans>
+                            );
+                        }
+                        // Fallback: show a standalone link using the translated string as label
+                        const label = raw && typeof raw === "string" && raw.trim().length > 0
+                            ? raw
+                            : ("Download statistics" as const);
+                        return (
+                            <>
+                                {"-"} <CSVLink filename="CBRStats.csv" data={data}>{label}</CSVLink>
+                            </>
+                        );
+                    })()}
                 </Typography>
             </DialogContent>
 

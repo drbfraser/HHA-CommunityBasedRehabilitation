@@ -562,12 +562,16 @@ const ExportStats = ({
                             );
                         }
                         // Fallback: show a standalone link using the translated string as label
-                        const label = raw && typeof raw === "string" && raw.trim().length > 0
-                            ? raw
-                            : ("Download statistics" as const);
+                        const label =
+                            raw && typeof raw === "string" && raw.trim().length > 0
+                                ? raw
+                                : ("Download statistics" as const);
                         return (
                             <>
-                                {"-"} <CSVLink filename="CBRStats.csv" data={data}>{label}</CSVLink>
+                                {"-"}{" "}
+                                <CSVLink filename="CBRStats.csv" data={data}>
+                                    {label}
+                                </CSVLink>
                             </>
                         );
                     })()}

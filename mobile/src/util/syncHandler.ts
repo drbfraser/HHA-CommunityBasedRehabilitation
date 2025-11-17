@@ -81,7 +81,15 @@ export async function SyncDB(database: dbType) {
                 const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
                 console.log(`[SYNC PULL] Fetching: ${Endpoint.SYNC}${urlParams}`);
 
-                const response = await apiFetch(Endpoint.SYNC, urlParams);
+                let response;
+                try {
+                    response = await apiFetch(Endpoint.SYNC, urlParams);
+                } catch (err: any) {
+                    console.log("[SYNC PULL] apiFetch ERROR");
+                    console.log("message:", err?.message);
+                    console.log("name:", err?.name);
+                    console.log("stack:", err?.stack);
+                }
 
                 const latency = Date.now() - start;
                 console.log(
@@ -113,7 +121,15 @@ export async function SyncDB(database: dbType) {
                     body: JSON.stringify(changes),
                 };
 
-                const response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                let response;
+                try {
+                    response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                } catch (err: any) {
+                    console.log("[SYNC PUSH] apiFetch ERROR");
+                    console.log("message:", err?.message);
+                    console.log("name:", err?.name);
+                    console.log("stack:", err?.stack);
+                }
 
                 const latency = Date.now() - start;
                 console.log(

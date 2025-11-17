@@ -73,32 +73,62 @@ export async function SyncDB(database: dbType) {
         await synchronize({
             database,
             log: logger.newLog(),
+
             pullChanges: async ({ lastPulledAt }) => {
+                const start = Date.now();
+                console.log(`[SYNC PULL] lastPulledAt=${lastPulledAt}`);
+
                 const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                console.log(`[SYNC PULL] Fetching: ${Endpoint.SYNC}${urlParams}`);
+
                 const response = await apiFetch(Endpoint.SYNC, urlParams);
+
+                const latency = Date.now() - start;
+                console.log(
+                    `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
+                );
+
                 if (!response.ok) {
                     throw new Error(await response.text());
                 }
 
                 const { changes, timestamp } = await response.json();
+
+                console.log(`[SYNC PULL] New timestamp=${timestamp}`);
+
                 await getImage(changes);
+
                 return { changes, timestamp };
             },
+
             pushChanges: async ({ changes, lastPulledAt }) => {
+                const start = Date.now();
+                console.log(`[SYNC PUSH] lastPulledAt=${lastPulledAt}`);
+
                 const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                console.log(`[SYNC PUSH] Posting: ${Endpoint.SYNC}${urlParams}`);
+
                 const init: RequestInit = {
                     method: "POST",
                     body: JSON.stringify(changes),
                 };
 
                 const response = await apiFetch(Endpoint.SYNC, urlParams, init);
+
+                const latency = Date.now() - start;
+                console.log(
+                    `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
+                );
+
                 if (!response.ok) {
                     throw new Error(await response.text());
                 }
             },
+
             migrationsEnabledAtVersion: 5,
             conflictResolver: conflictResolver,
         }).then(() => {
+            console.log("[SYNC] Finished successfully");
             updateLastVersionSynced();
             storeStats();
         });

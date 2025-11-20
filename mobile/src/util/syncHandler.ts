@@ -89,6 +89,8 @@ export async function SyncDB(database: dbType) {
                     console.log("message:", err?.message);
                     console.log("name:", err?.name);
                     console.log("stack:", err?.stack);
+                    console.log(err);
+                    throw err; // VERY important so Watermelon aborts correctly
                 }
 
                 const latency = Date.now() - start;
@@ -129,6 +131,7 @@ export async function SyncDB(database: dbType) {
                     console.log("message:", err?.message);
                     console.log("name:", err?.name);
                     console.log("stack:", err?.stack);
+                    throw err; // keeps sync from corrupting timestamps
                 }
 
                 const latency = Date.now() - start;

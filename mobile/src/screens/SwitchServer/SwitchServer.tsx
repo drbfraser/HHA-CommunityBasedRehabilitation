@@ -4,7 +4,20 @@ import { Text, Card, Chip, Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { View, Alert } from "react-native";
-import { BASE_URL } from "../../..";
+// Avoid importing from the project root (index.js) to prevent a require cycle with App/index.
+// Compute BASE_URL locally, mirroring mobile/index.js logic.
+const BASE_URLS = {
+    local: process.env.LOCAL_URL ?? "",
+    dev: "https://cbr-dev.cmpt.sfu.ca",
+    staging: "https://cbr-stg.cmpt.sfu.ca",
+    prod: "https://cbr.hopehealthaction.org",
+};
+const DEFAULT_APP_ENV = "dev";
+let appEnv = process.env.APP_ENV ?? DEFAULT_APP_ENV;
+if (appEnv === "local" && !BASE_URLS.local) {
+    appEnv = DEFAULT_APP_ENV;
+}
+const BASE_URL = BASE_URLS[appEnv];
 import { baseServicesTypes, SocketContext, updateCommonApiUrl } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncDB } from "../../util/syncHandler";

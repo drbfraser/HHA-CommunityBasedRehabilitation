@@ -20,4 +20,3 @@ try {
 } catch (_) {
     // Best-effort; ignore if NativeModules is unavailable in this context
 }
-

@@ -73,32 +73,89 @@ export async function SyncDB(database: dbType) {
         await synchronize({
             database,
             log: logger.newLog(),
+
             pullChanges: async ({ lastPulledAt }) => {
+                const start = Date.now();
+                console.log(`[SYNC PULL] lastPulledAt=${lastPulledAt}`);
+
                 const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-                const response = await apiFetch(Endpoint.SYNC, urlParams);
+                console.log(`[SYNC PULL] Fetching: ${Endpoint.SYNC}${urlParams}`);
+
+                let response;
+                try {
+                    response = await apiFetch(Endpoint.SYNC, urlParams);
+                } catch (err: any) {
+                    console.log("[SYNC PULL] apiFetch ERROR");
+                    console.log("message:", err?.message);
+                    console.log("name:", err?.name);
+                    console.log("stack:", err?.stack);
+                    console.log(err);
+                    showGenericAlert(
+                        "[SYNC PULL] apiFetch ERROR",
+                        "Please try syncing again or contact support if the issue persists."
+                    );
+                    throw err; // VERY important so Watermelon aborts correctly
+                }
+
+                const latency = Date.now() - start;
+                console.log(
+                    `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
+                );
+
                 if (!response.ok) {
                     throw new Error(await response.text());
                 }
 
                 const { changes, timestamp } = await response.json();
+
+                console.log(`[SYNC PULL] New timestamp=${timestamp}`);
+
                 await getImage(changes);
+
                 return { changes, timestamp };
             },
+
             pushChanges: async ({ changes, lastPulledAt }) => {
+                const start = Date.now();
+                console.log(`[SYNC PUSH] lastPulledAt=${lastPulledAt}`);
+
                 const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                console.log(`[SYNC PUSH] Posting: ${Endpoint.SYNC}${urlParams}`);
+
                 const init: RequestInit = {
                     method: "POST",
                     body: JSON.stringify(changes),
                 };
 
-                const response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                let response;
+                try {
+                    response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                } catch (err: any) {
+                    console.log("[SYNC PUSH] apiFetch ERROR");
+                    console.log("message:", err?.message);
+                    console.log("name:", err?.name);
+                    console.log("stack:", err?.stack);
+                    showGenericAlert(
+                        "[SYNC PUSH] apiFetch ERROR",
+                        "Please try syncing again or contact support if the issue persists."
+                    );
+                    throw err; // keeps sync from corrupting timestamps
+                }
+
+                const latency = Date.now() - start;
+                console.log(
+                    `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
+                );
+
                 if (!response.ok) {
                     throw new Error(await response.text());
                 }
             },
+
             migrationsEnabledAtVersion: 5,
             conflictResolver: conflictResolver,
         }).then(() => {
+            console.log("[SYNC] Finished successfully");
             updateLastVersionSynced();
             storeStats();
         });
@@ -109,6 +166,7 @@ export async function SyncDB(database: dbType) {
                 "Please install the newest update of CBR on the Google Play Store."
             );
         }
+        throw e;
     }
 }
 

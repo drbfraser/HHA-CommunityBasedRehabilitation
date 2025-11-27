@@ -39,21 +39,27 @@ export const getDisabilities = async () => cache.getCachedValue();
 
 export const useDisabilities = (t: TFunction) => {
     const disabilities = cache.useCacheHook()();
-    const translatedDisabilities = new Map();
+    const dict = physiotherapyConditions(t);
+    const desiredOrder = Object.keys(dict);
 
-    disabilities.forEach((name, key) => {
-        // sanitize string before using it to lookup in common dictionary
-        // also replaces non-ascii apostrophes with ascii apostrophes
-        name = name.toLowerCase().replace(/[’]/g, "'");
-
-        const translation = physiotherapyConditions(t)[name.toLowerCase()];
+    const items = Array.from(disabilities.entries()).map(([id, name]) => {
+        const rawName = String(name);
+        const normalized = rawName.toLowerCase().replace(/[’]/g, "'");
+        const translation = dict[normalized];
+        const label = translation ?? rawName;
         if (!translation) {
-            console.error(`unknown disability name: ${name.toLowerCase()}`);
-            return;
+            console.warn(`unknown disability name: ${normalized}`);
         }
-
-        translatedDisabilities.set(key, translation);
+        const idx = desiredOrder.indexOf(normalized);
+        const weight = idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
+        return { id, label, weight } as { id: number; label: string; weight: number };
     });
 
-    return translatedDisabilities;
+    items.sort((a, b) =>
+        a.weight !== b.weight ? a.weight - b.weight : a.label.localeCompare(b.label)
+    );
+
+    const orderedMap = new Map<number, string>();
+    items.forEach(({ id, label }) => orderedMap.set(id, label));
+    return orderedMap;
 };

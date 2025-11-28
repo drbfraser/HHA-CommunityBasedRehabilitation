@@ -5,7 +5,7 @@ import { RadioButton } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import ModalWindow from "../../../components/ModalForm/components/ModalWindow";
 import { OutcomeGoalMet, FormField, fieldLabels, clientFieldLabels } from "@cbr/common";
-import { FormikTextInput } from "./ClientRiskFormModal"; // import your shared component
+import FormikTextInput from "../../../components/FormikTextInput/FormikTextInput";
 import type { FormikProps } from "formik";
 import type { IRisk } from "@cbr/common";
 import useStyles from "./ClientRiskForm.styles";
@@ -91,7 +91,7 @@ const UpdateGoalStatusModal: React.FC<UpdateGoalStatusModalProps> = ({
                 <FormikTextInput
                     formikProps={formik}
                     field={FormField.cancellation_reason}
-                    label={t("risks.specify")}
+                    fieldLabels={{ [FormField.cancellation_reason]: t("risks.specify") }}
                     style={styles.cancellationReasonInput}
                 />
             )}

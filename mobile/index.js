@@ -1,3 +1,5 @@
+// Polyfill NativeEventEmitter arg shape warnings as early as possible
+import "./src/setup/nativeEventEmitterPolyfills";
 import { registerRootComponent } from "expo";
 import App from "./src/App";
 import { initializeCommon, invalidateAllCachedAPI } from "@cbr/common";

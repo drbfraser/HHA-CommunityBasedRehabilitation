@@ -19,6 +19,7 @@ import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 import SyncUpdateAlert from "../../components/SyncUpdateAlert.tsx/SyncUpdateAlert";
 import { useTranslation } from "react-i18next";
 import * as Application from "expo-application";
+import { useSyncStatus } from "../../util/useSyncStatus";
 
 export interface ISync {
     lastPulledTime: number;
@@ -44,6 +45,15 @@ const Sync = () => {
         localChanges: 0,
     });
     const { t } = useTranslation();
+    const { isSyncing } = useSyncStatus();
+
+    const syncButtonDisabled =
+        isSyncing ||
+        (!netInfo.isConnected
+            ? true
+            : netInfo.type == "cellular" && !cellularSync
+            ? true
+            : false);
 
     const resetAlertSubtitleIfVisible = () => {
         if (alertSubtitle !== "") {
@@ -119,7 +129,11 @@ const Sync = () => {
     };
 
     const performSync = async () => {
-        await SyncDB(database);
+        const syncStarted = await SyncDB(database);
+
+        if (!syncStarted) {
+            return;
+        }
 
         setAlertStatus(true);
         setAlertMessage(t("sync.syncComplete"));
@@ -176,13 +190,8 @@ const Sync = () => {
                         mode="contained"
                         labelStyle={styles.syncBtnLabel}
                         style={styles.syncBtbContainer}
-                        disabled={
-                            !netInfo.isConnected
-                                ? true
-                                : netInfo.type == "cellular" && !cellularSync
-                                ? true
-                                : false
-                        }
+                        disabled={syncButtonDisabled}
+                        loading={isSyncing}
                         onPress={async () => {
                             try {
                                 if (!(await lastVersionSyncedIsCurrentVersion())) {
@@ -202,6 +211,7 @@ const Sync = () => {
                         mode="contained"
                         labelStyle={styles.resetBtnLabel}
                         style={styles.resetBtbContainer}
+                        disabled={isSyncing}
                         onPress={resetDatabase}
                     >
                         {t("sync.clearLocal")}

@@ -28,10 +28,24 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../screens/Sync/PrefConstants";
 import { modelName } from "../models/constant";
 import { showGenericAlert } from "./genericAlert";
+import { Mutex } from "async-mutex";
+import {
+    markSyncError,
+    markSyncPhase,
+    markSyncStart,
+    markSyncSuccess,
+    SyncSource,
+} from "./syncState";
+import {
+    notifyAutoSyncFailure,
+    notifyAutoSyncStart,
+    notifyAutoSyncSuccess,
+} from "./syncNotifications";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
 export const mobileApiVersion: string = "5.0.0";
+const syncMutex = new Mutex();
 
 export async function checkUnsyncedChanges() {
     return await hasUnsyncedChanges({ database });
@@ -48,7 +62,7 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
                     ) {
                         showAutoSyncFailedAlert();
                     } else {
-                        await SyncDB(database);
+                        await SyncDB(database, "auto");
                     }
                 }
                 break;
@@ -60,7 +74,7 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
                     ) {
                         showAutoSyncFailedAlert();
                     } else {
-                        await SyncDB(database);
+                        await SyncDB(database, "auto");
                     }
                 }
                 break;
@@ -68,106 +82,134 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
     });
 }
 
-export async function SyncDB(database: dbType) {
-    try {
-        await synchronize({
-            database,
-            log: logger.newLog(),
-
-            pullChanges: async ({ lastPulledAt }) => {
-                const start = Date.now();
-                console.log(`[SYNC PULL] lastPulledAt=${lastPulledAt}`);
-
-                const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-                console.log(`[SYNC PULL] Fetching: ${Endpoint.SYNC}${urlParams}`);
-
-                let response;
-                try {
-                    response = await apiFetch(Endpoint.SYNC, urlParams);
-                } catch (err: any) {
-                    console.log("[SYNC PULL] apiFetch ERROR");
-                    console.log("message:", err?.message);
-                    console.log("name:", err?.name);
-                    console.log("stack:", err?.stack);
-                    console.log(err);
-                    showGenericAlert(
-                        "[SYNC PULL] apiFetch ERROR",
-                        "Please try syncing again or contact support if the issue persists."
-                    );
-                    throw err; // VERY important so Watermelon aborts correctly
-                }
-
-                const latency = Date.now() - start;
-                console.log(
-                    `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
-                );
-
-                if (!response.ok) {
-                    throw new Error(await response.text());
-                }
-
-                const { changes, timestamp } = await response.json();
-
-                console.log(`[SYNC PULL] New timestamp=${timestamp}`);
-
-                await getImage(changes);
-
-                return { changes, timestamp };
-            },
-
-            pushChanges: async ({ changes, lastPulledAt }) => {
-                const start = Date.now();
-                console.log(`[SYNC PUSH] lastPulledAt=${lastPulledAt}`);
-
-                const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-                console.log(`[SYNC PUSH] Posting: ${Endpoint.SYNC}${urlParams}`);
-
-                const init: RequestInit = {
-                    method: "POST",
-                    body: JSON.stringify(changes),
-                };
-
-                let response;
-                try {
-                    response = await apiFetch(Endpoint.SYNC, urlParams, init);
-                } catch (err: any) {
-                    console.log("[SYNC PUSH] apiFetch ERROR");
-                    console.log("message:", err?.message);
-                    console.log("name:", err?.name);
-                    console.log("stack:", err?.stack);
-                    showGenericAlert(
-                        "[SYNC PUSH] apiFetch ERROR",
-                        "Please try syncing again or contact support if the issue persists."
-                    );
-                    throw err; // keeps sync from corrupting timestamps
-                }
-
-                const latency = Date.now() - start;
-                console.log(
-                    `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
-                );
-
-                if (!response.ok) {
-                    throw new Error(await response.text());
-                }
-            },
-
-            migrationsEnabledAtVersion: 5,
-            conflictResolver: conflictResolver,
-        }).then(() => {
-            console.log("[SYNC] Finished successfully");
-            updateLastVersionSynced();
-            storeStats();
-        });
-    } catch (e) {
-        if (e instanceof APIFetchFailError && e.status === 403) {
-            showGenericAlert(
-                "Sync Is Not Compatible With Your Current Version Of CBR",
-                "Please install the newest update of CBR on the Google Play Store."
-            );
-        }
-        throw e;
+export async function SyncDB(
+    database: dbType,
+    source: SyncSource = "manual"
+): Promise<boolean> {
+    if (syncMutex.isLocked()) {
+        console.log("[SYNC] A sync is already in progress. Skipping new request.");
+        return false;
     }
+
+    return syncMutex.runExclusive(async () => {
+        markSyncStart(source);
+        if (source === "auto") {
+            notifyAutoSyncStart();
+        }
+
+        try {
+            const didSync = await synchronize({
+                database,
+                log: logger.newLog(),
+
+                pullChanges: async ({ lastPulledAt }) => {
+                    markSyncPhase("pulling");
+                    const start = Date.now();
+                    console.log(`[SYNC PULL] lastPulledAt=${lastPulledAt}`);
+
+                    const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                    console.log(`[SYNC PULL] Fetching: ${Endpoint.SYNC}${urlParams}`);
+
+                    let response;
+                    try {
+                        response = await apiFetch(Endpoint.SYNC, urlParams);
+                    } catch (err: any) {
+                        console.log("[SYNC PULL] apiFetch ERROR");
+                        console.log("message:", err?.message);
+                        console.log("name:", err?.name);
+                        console.log("stack:", err?.stack);
+                        console.log(err);
+                        showGenericAlert(
+                            "[SYNC PULL] apiFetch ERROR",
+                            "Please try syncing again or contact support if the issue persists."
+                        );
+                        throw err; // VERY important so Watermelon aborts correctly
+                    }
+
+                    const latency = Date.now() - start;
+                    console.log(
+                        `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(await response.text());
+                    }
+
+                    const { changes, timestamp } = await response.json();
+
+                    console.log(`[SYNC PULL] New timestamp=${timestamp}`);
+
+                    await getImage(changes);
+
+                    return { changes, timestamp };
+                },
+
+                pushChanges: async ({ changes, lastPulledAt }) => {
+                    markSyncPhase("pushing");
+                    const start = Date.now();
+                    console.log(`[SYNC PUSH] lastPulledAt=${lastPulledAt}`);
+
+                    const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                    console.log(`[SYNC PUSH] Posting: ${Endpoint.SYNC}${urlParams}`);
+
+                    const init: RequestInit = {
+                        method: "POST",
+                        body: JSON.stringify(changes),
+                    };
+
+                    let response;
+                    try {
+                        response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                    } catch (err: any) {
+                        console.log("[SYNC PUSH] apiFetch ERROR");
+                        console.log("message:", err?.message);
+                        console.log("name:", err?.name);
+                        console.log("stack:", err?.stack);
+                        showGenericAlert(
+                            "[SYNC PUSH] apiFetch ERROR",
+                            "Please try syncing again or contact support if the issue persists."
+                        );
+                        throw err; // keeps sync from corrupting timestamps
+                    }
+
+                    const latency = Date.now() - start;
+                    console.log(
+                        `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
+                    );
+
+                    if (!response.ok) {
+                        throw new Error(await response.text());
+                    }
+                },
+
+                migrationsEnabledAtVersion: 5,
+                conflictResolver: conflictResolver,
+            }).then(() => {
+                markSyncPhase("finalizing");
+                console.log("[SYNC] Finished successfully");
+                updateLastVersionSynced();
+                storeStats();
+                markSyncSuccess();
+                if (source === "auto") {
+                    notifyAutoSyncSuccess();
+                }
+                return true;
+            });
+            return didSync;
+        } catch (e) {
+            if (e instanceof APIFetchFailError && e.status === 403) {
+                showGenericAlert(
+                    "Sync Is Not Compatible With Your Current Version Of CBR",
+                    "Please install the newest update of CBR on the Google Play Store."
+                );
+            }
+            markSyncError(getErrorMessage(e));
+            if (source === "auto") {
+                notifyAutoSyncFailure();
+            }
+            throw e;
+        }
+    });
 }
 
 export async function preSyncOperations(database: dbType) {
@@ -189,6 +231,16 @@ function showAutoSyncFailedAlert() {
         "Automatic Sync Failed",
         "Please perform a manual sync to resolve this issue."
     );
+}
+
+function getErrorMessage(error: unknown): string {
+    if (error instanceof Error) {
+        return error.message;
+    }
+    if (typeof error === "string") {
+        return error;
+    }
+    return "Sync failed. Please try again.";
 }
 
 export async function lastVersionSyncedIsCurrentVersion() {

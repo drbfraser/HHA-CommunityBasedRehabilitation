@@ -72,11 +72,7 @@ const SwitchServer = () => {
         }
     };
 
-    const confirmSwitchServer = (
-        server: ServerOption,
-        apiUrl: string,
-        baseUrl: string
-    ) => {
+    const confirmSwitchServer = (server: ServerOption, apiUrl: string, baseUrl: string) => {
         Alert.alert(i18n.t("general.alert"), i18n.t("login.switchClearData"), [
             { text: i18n.t("general.cancel"), style: "cancel" },
             {
@@ -87,7 +83,10 @@ const SwitchServer = () => {
                     });
 
                     terminateCurrentConnection();
-                    await persistServerSelection(baseUrl, server === ServerOption.LIVE ? appEnv : undefined);
+                    await persistServerSelection(
+                        baseUrl,
+                        server === ServerOption.LIVE ? appEnv : undefined
+                    );
                     updateCommonApiUrl(apiUrl, baseUrl);
                     navigator.navigate("Login");
                 },

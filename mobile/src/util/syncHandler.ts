@@ -36,11 +36,7 @@ import {
     markSyncSuccess,
     SyncSource,
 } from "./syncState";
-import {
-    notifyAutoSyncFailure,
-    notifyAutoSyncStart,
-    notifyAutoSyncSuccess,
-} from "./syncNotifications";
+import { notifyAutoSyncFailure, notifyAutoSyncSuccess } from "./syncNotifications";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
@@ -93,9 +89,6 @@ export async function SyncDB(
 
     return syncMutex.runExclusive(async () => {
         markSyncStart(source);
-        if (source === "auto") {
-            notifyAutoSyncStart();
-        }
 
         try {
             const didSync = await synchronize({
@@ -184,13 +177,17 @@ export async function SyncDB(
 
                 migrationsEnabledAtVersion: 5,
                 conflictResolver: conflictResolver,
-            }).then(() => {
+            }).then(async () => {
                 markSyncPhase("finalizing");
                 console.log("[SYNC] Finished successfully");
                 updateLastVersionSynced();
-                storeStats();
+                const stats = await storeStats();
                 markSyncSuccess();
-                if (source === "auto") {
+                if (
+                    source === "auto" &&
+                    stats &&
+                    ((stats.localChanges ?? 0) > 0 || (stats.remoteChanges ?? 0) > 0)
+                ) {
                     notifyAutoSyncSuccess();
                 }
                 return true;
@@ -280,7 +277,9 @@ async function storeStats() {
         try {
             await AsyncStorage.setItem(SyncSettings.SyncStats, JSON.stringify(newStats));
         } catch (e) {}
+        return newStats;
     }
+    return null;
 }
 
 async function getImage(changes) {

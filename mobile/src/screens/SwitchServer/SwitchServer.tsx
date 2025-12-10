@@ -4,20 +4,6 @@ import { Text, Card, Chip, Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { View, Alert } from "react-native";
-// Avoid importing from the project root (index.js) to prevent a require cycle with App/index.
-// Compute BASE_URL locally, mirroring mobile/index.js logic.
-const BASE_URLS = {
-    local: process.env.LOCAL_URL ?? "",
-    dev: "https://cbr-dev.cmpt.sfu.ca",
-    staging: "https://cbr-stg.cmpt.sfu.ca",
-    prod: "https://cbr.hopehealthaction.org",
-};
-const DEFAULT_APP_ENV = "dev";
-let appEnv = process.env.APP_ENV ?? DEFAULT_APP_ENV;
-if (appEnv === "local" && !BASE_URLS.local) {
-    appEnv = DEFAULT_APP_ENV;
-}
-const BASE_URL = BASE_URLS[appEnv];
 import { baseServicesTypes, SocketContext, updateCommonApiUrl } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncDB } from "../../util/syncHandler";
@@ -26,6 +12,23 @@ import { showGenericAlert } from "../../util/genericAlert";
 import { useNavigation } from "@react-navigation/native";
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
+import { buildApiUrl, getBaseUrls, persistServerSelection } from "../../util/serverConfig";
+
+// Avoid importing from the project root (index.js) to prevent a require cycle with App/index.
+// Compute BASE_URL locally, mirroring mobile/index.js logic.
+const baseUrls = getBaseUrls();
+const BASE_URLS = {
+    local: baseUrls.local,
+    dev: baseUrls.dev,
+    staging: baseUrls.staging,
+    prod: baseUrls.prod,
+};
+const DEFAULT_APP_ENV = baseUrls.defaultAppEnv ?? "dev";
+let appEnv = process.env.APP_ENV ?? DEFAULT_APP_ENV;
+if (appEnv === "local" && !BASE_URLS.local) {
+    appEnv = DEFAULT_APP_ENV;
+}
+const BASE_URL = BASE_URLS[appEnv];
 
 const SwitchServer = () => {
     enum ServerOption {
@@ -45,7 +48,7 @@ const SwitchServer = () => {
     const switchServer = async (server: ServerOption) => {
         if (server !== ServerOption.NONE) {
             const baseUrl = server === ServerOption.LIVE ? BASE_URL : testServerURL;
-            const apiUrl = `${baseUrl}/api/`;
+            const apiUrl = buildApiUrl(baseUrl);
 
             if (baseUrl === socket.ioUrl) {
                 Alert.alert(
@@ -58,7 +61,7 @@ const SwitchServer = () => {
 
             await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
                 if (connectionInfo?.isConnected && connectionInfo.isWifiEnabled) {
-                    confirmSwitchServer(apiUrl, baseUrl);
+                    confirmSwitchServer(server, apiUrl, baseUrl);
                 } else {
                     showGenericAlert(
                         i18n.t("login.notConnectedToInternet"),
@@ -69,7 +72,11 @@ const SwitchServer = () => {
         }
     };
 
-    const confirmSwitchServer = (apiUrl: string, baseUrl: string) => {
+    const confirmSwitchServer = (
+        server: ServerOption,
+        apiUrl: string,
+        baseUrl: string
+    ) => {
         Alert.alert(i18n.t("general.alert"), i18n.t("login.switchClearData"), [
             { text: i18n.t("general.cancel"), style: "cancel" },
             {
@@ -80,6 +87,7 @@ const SwitchServer = () => {
                     });
 
                     terminateCurrentConnection();
+                    await persistServerSelection(baseUrl, server === ServerOption.LIVE ? appEnv : undefined);
                     updateCommonApiUrl(apiUrl, baseUrl);
                     navigator.navigate("Login");
                 },

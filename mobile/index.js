@@ -2,6 +2,7 @@
 import "./src/setup/nativeEventEmitterPolyfills";
 import { registerRootComponent } from "expo";
 import App from "./src/App";
+import { setLogger as setReanimatedLogger } from "react-native-reanimated";
 import { initializeCommon, invalidateAllCachedAPI } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
@@ -37,6 +38,22 @@ if (appEnv === "local" && !BASE_URLS.local) {
 
 export const BASE_URL = BASE_URLS[appEnv];
 export const API_URL = `${BASE_URL}/api/`;
+
+// Silence noisy reanimated warnings from third-party components reading shared values during render.
+setReanimatedLogger({
+    log: console.log,
+    warn: (message, ...args) => {
+        if (
+            typeof message === "string" &&
+            message.includes("Reading from `value` during component render")
+        ) {
+            return;
+        }
+        console.warn(message, ...args);
+    },
+    error: console.error,
+    info: console.info,
+});
 
 initializeCommon({
     apiUrl: API_URL,

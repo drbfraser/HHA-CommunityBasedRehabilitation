@@ -57,6 +57,12 @@ const useStyles = () =>
             color: themeColors.borderGray,
         },
         switch: { flex: 0.2 },
+        syncingNotice: {
+            textAlign: "center",
+            color: themeColors.blueBgDark,
+            marginBottom: 8,
+            fontWeight: "600",
+        },
     });
 
 export default useStyles;

@@ -2,6 +2,8 @@ import NetInfo, { NetInfoState, NetInfoSubscription } from "@react-native-commun
 import { dbType } from "../util/watermelonDatabase";
 import { AutoSyncDB } from "../util/syncHandler";
 import { Mutex } from "async-mutex";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SyncSettings } from "../screens/Sync/PrefConstants";
 
 type BackgroundTimerType = typeof import("react-native-background-timer").default;
 
@@ -28,7 +30,7 @@ const getBackgroundTimer = (): BackgroundTimerType => {
 
 export namespace SyncDatabaseTask {
     const TASK_TAG = "[SyncDatabaseTask]";
-    const SYNC_INTERVAL_MILLISECONDS = 60 * 60 * 1000; /* 1 hour sync interval */
+    export const SYNC_INTERVAL_MILLISECONDS = 0.3 * 60 * 1000; /* 1 hour sync interval */
 
     const syncMutex = new Mutex();
 
@@ -40,6 +42,22 @@ export namespace SyncDatabaseTask {
         netInfoState = connectionState;
     });
 
+    const setNextAutoSyncTime = async (timestamp: number) => {
+        try {
+            await AsyncStorage.setItem(SyncSettings.NextAutoSyncAt, timestamp.toString());
+        } catch (e) {
+            console.log(`${TASK_TAG}: Failed to store next auto sync timestamp`, e);
+        }
+    };
+
+    const clearNextAutoSyncTime = async () => {
+        try {
+            await AsyncStorage.removeItem(SyncSettings.NextAutoSyncAt);
+        } catch (e) {
+            console.log(`${TASK_TAG}: Failed to clear next auto sync timestamp`, e);
+        }
+    };
+
     export const scheduleAutoSync = async (
         database: dbType,
         autoSync: boolean,
@@ -49,7 +67,9 @@ export namespace SyncDatabaseTask {
         const BackgroundTimer = getBackgroundTimer();
         BackgroundTimer.stopBackgroundTimer();
         console.log(`${TASK_TAG}: Scheduling Auto Sync`);
+        await setNextAutoSyncTime(Date.now() + SYNC_INTERVAL_MILLISECONDS);
         BackgroundTimer.runBackgroundTimer(async () => {
+            await setNextAutoSyncTime(Date.now() + SYNC_INTERVAL_MILLISECONDS);
             console.log(`${TASK_TAG}: Syncing local DB with remote`);
             syncMutex.runExclusive(async () => {
                 await AutoSyncDB(database, autoSync, cellularSync);
@@ -63,5 +83,6 @@ export namespace SyncDatabaseTask {
         const BackgroundTimer = getBackgroundTimer();
         BackgroundTimer.stopBackgroundTimer();
         netInfoUnsubscribe();
+        clearNextAutoSyncTime();
     };
 }

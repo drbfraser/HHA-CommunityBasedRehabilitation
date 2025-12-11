@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-    getSyncStatus,
-    subscribeToSyncStatus,
-    syncInProgress,
-    SyncStatus,
-} from "./syncState";
+import { getSyncStatus, subscribeToSyncStatus, syncInProgress, SyncStatus } from "./syncState";
 
 export const useSyncStatus = () => {
     const [status, setStatus] = useState<SyncStatus>(getSyncStatus());

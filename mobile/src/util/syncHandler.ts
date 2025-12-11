@@ -49,6 +49,11 @@ export async function checkUnsyncedChanges() {
 
 export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
     await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
+        if (!connectionInfo?.isInternetReachable) {
+            notifyAutoSyncFailure();
+            return;
+        }
+
         switch (connectionInfo?.type) {
             case NetInfoStateType.cellular:
                 if (autoSync && cellularSync && connectionInfo?.isInternetReachable) {
@@ -74,14 +79,14 @@ export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSy
                     }
                 }
                 break;
+            default:
+                notifyAutoSyncFailure();
+                break;
         }
     });
 }
 
-export async function SyncDB(
-    database: dbType,
-    source: SyncSource = "manual"
-): Promise<boolean> {
+export async function SyncDB(database: dbType, source: SyncSource = "manual"): Promise<boolean> {
     if (syncMutex.isLocked()) {
         console.log("[SYNC] A sync is already in progress. Skipping new request.");
         return false;

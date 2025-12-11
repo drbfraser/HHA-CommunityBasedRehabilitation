@@ -51,8 +51,7 @@ const Sync = () => {
     const prevSyncPhase = useRef(syncStatus.phase);
 
     const syncButtonDisabled =
-        isSyncing ||
-        (!netInfo.isConnected ? true : netInfo.type == "cellular" && !cellularSync ? true : false);
+        isSyncing || (netInfo.type === "cellular" && !cellularSync ? true : false);
 
     const renderSyncingNotice = () => {
         if (!isSyncing) return null;
@@ -80,7 +79,7 @@ const Sync = () => {
             });
         }
 
-        if (remainingMs === 0) {
+        if (remainingMs <= 2000) {
             return t("sync.autoSyncRefreshing", {
                 defaultValue: "Scheduling next sync...",
             });

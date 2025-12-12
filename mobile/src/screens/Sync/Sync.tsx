@@ -79,6 +79,12 @@ const Sync = () => {
             });
         }
 
+        if (isSyncing) {
+            return t("sync.autoSyncRefreshing", {
+                defaultValue: "Scheduling next sync...",
+            });
+        }
+
         if (remainingMs <= 2000) {
             return t("sync.autoSyncRefreshing", {
                 defaultValue: "Scheduling next sync...",

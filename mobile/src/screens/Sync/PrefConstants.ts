@@ -3,4 +3,5 @@ export enum SyncSettings {
     AutoSyncPref = "AutoSyncPref",
     CellularPref = "CellularSyncPref",
     VersionLastSynced = "VersionLastSynced",
+    NextAutoSyncAt = "NextAutoSyncAt",
 }

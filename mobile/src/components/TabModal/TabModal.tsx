@@ -1,8 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef } from "react";
 import { View } from "react-native";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { AppStackNavProp } from "../../util/stackScreens";
-import CustomBackdrop from "./CustomBackDrop";
 import useStyles from "./TabModal.styles";
 import { useIsFocused } from "@react-navigation/core";
 
@@ -44,7 +43,9 @@ export const TabModal = (props: StackModal) => {
             index={0}
             snapPoints={snapPoints}
             onChange={handleSheetChanges}
-            backdropComponent={CustomBackdrop}
+            backdropComponent={(props) => (
+                <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
+            )}
         >
             <View style={styles.contentContainer}>{props.children}</View>
         </BottomSheetModal>

@@ -1,7 +1,7 @@
 import { themeColors, timestampToDateTime, APIFetchFailError } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Alert, SafeAreaView, View, ScrollView } from "react-native";
 import { Button, Divider, Text, Card, Switch } from "react-native-paper";
 import SyncAlert from "../../components/SyncAlert/SyncAlert";
@@ -19,6 +19,8 @@ import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 import SyncUpdateAlert from "../../components/SyncUpdateAlert.tsx/SyncUpdateAlert";
 import { useTranslation } from "react-i18next";
 import * as Application from "expo-application";
+import { useSyncStatus } from "../../util/useSyncStatus";
+import { useNextAutoSyncCountdown } from "../../util/useNextAutoSyncCountdown";
 
 export interface ISync {
     lastPulledTime: number;
@@ -44,6 +46,77 @@ const Sync = () => {
         localChanges: 0,
     });
     const { t } = useTranslation();
+    const { status: syncStatus, isSyncing } = useSyncStatus();
+    const { remainingMs, nextAutoSyncAt } = useNextAutoSyncCountdown(autoSync);
+    const prevSyncPhase = useRef(syncStatus.phase);
+
+    const syncButtonDisabled =
+        isSyncing || (netInfo.type === "cellular" && !cellularSync ? true : false);
+
+    const renderSyncingNotice = () => {
+        if (!isSyncing) return null;
+        const label =
+            syncStatus.source === "auto"
+                ? t("sync.autoSyncInProgress", { defaultValue: "Automatic sync in progress..." })
+                : t("sync.manualSyncInProgress", { defaultValue: "Sync in progress..." });
+        return <Text style={styles.syncingNotice}>{label}</Text>;
+    };
+
+    const formatNextAutoSync = () => {
+        if (!autoSync) {
+            return t("sync.autoSyncDisabled", { defaultValue: "Automatic sync is off" });
+        }
+
+        if (!nextAutoSyncAt) {
+            return t("sync.autoSyncUnknown", {
+                defaultValue: "Next automatic sync time unavailable",
+            });
+        }
+
+        if (remainingMs === null) {
+            return t("sync.autoSyncUnknown", {
+                defaultValue: "Next automatic sync time unavailable",
+            });
+        }
+
+        if (isSyncing) {
+            return t("sync.autoSyncRefreshing", {
+                defaultValue: "Scheduling next sync...",
+            });
+        }
+
+        if (remainingMs <= 2000) {
+            return t("sync.autoSyncRefreshing", {
+                defaultValue: "Scheduling next sync...",
+            });
+        }
+
+        const totalSeconds = Math.ceil(remainingMs / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        if (hours > 0) {
+            return t("sync.autoSyncInHours", {
+                defaultValue: `${hours}h ${minutes}m`,
+                hours,
+                minutes,
+            });
+        }
+
+        if (minutes > 0) {
+            return t("sync.autoSyncInMinutes", {
+                defaultValue: `${minutes}m ${seconds}s`,
+                minutes,
+                seconds,
+            });
+        }
+
+        return t("sync.autoSyncInSeconds", {
+            defaultValue: `${seconds}s`,
+            seconds,
+        });
+    };
 
     const resetAlertSubtitleIfVisible = () => {
         if (alertSubtitle !== "") {
@@ -119,7 +192,11 @@ const Sync = () => {
     };
 
     const performSync = async () => {
-        await SyncDB(database);
+        const syncStarted = await SyncDB(database);
+
+        if (!syncStarted) {
+            return;
+        }
 
         setAlertStatus(true);
         setAlertMessage(t("sync.syncComplete"));
@@ -163,6 +240,13 @@ const Sync = () => {
         }
     }, [loading]);
 
+    useEffect(() => {
+        if (prevSyncPhase.current !== syncStatus.phase && syncStatus.phase === "success") {
+            retreiveStats();
+        }
+        prevSyncPhase.current = syncStatus.phase;
+    }, [syncStatus.phase]);
+
     console.log("Sync: stats.lastPulledTime: ", stats.lastPulledTime);
     console.log("Sync: stats.localChanges:   ", stats.localChanges);
     console.log("Sync: stats.remoteChanges:  ", stats.remoteChanges);
@@ -170,19 +254,15 @@ const Sync = () => {
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.groupContainer}>
                 <Text style={styles.cardSectionTitle}>{t("sync.database")} </Text>
+                {renderSyncingNotice()}
                 <View style={styles.btnContainer}>
                     <Button
                         icon="database-sync"
                         mode="contained"
                         labelStyle={styles.syncBtnLabel}
                         style={styles.syncBtbContainer}
-                        disabled={
-                            !netInfo.isConnected
-                                ? true
-                                : netInfo.type == "cellular" && !cellularSync
-                                ? true
-                                : false
-                        }
+                        disabled={syncButtonDisabled}
+                        loading={isSyncing}
                         onPress={async () => {
                             try {
                                 if (!(await lastVersionSyncedIsCurrentVersion())) {
@@ -202,6 +282,7 @@ const Sync = () => {
                         mode="contained"
                         labelStyle={styles.resetBtnLabel}
                         style={styles.resetBtbContainer}
+                        disabled={isSyncing}
                         onPress={resetDatabase}
                     >
                         {t("sync.clearLocal")}
@@ -211,9 +292,9 @@ const Sync = () => {
                 <Text style={styles.cardSectionTitle}>{t("sync.syncStatistics")}</Text>
                 <Card style={styles.CardStyle}>
                     {!loading ? (
-                        <>
+                        <View>
                             <View style={styles.row}>
-                                <Text style={styles.stats}> {t("sync.lastPullAt")}</Text>
+                                <Text style={styles.stats}> {"Last Synchronized:"}</Text>
                                 {stats.lastPulledTime != 0 ? (
                                     <Text>{timestampToDateTime(stats.lastPulledTime)}</Text>
                                 ) : (
@@ -232,10 +313,8 @@ const Sync = () => {
                                 <Text style={styles.stats}> {t("sync.versionName")}</Text>
                                 <Text>{VERSION_NAME}</Text>
                             </View>
-                        </>
-                    ) : (
-                        <></>
-                    )}
+                        </View>
+                    ) : null}
                 </Card>
                 <Divider />
                 <Text style={styles.cardSectionTitle}>{t("sync.syncSettings")}</Text>
@@ -274,6 +353,16 @@ const Sync = () => {
                             }}
                             value={cellularSync}
                         ></Switch>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={{ flex: 0.7, paddingRight: 10, margin: 10 }}>
+                            {t("sync.nextAutoSync", { defaultValue: "Next automatic sync" })}
+                        </Text>
+                        <Text
+                            style={{ flex: 0.3, paddingRight: 10, margin: 10, textAlign: "right" }}
+                        >
+                            {formatNextAutoSync()}
+                        </Text>
                     </View>
                 </Card>
             </ScrollView>

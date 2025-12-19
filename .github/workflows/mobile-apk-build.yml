@@ -4,11 +4,11 @@ name: Mobile APK Build
 on:
   workflow_dispatch:
 env:
-  HUB_REPO_BACKEND: "${{ secrets.HUB_REPO_BACKEND }}"
-  HUB_REPO_FRONTEND: "${{ secrets.HUB_REPO_FRONTEND }}"
-  HUB_TOKEN: "${{ secrets.HUB_TOKEN }}"
-  HUB_USER: "${{ secrets.HUB_USER }}"
-  GRAFANA_API_KEY: "${{ secrets.GRAFANA_API_KEY }}"
+  # HUB_REPO_BACKEND: "${{ secrets.HUB_REPO_BACKEND }}"
+  # HUB_REPO_FRONTEND: "${{ secrets.HUB_REPO_FRONTEND }}"
+  # HUB_TOKEN: "${{ secrets.HUB_TOKEN }}"
+  # HUB_USER: "${{ secrets.HUB_USER }}"
+  # GRAFANA_API_KEY: "${{ secrets.GRAFANA_API_KEY }}"
   NPM_VERSION: 10.7.0
   CLONE_DEPTH: 150
   # Keep npm's cache out of home directory (mounted from host)
@@ -47,7 +47,7 @@ jobs:
   #       run: npm run test-ci
   #       working-directory: /isolated_build/repo/common
 
-  build-mobile:
+  build-mobile-apk:
     runs-on: [self-hosted, docker]
     container:
       # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
@@ -124,15 +124,16 @@ jobs:
         #    from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
         # Fix: Set HOME to /isolated_build/ in the job's env: section above.
         run: |
-          rm -f /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+          rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
           npm run build-apk staging
         working-directory: /isolated_build/repo/mobile
       - name: Display build/outputs folder
         run: find /isolated_build/repo/mobile/android/app/build/outputs/
-      - uses: actions/upload-artifact@v3
+      - name: Upload APK Artifact (Staging)
+        uses: actions/upload-artifact@v3
         with:
           name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
-          path: /isolated_build/repo/mobile/android/app/build/outputs/bundle/release/app-release.aab
+          path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
           retention-days: 60
           if-no-files-found: error
 

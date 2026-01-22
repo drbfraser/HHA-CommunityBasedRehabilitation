@@ -9,6 +9,7 @@ from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
+from cbr_api.email_notifications import send_referral_created_email
 from cbr_api.util import (
     current_milli_time,
     create_client_data,
@@ -434,6 +435,7 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         validated_data["server_created_at"] = current_time
         referrals = models.Referral.objects.create(**validated_data)
         referrals.save()
+        send_referral_created_email(referrals)
         return referrals
 
 

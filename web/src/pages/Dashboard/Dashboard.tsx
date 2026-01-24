@@ -258,19 +258,19 @@ const Dashboard = () => {
             renderHeader: RenderRiskHeader,
             renderCell: RenderBadge,
             sortComparator: riskComparator,
-            flex: 0.7,
+            flex: 0.4,
         })),
         {
             field: "zone",
             headerName: t("general.zone"),
-            flex: 1.2,
+            flex: 1.1,
             renderCell: RenderZone,
         },
         {
             field: "last_visit_date",
             headerName: t("general.lastVisit"),
             renderCell: RenderDate,
-            flex: 1,
+            flex: 0.8,
         },
     ];
 

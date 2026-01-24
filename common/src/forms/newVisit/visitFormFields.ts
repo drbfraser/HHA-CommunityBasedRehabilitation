@@ -11,6 +11,7 @@ export enum VisitField {
     latitude = "latitude",
     zone = "zone",
     village = "village",
+    picture = "picture",
 }
 
 export enum GoalStatus {
@@ -31,6 +32,7 @@ export enum VisitFormField {
     mental = "MENTAL",
     outcomes = "outcomes",
     improvements = "improvements",
+    picture = "picture",
 }
 
 export enum ImprovementFormField {
@@ -56,10 +58,12 @@ const refreshArrays = () => {
         [VisitFormField.nutrition]: i18n.t("newVisit.nutrition"),
         [VisitFormField.mental]: i18n.t("newVisit.mental"),
         [VisitFormField.improvements]: i18n.t("newVisit.improvements"),
+        [VisitFormField.picture]: i18n.t("referral.picture"), // KTTODO: Change this translation 
         [ImprovementFormField.description]: i18n.t("newVisit.description"),
         [GoalStatus.cancelled]: i18n.t("newVisit.cancelled"),
         [GoalStatus.ongoing]: i18n.t("newVisit.ongoing"),
         [GoalStatus.concluded]: i18n.t("newVisit.concluded"),
+        
     };
     provisionals = {
         [VisitFormField.health]: [
@@ -163,6 +167,7 @@ export const visitInitialValues = {
     [VisitFormField.social]: false,
     [VisitFormField.nutrition]: false,
     [VisitFormField.mental]: false,
+    [VisitFormField.picture]: "",
     [VisitFormField.improvements]: {
         [VisitFormField.health]: [],
         [VisitFormField.education]: [],

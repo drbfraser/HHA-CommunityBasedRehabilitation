@@ -664,6 +664,7 @@ def sync(request):
         else:
             validation_fail(survey_serializer)
 
+        decode_image(request.data["visits"])
         visit_serializer = serializers.pushVisitSerializer(
             data=request.data, context={"sync_time": sync_time}
         )

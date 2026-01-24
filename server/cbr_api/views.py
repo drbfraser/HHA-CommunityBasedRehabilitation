@@ -436,6 +436,43 @@ class VisitDetail(generics.RetrieveAPIView):
     serializer_class = serializers.DetailedVisitSerializer
 
 
+# Reused ReferralImage VIew
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
+class VisitImage(AuthenticatedObjectDownloadView):
+    model = models.Visit
+    file_field = "picture"
+
+    @extend_schema(
+        description="Gets the image of Visit if it exists.",
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+    )
+    def get(self, request, pk):
+        if DEBUG:
+
+            def super_get(self_new, request_new, pk_new):
+                return super().get(self_new, request_new, pk_new)
+
+            return super_get(self, request, pk)
+
+        visit = models.Visit.objects.get(pk=pk)
+        if visit:
+            if len(visit.picture.name) <= 0:
+                return HttpResponseNotFound()
+
+            # dir_name, file_name = os.path.split(visit.picture.name)
+            # response = HttpResponse()
+            # # Redirect the image request to Caddy.
+            # response["X-Accel-Redirect"] = visit.picture.name
+            # response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+            # return response
+            return super().get(self, request, pk)
+        else:
+            return HttpResponseNotFound()
+
+
+
 @method_decorator(
     cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
 )

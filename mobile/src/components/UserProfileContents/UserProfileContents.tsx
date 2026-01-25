@@ -123,11 +123,6 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             <Text style={styles.profileInfoText}>{user.username}</Text>
 
                             <Subheading style={styles.profileInfoHeader}>
-                                {t("general.id")}
-                            </Subheading>
-                            <Text style={styles.profileInfoText}>{user.id}</Text>
-
-                            <Subheading style={styles.profileInfoHeader}>
                                 {t("general.zone")}
                             </Subheading>
                             <Text style={styles.profileInfoText}>

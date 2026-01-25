@@ -37,12 +37,12 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
         sdk.dir = /D:\\Users\\Brian\\AndroidSDK
         ```
 
-If you need to change the version of node/npm, then try:
+**If you need to change the version of node/npm, then try:**
 
-1. Install nvm:  
+1. If on windows, install nvm-windows by following the instructions at: https://github.com/coreybutler/nvm-windows#readme . For linux use the command:
    `$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
-2. Close and reopen shell
-3. Install needed node versions:  
+2. After installing, close and reopen your shell.
+3. Install needed node versions (e.g., 18.20.5):
    `$ nvm install 18.20.5`
 4. For each new shell you open, set the node (and hence also npm) version to use:  
    `$ nvm use 18.20.5`

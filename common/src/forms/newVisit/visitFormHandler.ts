@@ -51,13 +51,11 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
     };
 
     const visitObj = objectToFormData(newVisit);
-    
+
     //if referral picture exist, then attached into form data
     if (values[VisitFormField.picture]) {
         await appendPic(visitObj, values[VisitFormField.picture]);
-      
     }
 
-    return await addVisit(visitObj)
-
+    return await addVisit(visitObj);
 };

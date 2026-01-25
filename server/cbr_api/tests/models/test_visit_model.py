@@ -73,7 +73,9 @@ class VisitModelTests(TestCase):
 
     @patch("os.path.splitext")
     @patch("cbr_api.models.get_random_string")
-    def test_rename_file_method_with_primary_key(self, mock_get_random_string, mock_splitext):
+    def test_rename_file_method_with_primary_key(
+        self, mock_get_random_string, mock_splitext
+    ):
         visit = create_visit(
             client=self.client,
             user=self.user,
@@ -152,4 +154,3 @@ class VisitModelTests(TestCase):
         client_id = self.client.id
         self.client.delete()
         self.assertEqual(Visit.objects.filter(client_id=client_id).count(), 0)
-

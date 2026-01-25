@@ -472,7 +472,6 @@ class VisitImage(AuthenticatedObjectDownloadView):
             return HttpResponseNotFound()
 
 
-
 @method_decorator(
     cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
 )

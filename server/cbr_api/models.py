@@ -298,7 +298,7 @@ class Visit(models.Model):
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
-    
+
     def rename_file(self, original_filename):
         # file_ext includes the "."
         file_root, file_ext = os.path.splitext(original_filename)
@@ -308,7 +308,7 @@ class Visit(models.Model):
             else f"referral-{get_random_string(10)}-{file_root}{file_ext}"
         )
         return os.path.join(visit_picture_upload_dir, new_filename)
-    
+
     picture = models.ImageField(
         upload_to=rename_file,
         storage=OverwriteStorage(),

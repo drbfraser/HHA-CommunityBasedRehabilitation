@@ -205,7 +205,7 @@ const SwitchServer = () => {
                             error={false}
                             value={testServerURL}
                             onChangeText={(newURL) => setTestServerURL(newURL)}
-                            placeholder={" https://somewhere.com"}
+                            placeholder={"https://somewhere.com"}
                             mode="outlined"
                             blurOnSubmit={false}
                             autoCapitalize="none"

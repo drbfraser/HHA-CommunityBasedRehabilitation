@@ -10,4 +10,11 @@ const showToast = (message: string) => {
 
 export const notifyAutoSyncStart = () => showToast("Automatic sync started");
 export const notifyAutoSyncSuccess = () => showToast("Automatic sync completed");
-export const notifyAutoSyncFailure = () => showToast("Automatic sync failed");
+export const notifyAutoSyncFailure = (reason?: 'no_internet') => {
+    if (reason === 'no_internet') {
+        showToast("Skipping automatic sync because no internet is available.");
+        showToast("Will try again later.");
+    } else {
+        showToast("Automatic sync failed: Unable to connect to server.");
+    }
+};

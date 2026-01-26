@@ -101,7 +101,7 @@ class VisitModelTests(TestCase):
         visit = Visit()
         result = visit.rename_file("original.jpg")
 
-        self.assertTrue(result.endswith("ABC123DEF4-original.jpg"))
+        self.assertTrue(result.endswith("visit-ABC123DEF4-original.jpg"))
         mock_random_string.assert_called_once_with(10)
 
     @override_settings(MEDIA_ROOT=tempfile.gettempdir())

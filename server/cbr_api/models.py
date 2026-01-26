@@ -305,7 +305,7 @@ class Visit(models.Model):
         new_filename = (
             f"visit-{self.pk}{file_ext}"
             if self.pk is not None
-            else f"referral-{get_random_string(10)}-{file_root}{file_ext}"
+            else f"visit-{get_random_string(10)}-{file_root}{file_ext}"
         )
         return os.path.join(visit_picture_upload_dir, new_filename)
 

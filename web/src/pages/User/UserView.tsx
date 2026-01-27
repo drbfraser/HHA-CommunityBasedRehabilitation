@@ -42,9 +42,6 @@ const UserView = () => {
                     <b>{t("general.username")}</b>
                     <p>{user.username}</p>
 
-                    <b>{t("general.id")}</b>
-                    <p> {user.id} </p>
-
                     <b>{t("general.zone")}</b>
                     <p> {zones.get(user.zone) ?? "Unknown"} </p>
 

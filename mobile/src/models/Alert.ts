@@ -18,7 +18,9 @@ export default class Alert extends Model implements SyncableModel {
     @json(alertField.unread_by_users, sanitizedUnreadUsers)
     unread_by_users;
 
-    @readonly @date("created_date") created_date;
+    @readonly
+    @date("created_date")
+    created_date;
     @readonly @date(mobileGenericField.updated_at) updatedAt;
 
     getBriefIdentifier = (): string => {

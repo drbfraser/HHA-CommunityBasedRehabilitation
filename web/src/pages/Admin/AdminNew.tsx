@@ -59,7 +59,14 @@ const AdminNew = () => {
                             </Grid>
                             <Grid item md={6} xs={12}>
                                 <FormControl fullWidth variant="outlined">
-                                    <Field component={TextField} select required variant="outlined" label={adminUserFieldLabels[AdminField.role]} name={AdminField.role}>
+                                    <Field
+                                        component={TextField}
+                                        select
+                                        required
+                                        variant="outlined"
+                                        label={adminUserFieldLabels[AdminField.role]}
+                                        name={AdminField.role}
+                                    >
                                         {Object.entries(userRoles).map(([value, { name }]) => (
                                             <MenuItem key={value} value={value}>
                                                 {name}

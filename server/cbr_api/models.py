@@ -534,3 +534,25 @@ class Alert(models.Model):
     updated_at = models.BigIntegerField(_("date created"), default=0)
 
     created_date = models.BigIntegerField(_("date created"), default=time.time)
+
+
+class EmailSettings(models.Model):
+    from_email = models.EmailField(max_length=254)
+    from_email_password = models.CharField(max_length=128, blank=True, default="")
+    to_email = models.EmailField(max_length=254)
+    updated_at = models.BigIntegerField(default=current_milli_time)
+
+    @classmethod
+    def get_solo(cls):
+        existing = cls.objects.first()
+        if existing:
+            return existing
+        return cls.objects.create(
+            from_email=settings.EMAIL_HOST_USER,
+            from_email_password=settings.EMAIL_HOST_PASSWORD,
+            to_email=settings.REFERRAL_NOTIFICATION_TO_EMAIL,
+        )
+
+    def save(self, *args, **kwargs):
+        self.updated_at = current_milli_time()
+        return super().save(*args, **kwargs)

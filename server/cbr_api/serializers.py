@@ -987,6 +987,38 @@ class AlertListSerializer(serializers.ModelSerializer):
         ]
 
 
+class EmailSettingsSerializer(serializers.ModelSerializer):
+    from_email_password = serializers.CharField(
+        write_only=True, required=False, allow_blank=True
+    )
+    from_email_password_set = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = models.EmailSettings
+        fields = [
+            "from_email",
+            "to_email",
+            "from_email_password",
+            "from_email_password_set",
+            "updated_at",
+        ]
+        read_only_fields = ["updated_at", "from_email_password_set"]
+
+    def get_from_email_password_set(self, obj):
+        return bool(obj.from_email_password)
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("from_email_password", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password is not None:
+            cleaned = "".join(password.split())
+            if cleaned:
+                instance.from_email_password = cleaned
+        instance.save()
+        return instance
+
+
 class AlertSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Alert

@@ -1,0 +1,185 @@
+import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Field, Formik } from "formik";
+import { TextField } from "formik-mui";
+import { Button, Grid, Typography } from "@mui/material";
+import * as Yup from "yup";
+
+import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
+import { Validation } from "@cbr/common/util/validations";
+import { Container, StyledForm } from "./Admin.styles";
+
+type EmailSettingsFormValues = {
+    from_email: string;
+    to_email: string;
+    from_email_password: string;
+};
+
+const normalizePassword = (value: string) => value.replace(/\s+/g, "");
+
+const emptyValues: EmailSettingsFormValues = {
+    from_email: "",
+    to_email: "",
+    from_email_password: "",
+};
+
+const AdminEmailSettings = () => {
+    const { t } = useTranslation();
+    const [initialValues, setInitialValues] = useState<EmailSettingsFormValues>(emptyValues);
+    const [passwordSet, setPasswordSet] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        apiFetch(Endpoint.EMAIL_SETTINGS)
+            .then((res) => res.json())
+            .then((data) => {
+                setInitialValues({
+                    from_email: data.from_email ?? "",
+                    to_email: data.to_email ?? "",
+                    from_email_password: "",
+                });
+                setPasswordSet(Boolean(data.from_email_password_set));
+            })
+            .catch((e) => {
+                const errMsg =
+                    e instanceof APIFetchFailError ? e.details ?? e.message : (e as string);
+                alert(errMsg);
+            })
+            .finally(() => setLoading(false));
+    }, []);
+
+    const validationSchema = useMemo(() => {
+        const requiredMsg = "Required";
+        return Yup.object().shape({
+            from_email: Yup.string()
+                .matches(Validation.emailRegExp, t("clientFields.emailAddressNotValid"))
+                .required(requiredMsg),
+            to_email: Yup.string()
+                .matches(Validation.emailRegExp, t("clientFields.emailAddressNotValid"))
+                .required(requiredMsg),
+            from_email_password: Yup.string()
+                .test("password-required", "App password is required", function (value) {
+                    const cleaned = normalizePassword(value ?? "");
+                    const fromEmailChanged =
+                        (this.parent.from_email ?? "") !== initialValues.from_email;
+                    if (!passwordSet || fromEmailChanged) {
+                        return cleaned.length > 0;
+                    }
+                    return true;
+                })
+                .test("password-length", "App password must be 16 characters", (value) => {
+                    const cleaned = normalizePassword(value ?? "");
+                    if (!cleaned) {
+                        return true;
+                    }
+                    return cleaned.length === 16;
+                }),
+        });
+    }, [initialValues.from_email, passwordSet, t]);
+
+    return (
+        <Container>
+            {loading ? (
+                <Typography variant="body2">Loading...</Typography>
+            ) : (
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    enableReinitialize
+                    onSubmit={(values, helpers) => {
+                        const cleanedPassword = normalizePassword(values.from_email_password);
+                        const payload: Record<string, string> = {
+                            from_email: values.from_email.trim(),
+                            to_email: values.to_email.trim(),
+                        };
+                        if (cleanedPassword) {
+                            payload.from_email_password = cleanedPassword;
+                        }
+
+                        apiFetch(Endpoint.EMAIL_SETTINGS, "", {
+                            method: "PUT",
+                            body: JSON.stringify(payload),
+                        })
+                            .then((res) => res.json())
+                            .then((data) => {
+                                const nextValues = {
+                                    from_email: data.from_email ?? payload.from_email,
+                                    to_email: data.to_email ?? payload.to_email,
+                                    from_email_password: "",
+                                };
+                                setInitialValues(nextValues);
+                                setPasswordSet(Boolean(data.from_email_password_set));
+                                helpers.resetForm({ values: nextValues });
+                                alert("Email settings updated.");
+                            })
+                            .catch((e) => {
+                                const errMsg =
+                                    e instanceof APIFetchFailError
+                                        ? e.details ?? e.message
+                                        : (e as string);
+                                alert(errMsg);
+                            })
+                            .finally(() => helpers.setSubmitting(false));
+                    }}
+                >
+                    {({ isSubmitting, values }) => (
+                        <StyledForm>
+                            <Grid container spacing={2}>
+                                <Grid item md={6} xs={12}>
+                                    <Field
+                                        component={TextField}
+                                        name="from_email"
+                                        variant="outlined"
+                                        label="From email"
+                                        required
+                                        fullWidth
+                                    />
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <Field
+                                        component={TextField}
+                                        name="to_email"
+                                        variant="outlined"
+                                        label="Recipient email"
+                                        required
+                                        fullWidth
+                                    />
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                    <Field
+                                        component={TextField}
+                                        name="from_email_password"
+                                        variant="outlined"
+                                        label="App password"
+                                        type="password"
+                                        fullWidth
+                                    />
+                                    {passwordSet && !values.from_email_password && (
+                                        <Typography variant="caption" color="text.secondary">
+                                            App password is already set. Leave blank to keep it.
+                                        </Typography>
+                                    )}
+                                </Grid>
+                            </Grid>
+
+                            <Grid container justifyContent="flex-end">
+                                <Grid item>
+                                    <Button
+                                        color="primary"
+                                        variant="contained"
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                    >
+                                        {t("general.save")}
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </StyledForm>
+                    )}
+                </Formik>
+            )}
+        </Container>
+    );
+};
+
+export default AdminEmailSettings;

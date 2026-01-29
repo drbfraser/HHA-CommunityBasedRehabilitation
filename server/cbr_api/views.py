@@ -256,6 +256,14 @@ class AdminStats(generics.RetrieveAPIView):
         }
 
 
+class EmailSettingsView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.AdminAll]
+    serializer_class = serializers.EmailSettingsSerializer
+
+    def get_object(self):
+        return models.EmailSettings.get_solo()
+
+
 class UserCurrent(generics.RetrieveAPIView):
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer

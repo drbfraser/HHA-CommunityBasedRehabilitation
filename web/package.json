@@ -1,79 +1,87 @@
 {
-    "name": "@cbr/web",
-    "version": "0.1.0",
-    "private": true,
-    "engines": {
-        "node": ">=18.20.4 <19"
-    },
-    "dependencies": {
-        "@craco/craco": "^7.1.0",
-        "@emotion/react": "^11.13.3",
-        "@emotion/styled": "^11.13.0",
-        "@mui/icons-material": "^5.16.7",
-        "@mui/lab": "^5.0.0-alpha.170",
-        "@mui/material": "^5.16.7",
-        "@mui/x-data-grid": "^5.17.26",
-        "@mui/x-date-pickers": "^7.28.3",
-        "@testing-library/jest-dom": "^5.11.9",
-        "@testing-library/react": "^11.2.3",
-        "@testing-library/user-event": "^12.6.0",
-        "@types/jest": "^26.0.20",
-        "@types/node": "^12.19.14",
-        "@types/react": "^18.3.11",
-        "@types/react-csv": "^1.1.1",
-        "@types/react-dom": "^18.3.1",
-        "@types/react-router-dom": "^5.1.7",
-        "bootstrap": "^4.5.3",
-        "browser-image-compression": "^1.0.17",
-        "craco-babel-loader": "^0.1.4",
-        "dayjs": "^1.11.13",
-        "expo-localization": "^10.2.0",
-        "formik": "^2.2.6",
-        "formik-mui": "^4.0.0",
-        "i18next": "^23.16.0",
-        "jwt-decode": "^3.1.2",
-        "react": "^18.3.1",
-        "react-cropper": "^2.1.7",
-        "react-csv": "^2.0.3",
-        "react-dom": "^18.3.1",
-        "react-i18next": "^15.0.0",
-        "react-router-dom": "^5.3.3",
-        "react-scripts": "5.0.1",
-        "recharts": "^2.7.2",
-        "socket.io-client": "^4.7.1",
-        "web-vitals": "^0.2.4",
-        "yup": "^0.32.8"
-    },
-    "overrides": {
-        "typescript": "^5.6.2"
-    },
-    "scripts": {
-        "start": "craco start",
-        "build": "craco build",
-        "test": "craco test",
-        "eject": "react-scripts eject"
-    },
-    "eslintConfig": {
-        "extends": [
-            "react-app",
-            "react-app/jest"
-        ]
-    },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "devDependencies": {
-        "prettier": "2.3.0",
-        "typescript": "^5.6.2",
-        "@babel/plugin-proposal-private-property-in-object": "^7"
-    }
+  "name": "@cbr/web",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=18.20.4 <19"
+  },
+  "dependencies": {
+    "@craco/craco": "^7.1.0",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^5.16.7",
+    "@mui/lab": "^5.0.0-alpha.170",
+    "@mui/material": "^5.16.7",
+    "@mui/x-data-grid": "^5.17.26",
+    "@mui/x-date-pickers": "^7.28.3",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.3",
+    "@testing-library/user-event": "^12.6.0",
+    "@types/jest": "^26.0.20",
+    "@types/node": "^12.19.14",
+    "@types/react": "^18.3.11",
+    "@types/react-csv": "^1.1.1",
+    "@types/react-dom": "^18.3.1",
+    "@types/react-router-dom": "^5.1.7",
+    "bootstrap": "^4.5.3",
+    "browser-image-compression": "^1.0.17",
+    "craco-babel-loader": "^0.1.4",
+    "dayjs": "^1.11.13",
+    "expo-localization": "^10.2.0",
+    "formik": "^2.2.6",
+    "formik-mui": "^4.0.0",
+    "i18next": "^23.16.0",
+    "jwt-decode": "^3.1.2",
+    "react": "^18.3.1",
+    "react-cropper": "^2.1.7",
+    "react-csv": "^2.0.3",
+    "react-dom": "^18.3.1",
+    "react-i18next": "^15.0.0",
+    "react-router-dom": "^5.3.3",
+    "react-scripts": "5.0.1",
+    "recharts": "^2.7.2",
+    "socket.io-client": "^4.7.1",
+    "web-vitals": "^0.2.4",
+    "yup": "^0.32.8"
+  },
+  "overrides": {
+    "typescript": "^5.6.2"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,md,html}": [
+      "prettier --write"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "2.3.0",
+    "typescript": "^5.6.2"
+  }
 }

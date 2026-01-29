@@ -50,11 +50,11 @@ const AdminNew = () => {
                             <Grid item md={6} xs={12}>
                                 <Field
                                     component={TextField}
-                                    name={AdminField.username}
-                                    variant="outlined"
+                                        name={AdminField.username}
+                                        variant="outlined"
                                     label={adminUserFieldLabels[AdminField.username]}
                                     required
-                                    fullWidth
+                                       fullWidth 
                                 />
                             </Grid>
                             <Grid item md={6} xs={12}>

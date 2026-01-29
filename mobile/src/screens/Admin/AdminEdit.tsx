@@ -86,7 +86,7 @@ const AdminEdit = ({
                                 database,
                                 formikHelpers,
                                 autoSync,
-                                cellularSync
+                                cellularSync,
                             )
                                 .then((id) => {
                                     setHasSubmitted(true);
@@ -98,8 +98,8 @@ const AdminEdit = ({
                                     setSaveError(
                                         e instanceof APIFetchFailError
                                             ? e.buildFormError(adminUserFieldLabels)
-                                            : `${e}`
-                                    )
+                                            : `${e}`,
+                                    ),
                                 );
                         }}
                     >
@@ -181,7 +181,7 @@ const AdminEdit = ({
                                         onPress={() => {
                                             formikProps.setFieldValue(
                                                 AdminField.is_active,
-                                                !formikProps.values.is_active
+                                                !formikProps.values.is_active,
                                             );
                                             formikProps.setFieldTouched(AdminField.is_active, true);
                                         }}
@@ -200,7 +200,7 @@ const AdminEdit = ({
                                         loading={formikProps.isSubmitting}
                                         onPress={
                                             formikProps.handleSubmit as (
-                                                e?: GestureResponderEvent
+                                                e?: GestureResponderEvent,
                                             ) => void
                                         }
                                         mode="contained"

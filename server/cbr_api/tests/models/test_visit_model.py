@@ -92,13 +92,14 @@ class VisitModelTests(TestCase):
         mock_get_random_string.assert_not_called()
         mock_splitext.assert_called_once_with("original.jpg")
 
-    @patch("os.path.splitext")
+    @patch("cbr_api.models.os.path.splitext")
     @patch("cbr_api.models.get_random_string")
     def test_rename_file_without_primary_key(self, mock_random_string, mock_splitext):
         mock_splitext.return_value = ("original", ".jpg")
         mock_random_string.return_value = "ABC123DEF4"
 
         visit = Visit()
+        visit.pk = None
         result = visit.rename_file("original.jpg")
 
         self.assertTrue(result.endswith("images/visits/visit-ABC123DEF4-original.jpg"))

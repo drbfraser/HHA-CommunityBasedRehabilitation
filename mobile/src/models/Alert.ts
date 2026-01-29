@@ -12,9 +12,11 @@ export default class Alert extends Model implements SyncableModel {
     static table = modelName.alert;
     @text(alertField.subject) subject;
     @text(alertField.priority) priority;
-    @text(alertField.alert_message) alert_message;
+    @text(alertField.alert_message)
+    alert_message;
     @text(alertField.created_by_user) created_by_user;
-    @json(alertField.unread_by_users, sanitizedUnreadUsers) unread_by_users;
+    @json(alertField.unread_by_users, sanitizedUnreadUsers)
+    unread_by_users;
 
     @readonly @date("created_date") created_date;
     @readonly @date(mobileGenericField.updated_at) updatedAt;

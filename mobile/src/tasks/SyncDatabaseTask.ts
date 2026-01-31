@@ -30,14 +30,14 @@ const getBackgroundTimer = (): BackgroundTimerType => {
 
 export namespace SyncDatabaseTask {
     const TASK_TAG = "[SyncDatabaseTask]";
-    export const SYNC_INTERVAL_MILLISECONDS = 60 * 60 * 1000; /* 1 hour sync interval */
+    export const SYNC_INTERVAL_MILLISECONDS = 20 * 1000; // 20 seconds
 
     const syncMutex = new Mutex();
 
     let netInfoState: NetInfoState;
 
     const netInfoUnsubscribe: NetInfoSubscription = NetInfo.addEventListener((connectionState) => {
-        /* Subscrube to Network state updates and update state */
+        /* Subscribe to Network state updates and update state */
         /* Calling function again will unsubscribe from updates */
         netInfoState = connectionState;
     });

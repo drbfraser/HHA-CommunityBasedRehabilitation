@@ -50,7 +50,7 @@ export async function checkUnsyncedChanges() {
 export async function AutoSyncDB(database: dbType, autoSync: boolean, cellularSync: boolean) {
     await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
         if (!connectionInfo?.isInternetReachable) {
-            notifyAutoSyncFailure();
+            notifyAutoSyncFailure("no_internet");
             return;
         }
 

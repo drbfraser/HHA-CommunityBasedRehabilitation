@@ -11,6 +11,8 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "{mobile,web,common}/**/*.{ts,tsx,js,jsx,json}": "prettier --write"
+    "mobile/**/*.{ts,tsx,js,jsx,json,md,css}": "prettier --write",
+    "web/**/*.{ts,tsx,js,jsx,json,md,css}": "prettier --write",
+    "common/**/*.{ts,tsx,js,jsx,json,md,css}": "prettier --write"
   }
 }

@@ -37,7 +37,7 @@ const updateUserPassword = async (userInfo: string, userId: string) => {
 export const handleUpdatePassword = async (
     userId: string,
     values: TAdminPasswordValues,
-    helpers: FormikHelpers<TAdminPasswordValues>
+    helpers: FormikHelpers<TAdminPasswordValues>,
 ) => {
     const newPassword = JSON.stringify({
         new_password: values.password,
@@ -56,7 +56,7 @@ export const handleUpdatePassword = async (
  */
 export const handleNewUserSubmit = async (
     values: TNewUserValues,
-    helpers: FormikHelpers<TNewUserValues>
+    helpers: FormikHelpers<TNewUserValues>,
 ) => {
     const newUser = JSON.stringify({
         username: values.username.toLocaleLowerCase(),

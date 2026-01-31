@@ -110,11 +110,11 @@ const refreshArrays = () => {
         [ReferralFormField.mentalConditionOther]: i18n.t("referral.mentalConditionOther"),
 
         [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t(
-            "referral.hhaNutritionAndAgricultureProject"
+            "referral.hhaNutritionAndAgricultureProject",
         ),
         [ReferralFormField.emergencyFoodAidRequired]: i18n.t("referral.emergencyFoodAidRequired"),
         [ReferralFormField.agricultureLivelihoodProgramEnrollment]: i18n.t(
-            "referral.agricultureLivelihoodProgramEnrollment"
+            "referral.agricultureLivelihoodProgramEnrollment",
         ),
 
         [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
@@ -128,7 +128,7 @@ const refreshArrays = () => {
         [ReferralFormField.orthotic]: i18n.t("referral.orthotic"),
         [ReferralFormField.prosthetic]: i18n.t("referral.prosthetic"),
         [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t(
-            "referral.hhaNutritionAndAgricultureProjectAbbr"
+            "referral.hhaNutritionAndAgricultureProjectAbbr",
         ),
         [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
         [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
@@ -199,14 +199,14 @@ export const physiotherapyValidationSchema = () =>
                 i18n.t("referral.otherConditionRequired"),
                 async (conditionOther, schema) =>
                     !(await isOtherCondition(schema.parent[ReferralFormField.condition])) ||
-                    (conditionOther !== undefined && conditionOther.length > 0)
+                    (conditionOther !== undefined && conditionOther.length > 0),
             )
             .test(
                 "require-if-other-selected",
                 i18n.t("referral.otherConditionAtMost100Char"),
                 async (conditionOther, schema) =>
                     !(await isOtherCondition(schema.parent[ReferralFormField.condition])) ||
-                    (conditionOther !== undefined && conditionOther.length <= 100)
+                    (conditionOther !== undefined && conditionOther.length <= 100),
             ),
     });
 
@@ -232,7 +232,7 @@ export const mentalHealthValidationSchema = () =>
                 async (conditionOther, schema) =>
                     schema.parent[ReferralFormField.mentalHealthCondition] !==
                         MentalConditions.OTHER ||
-                    (conditionOther !== undefined && conditionOther.length > 0)
+                    (conditionOther !== undefined && conditionOther.length > 0),
             )
             .test(
                 "require-if-other-selected",
@@ -240,7 +240,7 @@ export const mentalHealthValidationSchema = () =>
                 async (conditionOther, schema) =>
                     schema.parent[ReferralFormField.mentalHealthCondition] !==
                         MentalConditions.OTHER ||
-                    (conditionOther !== undefined && conditionOther.length <= 100)
+                    (conditionOther !== undefined && conditionOther.length <= 100),
             ),
     });
 
@@ -248,10 +248,10 @@ export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
     Yup.object()
         .shape({
             [ReferralFormField.agricultureLivelihoodProgramEnrollment]: Yup.boolean().label(
-                referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment]
+                referralFieldLabels[ReferralFormField.agricultureLivelihoodProgramEnrollment],
             ),
             [ReferralFormField.emergencyFoodAidRequired]: Yup.boolean().label(
-                referralFieldLabels[ReferralFormField.emergencyFoodAidRequired]
+                referralFieldLabels[ReferralFormField.emergencyFoodAidRequired],
             ),
         })
         .test("require-atleast-one-checkbox", i18n.t("referral.atLeastOneCheckbox"), (obj) => {
@@ -279,14 +279,14 @@ export const otherServicesValidationSchema = () =>
                 i18n.t("referral.otherConditionRequired"),
                 async (conditionOther, schema) =>
                     schema.parent[ReferralFormField.otherDescription] !== Impairments.OTHER ||
-                    (conditionOther !== undefined && conditionOther.length > 0)
+                    (conditionOther !== undefined && conditionOther.length > 0),
             )
             .test(
                 "require-if-other-selected",
                 i18n.t("referral.otherConditionAtMost100Char"),
                 async (conditionOther, schema) =>
                     schema.parent[ReferralFormField.otherDescription] !== Impairments.OTHER ||
-                    (conditionOther !== undefined && conditionOther.length <= 100)
+                    (conditionOther !== undefined && conditionOther.length <= 100),
             ),
     });
 export const serviceTypes: ReferralFormField[] = [

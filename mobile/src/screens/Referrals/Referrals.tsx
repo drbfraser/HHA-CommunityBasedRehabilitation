@@ -54,7 +54,7 @@ const Referrals = () => {
         let fetchedReferrals = await fetchReferrals(database);
         if (sortDirection !== "None") {
             fetchedReferrals = fetchedReferrals.sort((a, b) =>
-                referralComparator(a, b, sortOption, sortDirection)
+                referralComparator(a, b, sortOption, sortDirection),
             );
         }
         setReferrals(fetchedReferrals);
@@ -78,7 +78,7 @@ const Referrals = () => {
 
         if (selectedTypes.length > 0) {
             filtered = filtered.filter((r) =>
-                r.type_keys.some((key) => selectedTypes.includes(key))
+                r.type_keys.some((key) => selectedTypes.includes(key)),
             );
         }
 
@@ -88,12 +88,12 @@ const Referrals = () => {
     useFocusEffect(
         useCallback(() => {
             getReferrals();
-        }, [sortOption, sortDirection])
+        }, [sortOption, sortDirection]),
     );
 
     const toggleType = (type: string) => {
         setSelectedTypes((prev) =>
-            prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+            prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type],
         );
     };
 

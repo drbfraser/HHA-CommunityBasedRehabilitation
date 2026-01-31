@@ -23,7 +23,7 @@ const FoodForm = (props: IFormProps) => {
 
     const otherDropdownKeyChangeCallback = useCallback(
         (key: any) => (key === ChildNourish.MALNOURISHED ? showAlert() : hideAlert()),
-        []
+        [],
     );
 
     return (

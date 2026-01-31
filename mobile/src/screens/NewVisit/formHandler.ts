@@ -15,7 +15,7 @@ export const handleSubmit = async (
     userUsername: string,
     database: dbType,
     autoSync: boolean,
-    cellularSync: boolean
+    cellularSync: boolean,
 ) => {
     helpers.setSubmitting(true);
     try {

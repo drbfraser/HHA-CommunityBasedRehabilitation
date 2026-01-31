@@ -29,7 +29,7 @@ if (process.argv.length === 4 && process.argv[2] != BUNDLE_FLAG) {
 
 if (!VALID_TARGETS.includes(target)) {
     console.error(
-        "Usage: npm run build [target], where target is one of: " + VALID_TARGETS.join(", ")
+        "Usage: npm run build [target], where target is one of: " + VALID_TARGETS.join(", "),
     );
     process.exit(1);
 }

@@ -53,7 +53,7 @@ const Dashboard = () => {
             clientSortOption,
             clientSortDirection,
             setClientSortOption,
-            setClientIsSortDirection
+            setClientIsSortDirection,
         );
     };
     const clientArrowDirectionController = (column_name: string) => {
@@ -70,7 +70,7 @@ const Dashboard = () => {
             referralSortOption,
             referralSortDirection,
             setReferralSortOption,
-            setReferralIsSortDirection
+            setReferralIsSortDirection,
         );
     };
     const referralArrowDirectionController = (column_name: string) => {
@@ -115,7 +115,7 @@ const Dashboard = () => {
         setUnreadAlertsCount(
             fetchedAlerts.filter((alert) => {
                 return alert.unread_by_users.includes(userId);
-            }).length
+            }).length,
         );
     };
 
@@ -264,7 +264,7 @@ const Dashboard = () => {
                                                         ? timestampToDate(
                                                               Number(item.last_visit_date),
                                                               locale,
-                                                              timezone
+                                                              timezone,
                                                           )
                                                         : t("dashboard.noVisits")}
                                                 </Text>
@@ -286,7 +286,7 @@ const Dashboard = () => {
                                         style={styles.column_referral_name}
                                         onPress={() => referralSortBy(SortOptions.NAME)}
                                         sortDirection={referralArrowDirectionController(
-                                            SortOptions.NAME
+                                            SortOptions.NAME,
                                         )}
                                     >
                                         {t("general.name")}
@@ -295,7 +295,7 @@ const Dashboard = () => {
                                         style={styles.column_referral_type}
                                         onPress={() => referralSortBy(SortOptions.TYPE)}
                                         sortDirection={referralArrowDirectionController(
-                                            SortOptions.TYPE
+                                            SortOptions.TYPE,
                                         )}
                                     >
                                         {t("general.type")}
@@ -304,7 +304,7 @@ const Dashboard = () => {
                                         style={styles.column_referral_date}
                                         onPress={() => referralSortBy(SortOptions.DATE)}
                                         sortDirection={referralArrowDirectionController(
-                                            SortOptions.DATE
+                                            SortOptions.DATE,
                                         )}
                                     >
                                         {t("referralAttr.dateReferred")}
@@ -332,7 +332,7 @@ const Dashboard = () => {
                                                     {timestampToDate(
                                                         Number(item.date_referred),
                                                         locale,
-                                                        timezone
+                                                        timezone,
                                                     )}
                                                 </Text>
                                             </DataTable.Cell>

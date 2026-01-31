@@ -29,7 +29,7 @@ export const handleRiskSubmit = async (
     setRisk: (risk: IRisk) => void,
     database: dbType,
     autoSync: boolean,
-    cellularSync: boolean
+    cellularSync: boolean,
 ) => {
     if (!wasChangeMade(values, initialValues)) return;
 
@@ -63,7 +63,7 @@ export const handleRiskSubmit = async (
                 values.goal_status,
                 values.cancellation_reason,
                 currentTime,
-                actualStartDate
+                actualStartDate,
             );
         });
         await client.updateRisk(values.risk_type, finalRiskLevelForClient, currentTime);

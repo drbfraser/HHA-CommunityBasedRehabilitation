@@ -33,7 +33,7 @@ const WheelchairForm = (props: IFormProps) => {
                     onValueChange={(value: string) =>
                         props.formikProps.setFieldValue(
                             ReferralFormField.wheelchairExperience,
-                            value
+                            value,
                         )
                     }
                 >

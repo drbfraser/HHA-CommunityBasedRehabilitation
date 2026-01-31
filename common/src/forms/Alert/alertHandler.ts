@@ -51,7 +51,7 @@ const deleteAlert = async (alertId: string, refreshAlert: () => void): Promise<v
 
 export const handleNewWebAlertSubmit = async (
     values: TAlertValues,
-    helpers: FormikHelpers<TAlertValues>
+    helpers: FormikHelpers<TAlertValues>,
 ) => {
     const user: IUser | typeof APILoadError = await getCurrentUser();
     let newAlert;
@@ -117,7 +117,7 @@ export const handleUpdateAlertSubmit = async (values: TAlertUpdateValues) => {
         let userID: string = user !== APILoadError ? user.id : i18n.t("alerts.unknownUser");
         // remove this user from the list of unread users
         let updatedUnreadUserList = Object.values(values.unread_by_users).filter(
-            (user) => user != userID
+            (user) => user != userID,
         );
 
         const updateValues: Partial<IAlert> = {

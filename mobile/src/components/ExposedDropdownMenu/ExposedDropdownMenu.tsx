@@ -94,7 +94,7 @@ const menuItemStyle = StyleSheet.create({
 
 const convertMapToMenuItems = (
     props: TDropdownMenuProps,
-    hideMenu: () => void
+    hideMenu: () => void,
 ): Array<React.ReactNode> => {
     // for TypeScript smart casting
     if (props.valuesType !== "map") {
@@ -135,7 +135,7 @@ const convertMapToMenuItems = (
 
 export const areDropdownMenuValuesPropsEqual = (
     oldPropsParam: Readonly<Pick<TDropdownMenuProps, "values" | "valuesType">>,
-    newPropsParam: Readonly<Pick<TDropdownMenuProps, "values" | "valuesType">>
+    newPropsParam: Readonly<Pick<TDropdownMenuProps, "values" | "valuesType">>,
 ): boolean => {
     // Workaround for TypeScript smart casting.
     const oldProps = oldPropsParam as TDropdownMenuProps;
@@ -227,22 +227,22 @@ const MenuItems = ({ hideMenu, existingProps }: TMenuItemsProps) => {
                       />
                   ))
                 : existingProps.valuesType === "array"
-                ? existingProps.values.map((label, index) => (
-                      <Menu.Item
-                          style={
-                              existingProps.value === label
-                                  ? menuItemStyle.selectedItemStyle
-                                  : menuItemStyle.itemStyle
-                          }
-                          onPress={() => {
-                              existingProps.onKeyChange(index);
-                              hideMenu();
-                          }}
-                          key={label}
-                          title={label}
-                      />
-                  ))
-                : convertMapToMenuItems(existingProps, hideMenu)}
+                  ? existingProps.values.map((label, index) => (
+                        <Menu.Item
+                            style={
+                                existingProps.value === label
+                                    ? menuItemStyle.selectedItemStyle
+                                    : menuItemStyle.itemStyle
+                            }
+                            onPress={() => {
+                                existingProps.onKeyChange(index);
+                                hideMenu();
+                            }}
+                            key={label}
+                            title={label}
+                        />
+                    ))
+                  : convertMapToMenuItems(existingProps, hideMenu)}
         </>
     );
 };

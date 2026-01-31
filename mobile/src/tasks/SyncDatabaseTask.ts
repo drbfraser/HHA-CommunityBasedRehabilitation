@@ -61,7 +61,7 @@ export namespace SyncDatabaseTask {
     export const scheduleAutoSync = async (
         database: dbType,
         autoSync: boolean,
-        cellularSync: boolean
+        cellularSync: boolean,
     ) => {
         /* Remove running timer, if it exists */
         const BackgroundTimer = getBackgroundTimer();

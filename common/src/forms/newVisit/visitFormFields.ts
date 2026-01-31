@@ -198,9 +198,9 @@ export const visitTypeValidationSchema = (visitType: VisitFormField) =>
                             field: visitFieldLabels[ImprovementFormField.description],
                         }),
                         (description, context) =>
-                            context.parent.enabled ? description !== undefined : true
+                            context.parent.enabled ? description !== undefined : true,
                     ),
-                })
+                }),
             ),
         }),
     });

@@ -34,7 +34,7 @@ const AdminView = ({ route }: StackScreenProps<StackParamList, StackScreenName.A
     const loadUser = async (
         userId: string,
         setUser: React.Dispatch<React.SetStateAction<any | undefined>>,
-        setError: React.Dispatch<React.SetStateAction<ILoadError | undefined>>
+        setError: React.Dispatch<React.SetStateAction<ILoadError | undefined>>,
     ) => {
         setError(undefined);
         try {

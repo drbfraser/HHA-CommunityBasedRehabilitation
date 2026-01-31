@@ -79,7 +79,7 @@ const BaseSurvey = (props: IBaseSurveyProps) => {
                 })
                 .catch((e) => {
                     setSaveError(
-                        e instanceof APIFetchFailError ? e.buildFormError(baseFieldLabels) : `${e}`
+                        e instanceof APIFetchFailError ? e.buildFormError(baseFieldLabels) : `${e}`,
                     );
                     helpers.setSubmitting(false);
                     setSubmissionError(true);

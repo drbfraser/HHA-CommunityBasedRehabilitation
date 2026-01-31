@@ -106,7 +106,7 @@ export class APIFetchFailError extends Error {
 export const createApiFetchRequest = (
     endpoint: Endpoint,
     urlParams: string = "",
-    customInit?: RequestInit
+    customInit?: RequestInit,
 ) => new Request(commonConfiguration.apiUrl + endpoint + urlParams, customInit);
 
 /**
@@ -124,14 +124,14 @@ export const createApiFetchRequest = (
 export const apiFetch = async (
     endpoint: Endpoint,
     urlParams: string = "",
-    customInit: RequestInit = {}
+    customInit: RequestInit = {},
 ): Promise<Response> => {
     return apiFetchByRequest(createApiFetchRequest(endpoint, urlParams), customInit);
 };
 
 export const apiFetchByRequest = async (
     request: Request,
-    customInit: RequestInit
+    customInit: RequestInit,
 ): Promise<Response> => {
     const authToken = await getAuthToken();
     if (authToken === null) {
@@ -163,7 +163,7 @@ export const apiFetchByRequest = async (
                     return resp;
                 }
                 return Promise.reject(
-                    new APIFetchFailError(message, resp.status, await jsonPromise)
+                    new APIFetchFailError(message, resp.status, await jsonPromise),
                 );
             }
             clearTimeout(timeoutId); // clears timeout if request completes sooner

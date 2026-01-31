@@ -65,7 +65,7 @@ export const ProfilePicCard = (props: IProps) => {
 
     const [imgSrcState, dispatchImgSrcState] = useReducer(
         imgSrcReducer,
-        !props.picture ? DEFAULT_IMAGE_PATH : ""
+        !props.picture ? DEFAULT_IMAGE_PATH : "",
     );
     useEffect(() => {
         return () => {

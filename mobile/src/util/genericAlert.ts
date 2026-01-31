@@ -12,6 +12,6 @@ export const showGenericAlert = (title: string, subtitle: string) => {
         ],
         {
             cancelable: true,
-        }
+        },
     );
 };

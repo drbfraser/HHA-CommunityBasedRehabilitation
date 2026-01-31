@@ -15,16 +15,16 @@ const rejectWithWrappedError = async (e: any): Promise<Response> => {
         return Promise.reject<Response>(
             commonConfiguration.fetchErrorWrapper && e instanceof Error
                 ? await commonConfiguration.fetchErrorWrapper(
-                      Error(i18n.t("general.requestTimedOut"))
+                      Error(i18n.t("general.requestTimedOut")),
                   )
-                : Error(i18n.t("general.requestTimedOut"))
+                : Error(i18n.t("general.requestTimedOut")),
         );
     }
 
     return Promise.reject<Response>(
         commonConfiguration.fetchErrorWrapper && e instanceof Error
             ? await commonConfiguration.fetchErrorWrapper(e)
-            : e
+            : e,
     );
 };
 

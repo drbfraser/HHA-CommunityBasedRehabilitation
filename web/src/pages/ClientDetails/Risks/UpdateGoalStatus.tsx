@@ -93,7 +93,7 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                                         control={<Radio />}
                                                                         label={label.label}
                                                                     />
-                                                                )
+                                                                ),
                                                             )}
                                                         </RadioGroup>
                                                     </>
@@ -110,9 +110,9 @@ export default function UpdateGoalStatus(props: IModalProps) {
                                                         options={cancellationOptions}
                                                         isCustom={
                                                             !Object.keys(
-                                                                cancellationOptions
+                                                                cancellationOptions,
                                                             ).includes(
-                                                                values.cancellation_reason
+                                                                values.cancellation_reason,
                                                             ) && values.cancellation_reason !== ""
                                                         }
                                                         error={errors.cancellation_reason}

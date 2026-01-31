@@ -40,14 +40,14 @@ export const changePassValidationSchema = () =>
             .matches(Validation.passwordRegExp, Validation.passwordInvalidMsg)
             .notOneOf(
                 [Yup.ref(ChangePasswordField.oldPassword)],
-                i18n.t("userProfile.passwordsMustBeDifferent")
+                i18n.t("userProfile.passwordsMustBeDifferent"),
             )
             .required(),
         [ChangePasswordField.confirmNewPassword]: Yup.string()
             .label(changePasswordFieldLabels[ChangePasswordField.confirmNewPassword])
             .oneOf(
                 [Yup.ref(ChangePasswordField.newPassword)],
-                i18n.t("userProfile.passwordsMustMatch")
+                i18n.t("userProfile.passwordsMustMatch"),
             )
             .required(),
     });

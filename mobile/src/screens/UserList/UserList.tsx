@@ -93,7 +93,7 @@ const UserList = () => {
             searchQuery,
             sortOption,
             sortDirection,
-            database
+            database,
         );
         if (sortDirection !== "None") {
             fetchedUserList = fetchedUserList.sort(userListScreenComparator);

@@ -10,7 +10,7 @@ export const initialConflictsState = {
 
 export function conflictsReducer(
     state = initialConflictsState,
-    action: ReturnType<AddConflictsType> | ReturnType<ClearConflictsType>
+    action: ReturnType<AddConflictsType> | ReturnType<ClearConflictsType>,
 ) {
     switch (action.type) {
         case ADD_CONFLICTS: {

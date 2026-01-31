@@ -198,14 +198,14 @@ const ExportStats = ({
                 if (categorizeBy === "zone" && zones.size) {
                     const zoneNames = Array.from(zones.values());
                     const byName = new Map<string, any>(
-                        seriesArr.map((c: any) => [String(c.name), c])
+                        seriesArr.map((c: any) => [String(c.name), c]),
                     );
                     catSeries = zoneNames.map(
                         (zn) =>
                             byName.get(String(zn)) || {
                                 name: String(zn),
                                 data: [{ name: "Total", value: 0 }],
-                            }
+                            },
                     );
                 }
 
@@ -219,19 +219,19 @@ const ExportStats = ({
                 // Zero-fill missing categories for specific categorizeBy values
                 if (categorizeBy === "gender") {
                     const byName = new Map<string, any>(
-                        catSeries.map((c: any) => [String(c.name), c])
+                        catSeries.map((c: any) => [String(c.name), c]),
                     );
                     const domain = ["Male", "Female"]; // fixed order
                     catSeries = domain.map(
-                        (label) => byName.get(label) || { name: label, data: [] }
+                        (label) => byName.get(label) || { name: label, data: [] },
                     );
                 } else if (categorizeBy === "host_status") {
                     const byName = new Map<string, any>(
-                        catSeries.map((c: any) => [String(c.name), c])
+                        catSeries.map((c: any) => [String(c.name), c]),
                     );
                     const domain = ["host", "refugee", "not set"]; // include unset
                     catSeries = domain.map(
-                        (label) => byName.get(label) || { name: label, data: [] }
+                        (label) => byName.get(label) || { name: label, data: [] },
                     );
                 } else if (categorizeBy === "age_band") {
                     // Determine which age bands should be shown based on filters
@@ -240,10 +240,10 @@ const ExportStats = ({
                         Array.isArray(age.bands) && age.bands.length > 0
                             ? age.bands
                             : age.demographic === "child"
-                            ? ["0-5", "6-10", "11-17"]
-                            : age.demographic === "adult"
-                            ? ["18-25", "26-30", "31-45", "46+"]
-                            : defaultBands;
+                              ? ["0-5", "6-10", "11-17"]
+                              : age.demographic === "adult"
+                                ? ["18-25", "26-30", "31-45", "46+"]
+                                : defaultBands;
 
                     // Backend returns names like "Age 0-5" — normalize to bare band for matching
                     const byBand = new Map<string, any>(
@@ -252,10 +252,10 @@ const ExportStats = ({
                             const m = nm.match(/^Age\s+(.*)$/i);
                             const key = m ? m[1] : nm;
                             return [key, c];
-                        })
+                        }),
                     );
                     catSeries = bandsFromFilter.map(
-                        (b) => byBand.get(b) || { name: `Age ${b}`, data: [] }
+                        (b) => byBand.get(b) || { name: `Age ${b}`, data: [] },
                     );
                 }
 
@@ -305,7 +305,7 @@ const ExportStats = ({
                         }
                         // Fallback: split before trailing host/refugee or Age ...
                         const m = label.match(
-                            /^(.*)\s+(host|refugee|not\s+set|Male|Female|Age\s+.*)$/i
+                            /^(.*)\s+(host|refugee|not\s+set|Male|Female|Age\s+.*)$/i,
                         );
                         if (m) return m[1];
                         return null;
@@ -344,7 +344,7 @@ const ExportStats = ({
                             age_band: AGE_BANDS_ORDER,
                         };
                         const orderDims = ["gender", "host_status", "age_band"].filter((d) =>
-                            otherDims.includes(d as any)
+                            otherDims.includes(d as any),
                         ) as Array<"gender" | "host_status" | "age_band">;
 
                         // Emit per-zone blocks
@@ -362,7 +362,7 @@ const ExportStats = ({
                                 }
                                 const dim = orderDims[idx];
                                 domains[dim].forEach((val) =>
-                                    emitLoop(idx + 1, { ...acc, [dim]: val })
+                                    emitLoop(idx + 1, { ...acc, [dim]: val }),
                                 );
                             };
                             if (orderDims.length === 0) {
@@ -401,7 +401,7 @@ const ExportStats = ({
                                     const v =
                                         agg.get(normalizeOther({ age_band: band } as any)) || 0;
                                     rows.push(["", `Age ${band}`, String(v)]);
-                                }
+                                },
                             );
                         } else if (dim === "gender") {
                             ["Male", "Female"].forEach((g) => {
@@ -441,7 +441,7 @@ const ExportStats = ({
                             age_band: AGE_BANDS_ORDER,
                         };
                         const order = ["gender", "host_status", "age_band"].filter((d) =>
-                            dims.includes(d as any)
+                            dims.includes(d as any),
                         ) as Array<"gender" | "host_status" | "age_band">;
 
                         const loop = (idx: number, acc: Record<string, string>) => {
@@ -484,7 +484,8 @@ const ExportStats = ({
                     const parts = parseName(d.name || "");
                     const pval = parts[primary] ?? "not set";
                     const sval = secondary
-                        ? parts[secondary] ?? (secondary === "age_band" ? AGE_BANDS[0] : "not set")
+                        ? (parts[secondary] ??
+                          (secondary === "age_band" ? AGE_BANDS[0] : "not set"))
                         : "Total";
                     if (!byPrimary.has(pval)) byPrimary.set(pval, new Map());
                     byPrimary.get(pval)!.set(sval, Number(d.value) || 0);
@@ -496,8 +497,8 @@ const ExportStats = ({
                     ? ORDER[secondary] ||
                       Array.from(
                           new Set(
-                              Array.from(byPrimary.values()).flatMap((m) => Array.from(m.keys()))
-                          )
+                              Array.from(byPrimary.values()).flatMap((m) => Array.from(m.keys())),
+                          ),
                       ).sort()
                     : ["Total"];
 

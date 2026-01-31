@@ -70,7 +70,7 @@ const refreshArrays = () => {
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.CLIENT>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.CLIENT>).params.clientID
-                }`
+                }`,
             ),
         }),
         [StackScreenName.ADMIN_VIEW]: {
@@ -92,7 +92,7 @@ const refreshArrays = () => {
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.VISIT>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.VISIT>).params.clientID
-                }`
+                }`,
             ),
         }),
         [StackScreenName.REFERRAL]: ({ route, navigation }) => ({
@@ -102,7 +102,7 @@ const refreshArrays = () => {
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.REFERRAL>).params.clientID
-                }`
+                }`,
             ),
         }),
         [StackScreenName.BASE_SURVEY]: ({ route, navigation }) => ({
@@ -112,7 +112,7 @@ const refreshArrays = () => {
                 `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
                     (route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientName ??
                     (route as TAppRouteProp<StackScreenName.BASE_SURVEY>).params.clientID
-                }`
+                }`,
             ),
         }),
         [StackScreenName.SYNC]: {

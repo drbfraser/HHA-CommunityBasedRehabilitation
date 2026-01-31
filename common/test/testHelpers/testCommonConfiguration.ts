@@ -42,7 +42,7 @@ export const testCommonConfig: CommonConfiguration = {
  */
 export const fromNewCommonModule = async <T>(
     importer: () => Promise<T>,
-    commonConfigOverride?: CommonConfiguration
+    commonConfigOverride?: CommonConfiguration,
 ): Promise<T> => {
     jest.resetModules();
     return import("../../src/init")

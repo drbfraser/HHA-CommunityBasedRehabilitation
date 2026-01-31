@@ -39,7 +39,7 @@ i18n.on("languageChanged", () => {
 });
 
 export const userRolesToLabelMap: ReadonlyMap<string, string> = new Map(
-    Object.entries(userRoles).map(([value, { name }]) => [value, name])
+    Object.entries(userRoles).map(([value, { name }]) => [value, name]),
 );
 
 /**

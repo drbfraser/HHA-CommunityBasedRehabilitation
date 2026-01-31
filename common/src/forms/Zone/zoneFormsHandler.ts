@@ -31,7 +31,7 @@ const updateZone = async (zoneInfo: string, zoneId: number) => {
  */
 export const handleNewZoneSubmit = async (
     values: TNewZoneValues,
-    helpers: FormikHelpers<TNewZoneValues>
+    helpers: FormikHelpers<TNewZoneValues>,
 ) => {
     const newZone = JSON.stringify({
         zone_name: values.zone_name,

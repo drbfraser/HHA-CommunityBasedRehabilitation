@@ -19,7 +19,7 @@ const addMobileClient = async (clientInfo: FormData) => {
 
 export const handleNewMobileClientSubmit = async (
     values: TClientValues,
-    helpers: FormikHelpers<TClientValues>
+    helpers: FormikHelpers<TClientValues>,
 ) => {
     const buildRiskObject = (riskLevel: string, requirement: string, goalName: string) => {
         if (riskLevel && requirement && goalName) {
@@ -44,7 +44,7 @@ export const handleNewMobileClientSubmit = async (
         birth_date: Math.round(timestampFromFormDate(values.birthDate)),
         disability: values.disability,
         other_disability: (values.disability as number[]).includes(
-            getOtherDisabilityId(disabilities)
+            getOtherDisabilityId(disabilities),
         )
             ? values.otherDisability
             : "",
@@ -63,27 +63,27 @@ export const handleNewMobileClientSubmit = async (
         health_risk: buildRiskObject(
             values.healthRisk,
             values.healthRequirements,
-            values.healthGoals
+            values.healthGoals,
         ),
         social_risk: buildRiskObject(
             values.socialRisk,
             values.socialRequirements,
-            values.socialGoals
+            values.socialGoals,
         ),
         educat_risk: buildRiskObject(
             values.educationRisk,
             values.educationRequirements,
-            values.educationGoals
+            values.educationGoals,
         ),
         nutrit_risk: buildRiskObject(
             values.nutritionRisk,
             values.nutritionRequirements,
-            values.nutritionGoals
+            values.nutritionGoals,
         ),
         mental_risk: buildRiskObject(
             values.mentalRisk,
             values.mentalRequirements,
-            values.mentalGoals
+            values.mentalGoals,
         ),
     };
 

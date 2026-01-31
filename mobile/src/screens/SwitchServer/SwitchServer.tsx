@@ -85,7 +85,7 @@ const SwitchServer = () => {
                 Alert.alert(
                     i18n.t("general.alert"),
                     i18n.t("login.alreadyConnectedToServer") + baseUrl,
-                    [{ text: i18n.t("general.ok"), style: "cancel" }]
+                    [{ text: i18n.t("general.ok"), style: "cancel" }],
                 );
                 return;
             }
@@ -97,7 +97,7 @@ const SwitchServer = () => {
                         if (!canConnect) {
                             showGenericAlert(
                                 i18n.t("general.alert"),
-                                `Unable to connect to server ${baseUrl}`
+                                `Unable to connect to server ${baseUrl}`,
                             );
                             return;
                         }
@@ -107,7 +107,7 @@ const SwitchServer = () => {
                 } else {
                     showGenericAlert(
                         i18n.t("login.notConnectedToInternet"),
-                        i18n.t("login.mustHaveInternet")
+                        i18n.t("login.mustHaveInternet"),
                     );
                 }
             });
@@ -127,7 +127,7 @@ const SwitchServer = () => {
                     terminateCurrentConnection();
                     await persistServerSelection(
                         baseUrl,
-                        server === ServerOption.LIVE ? appEnv : undefined
+                        server === ServerOption.LIVE ? appEnv : undefined,
                     );
                     updateCommonApiUrl(apiUrl, baseUrl);
                     navigator.navigate("Login");

@@ -54,7 +54,7 @@ const bootstrapServerConfig = async () => {
                     return new Error(
                         !netInfoState.isInternetReachable
                             ? i18n.t("login.noInternet")
-                            : i18n.t("login.unableToReachServer")
+                            : i18n.t("login.unableToReachServer"),
                     );
                 }
 
@@ -83,7 +83,7 @@ const bootstrapServerConfig = async () => {
                     return new Error(
                         !netInfoState.isInternetReachable
                             ? i18n.t("login.noInternet")
-                            : i18n.t("login.unableToReachServer")
+                            : i18n.t("login.unableToReachServer"),
                     );
                 }
                 return err;

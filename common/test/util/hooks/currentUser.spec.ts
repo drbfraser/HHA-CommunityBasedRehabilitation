@@ -75,15 +75,15 @@ describe("currentUser.ts", () => {
 
             const freshGetCurrentUserFn = await fromNewCommonModule(async () =>
                 import("../../../src/util/hooks/currentUser").then(
-                    (module) => module.getCurrentUser
-                )
+                    (module) => module.getCurrentUser,
+                ),
             );
 
             expect(await freshGetCurrentUserFn()).toBe(APILoadError);
         });
 
         const testCurrentUserEndpointReturningResponse = async (
-            responseFromServer: any
+            responseFromServer: any,
         ): Promise<IUser> => {
             fetchMock.get(
                 Endpoint.USER_CURRENT,
@@ -97,13 +97,13 @@ describe("currentUser.ts", () => {
                         status: 200,
                         body: JSON.stringify(responseFromServer),
                     };
-                }
+                },
             );
 
             const freshGetCurrentUserFn = await fromNewCommonModule(async () =>
                 import("../../../src/util/hooks/currentUser").then(
-                    (module) => module.getCurrentUser
-                )
+                    (module) => module.getCurrentUser,
+                ),
             );
 
             const userFromMockServer: IUser | TAPILoadError = await freshGetCurrentUserFn();

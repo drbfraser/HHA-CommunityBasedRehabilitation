@@ -37,7 +37,7 @@ import { FormikTextInput } from "../ClientDetails/Risks/ClientRiskFormModal";
 const riskMap: Map<RiskLevel, string> = new Map(
     Object.entries(riskLevels)
         .filter(([_, riskLevel]) => riskLevel.isDropDownOption)
-        .map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name])
+        .map(([riskKey, riskLevel]) => [riskKey as RiskLevel, riskLevel.name]),
 );
 
 const RiskForm = ({
@@ -80,7 +80,7 @@ const RiskForm = ({
 
     const isFieldDisabled = useCallback(
         () => formikProps.isSubmitting || !formikProps.values.interviewConsent,
-        [formikProps.isSubmitting, formikProps.values.interviewConsent]
+        [formikProps.isSubmitting, formikProps.values.interviewConsent],
     );
 
     const checkedField = `${riskPrefix}Checked` as keyof TClientValues;
@@ -206,7 +206,7 @@ const NewClient = () => {
     const scrollRef = React.createRef<KeyboardAwareScrollView>();
     const scrollToTop = useCallback(
         () => scrollRef?.current?.scrollToPosition(0, 0, false),
-        [scrollRef]
+        [scrollRef],
     );
 
     useEffect(() => {
@@ -235,7 +235,7 @@ const NewClient = () => {
                             database,
                             user!.id,
                             autoSync,
-                            cellularSync
+                            cellularSync,
                         );
                     }}
                     enableReinitialize

@@ -81,23 +81,23 @@ const ClientRisksModal = (props: IModalProps) => {
             switch (riskType) {
                 case RiskType.HEALTH:
                     return `${capitalizeFirstLetter(t("general.create"))} ${t(
-                        "clientFields.healthRisk"
+                        "clientFields.healthRisk",
                     )}`;
                 case RiskType.EDUCATION:
                     return `${capitalizeFirstLetter(t("general.create"))} ${t(
-                        "clientFields.educationRisk"
+                        "clientFields.educationRisk",
                     )}`;
                 case RiskType.SOCIAL:
                     return `${capitalizeFirstLetter(t("general.create"))} ${t(
-                        "clientFields.socialRisk"
+                        "clientFields.socialRisk",
                     )}`;
                 case RiskType.NUTRITION:
                     return `${capitalizeFirstLetter(t("general.create"))} ${t(
-                        "clientFields.nutritionRisk"
+                        "clientFields.nutritionRisk",
                     )}`;
                 case RiskType.MENTAL:
                     return `${capitalizeFirstLetter(t("general.create"))} ${t(
-                        "clientFields.mentalRisk"
+                        "clientFields.mentalRisk",
                     )}`;
                 default:
                     console.error("Unknown risk type.");
@@ -182,7 +182,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                                     {Object.entries(riskLevels)
                                                         .filter(
                                                             ([_, { isDropDownOption }]) =>
-                                                                isDropDownOption
+                                                                isDropDownOption,
                                                         )
                                                         .map(([value, { name }]) => (
                                                             <MenuItem key={value} value={value}>
@@ -208,7 +208,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                                     !Object.keys(
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
-                                                        ].requirement
+                                                        ].requirement,
                                                     ).includes(editedRisk.requirement) &&
                                                     editedRisk.requirement !== ""
                                                 }
@@ -232,7 +232,7 @@ const ClientRisksModal = (props: IModalProps) => {
                                                     !Object.keys(
                                                         riskDropdownOptions[
                                                             riskTypeKeyMap[props.risk.risk_type]
-                                                        ].goal
+                                                        ].goal,
                                                     ).includes(editedRisk.goal_name) &&
                                                     editedRisk.goal_name !== ""
                                                 }

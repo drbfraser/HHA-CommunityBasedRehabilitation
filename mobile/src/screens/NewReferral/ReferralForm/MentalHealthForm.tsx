@@ -38,11 +38,11 @@ const MentalHealthForm = (props: IFormProps) => {
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 ReferralFormField.mentalConditionOther,
-                                true
+                                true,
                             );
                             props.formikProps.setFieldValue(
                                 ReferralFormField.mentalConditionOther,
-                                value
+                                value,
                             );
                         }}
                     />

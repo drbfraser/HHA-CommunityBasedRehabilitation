@@ -4,7 +4,7 @@ import { Appbar } from "react-native-paper";
 
 function DefaultHeader(
     title: string,
-    subtitle?: React.ReactNode
+    subtitle?: React.ReactNode,
 ): (props: StackHeaderProps) => React.ReactNode {
     return (props: StackHeaderProps) => (
         <Appbar.Header statusBarHeight={0}>

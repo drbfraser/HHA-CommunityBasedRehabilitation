@@ -62,7 +62,7 @@ const BottomSheetBackdropComponent = ({
                 runOnJS(handleOnPress)();
             },
         },
-        [handleOnPress]
+        [handleOnPress],
     );
     //#endregion
 
@@ -72,13 +72,13 @@ const BottomSheetBackdropComponent = ({
             animatedIndex.value,
             [-1, disappearsOnIndex, appearsOnIndex],
             [0, 0, opacity],
-            Extrapolate.CLAMP
+            Extrapolate.CLAMP,
         ),
         flex: 1,
     }));
     const containerStyle = useMemo(
         () => [styles.container, style, containerAnimatedStyle],
-        [style, containerAnimatedStyle]
+        [style, containerAnimatedStyle],
     );
     //#endregion
 
@@ -91,7 +91,7 @@ const BottomSheetBackdropComponent = ({
             }
             runOnJS(handleContainerTouchability)(shouldDisableTouchability);
         },
-        [disappearsOnIndex]
+        [disappearsOnIndex],
     );
     //#endregion
 

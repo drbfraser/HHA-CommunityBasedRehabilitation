@@ -38,11 +38,11 @@ const PhysiotherapyForm = (props: IFormProps) => {
                         onChangeText={(value: string) => {
                             props.formikProps.setFieldTouched(
                                 ReferralFormField.conditionOther,
-                                true
+                                true,
                             );
                             props.formikProps.setFieldValue(
                                 ReferralFormField.conditionOther,
-                                value
+                                value,
                             );
                         }}
                     />

@@ -113,18 +113,18 @@ const ImprovementField = (props: {
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 `${fieldName}.${ImprovementFormField.description}`,
-                                true
+                                true,
                             );
 
                             props.formikProps.setFieldValue(
                                 `${fieldName}.${ImprovementFormField.description}`,
-                                value
+                                value,
                             );
                         }}
                         onBlur={() => {
                             props.formikProps.setFieldTouched(
                                 `${fieldName}.${ImprovementFormField.description}`,
-                                true
+                                true,
                             );
                         }}
                     />
@@ -149,7 +149,7 @@ const visitReasonStepCallBack =
 const VisitFocusForm = (
     formikProps: FormikProps<any>,
     setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
-    zones: TZoneMap
+    zones: TZoneMap,
 ) => {
     const { t } = useTranslation();
     const styles = useStyles();
@@ -159,8 +159,8 @@ const VisitFocusForm = (
             visitTypes.filter(
                 (type) =>
                     (formikProps.values[type] && type !== visitType) ||
-                    (checked && type === visitType)
-            )
+                    (checked && type === visitType),
+            ),
         );
 
         if (checked) {
@@ -235,7 +235,7 @@ const VisitFocusForm = (
 const VisitTypeStep = (
     visitType: VisitFormField,
     risks: IRisk[],
-    setRisks: React.Dispatch<React.SetStateAction<IRisk[]>>
+    setRisks: React.Dispatch<React.SetStateAction<IRisk[]>>,
 ) => {
     const styles = useStyles();
     // Note: Not using the useTranslation hook here because it causes a crash:
@@ -346,10 +346,13 @@ const NewVisit = (props: INewVisitProps) => {
         // validate form (should be unneeded in current setup, as 'Submit' button is disabled if form has errors)
         if (hasErrors) {
             helpers.setTouched(
-                Object.keys(errors).reduce((acc, key) => {
-                    acc[key] = true;
-                    return acc;
-                }, {} as Record<string, boolean>)
+                Object.keys(errors).reduce(
+                    (acc, key) => {
+                        acc[key] = true;
+                        return acc;
+                    },
+                    {} as Record<string, boolean>,
+                ),
             );
             helpers.setSubmitting(false);
             return;
@@ -363,7 +366,9 @@ const NewVisit = (props: INewVisitProps) => {
                 })
                 .catch((e) => {
                     setSaveError(
-                        e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`
+                        e instanceof APIFetchFailError
+                            ? e.buildFormError(visitFieldLabels)
+                            : `${e}`,
                     );
                     helpers.setSubmitting(false);
                     setSubmissionError(true);

@@ -14,7 +14,7 @@ import { ClientRiskForm } from "./ClientRiskForm";
 const getLatestRisks = (clientRisk: IRisk[], riskType: RiskType) => {
     // Get the latest Risk for each type and pass the values on so they can be displayed initially
     const filteredRisks: IRisk[] = clientRisk.filter(
-        (presentRisk) => presentRisk.risk_type === riskType
+        (presentRisk) => presentRisk.risk_type === riskType,
     );
     const latestRisk = filteredRisks.reduce(function (prev, current) {
         return prev.timestamp > current.timestamp ? prev : current;
@@ -31,7 +31,7 @@ interface riskProps {
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
     const [risk, setRisk] = useState<IRisk>(
-        getLatestRisks(props.clientRisks, props.presentRiskType)
+        getLatestRisks(props.clientRisks, props.presentRiskType),
     );
     const { t } = useTranslation();
 

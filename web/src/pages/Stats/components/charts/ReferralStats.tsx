@@ -93,22 +93,22 @@ const ReferralStats: React.FC<IProps> = ({
                 return false;
 
             const keys = new Set<string>(
-                list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
+                list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? ""))),
             );
             const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
             if (!hasHostRefugee) return false;
             return zoneNames.some((zn) => Array.from(keys).some((k) => k.startsWith(String(zn))));
         },
-        [isZoneHostGrouping, zoneNames]
+        [isZoneHostGrouping, zoneNames],
     );
 
     const resolvedWantZoneHostDomain = useMemo(
         () => inferZoneHostFromList(resolved),
-        [resolved, inferZoneHostFromList]
+        [resolved, inferZoneHostFromList],
     );
     const unresolvedWantZoneHostDomain = useMemo(
         () => inferZoneHostFromList(unresolved),
-        [unresolved, inferZoneHostFromList]
+        [unresolved, inferZoneHostFromList],
     );
 
     // ✅ same fix: stabilize with useCallback
@@ -122,16 +122,16 @@ const ReferralStats: React.FC<IProps> = ({
             }
             return keys;
         },
-        [zoneNames]
+        [zoneNames],
     );
 
     const resolvedExactSeriesKeys = useMemo(
         () => makeSeriesKeys(resolvedWantZoneHostDomain),
-        [resolvedWantZoneHostDomain, makeSeriesKeys]
+        [resolvedWantZoneHostDomain, makeSeriesKeys],
     );
     const unresolvedExactSeriesKeys = useMemo(
         () => makeSeriesKeys(unresolvedWantZoneHostDomain),
-        [unresolvedWantZoneHostDomain, makeSeriesKeys]
+        [unresolvedWantZoneHostDomain, makeSeriesKeys],
     );
 
     const buildPropsFrom = (list: any[], exactSeriesKeys: string[], heading: string) => {
@@ -139,12 +139,12 @@ const ReferralStats: React.FC<IProps> = ({
             const keys = exactSeriesKeys.length
                 ? exactSeriesKeys
                 : Array.from(
-                      new Set(list.flatMap((c: Categorized) => (c.data || []).map((d) => d.name)))
+                      new Set(list.flatMap((c: Categorized) => (c.data || []).map((d) => d.name))),
                   );
             const rows = list.map((cat: Categorized) => {
                 const row: Record<string, any> = { category: String(cat.name) };
                 const lookup = new Map<string, number>(
-                    (cat.data || []).map((d) => [d.name, d.value])
+                    (cat.data || []).map((d) => [d.name, d.value]),
                 );
                 keys.forEach((k) => (row[k] = lookup.get(k) ?? 0));
                 return row;
@@ -172,11 +172,11 @@ const ReferralStats: React.FC<IProps> = ({
 
     const resolvedChart = useMemo(
         () => buildPropsFrom(resolved, resolvedExactSeriesKeys, "Resolved Referrals"),
-        [resolved, resolvedExactSeriesKeys]
+        [resolved, resolvedExactSeriesKeys],
     );
     const unresolvedChart = useMemo(
         () => buildPropsFrom(unresolved, unresolvedExactSeriesKeys, "Unresolved Referrals"),
-        [unresolved, unresolvedExactSeriesKeys]
+        [unresolved, unresolvedExactSeriesKeys],
     );
 
     const computeXMax = (chartData: any[], seriesKeys: string[]) =>
@@ -185,8 +185,8 @@ const ReferralStats: React.FC<IProps> = ({
             : Math.max(
                   0,
                   ...chartData.map((r: any) =>
-                      Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0))
-                  )
+                      Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0)),
+                  ),
               );
 
     const RenderChartBlock = ({
@@ -205,8 +205,8 @@ const ReferralStats: React.FC<IProps> = ({
             220,
             Math.max(
                 60,
-                Math.max(...chartData.map((r: any) => String(r[yKey] ?? "").length)) * 8 + 12
-            )
+                Math.max(...chartData.map((r: any) => String(r[yKey] ?? "").length)) * 8 + 12,
+            ),
         );
 
         return (
@@ -236,7 +236,7 @@ const ReferralStats: React.FC<IProps> = ({
 
                             // Case-insensitive matching for zone names
                             const zoneIndex = zoneNames.findIndex(
-                                (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
+                                (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim(),
                             );
 
                             // Fallback to idx if not found so every bar gets a unique color

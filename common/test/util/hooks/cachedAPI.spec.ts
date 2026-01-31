@@ -33,7 +33,7 @@ const keyValStorageThatRejectsCacheKeys: KeyValStorageProvider = {
     removeItem: async (key: string): Promise<void> => {
         if (key.startsWith(TEST_CACHE_KEY)) {
             return Promise.reject(
-                new Error("for test reasons, removeItem will always fail for cache")
+                new Error("for test reasons, removeItem will always fail for cache"),
             );
         } else {
             testKeyValStorage.delete(key);
@@ -42,7 +42,7 @@ const keyValStorageThatRejectsCacheKeys: KeyValStorageProvider = {
     setItem: async (key: string, value: string): Promise<void> => {
         if (key.startsWith(TEST_CACHE_KEY)) {
             return Promise.reject(
-                new Error("for test reasons, setItem will always fail for cache")
+                new Error("for test reasons, setItem will always fail for cache"),
             );
         } else {
             testKeyValStorage.set(key, value);
@@ -57,7 +57,7 @@ const createTestCache = (key: string = TEST_CACHE_KEY, timeout?: number) => {
         (data: ITestData) => data,
         "loading",
         "error",
-        timeout
+        timeout,
     );
 };
 
@@ -194,7 +194,7 @@ describe("cachedAPI.ts", () => {
             // Backup values are in the key value storage as strings.
             expect(testKeyValStorage.get(TEST_CACHE_KEY)).toEqual(JSON.stringify(expectedTestData));
             expect(testKeyValStorage.get(TEST_CACHE2_KEY)).toEqual(
-                JSON.stringify(expectedTestData)
+                JSON.stringify(expectedTestData),
             );
 
             await invalidateAllCachedAPIInternal(true, true, false, true);
@@ -224,7 +224,7 @@ describe("cachedAPI.ts", () => {
             // Backup values are in the key value storage as strings.
             expect(testKeyValStorage.get(TEST_CACHE_KEY)).toEqual(JSON.stringify(expectedTestData));
             expect(testKeyValStorage.get(TEST_CACHE2_KEY)).toEqual(
-                JSON.stringify(expectedTestData)
+                JSON.stringify(expectedTestData),
             );
 
             reinitializeCommon({
@@ -577,7 +577,7 @@ describe("cachedAPI.ts", () => {
             const secondValue = await secondPromise;
             expect(secondValue).toStrictEqual(secondTestData);
             expect(JSON.parse(testKeyValStorage.get(cache.cacheBackupKey))).toStrictEqual(
-                secondValue
+                secondValue,
             );
             expect(cache.value).toStrictEqual(secondValue);
             expect(cache.promise).not.toBeUndefined();

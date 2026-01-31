@@ -18,10 +18,10 @@ const cache = new APICacheData<TZoneMap, TZoneMap, TZoneMap>(
         new Map(
             zones
                 .sort((a, b) => a.zone_name.localeCompare(b.zone_name)) // sort alphabetically
-                .map((z) => [z.id, z.zone_name])
+                .map((z) => [z.id, z.zone_name]),
         ),
     emptyMap,
-    emptyMap
+    emptyMap,
 );
 
 export const getZones = async () => cache.getCachedValue();

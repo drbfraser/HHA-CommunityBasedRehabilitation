@@ -9,7 +9,7 @@ export const handleSubmit = async (
     database: dbType,
     helpers: FormikHelpers<ReferralFormValues>,
     autoSync: boolean,
-    cellularSync: boolean
+    cellularSync: boolean,
 ) => {
     const source = "mobile";
     helpers.setSubmitting(true);

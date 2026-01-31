@@ -47,7 +47,7 @@ const AlertInbox = () => {
             .write(async () => {
                 await alert.update(() => {
                     alert.unread_by_users = alert.unread_by_users.filter(
-                        (unread_user) => unread_user !== userId
+                        (unread_user) => unread_user !== userId,
                     );
                 });
             })
@@ -80,7 +80,7 @@ const AlertInbox = () => {
                     style: "cancel",
                 },
                 { text: t("general.ok"), onPress: () => deleteAlert(alert.id) },
-            ]
+            ],
         );
 
     useEffect(() => {

@@ -56,7 +56,7 @@ const ModalForm: FC<IProps> = ({
      */
     // todo: this method of converting from JSON object to string[] could be cleaner
     const canonicalFields: string[] = Object.values(
-        t(transKey, { returnObjects: true, lng: "en" })
+        t(transKey, { returnObjects: true, lng: "en" }),
     );
     /**
      * The fields in the currently selected langauge, for displaying to the user.
@@ -68,15 +68,15 @@ const ModalForm: FC<IProps> = ({
     console.assert(canonicalFields.length == localizedFields.length);
 
     const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(
-        initializeCheckedItems(defaultValue, canonicalFields, localizedFields)
+        initializeCheckedItems(defaultValue, canonicalFields, localizedFields),
     );
     const [freeformText, setFreeformText] = useState(
-        initializeFreeformText(defaultValue, canonicalFields)
+        initializeFreeformText(defaultValue, canonicalFields),
     );
     const [canonicalFormValue, displayedFormValue] = useFormValueGenerator(
         checkedItems,
         freeformText,
-        canonicalFields
+        canonicalFields,
     );
 
     const onOpen = () => {

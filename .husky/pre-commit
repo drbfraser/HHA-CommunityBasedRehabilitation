@@ -1,3 +1,5 @@
 npx prettier --write "mobile/**/*.{ts,tsx,js,jsx,json,md,css}" \
   "web/**/*.{ts,tsx,js,jsx,json,md,css}" \
   "common/**/*.{ts,tsx,js,jsx,json,md,css}"
+
+git add mobile web common

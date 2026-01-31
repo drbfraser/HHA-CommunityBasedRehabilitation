@@ -92,12 +92,14 @@ After the app is up and running the first time, after you make a change to the c
 - How is it best to do hot-reloading?
 
 # Notes
--   **First-Time Run**: The first time you run the mobile application, it may take a long time to start. This is normal as dependencies are being initialized.
--   **Troubleshooting for mac**: If you encounter an issue where the first run works but subsequent runs fail, you can try running the following command to resolve it:
+
+- **First-Time Run**: The first time you run the mobile application, it may take a long time to start. This is normal as dependencies are being initialized.
+- **Troubleshooting for mac**: If you encounter an issue where the first run works but subsequent runs fail, you can try running the following command to resolve it:
 
     ```bash
     pkill node
     ```
+
     Then, rerun the application, and it should work as expected.
 
 # Troubleshooting

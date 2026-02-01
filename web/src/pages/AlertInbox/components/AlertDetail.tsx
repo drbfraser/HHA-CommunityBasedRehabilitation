@@ -20,7 +20,7 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
             try {
                 // Find the selected alert in the alertData list by ID
                 const selectedAlertData: IAlert | undefined = alertData.find(
-                    ({ id }) => id.toString() === selectAlert.toString(),
+                    ({ id }) => id.toString() === selectAlert.toString()
                 );
                 if (selectedAlertData) {
                     const updateAlert = {

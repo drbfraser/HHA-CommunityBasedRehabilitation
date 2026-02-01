@@ -43,7 +43,7 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
                 <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>;
             } else {
                 const unreadAlerts: IAlert[] = alertsList.filter((alert: IAlert) =>
-                    alert.unread_by_users.includes(user.id),
+                    alert.unread_by_users.includes(user.id)
                 );
                 setUnreadAlertsCount(unreadAlerts.length);
             }

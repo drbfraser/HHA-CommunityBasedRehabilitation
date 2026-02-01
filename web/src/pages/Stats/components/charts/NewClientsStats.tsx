@@ -102,12 +102,12 @@ const NewClientsStats: React.FC<IProps> = ({
         const list = Array.isArray(newClients) ? newClients : [];
         if (!isCategorized(list)) return false;
         const keys = new Set<string>(
-            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? ""))),
+            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
         );
         const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
         if (!hasHostRefugee) return false;
         const hasAnyZone = zoneNames.some((zn) =>
-            Array.from(keys).some((k) => k.startsWith(String(zn))),
+            Array.from(keys).some((k) => k.startsWith(String(zn)))
         );
         return hasAnyZone;
     }, [isZoneHostGrouping, newClients, zoneNames]);
@@ -140,15 +140,15 @@ const NewClientsStats: React.FC<IProps> = ({
             } else {
                 keys = Array.from(
                     new Set(
-                        newClients.flatMap((c: Categorized) => (c.data || []).map((d) => d.name)),
-                    ),
+                        newClients.flatMap((c: Categorized) => (c.data || []).map((d) => d.name))
+                    )
                 );
             }
 
             const rows = newClients.map((cat: Categorized) => {
                 const row: Record<string, any> = { category: String(cat.name) };
                 const lookup = new Map<string, number>(
-                    (cat.data || []).map((d) => [d.name, d.value]),
+                    (cat.data || []).map((d) => [d.name, d.value])
                 );
                 keys.forEach((k) => {
                     row[k] = lookup.get(k) ?? 0;
@@ -191,7 +191,7 @@ const NewClientsStats: React.FC<IProps> = ({
         }
         return Math.max(
             0,
-            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0))),
+            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0)))
         );
     }, [chartData, seriesKeys]);
 
@@ -280,8 +280,7 @@ const NewClientsStats: React.FC<IProps> = ({
 
                                 // ✅ Case-insensitive and whitespace-trimmed matching
                                 const zoneIndex = zoneNames.findIndex(
-                                    (z) =>
-                                        z.toLowerCase().trim() === zoneLabel.toLowerCase().trim(),
+                                    (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
                                 );
 
                                 // ✅ Use idx as fallback for distinct colors when match fails

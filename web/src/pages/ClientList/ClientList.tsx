@@ -119,7 +119,7 @@ const ClientList = () => {
             searchValue,
             searchOption,
             allClientsMode,
-            archivedMode,
+            archivedMode
         );
     }, [searchValue, searchOption, allClientsMode, archivedMode, requestClientRowsDebounced]);
 
@@ -198,7 +198,7 @@ const ClientList = () => {
                 _v1: GridCellValue,
                 _v2: GridCellValue,
                 params1: GridSortCellParams,
-                params2: GridSortCellParams,
+                params2: GridSortCellParams
             ) => {
                 return (
                     riskLevels[String(params1.value)].level -

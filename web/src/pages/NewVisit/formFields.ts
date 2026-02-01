@@ -129,9 +129,9 @@ export const visitTypeValidationSchema = (visitType: FormField) =>
                         "Required-If-Enabled",
                         `${fieldLabels[ImprovementFormField.description]} is a required field`,
                         (description, context) =>
-                            context.parent.enabled ? description !== undefined : true,
+                            context.parent.enabled ? description !== undefined : true
                     ),
-                }),
+                })
             ),
         }),
         [FormField.outcomes]: Yup.object().shape({

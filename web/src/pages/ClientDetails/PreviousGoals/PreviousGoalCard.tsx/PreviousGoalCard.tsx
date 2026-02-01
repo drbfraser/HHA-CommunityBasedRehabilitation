@@ -54,11 +54,11 @@ const PreviousGoalCard = (props: IModalProps) => {
     const risk = props.risk;
     const translatedRequirement = t(
         `${getRiskRequirementsTranslationKey(risk.risk_type)}.${risk.requirement}`,
-        { defaultValue: risk.requirement },
+        { defaultValue: risk.requirement }
     );
     const translatedGoalName = t(
         `${getRiskGoalsTranslationKey(risk.risk_type)}.${risk.goal_name}`,
-        { defaultValue: risk.goal_name },
+        { defaultValue: risk.goal_name }
     );
 
     return (
@@ -163,7 +163,7 @@ const PreviousGoalCard = (props: IModalProps) => {
                                         `cancellation.${props.risk.cancellation_reason}`,
                                         {
                                             defaultValue: props.risk.cancellation_reason,
-                                        },
+                                        }
                                     )}
                                     InputProps={{
                                         readOnly: true,

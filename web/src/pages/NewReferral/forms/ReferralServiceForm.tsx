@@ -16,7 +16,7 @@ interface IFormProps {
 
 const ReferralServiceForm = (
     props: IFormProps,
-    setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>,
+    setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>
 ) => {
     const { t } = useTranslation();
 
@@ -27,8 +27,8 @@ const ReferralServiceForm = (
                 (serviceType) =>
                     (props.formikProps.values[serviceType] &&
                         serviceType !== selectedServiceType) ||
-                    (checked && serviceType === selectedServiceType),
-            ),
+                    (checked && serviceType === selectedServiceType)
+            )
         );
     };
 

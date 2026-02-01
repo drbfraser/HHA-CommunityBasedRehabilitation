@@ -12,7 +12,7 @@ export const getLanguageFromLocalStorage = (): Language => {
         console.error(
             savedLanguage === null
                 ? "No language was saved in localStorage"
-                : `Unknown language fetched from local storage: ${savedLanguage}`,
+                : `Unknown language fetched from local storage: ${savedLanguage}`
         );
         return DEAFULT_LANGUAGE;
     }

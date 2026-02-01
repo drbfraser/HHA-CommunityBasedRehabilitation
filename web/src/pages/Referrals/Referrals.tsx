@@ -175,16 +175,16 @@ const Referrals = () => {
                 details.push(
                     `${t("referral.experience")}: ${
                         wheelchairExperiences[row.wheelchair_experience]
-                    }`,
+                    }`
                 );
                 details.push(`${t("referral.hipWidth")}: ${row.hip_width} ${t("referral.inches")}`);
                 details.push(
-                    `${t("referral.wheelchairOwned")}: ${row.wheelchair_owned ? "✔" : "✘"}`,
+                    `${t("referral.wheelchairOwned")}: ${row.wheelchair_owned ? "✔" : "✘"}`
                 );
                 details.push(
                     `${t("referral.wheelchairRepairable")}: ${
                         row.wheelchair_repairable ? "✔" : "✘"
-                    }`,
+                    }`
                 );
             }
             if (row.physiotherapy) {
@@ -193,33 +193,33 @@ const Referrals = () => {
                         physiotherapyConditions(t)[row.condition]
                             ? physiotherapyConditions(t)[row.condition]
                             : row.condition
-                    }`,
+                    }`
                 );
             }
             if (row.prosthetic) {
                 details.push(
                     `${t("referral.prostheticInjuryLocation")}: ${
                         prostheticInjuryLocations[row.prosthetic_injury_location]
-                    }`,
+                    }`
                 );
             }
             if (row.orthotic) {
                 details.push(
                     `${t("referral.orthoticInjuryLocation")}: ${
                         orthoticInjuryLocations[row.orthotic_injury_location]
-                    }`,
+                    }`
                 );
             }
             if (row.hha_nutrition_and_agriculture_project) {
                 details.push(
                     `${t("referral.emergencyFoodAidRequired")}: ${
                         row.emergency_food_aid ? "✔" : "✘"
-                    }`,
+                    }`
                 );
                 details.push(
                     `${t("referral.agricultureLivelihoodProgramEnrollment")}: ${
                         row.agriculture_livelihood_program_enrollment ? "✔" : "✘"
-                    }`,
+                    }`
                 );
             }
             if (row.mental_health) {
@@ -228,7 +228,7 @@ const Referrals = () => {
                         mentalHealthConditions[row.mental_health_condition]
                             ? mentalHealthConditions[row.mental_health_condition]
                             : row.mental_health_condition
-                    }`,
+                    }`
                 );
             }
             if (row.services_other) {
@@ -237,7 +237,7 @@ const Referrals = () => {
                         otherServices[row.services_other]
                             ? otherServices[row.services_other]
                             : row.services_other
-                    }`,
+                    }`
                 );
             }
             return details.join("\n");
@@ -257,7 +257,7 @@ const Referrals = () => {
 
         if (selectedTypes.length > 0) {
             filtered = filtered.filter((referral) =>
-                selectedTypes.some((type) => referral.type.includes(type)),
+                selectedTypes.some((type) => referral.type.includes(type))
             );
         }
 

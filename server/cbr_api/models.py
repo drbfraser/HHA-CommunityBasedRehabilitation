@@ -534,3 +534,28 @@ class Alert(models.Model):
     updated_at = models.BigIntegerField(_("date created"), default=0)
 
     created_date = models.BigIntegerField(_("date created"), default=time.time)
+
+class PatientNote(models.Model):
+    id = models.CharField(primary_key=True, max_length=100)
+
+    client = models.ForeignKey(
+        Client,
+        related_name="notes",
+        on_delete=models.CASCADE
+    )
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="patient_notes",
+        on_delete=models.PROTECT
+    )
+
+    note = models.TextField()
+
+    created_at = models.BigIntegerField(default=current_milli_time)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["client", "created_at"]),
+        ]

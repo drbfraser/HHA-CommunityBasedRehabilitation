@@ -52,7 +52,7 @@ const renderApp = () => {
                     <App />
                 </ThemeProvider>
             </I18nextProvider>
-        </React.StrictMode>
+        </React.StrictMode>,
     );
 };
 

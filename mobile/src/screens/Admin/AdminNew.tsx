@@ -75,7 +75,7 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                                 database,
                                 formikHelpers,
                                 autoSync,
-                                cellularSync,
+                                cellularSync
                             )
                                 .then((id) => {
                                     setHasSubmitted(true);
@@ -87,8 +87,8 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                                     setSaveError(
                                         e instanceof APIFetchFailError
                                             ? e.buildFormError(adminUserFieldLabels)
-                                            : `${e}`,
-                                    ),
+                                            : `${e}`
+                                    )
                                 );
                         }}
                     >
@@ -194,7 +194,7 @@ const AdminNew = ({ navigation }: StackScreenProps<StackParamList, StackScreenNa
                                         loading={formikProps.isSubmitting}
                                         onPress={
                                             formikProps.handleSubmit as (
-                                                e?: GestureResponderEvent,
+                                                e?: GestureResponderEvent
                                             ) => void
                                         }
                                         mode="contained"

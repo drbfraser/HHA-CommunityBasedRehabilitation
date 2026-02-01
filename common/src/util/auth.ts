@@ -56,7 +56,7 @@ interface AuthTokens {
  */
 const requestTokens = async (
     endpoint: Endpoint.LOGIN | Endpoint.LOGIN_REFRESH,
-    postBody: string,
+    postBody: string
 ): Promise<AuthTokens> => {
     const abortController = new AbortController();
     const timeoutId = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MILLIS); // timeout value in ms
@@ -72,7 +72,7 @@ const requestTokens = async (
 
     try {
         const resp = await fetch(commonConfiguration.apiUrl + endpoint, init).catch(
-            rejectWithWrappedError,
+            rejectWithWrappedError
         );
 
         clearTimeout(timeoutId); // clears timeout if request completes sooner
@@ -81,7 +81,7 @@ const requestTokens = async (
             throw new APIFetchFailError(
                 i18n.t("general.requestTokenFailureHttp", { respStatus: resp.status }),
                 resp.status,
-                await resp.json().catch(() => undefined),
+                await resp.json().catch(() => undefined)
             );
         }
 
@@ -92,7 +92,7 @@ const requestTokens = async (
             return tokens;
         } else {
             throw new Error(
-                i18n.t("general.requestTokenFailureInvalid", { respStatus: resp.status }),
+                i18n.t("general.requestTokenFailureInvalid", { respStatus: resp.status })
             );
         }
     } catch (e: any) {

@@ -11,7 +11,7 @@ export const handleSelfChangePassword = async (
     database: dbType,
     helpers: FormikHelpers<TPasswordValues>,
     autoSync: boolean,
-    cellularSync: boolean,
+    cellularSync: boolean
 ): Promise<void> => {
     try {
         const user: any = await database.get(modelName.users).find(userId);
@@ -29,7 +29,7 @@ export const handleUpdatePassword = async (
     database: dbType,
     helpers: FormikHelpers<TAdminPasswordValues>,
     autoSync: boolean,
-    cellularSync: boolean,
+    cellularSync: boolean
 ) => {
     const newPassword = JSON.stringify({
         new_password: values.password,
@@ -49,7 +49,7 @@ export const handleNewUserSubmit = async (
     database: dbType,
     helpers: FormikHelpers<TNewUserValues>,
     autoSync: boolean,
-    cellularSync: boolean,
+    cellularSync: boolean
 ) => {
     try {
         let newUser;
@@ -79,7 +79,7 @@ export const handleUserEditSubmit = async (
     database: dbType,
     helpers: FormikHelpers<IUser>,
     autoSync: boolean,
-    cellularSync: boolean,
+    cellularSync: boolean
 ) => {
     try {
         let editedUser;

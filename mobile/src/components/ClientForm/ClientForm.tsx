@@ -91,12 +91,12 @@ export const ClientForm = (props: IClientFormProps) => {
         selectedHcrType === HCRType.NOT_SET
             ? hcrTypes
             : Object.fromEntries(
-                  Object.entries(hcrTypes).filter(([key]) => key !== HCRType.NOT_SET),
+                  Object.entries(hcrTypes).filter(([key]) => key !== HCRType.NOT_SET)
               );
 
     const isFieldDisabled = useCallback(
         () => props.formikProps.isSubmitting || fieldsDisabled || props.disabled,
-        [fieldsDisabled, props.disabled],
+        [fieldsDisabled, props.disabled]
     );
 
     const navigation = useNavigation<AppStackNavProp>();
@@ -115,7 +115,7 @@ export const ClientForm = (props: IClientFormProps) => {
                     onPress: () => {},
                 },
             ],
-            { cancelable: true },
+            { cancelable: true }
         );
 
     const invalidUserAlert = () =>
@@ -129,15 +129,15 @@ export const ClientForm = (props: IClientFormProps) => {
                     onPress: () => {},
                 },
             ],
-            { cancelable: true },
+            { cancelable: true }
         );
 
     useEffect(() => {
         const title = props.isNewClient
             ? t("clientAttr.newClient")
             : fieldsDisabled
-              ? t("clientAttr.viewClient")
-              : t("clientAttr.editClient");
+            ? t("clientAttr.viewClient")
+            : t("clientAttr.editClient");
 
         const subtitle = props.clientName
             ? `${t("general.client")} ${t("general.name")}: ${props.clientName}`
@@ -180,7 +180,7 @@ export const ClientForm = (props: IClientFormProps) => {
                 onConfirm={() => {
                     props.formikProps.setFieldValue(
                         ClientField.is_active,
-                        !props.formikProps.values.is_active,
+                        !props.formikProps.values.is_active
                     );
                     props.formikProps.handleSubmit();
                     setArchiveDialogVisibleOk(false);
@@ -227,7 +227,7 @@ export const ClientForm = (props: IClientFormProps) => {
                               timezone conversion to ensure that the date format does not break. */
                               props.isNewClient
                                   ? timestampFromFormDate(props.formikProps.values.birthDate)
-                                  : timestampFromFormDate(props.formikProps.values.birthDate, true),
+                                  : timestampFromFormDate(props.formikProps.values.birthDate, true)
                           )
                         : "--/--/--"}
                 </Text>
@@ -252,12 +252,12 @@ export const ClientForm = (props: IClientFormProps) => {
                                     ? timestampToDateObj(
                                           props.isNewClient
                                               ? timestampFromFormDate(
-                                                    props.formikProps.values.birthDate,
+                                                    props.formikProps.values.birthDate
                                                 )
                                               : timestampFromFormDate(
                                                     props.formikProps.values.birthDate,
-                                                    true,
-                                                ),
+                                                    true
+                                                )
                                       )
                                     : new Date()
                             }
@@ -273,13 +273,13 @@ export const ClientForm = (props: IClientFormProps) => {
                                     todayDate.setHours(0, 0, 0, 0);
                                     props.formikProps.setFieldValue(
                                         ClientField.birthDate,
-                                        todayDate,
+                                        todayDate
                                     );
                                 } else {
                                     if (date) {
                                         props.formikProps.setFieldValue(
                                             ClientField.birthDate,
-                                            date,
+                                            date
                                         );
                                     }
                                 }
@@ -365,11 +365,11 @@ export const ClientForm = (props: IClientFormProps) => {
                                     callback={(values) => {
                                         props.formikProps.setFieldTouched(
                                             ClientField.disability,
-                                            true,
+                                            true
                                         );
                                         props.formikProps.setFieldValue(
                                             ClientField.disability,
-                                            values.map(Number),
+                                            values.map(Number)
                                         );
                                     }}
                                     rowBackgroundColor={themeColors.blueBgLight}
@@ -402,7 +402,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                         <Text key={item} style={styles.valueText}>
                                             {disabilityMap.get(item)}
                                         </Text>
-                                    ) : null,
+                                    ) : null
                                 )}
                                 {props.formikProps.values.disability.includes(otherDisabilityId) ? (
                                     <FormikTextInput

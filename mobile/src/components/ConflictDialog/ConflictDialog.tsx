@@ -63,7 +63,7 @@ const ConflictDialog = () => {
                         .map((d) => disabilityObj[d])
                         .join(", ");
                 }
-            }),
+            })
         );
 
         setClientConflicts(clients);

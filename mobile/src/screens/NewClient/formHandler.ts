@@ -19,7 +19,7 @@ export const addRisk = async (
     goalStatus,
     cancellationReason,
     time,
-    startDate,
+    startDate
 ) => {
     const risk = await database.get(modelName.risks).create((risk: any) => {
         risk.client.set(client);
@@ -45,7 +45,7 @@ const handleNewMobileClientSubmit = async (
     database: dbType,
     userID: string,
     autoSync: boolean,
-    cellularSync: boolean,
+    cellularSync: boolean
 ) => {
     enum CancellationReason {
         NONE = "",
@@ -55,7 +55,7 @@ const handleNewMobileClientSubmit = async (
         level: string,
         requirementKey: string,
         goalKey: string,
-        riskPrefix: keyof typeof riskDropdownOptions,
+        riskPrefix: keyof typeof riskDropdownOptions
     ) => {
         const requirement =
             riskDropdownOptions[riskPrefix]?.requirement?.[requirementKey] || requirementKey;
@@ -113,7 +113,7 @@ const handleNewMobileClientSubmit = async (
                 values.healthRisk,
                 values.healthRequirements,
                 values.healthGoals,
-                "health",
+                "health"
             );
 
             await addRisk(
@@ -126,14 +126,14 @@ const handleNewMobileClientSubmit = async (
                 health.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
-                newClient.createdAt,
+                newClient.createdAt
             );
 
             const social = buildRiskValues(
                 values.socialRisk,
                 values.socialRequirements,
                 values.socialGoals,
-                "social",
+                "social"
             );
 
             await addRisk(
@@ -146,14 +146,14 @@ const handleNewMobileClientSubmit = async (
                 social.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
-                newClient.createdAt,
+                newClient.createdAt
             );
 
             const educat = buildRiskValues(
                 values.educationRisk,
                 values.educationRequirements,
                 values.educationGoals,
-                "education",
+                "education"
             );
             await addRisk(
                 newClient,
@@ -165,14 +165,14 @@ const handleNewMobileClientSubmit = async (
                 educat.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
-                newClient.createdAt,
+                newClient.createdAt
             );
 
             const nutrit = buildRiskValues(
                 values.nutritionRisk,
                 values.nutritionRequirements,
                 values.nutritionGoals,
-                "nutrition",
+                "nutrition"
             );
             await addRisk(
                 newClient,
@@ -184,14 +184,14 @@ const handleNewMobileClientSubmit = async (
                 nutrit.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
-                newClient.createdAt,
+                newClient.createdAt
             );
 
             const mental = buildRiskValues(
                 values.mentalRisk,
                 values.mentalRequirements,
                 values.mentalGoals,
-                "mental",
+                "mental"
             );
             await addRisk(
                 newClient,
@@ -203,7 +203,7 @@ const handleNewMobileClientSubmit = async (
                 mental.risk_level == "NA" ? OutcomeGoalMet.CONCLUDED : OutcomeGoalMet.ONGOING,
                 CancellationReason.NONE,
                 newClient.createdAt,
-                newClient.createdAt,
+                newClient.createdAt
             );
         });
 
@@ -227,7 +227,7 @@ export const handleSubmit = async (
     database: dbType,
     userID: string,
     autoSync: boolean,
-    cellularSync: boolean,
+    cellularSync: boolean
 ) => {
     helpers.setSubmitting(true);
 
@@ -237,7 +237,7 @@ export const handleSubmit = async (
         database,
         userID,
         autoSync,
-        cellularSync,
+        cellularSync
     ).then((res) => {
         if (res) {
             scrollToTop();

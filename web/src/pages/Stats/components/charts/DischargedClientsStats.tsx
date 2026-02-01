@@ -103,12 +103,12 @@ const DischargedClientsStats: React.FC<IProps> = ({
         const list = Array.isArray(discharged) ? (discharged as any[]) : [];
         if (!isCategorized(list as any)) return false;
         const keys = new Set<string>(
-            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? ""))),
+            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
         );
         const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
         if (!hasHostRefugee) return false;
         const hasAnyZone = zoneNames.some((zn) =>
-            Array.from(keys).some((k) => k.startsWith(String(zn))),
+            Array.from(keys).some((k) => k.startsWith(String(zn)))
         );
         return hasAnyZone;
     }, [isZoneHostGrouping, discharged, zoneNames]);
@@ -142,15 +142,15 @@ const DischargedClientsStats: React.FC<IProps> = ({
             } else {
                 keys = Array.from(
                     new Set(
-                        discharged.flatMap((c: Categorized) => (c.data || []).map((d) => d.name)),
-                    ),
+                        discharged.flatMap((c: Categorized) => (c.data || []).map((d) => d.name))
+                    )
                 );
             }
 
             const rows = discharged.map((cat: Categorized) => {
                 const row: Record<string, any> = { category: String(cat.name) };
                 const lookup = new Map<string, number>(
-                    (cat.data || []).map((d) => [d.name, d.value]),
+                    (cat.data || []).map((d) => [d.name, d.value])
                 );
                 keys.forEach((k) => {
                     row[k] = lookup.get(k) ?? 0;
@@ -194,7 +194,7 @@ const DischargedClientsStats: React.FC<IProps> = ({
         }
         return Math.max(
             0,
-            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0))),
+            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0)))
         );
     }, [chartData, seriesKeys]);
 
@@ -276,8 +276,7 @@ const DischargedClientsStats: React.FC<IProps> = ({
                                 const status = (m ? m[2] : "host").toLowerCase();
 
                                 const zoneIndex = zoneNames.findIndex(
-                                    (z) =>
-                                        z.toLowerCase().trim() === zoneLabel.toLowerCase().trim(),
+                                    (z) => z.toLowerCase().trim() === zoneLabel.toLowerCase().trim()
                                 );
 
                                 const color =

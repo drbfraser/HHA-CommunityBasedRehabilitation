@@ -73,7 +73,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                             database,
                             formikHelpers,
                             autoSync,
-                            cellularSync,
+                            cellularSync
                         )
                             .then(() => {
                                 setSubmissionError(null);
@@ -148,7 +148,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     loading={formikProps.isSubmitting}
                                     onPress={
                                         formikProps.handleSubmit as (
-                                            e?: GestureResponderEvent,
+                                            e?: GestureResponderEvent
                                         ) => void
                                     }
                                 >
@@ -170,7 +170,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                             database,
                             formikHelpers,
                             autoSync,
-                            cellularSync,
+                            cellularSync
                         )
                             .then(() => {
                                 setSubmissionError(null);
@@ -238,7 +238,7 @@ const ChangePasswordDialog = ({ isSelf, user, database, onDismiss, visible }: Pr
                                     loading={formikProps.isSubmitting}
                                     onPress={
                                         formikProps.handleSubmit as (
-                                            e?: GestureResponderEvent,
+                                            e?: GestureResponderEvent
                                         ) => void
                                     }
                                 >

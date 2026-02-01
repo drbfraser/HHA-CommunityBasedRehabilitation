@@ -116,7 +116,7 @@ const ClientForm = () => {
                                                             <MenuItem key={value} value={value}>
                                                                 {name}
                                                             </MenuItem>
-                                                        ),
+                                                        )
                                                     )}
                                                 </Field>
                                             </FormControl>
@@ -207,7 +207,7 @@ const ClientForm = () => {
                                                 ))}
                                             </Field>
                                             {(values[ClientField.disability] as number[]).includes(
-                                                getOtherDisabilityId(disabilities),
+                                                getOtherDisabilityId(disabilities)
                                             ) && (
                                                 <div>
                                                     <br />
@@ -365,7 +365,7 @@ const ClientForm = () => {
                                                             {Object.entries(riskLevels)
                                                                 .filter(
                                                                     ([_, { isDropDownOption }]) =>
-                                                                        isDropDownOption,
+                                                                        isDropDownOption
                                                                 )
                                                                 .map(([value, { name }]) => (
                                                                     <MenuItem
@@ -460,7 +460,7 @@ const ClientForm = () => {
                                                             {Object.entries(riskLevels)
                                                                 .filter(
                                                                     ([_, { isDropDownOption }]) =>
-                                                                        isDropDownOption,
+                                                                        isDropDownOption
                                                                 )
                                                                 .map(([value, { name }]) => (
                                                                     <MenuItem
@@ -551,7 +551,7 @@ const ClientForm = () => {
                                                             {Object.entries(riskLevels)
                                                                 .filter(
                                                                     ([_, { isDropDownOption }]) =>
-                                                                        isDropDownOption,
+                                                                        isDropDownOption
                                                                 )
                                                                 .map(([value, { name }]) => (
                                                                     <MenuItem
@@ -644,7 +644,7 @@ const ClientForm = () => {
                                                             {Object.entries(riskLevels)
                                                                 .filter(
                                                                     ([_, { isDropDownOption }]) =>
-                                                                        isDropDownOption,
+                                                                        isDropDownOption
                                                                 )
                                                                 .map(([value, { name }]) => (
                                                                     <MenuItem
@@ -737,7 +737,7 @@ const ClientForm = () => {
                                                             {Object.entries(riskLevels)
                                                                 .filter(
                                                                     ([_, { isDropDownOption }]) =>
-                                                                        isDropDownOption,
+                                                                        isDropDownOption
                                                                 )
                                                                 .map(([value, { name }]) => (
                                                                     <MenuItem

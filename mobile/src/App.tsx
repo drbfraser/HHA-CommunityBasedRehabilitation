@@ -82,7 +82,7 @@ const styles = globalStyle();
 const updateAuthStateIfNeeded = async (
     currentAuthState: AuthState,
     setAuthState: React.Dispatch<React.SetStateAction<AuthState>>,
-    tryUpdateUserInfoFromServer: boolean,
+    tryUpdateUserInfoFromServer: boolean
 ): Promise<void> => {
     // TODO: Decide on what to do when the refresh token expires. The current behaviour is
     //  to show the login screen again and block them from entering the app, forcing them to
@@ -244,7 +244,7 @@ export default function App() {
             },
             authState: authState,
         }),
-        [authState],
+        [authState]
     );
 
     return (

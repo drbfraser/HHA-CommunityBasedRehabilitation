@@ -44,7 +44,7 @@ const AdminEdit = () => {
                         const errMsg =
                             e instanceof APIFetchFailError
                                 ? e.buildFormError(adminUserFieldLabels)
-                                : ((e as string) ?? t("alert.editUserFailure"));
+                                : (e as string) ?? t("alert.editUserFailure");
                         alert(errMsg);
                     });
             }}

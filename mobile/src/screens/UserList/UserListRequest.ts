@@ -26,7 +26,7 @@ export const fetchUsersFromDB = async (
     searchValue: string,
     sortOption,
     sortDirection,
-    database: dbType,
+    database: dbType
 ): Promise<BriefUser[]> => {
     try {
         const FIRST_NAME = 0;

@@ -34,7 +34,7 @@ const OtherServicesForm = (props: IFormProps) => {
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 ReferralFormField.referralOther,
-                                true,
+                                true
                             );
                             props.formikProps.setFieldValue(ReferralFormField.referralOther, value);
                         }}

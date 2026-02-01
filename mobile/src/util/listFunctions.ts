@@ -39,7 +39,7 @@ export const sortBy = async (
     sortOption: string,
     sortDirection: TSortDirection,
     setSortOption: React.Dispatch<React.SetStateAction<string>>,
-    setSortDirection: React.Dispatch<React.SetStateAction<TSortDirection>>,
+    setSortDirection: React.Dispatch<React.SetStateAction<TSortDirection>>
 ) => {
     if (option != sortOption) {
         setSortOption(option);
@@ -52,7 +52,7 @@ export const sortBy = async (
 export const arrowDirectionController = (
     column_name: string,
     sortOption: string,
-    sortDirection: TSortDirection,
+    sortDirection: TSortDirection
 ): "ascending" | "descending" | undefined => {
     if (column_name === sortOption) {
         switch (sortDirection) {
@@ -72,7 +72,7 @@ export const arrowDirectionController = (
 };
 
 const riskColorsAndLevels: [string, number][] = Object.values(riskLevels).map(
-    ({ color, level }) => [color, level],
+    ({ color, level }) => [color, level]
 );
 const mapColorWithLevel = new Map(riskColorsAndLevels);
 
@@ -84,7 +84,7 @@ export const clientComparator = (
     a: ClientListRow,
     b: ClientListRow,
     sortOption: string,
-    sortDirection: string,
+    sortDirection: string
 ): number => {
     let result = 0;
     switch (sortOption) {
@@ -133,7 +133,7 @@ export const referralComparator = (
     a: BriefReferral,
     b: BriefReferral,
     referralSortOption: string,
-    referralSortDirection: string,
+    referralSortDirection: string
 ): number => {
     let result = 0;
     switch (referralSortOption) {
@@ -157,7 +157,7 @@ export const userComparator = (
     a: BriefUser,
     b: BriefUser,
     sortOption: string,
-    sortDirection: string,
+    sortDirection: string
 ): number => {
     let result = 0;
     switch (sortOption) {

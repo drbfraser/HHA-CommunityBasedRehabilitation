@@ -57,12 +57,12 @@ const BaseFormikTextInput = forwardRef<NativeTextInput, FormikTextInputProps<str
                 ) : null}
             </>
         );
-    },
+    }
 );
 
 const areFormikTextInputPropsEqual = (
     oldProps: FormikTextInputProps<string>,
-    newProps: FormikTextInputProps<string>,
+    newProps: FormikTextInputProps<string>
 ): boolean => {
     return (
         oldProps.editable === newProps.editable &&

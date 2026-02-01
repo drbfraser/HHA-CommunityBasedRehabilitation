@@ -60,8 +60,8 @@ const Login = () => {
                 !usernameToUse.length && !password.length
                     ? t("login.missingValue", { context: "usernamePassword" })
                     : !usernameToUse.length
-                      ? t("login.missingValue", { context: "username" })
-                      : t("login.missingValue", { context: "password" });
+                    ? t("login.missingValue", { context: "username" })
+                    : t("login.missingValue", { context: "password" });
 
             setStatus({ status: "failed", error: error });
             return;

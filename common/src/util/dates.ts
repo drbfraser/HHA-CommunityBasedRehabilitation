@@ -14,7 +14,7 @@ export const timestampToDate = (timestamp: number, locale?: string, timezone?: s
         This directly converts 25/10/1990 00:00:00 GMT to 25/10/1990 00:00:00 <user_timezone>
         and in the properly accepted format of the client locale. */
           timestampToDateObj(
-              timestamp + convertMinutesTo(new Date(timestamp).getTimezoneOffset(), Time.SECONDS),
+              timestamp + convertMinutesTo(new Date(timestamp).getTimezoneOffset(), Time.SECONDS)
           ).toLocaleDateString(convertLocale(locale), { timeZone: timezone })
         : timestampToDateObj(timestamp).toLocaleDateString();
 };
@@ -50,7 +50,7 @@ export const timestampToWeekdayTime = (timestamp: number) => {
  * @param referenceTimestamp An optional timestamp to use for determining the date formatter used.
  */
 export function getDateFormatterFromReference(
-    referenceTimestamp?: number,
+    referenceTimestamp?: number
 ): (timestamp: number) => string {
     const currentTimestamp = convertMillisTo(Date.now(), Time.SECONDS);
     const timestampDiff = (referenceTimestamp ?? 0) - currentTimestamp;
@@ -71,7 +71,7 @@ export const timestampToFormDate = (timestamp: number, convertTimezone: boolean 
     return convertTimezone
         ? new Date(
               Number(normalizedDate) +
-                  Number(convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS)),
+                  Number(convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS))
           )
               .toISOString()
               .substring(0, 10)
@@ -84,7 +84,7 @@ export const timestampFromFormDate = (formDate: string, convertTimezone: boolean
     const timeInMillis = convertTimezone
         ? new Date(
               normalizedDate.getTime() +
-                  convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS),
+                  convertMinutesTo(normalizedDate.getTimezoneOffset(), Time.MILLIS)
           ).getTime()
         : date.getTime();
 

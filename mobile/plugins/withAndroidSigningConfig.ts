@@ -32,12 +32,12 @@ module.exports = function withAndroidSigningConfig(config) {
                     return match.replace(/release \{([\s\S]*?)\}/, signingConfig);
                 }
                 return match.trim() + signingConfig;
-            },
+            }
         );
 
         config.modResults.contents = config.modResults.contents.replace(
             /buildTypes \{([\s\S]*?)release \{([\s\S]*?)signingConfig signingConfigs\.debug/, // Ensure release config uses signingConfigs.release
-            `buildTypes { $1release { $2signingConfig signingConfigs.release`,
+            `buildTypes { $1release { $2signingConfig signingConfigs.release`
         );
 
         return config;

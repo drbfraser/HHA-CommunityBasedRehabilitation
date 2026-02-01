@@ -101,7 +101,7 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
     const { autoSync, cellularSync } = useContext(SyncContext);
     const [showGoalStatusModal, setShowGoalStatusModal] = useState(false);
     const [pendingGoalStatus, setPendingGoalStatus] = useState<OutcomeGoalMet>(
-        props.riskData.goal_status as OutcomeGoalMet,
+        props.riskData.goal_status as OutcomeGoalMet
     );
     const { t } = useTranslation();
 
@@ -121,11 +121,11 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
             : {};
 
     const [showOtherInputRequirement, setShowOtherInputRequirement] = React.useState(
-        isCustomValue(props.riskData.requirement, localizedRequirements),
+        isCustomValue(props.riskData.requirement, localizedRequirements)
     );
 
     const [showOtherInputGoal, setShowOtherInputGoal] = React.useState(
-        isCustomValue(props.riskData.goal_name, localizedGoals),
+        isCustomValue(props.riskData.goal_name, localizedGoals)
     );
 
     const getHeaderText = () => {
@@ -213,7 +213,7 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                     props.setRisk,
                     database,
                     autoSync,
-                    cellularSync,
+                    cellularSync
                 );
             }}
             validationSchema={validationSchema}
@@ -270,13 +270,10 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                                 props.setShowModal(false);
                                 formikProps.resetForm();
                                 setShowOtherInputRequirement(
-                                    isCustomValue(
-                                        props.riskData.requirement,
-                                        localizedRequirements,
-                                    ),
+                                    isCustomValue(props.riskData.requirement, localizedRequirements)
                                 );
                                 setShowOtherInputGoal(
-                                    isCustomValue(props.riskData.goal_name, localizedGoals),
+                                    isCustomValue(props.riskData.goal_name, localizedGoals)
                                 );
                             }}
                         >
@@ -329,10 +326,10 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                                             [RiskLevel.CRITICAL, t("riskLevelsAbbreviated.critical"),],
                                         ].map(([level, abbreviation], index) => {
                                             const style = riskRadioButtonStyles(
-                                                riskLevels[level].color,
+                                                riskLevels[level].color
                                             ).riskRadioStyle;
                                             const textColour = riskRadioButtonStyles(
-                                                riskLevels[level].color,
+                                                riskLevels[level].color
                                             ).radioSubtitleText;
                                             return (
                                                 <View key={index} style={styles.radioIndividual}>

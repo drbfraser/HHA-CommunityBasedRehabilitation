@@ -46,7 +46,7 @@ export const getPassChangeErrorMessageFromSubmissionError = (error: any): string
  */
 export const handleSubmitChangePassword = async (
     values: TPasswordValues,
-    helpers: FormikHelpers<TPasswordValues>,
+    helpers: FormikHelpers<TPasswordValues>
 ): Promise<void> => {
     try {
         await updateCurrentUserPassword(values.oldPassword, values.newPassword);

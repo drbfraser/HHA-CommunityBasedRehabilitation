@@ -30,7 +30,7 @@ export const fetchClientsFromDB = async (
     searchValue: string,
     allClientsMode: boolean,
     archivedMode: boolean,
-    database: dbType,
+    database: dbType
 ): Promise<ClientListRow[]> => {
     try {
         const zones = await getZones();
@@ -52,12 +52,12 @@ export const fetchClientsFromDB = async (
                     if (searchOption === "full_name") {
                         query = query.extend(
                             Q.where(tableKey.user_id, user.id),
-                            Q.where(searchOption, Q.like(`%${searchValue}%`)),
+                            Q.where(searchOption, Q.like(`%${searchValue}%`))
                         );
                     } else {
                         query = query.extend(
                             Q.where(tableKey.user_id, user.id),
-                            Q.where(searchOption, searchValue),
+                            Q.where(searchOption, searchValue)
                         );
                     }
                 } else {

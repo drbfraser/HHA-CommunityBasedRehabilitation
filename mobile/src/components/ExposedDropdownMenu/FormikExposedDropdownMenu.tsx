@@ -40,8 +40,8 @@ const getCurrentSelection = <T extends string>(menuProps: TFormikMenuProps<T>): 
         (dropdownProps.valuesType === "array"
             ? dropdownProps.values[valueToUse]
             : dropdownProps.valuesType === "map"
-              ? dropdownProps.values.get(valueToUse)
-              : dropdownProps.values[valueToUse]) ?? ""
+            ? dropdownProps.values.get(valueToUse)
+            : dropdownProps.values[valueToUse]) ?? ""
     );
 };
 
@@ -70,7 +70,7 @@ const BaseFormikExposedDropdownMenu = <T extends string>(props: TFormikMenuProps
 
             otherOnKeyChange?.(key);
         },
-        [props.field],
+        [props.field]
     );
     const setFieldTouched = () => {
         props.formikProps.setFieldTouched(props.field);
@@ -110,7 +110,7 @@ const FormikExposedDropdownMenu = memo(
             getCurrentSelection(oldProps) === getCurrentSelection(newProps) &&
             areDropdownMenuValuesPropsEqual(oldProps, newProps)
         );
-    },
+    }
 );
 
 export default FormikExposedDropdownMenu;

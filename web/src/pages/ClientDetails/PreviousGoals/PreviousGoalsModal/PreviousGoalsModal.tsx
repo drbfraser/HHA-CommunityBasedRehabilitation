@@ -47,7 +47,7 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                 const filteredGoals = data.filter(
                     (goal) =>
                         goal.goal_status === OutcomeGoalMet.CANCELLED ||
-                        goal.goal_status === OutcomeGoalMet.CONCLUDED,
+                        goal.goal_status === OutcomeGoalMet.CONCLUDED
                 );
                 setGoals(filteredGoals);
             })
@@ -93,7 +93,7 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
 
     const visibleRows = useMemo(
         () => [...memoizedData].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage),
-        [page, rowsPerPage, memoizedData],
+        [page, rowsPerPage, memoizedData]
     );
 
     const handleRowClick = (data: IRisk) => {
@@ -143,9 +143,9 @@ const PreviousGoalsModal = ({ clientId, close }: IModalProps) => {
                                             <TableCell>
                                                 {t(
                                                     `${getRiskGoalsTranslationKey(
-                                                        data.risk_type,
+                                                        data.risk_type
                                                     )}.${data.goal_name}`,
-                                                    { defaultValue: data.goal_name },
+                                                    { defaultValue: data.goal_name }
                                                 )}
                                             </TableCell>
                                             <TableCell>

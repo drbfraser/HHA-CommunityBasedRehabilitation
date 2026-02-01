@@ -34,7 +34,7 @@ const updateClient = async (clientInfo: FormData, clientId: string): Promise<ICl
 
 export const handleNewWebClientSubmit = async (
     values: TClientValues,
-    helpers: FormikHelpers<TClientValues>,
+    helpers: FormikHelpers<TClientValues>
 ) => {
     const buildRiskObject = (riskLevel: string, requirement: string, goal_name: string) => {
         if (riskLevel && requirement && goal_name) {
@@ -58,7 +58,7 @@ export const handleNewWebClientSubmit = async (
         birth_date: Math.round(timestampFromFormDate(values.birthDate)),
         disability: values.disability,
         other_disability: (values.disability as number[]).includes(
-            getOtherDisabilityId(disabilities),
+            getOtherDisabilityId(disabilities)
         )
             ? values.otherDisability
             : "",
@@ -78,27 +78,27 @@ export const handleNewWebClientSubmit = async (
         health_risk: buildRiskObject(
             values.healthRisk,
             values.healthRequirements,
-            values.healthGoals,
+            values.healthGoals
         ),
         social_risk: buildRiskObject(
             values.socialRisk,
             values.socialRequirements,
-            values.socialGoals,
+            values.socialGoals
         ),
         educat_risk: buildRiskObject(
             values.educationRisk,
             values.educationRequirements,
-            values.educationGoals,
+            values.educationGoals
         ),
         nutrit_risk: buildRiskObject(
             values.nutritionRisk,
             values.nutritionRequirements,
-            values.nutritionGoals,
+            values.nutritionGoals
         ),
         mental_risk: buildRiskObject(
             values.mentalRisk,
             values.mentalRequirements,
-            values.mentalGoals,
+            values.mentalGoals
         ),
     };
 
@@ -127,7 +127,7 @@ export const handleNewWebClientSubmit = async (
 export const handleUpdateClientSubmit = async (
     values: TClientFormValues,
     helpers: FormikHelpers<TClientFormValues>,
-    setIsEditing: (isEditing: boolean) => void,
+    setIsEditing: (isEditing: boolean) => void
 ) => {
     try {
         const disabilities = await getDisabilities();
@@ -176,7 +176,7 @@ export const handleUpdateClientSubmit = async (
 export const handleArchiveConfirmation = (
     values: TClientFormValues,
     user: IUser,
-    loadingError: string | undefined,
+    loadingError: string | undefined
 ): boolean => {
     if (loadingError) {
         window.alert(i18n.t("clientFields.errorFetching", { loadingError: loadingError }));
@@ -195,7 +195,7 @@ export const handleArchiveConfirmation = (
                     first_name: values.first_name,
                     last_name: values.last_name,
                     client_active_error: clientActiveError,
-                }),
+                })
             )
         ) {
             // set is_active

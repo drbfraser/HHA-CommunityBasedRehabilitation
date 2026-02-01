@@ -92,7 +92,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                             {
                                 compress: 0.7,
                                 base64: true,
-                            },
+                            }
                         );
                         uri = `data:image/jpeg;base64,${resizedUri.base64}`;
                     } else {

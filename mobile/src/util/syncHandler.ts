@@ -119,14 +119,14 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
                         console.log(err);
                         showGenericAlert(
                             "[SYNC PULL] apiFetch ERROR",
-                            "Please try syncing again or contact support if the issue persists.",
+                            "Please try syncing again or contact support if the issue persists."
                         );
                         throw err; // VERY important so Watermelon aborts correctly
                     }
 
                     const latency = Date.now() - start;
                     console.log(
-                        `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`,
+                        `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
                     );
 
                     if (!response.ok) {
@@ -165,14 +165,14 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
                         console.log("stack:", err?.stack);
                         showGenericAlert(
                             "[SYNC PUSH] apiFetch ERROR",
-                            "Please try syncing again or contact support if the issue persists.",
+                            "Please try syncing again or contact support if the issue persists."
                         );
                         throw err; // keeps sync from corrupting timestamps
                     }
 
                     const latency = Date.now() - start;
                     console.log(
-                        `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`,
+                        `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
                     );
 
                     if (!response.ok) {
@@ -202,7 +202,7 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
             if (e instanceof APIFetchFailError && e.status === 403) {
                 showGenericAlert(
                     "Sync Is Not Compatible With Your Current Version Of CBR",
-                    "Please install the newest update of CBR on the Google Play Store.",
+                    "Please install the newest update of CBR on the Google Play Store."
                 );
             }
             markSyncError(getErrorMessage(e));
@@ -231,7 +231,7 @@ export async function preSyncOperations(database: dbType) {
 function showAutoSyncFailedAlert() {
     showGenericAlert(
         "Automatic Sync Failed",
-        "Please perform a manual sync to resolve this issue.",
+        "Please perform a manual sync to resolve this issue."
     );
 }
 
@@ -308,7 +308,7 @@ async function getImageData(changes, endpoint) {
                         reader.readAsDataURL(blob);
                     });
             }
-        }),
+        })
     );
 }
 

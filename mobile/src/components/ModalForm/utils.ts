@@ -29,7 +29,7 @@ export const generateFormValue = (fields: Array<[string, boolean]>, freeformText
  */
 const parseInitialValues = (
     rawText: string,
-    canonicalFields: string[],
+    canonicalFields: string[]
 ): [checkedItems: string[], otherText: string] => {
     const items = rawText.split(DELIMITER);
 
@@ -45,7 +45,7 @@ const parseInitialValues = (
 export const initializeCheckedItems = (
     rawText: string,
     canonicalFields: string[],
-    localizedFields: string[],
+    localizedFields: string[]
 ): { [key: string]: boolean } => {
     const [canonicalCheckedItems, _] = parseInitialValues(rawText, canonicalFields);
 
@@ -56,7 +56,7 @@ export const initializeCheckedItems = (
             // 1-1 relation as an invariant
             [label]: canonicalCheckedItems.includes(canonicalFields[index]),
         }),
-        {},
+        {}
     );
     return localizedCheckedItems;
 };
@@ -69,20 +69,20 @@ export const initializeFreeformText = (defaultValue: string, canonicalFields: st
 const getModalFormDisplay = (
     t: TFunction,
     translationFieldsKey: RiskRequirementOptions | RiskGoalOptions,
-    rawText: string,
+    rawText: string
 ) => {
     const translatedItems = Object.entries(
         initializeCheckedItems(
             rawText,
             // todo: this method of converting from JSON object to string[] could be cleaner
             Object.keys(t(translationFieldsKey, { returnObjects: true, lng: "en" })),
-            Object.values(t(translationFieldsKey, { returnObjects: true })),
-        ),
+            Object.values(t(translationFieldsKey, { returnObjects: true }))
+        )
     );
     const otherText = initializeFreeformText(
         rawText,
         // todo: this method of converting from JSON object to string[] could be cleaner
-        Object.keys(t(translationFieldsKey, { returnObjects: true, lng: "en" })),
+        Object.keys(t(translationFieldsKey, { returnObjects: true, lng: "en" }))
     );
     return generateFormValue(translatedItems, otherText);
 };

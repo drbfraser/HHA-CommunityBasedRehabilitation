@@ -46,7 +46,7 @@ export namespace CacheRefreshTask {
             console.log(`${TASK_TAG}: Task failed: No internet connectivity`);
             if (!netInfoUnsubscribeFunction) {
                 console.log(
-                    `${TASK_TAG}: Registering NetInfo listener to run when internet state changes`,
+                    `${TASK_TAG}: Registering NetInfo listener to run when internet state changes`
                 );
                 netInfoUnsubscribeFunction = NetInfo.addEventListener(netInfoEventListener);
             }
@@ -68,7 +68,7 @@ export namespace CacheRefreshTask {
 
     const netInfoEventListener: NetInfoChangeHandler = (state: NetInfoState) => {
         console.log(
-            `${TASK_TAG}: netInfoEventListener: isInternetReachable: ${state.isInternetReachable}, isConnected: ${state.isConnected}`,
+            `${TASK_TAG}: netInfoEventListener: isInternetReachable: ${state.isInternetReachable}, isConnected: ${state.isConnected}`
         );
 
         if (state.isInternetReachable) {
@@ -84,7 +84,7 @@ export namespace CacheRefreshTask {
                     return refreshCachesLocked().then(() => unsubscribeNetInfoListener());
                 })
                 .catch((e) =>
-                    console.log(`${TASK_TAG}: netInfoEventListener failed to refresh, ${e}`),
+                    console.log(`${TASK_TAG}: netInfoEventListener failed to refresh, ${e}`)
                 );
         }
     };
@@ -121,7 +121,7 @@ export namespace CacheRefreshTask {
 
     export const registerBackgroundFetch = async () => {
         console.log(
-            `${TASK_TAG}: registerBackgroundFetch() with interval ${CACHE_REFRESH_INTERVAL_SECONDS} seconds`,
+            `${TASK_TAG}: registerBackgroundFetch() with interval ${CACHE_REFRESH_INTERVAL_SECONDS} seconds`
         );
 
         return BackgroundFetch.registerTaskAsync(TASK_NAME, {
@@ -136,7 +136,7 @@ export namespace CacheRefreshTask {
 
         const taskRegistered = await TaskManager.isTaskRegisteredAsync(TASK_NAME);
         console.log(
-            `${TASK_TAG}: unregisterBackgroundFetch(): task registered before: ${taskRegistered}`,
+            `${TASK_TAG}: unregisterBackgroundFetch(): task registered before: ${taskRegistered}`
         );
 
         if (taskRegistered) {

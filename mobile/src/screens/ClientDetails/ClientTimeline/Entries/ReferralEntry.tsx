@@ -292,8 +292,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                     </Text>
                                     <Text>
                                         <Text style={styles.labelBold}>
-                                            {t("referral.agricultureLivelihoodProgramEnrollment")}
-                                            ?{" "}
+                                            {t("referral.agricultureLivelihoodProgramEnrollment")}?{" "}
                                         </Text>
                                         {referral.agriculture_livelihood_program_enrollment
                                             ? t("general.yes")
@@ -307,8 +306,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 <View style={{ marginTop: 20 }}>
                                     <Text>
                                         <Text style={styles.labelBold}>
-                                            {t("referralAttr.condition", { context: "mental" })}
-                                            :{" "}
+                                            {t("referralAttr.condition", { context: "mental" })}:{" "}
                                         </Text>
                                         <Text>{referral.mental_health_condition}</Text>
                                     </Text>

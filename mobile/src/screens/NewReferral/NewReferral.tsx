@@ -49,7 +49,7 @@ interface INewReferralProps {
 
 const ReferralServiceForm = (
     props: ReferralFormProps,
-    setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>,
+    setEnabledSteps: React.Dispatch<React.SetStateAction<ReferralFormField[]>>
 ) => {
     const styles = useStyles();
     const { t } = useTranslation();
@@ -59,8 +59,8 @@ const ReferralServiceForm = (
                 (serviceType) =>
                     (props.formikProps.values[serviceType] &&
                         serviceType !== selectedServiceType) ||
-                    (checked && serviceType === selectedServiceType),
-            ),
+                    (checked && serviceType === selectedServiceType)
+            )
         );
     };
     return (
@@ -126,7 +126,7 @@ const NewReferral = (props: INewReferralProps) => {
                     setSaveError(
                         e instanceof APIFetchFailError
                             ? e.buildFormError(referralFieldLabels)
-                            : `${e}`,
+                            : `${e}`
                     );
                     helpers.setSubmitting(false);
                     setSubmissionError(true);
@@ -263,7 +263,7 @@ const NewReferral = (props: INewReferralProps) => {
                                             enabledSteps.length === 0 ||
                                             (enabledSteps[activeStep - 1] !== undefined &&
                                                 (!checkedSteps.includes(
-                                                    enabledSteps[activeStep - 1],
+                                                    enabledSteps[activeStep - 1]
                                                 )
                                                     ? countObjectKeys(formikProps.errors) !== 0 ||
                                                       Object.keys(formikProps.touched).length === 0

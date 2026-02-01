@@ -77,7 +77,7 @@ export default class Client extends Model implements SyncableModel {
         .get(modelName.referrals)
         .query(
             Q.where(tableKey.client_id, this.id),
-            Q.and(Q.where(ReferralField.resolved, Q.eq(false))),
+            Q.and(Q.where(ReferralField.resolved, Q.eq(false)))
         );
 
     @writer async updateRisk(type, level, time) {

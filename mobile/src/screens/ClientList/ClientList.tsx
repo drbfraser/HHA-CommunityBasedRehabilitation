@@ -104,7 +104,7 @@ const ClientList = () => {
             searchQuery,
             allClientsMode,
             archivedMode,
-            database,
+            database
         );
         if (sortDirection !== "None") {
             exampleClient = exampleClient.sort(clientListScreenComparator);
@@ -126,7 +126,7 @@ const ClientList = () => {
                     sortDirection={arrowDirectionController(
                         props.thisColumnSortOption,
                         sortOption,
-                        sortDirection,
+                        sortDirection
                     )}
                 >
                     {props.label}

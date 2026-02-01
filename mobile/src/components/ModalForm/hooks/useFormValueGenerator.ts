@@ -4,14 +4,14 @@ import { generateFormValue } from "../utils";
 const useFormValueGenerator = (
     checkedItems: { [key: string]: boolean },
     freeformText: string,
-    canonicalFields: string[],
+    canonicalFields: string[]
 ) => {
     const [canonicalFormValue, setCanonicalFormValue] = useState("");
     const [displayedFormValue, setDisplayText] = useState("");
 
     useEffect(() => {
         const fieldsInEnglish: Array<[string, boolean]> = Object.values(checkedItems).map(
-            (isChecked, i) => [canonicalFields[i], isChecked],
+            (isChecked, i) => [canonicalFields[i], isChecked]
         );
         const translatedFields = Object.entries(checkedItems);
 

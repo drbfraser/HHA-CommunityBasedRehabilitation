@@ -55,7 +55,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
     const screenList = screensForUser(
         authState.state === "loggedIn" || authState.state === "previouslyLoggedIn"
             ? authState.currentUser
-            : undefined,
+            : undefined
     );
     const { t } = useTranslation();
 

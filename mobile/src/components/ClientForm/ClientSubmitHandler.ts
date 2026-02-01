@@ -9,7 +9,7 @@ export const handleSubmit = async (
     database: dbType,
     autoSync: boolean,
     cellularSync: boolean,
-    imageChange?: boolean,
+    imageChange?: boolean
 ) => {
     try {
         await database.write(async () => {

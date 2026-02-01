@@ -13,7 +13,7 @@ export const handleSubmit = async (
     database: dbType,
     helpers: FormikHelpers<BaseFormValues>,
     autoSync: boolean,
-    cellularSync: boolean,
+    cellularSync: boolean
 ) => {
     const source = "mobile";
     helpers.setSubmitting(true);

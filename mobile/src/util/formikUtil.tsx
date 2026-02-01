@@ -15,7 +15,7 @@ export type TFormikComponentProps<Field extends string> = {
 
 export const areFormikComponentPropsEqual = <Field extends string>(
     oldProps: TFormikComponentProps<Field>,
-    newProps: TFormikComponentProps<Field>,
+    newProps: TFormikComponentProps<Field>
 ): boolean => {
     if (oldProps.field !== newProps.field) {
         return false;

@@ -68,7 +68,7 @@ export default function ConfirmDeleteZone(props: any) {
         }
 
         setContentText(
-            `${t("zone.cannotDeleteReason")}\n${userList}\n${clientList}\n\n${t("zone.select")}`,
+            `${t("zone.cannotDeleteReason")}\n${userList}\n${clientList}\n\n${t("zone.select")}`
         );
     }, [clients, t, users]);
 
@@ -82,7 +82,7 @@ export default function ConfirmDeleteZone(props: any) {
 
                 setOpen(false);
                 setConfirmDeleteOpen(true);
-            },
+            }
         );
     };
 
@@ -121,7 +121,7 @@ export default function ConfirmDeleteZone(props: any) {
                                     <MenuItem key={zone.id} value={zone.id}>
                                         {zone.zone_name}
                                     </MenuItem>
-                                ),
+                                )
                         )}
                     </Select>
                 </FormControl>

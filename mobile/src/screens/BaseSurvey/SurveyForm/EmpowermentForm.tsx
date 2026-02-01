@@ -26,11 +26,11 @@ const EmpowermentForm = (props: IFormProps) => {
                         onChangeText={(value) => {
                             props.formikProps.setFieldTouched(
                                 BaseSurveyFormField.organization,
-                                true,
+                                true
                             );
                             props.formikProps.setFieldValue(
                                 BaseSurveyFormField.organization,
-                                value,
+                                value
                             );
                         }}
                     />

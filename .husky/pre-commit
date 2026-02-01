@@ -1,5 +1,4 @@
-npx prettier --write "mobile/**/*.{ts,tsx,js,jsx,json,md,css}" \
-  "web/**/*.{ts,tsx,js,jsx,json,md,css}" \
-  "common/**/*.{ts,tsx,js,jsx,json,md,css}"
+#!/usr/bin/env sh
+. "$(dirname "$0")/_/husky.sh"
 
-git add mobile web common
+npx prettier --write common mobile web

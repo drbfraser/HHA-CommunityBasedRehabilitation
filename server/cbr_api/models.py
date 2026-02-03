@@ -535,19 +535,14 @@ class Alert(models.Model):
 
     created_date = models.BigIntegerField(_("date created"), default=time.time)
 
+
 class PatientNote(models.Model):
     id = models.CharField(primary_key=True, max_length=100)
 
-    client = models.ForeignKey(
-        Client,
-        related_name="notes",
-        on_delete=models.CASCADE
-    )
+    client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
 
     created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name="patient_notes",
-        on_delete=models.PROTECT
+        settings.AUTH_USER_MODEL, related_name="patient_notes", on_delete=models.PROTECT
     )
 
     note = models.TextField()

@@ -1190,7 +1190,10 @@ class VersionCheckSerializer(serializers.Serializer):
 
         return data
 
+
 from cbr_api.models import PatientNote as Note
+
+
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
@@ -1199,6 +1202,6 @@ class NoteSerializer(serializers.ModelSerializer):
             "id",
             "created_at",
             "server_created_at",
-            "created_by",   
-            "client",       
+            "created_by",
+            "client",
         ]

@@ -672,8 +672,10 @@ def version_check(request):
     else:
         return Response(status=status.HTTP_403_FORBIDDEN)
 
+
 from cbr_api.models import PatientNote as Note, Client
 from cbr_api.serializers import NoteSerializer
+
 
 class NoteList(generics.ListAPIView):
     serializer_class = NoteSerializer
@@ -694,8 +696,7 @@ class NoteCreate(generics.CreateAPIView):
             raise ValidationError({"client": "This field is required."})
 
         client = generics.get_object_or_404(
-            Client.objects.filter(zone=self.request.user.zone),
-            pk=client_id
+            Client.objects.filter(zone=self.request.user.zone), pk=client_id
         )
 
         serializer.save(created_by=self.request.user, client=client)
@@ -712,12 +713,7 @@ class LatestPatientNote(generics.GenericAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        note = (
-            Note.objects
-            .filter(client_id=client_id)
-            .order_by("-created_at")
-            .first()
-        )
+        note = Note.objects.filter(client_id=client_id).order_by("-created_at").first()
 
         if not note:
             return Response(

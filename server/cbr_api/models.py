@@ -539,7 +539,7 @@ class Alert(models.Model):
 
 
 class PatientNote(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, max_length=100)
 
     client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
 

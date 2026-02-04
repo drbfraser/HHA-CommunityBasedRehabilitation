@@ -548,9 +548,9 @@ class EmailSettings(models.Model):
         if existing:
             return existing
         return cls.objects.create(
-            from_email=settings.EMAIL_HOST_USER,
-            from_email_password=settings.EMAIL_HOST_PASSWORD,
-            to_email=settings.REFERRAL_NOTIFICATION_TO_EMAIL,
+            from_email="",
+            from_email_password="",
+            to_email="",
         )
 
     def save(self, *args, **kwargs):

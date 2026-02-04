@@ -541,6 +541,7 @@ class EmailSettings(models.Model):
     from_email_password = models.CharField(max_length=128, blank=True, default="")
     to_email = models.EmailField(max_length=254)
     updated_at = models.BigIntegerField(default=current_milli_time)
+    password_updated_at = models.BigIntegerField(default=0)
 
     @classmethod
     def get_solo(cls):
@@ -551,6 +552,7 @@ class EmailSettings(models.Model):
             from_email="",
             from_email_password="",
             to_email="",
+            password_updated_at=0,
         )
 
     def save(self, *args, **kwargs):

@@ -27,6 +27,7 @@ const AdminEmailSettings = () => {
     const { t } = useTranslation();
     const [initialValues, setInitialValues] = useState<EmailSettingsFormValues>(emptyValues);
     const [passwordSet, setPasswordSet] = useState(false);
+    const [passwordUpdatedAt, setPasswordUpdatedAt] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -39,6 +40,11 @@ const AdminEmailSettings = () => {
                     from_email_password: "",
                 });
                 setPasswordSet(Boolean(data.from_email_password_set));
+                setPasswordUpdatedAt(
+                    typeof data.password_updated_at === "number" && data.password_updated_at > 0
+                        ? data.password_updated_at
+                        : null
+                );
             })
             .catch((e) => {
                 const errMsg =
@@ -109,6 +115,12 @@ const AdminEmailSettings = () => {
                                 };
                                 setInitialValues(nextValues);
                                 setPasswordSet(Boolean(data.from_email_password_set));
+                                setPasswordUpdatedAt(
+                                    typeof data.password_updated_at === "number" &&
+                                        data.password_updated_at > 0
+                                        ? data.password_updated_at
+                                        : null
+                                );
                                 helpers.resetForm({ values: nextValues });
                                 alert("Email settings updated.");
                             })
@@ -157,6 +169,12 @@ const AdminEmailSettings = () => {
                                     {passwordSet && !values.from_email_password && (
                                         <Typography variant="caption" color="text.secondary">
                                             App password is already set. Leave blank to keep it.
+                                        </Typography>
+                                    )}
+                                    {passwordUpdatedAt && (
+                                        <Typography variant="caption" color="text.secondary">
+                                            Password last updated:{" "}
+                                            {new Date(passwordUpdatedAt).toLocaleString()}
                                         </Typography>
                                     )}
                                 </Grid>

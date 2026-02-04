@@ -1000,9 +1000,10 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
             "to_email",
             "from_email_password",
             "from_email_password_set",
+            "password_updated_at",
             "updated_at",
         ]
-        read_only_fields = ["updated_at", "from_email_password_set"]
+        read_only_fields = ["updated_at", "from_email_password_set", "password_updated_at"]
 
     def get_from_email_password_set(self, obj):
         return bool(obj.from_email_password)
@@ -1015,6 +1016,7 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
             cleaned = "".join(password.split())
             if cleaned:
                 instance.from_email_password = cleaned
+                instance.password_updated_at = current_milli_time()
         instance.save()
         return instance
 

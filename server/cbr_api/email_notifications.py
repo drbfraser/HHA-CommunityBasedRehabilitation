@@ -1,11 +1,12 @@
 from datetime import datetime
 import logging
 
-from django.conf import settings
 from django.core.mail import send_mail
 from django.utils import timezone
 
 logger = logging.getLogger(__name__)
+
+EMAIL_SUBJECT = "New CBR Referral Created"
 
 
 def _get_referral_email_config():
@@ -14,17 +15,13 @@ def _get_referral_email_config():
 
         email_settings = EmailSettings.get_solo()
         return (
-            email_settings.from_email or settings.DEFAULT_FROM_EMAIL,
-            email_settings.from_email_password or settings.EMAIL_HOST_PASSWORD,
-            email_settings.to_email or settings.REFERRAL_NOTIFICATION_TO_EMAIL,
+            email_settings.from_email,
+            email_settings.from_email_password,
+            email_settings.to_email,
         )
     except Exception:
-        logger.exception("Failed to load email settings; falling back to defaults")
-        return (
-            settings.DEFAULT_FROM_EMAIL,
-            settings.EMAIL_HOST_PASSWORD,
-            settings.REFERRAL_NOTIFICATION_TO_EMAIL,
-        )
+        logger.exception("Failed to load email settings; referral email skipped")
+        return None
 
 
 def send_referral_created_email(referral):
@@ -37,17 +34,21 @@ def send_referral_created_email(referral):
         f"Created at: {created_ms} ({created_dt.isoformat()})"
     )
 
-    from_email, from_password, to_email = _get_referral_email_config()
-    if not to_email:
+    config = _get_referral_email_config()
+    if not config:
+        return
+
+    from_email, from_password, to_email = config
+    if not from_email or not to_email or not from_password:
         logger.warning(
-            "Referral notification email skipped; no recipient configured",
+            "Referral notification email skipped; email settings incomplete",
             extra={"referral_id": str(referral.id)},
         )
         return
 
     try:
         send_mail(
-            settings.REFERRAL_NOTIFICATION_SUBJECT,
+            EMAIL_SUBJECT,
             body,
             from_email,
             [to_email],

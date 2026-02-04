@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+npx prettier --write common mobile web
+
+git add .

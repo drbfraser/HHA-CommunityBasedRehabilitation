@@ -11,12 +11,7 @@ EMAIL_SUBJECT = "New CBR Referral Created"
 DEFAULT_WEB_BASE_URL = "http://localhost:3000"
 
 
-def _build_client_link(client_id):
-    domain = getattr(settings, "DOMAIN", "")
-    if domain:
-        base_url = f"https://{domain}"
-    else:
-        base_url = DEFAULT_WEB_BASE_URL
+def _build_client_link(client_id, base_url):
     return f"{base_url}/client/{client_id}"
 
 
@@ -84,7 +79,21 @@ def send_referral_created_email(referral):
     if referral.services_other:
         details.append(f"Other services: {referral.services_other}")
 
-    client_link = _build_client_link(client_id) if client_id else ""
+    config = _get_referral_email_config()
+    if not config:
+        return
+
+    from_email, from_password, to_email = config
+    if not from_email or not to_email or not from_password:
+        logger.warning(
+            "Referral notification email skipped; email settings incomplete",
+            extra={"referral_id": str(referral.id)},
+        )
+        return
+
+    domain = getattr(settings, "DOMAIN", "")
+    base_url = (f"https://{domain}" if domain else DEFAULT_WEB_BASE_URL).rstrip("/")
+    client_link = _build_client_link(client_id, base_url) if client_id else ""
 
     body_lines = [
         "A new referral has been created.",
@@ -104,18 +113,6 @@ def send_referral_created_email(referral):
         body_lines.extend([f"- {item}" for item in details])
 
     body = "\n".join(body_lines)
-
-    config = _get_referral_email_config()
-    if not config:
-        return
-
-    from_email, from_password, to_email = config
-    if not from_email or not to_email or not from_password:
-        logger.warning(
-            "Referral notification email skipped; email settings incomplete",
-            extra={"referral_id": str(referral.id)},
-        )
-        return
 
     try:
         send_mail(

@@ -166,31 +166,40 @@ const AdminEmailSettings = () => {
                                         type="password"
                                         fullWidth
                                     />
-                                    {passwordSet && !values.from_email_password && (
-                                        <>
+                                    {passwordSet ? (
+                                        !values.from_email_password && (
                                             <Typography variant="caption" color="text.secondary">
                                                 App password is already set. Leave blank to keep it.
                                             </Typography>
-                                            <Typography
-                                                variant="caption"
-                                                color="text.secondary"
-                                                component="div"
-                                            >
-                                                To get a Gmail app password:
-                                            </Typography>
-                                            <Typography
-                                                variant="caption"
-                                                color="text.secondary"
-                                                component="ul"
-                                                sx={{ margin: "4px 0 0 16px" }}
-                                            >
-                                                <li>Enable 2-Step Verification on the Gmail account.</li>
-                                                <li>Go to Google Account → Security → App passwords.</li>
-                                                <li>Create a new app password for “Mail”.</li>
-                                                <li>Copy the 16-character password and paste it here.</li>
-                                            </Typography>
-                                        </>
+                                        )
+                                    ) : (
+                                        <Typography variant="caption" color="text.secondary">
+                                            App password has not been set yet. Enter one to enable
+                                            email sending.
+                                        </Typography>
                                     )}
+
+                                    {/* Always show Gmail instructions */}
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        component="div"
+                                        sx={{ mt: 0.5 }}
+                                    >
+                                        To get a Gmail app password:
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        component="ul"
+                                        sx={{ margin: "4px 0 0 16px" }}
+                                    >
+                                        <li>Enable 2-Step Verification on the Gmail account.</li>
+                                        <li>Go to Google Account → Security → App passwords.</li>
+                                        <li>Create a new app password for “Mail”.</li>
+                                        <li>Copy the 16-character password and paste it here.</li>
+                                    </Typography>
+
                                     {passwordUpdatedAt && (
                                         <Typography variant="caption" color="text.secondary">
                                             Password last updated:{" "}

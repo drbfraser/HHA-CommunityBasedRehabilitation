@@ -93,6 +93,95 @@ After the app is up and running the first time, after you make a change to the c
 
 -   How is it best to do hot-reloading?
 
+# Running E2E Tests
+
+The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on Android.
+
+## Prerequisites
+
+1. Set the `ANDROID_SDK_ROOT` environment variable:
+
+    ```powershell
+    # Temporary (current session only)
+    $env:ANDROID_SDK_ROOT = "C:\Users\<YourUsername>\AppData\Local\Android\Sdk"
+
+    # Permanent (add to user environment variables)
+    [System.Environment]::SetEnvironmentVariable("ANDROID_SDK_ROOT", "C:\Users\<YourUsername>\AppData\Local\Android\Sdk", "User")
+    ```
+
+2. Create the e2e credentials file (not tracked by git):
+    ```powershell
+    cp .env.e2e.example .env.e2e
+    ```
+    Then edit `.env.e2e` with valid test credentials:
+    ```
+    E2E_USERNAME=your_test_username
+    E2E_PASSWORD=your_test_password
+    ```
+
+## Building for E2E Tests
+
+Build the debug APK and test APK:
+
+```powershell
+cd android
+.\gradlew assembleDebug assembleAndroidTest
+```
+
+## Running E2E Tests
+
+1. **Start Metro bundler** (required for debug builds):
+
+    ```powershell
+    cd mobile
+    npx expo start
+    ```
+
+2. **In a separate terminal**, run the tests:
+    ```powershell
+    cd mobile
+    npx detox test -c android.emu.debug
+    ```
+
+### Available Configurations
+
+| Configuration         | Description                                       |
+| --------------------- | ------------------------------------------------- |
+| `android.emu.debug`   | Run on Android emulator with debug build          |
+| `android.emu.release` | Run on Android emulator with release build        |
+| `android.att.debug`   | Run on attached Android device with debug build   |
+| `android.att.release` | Run on attached Android device with release build |
+
+<!-- ### Running Release Tests (No Metro Required) - NEED TO VERIFY THIS WORKS
+
+For release builds, the JavaScript is bundled into the APK:
+
+```powershell
+cd android
+.\gradlew assembleRelease assembleAndroidTest -DtestBuildType=release
+cd ..
+npx detox test -c android.emu.release
+``` -->
+
+## Writing E2E Tests
+
+E2E tests are located in the `e2e/` directory. Tests use Jest and Detox APIs:
+
+```javascript
+describe("Feature", () => {
+    beforeAll(async () => {
+        await device.launchApp({ newInstance: true });
+    });
+
+    it("should do something", async () => {
+        await expect(element(by.id("my-element"))).toBeVisible();
+        await element(by.id("my-button")).tap();
+    });
+});
+```
+
+Add `testID` props to React Native components to make them accessible in tests.
+
 # Notes
 
 -   **First-Time Run**: The first time you run the mobile application, it may take a long time to start. This is normal as dependencies are being initialized.

@@ -11,6 +11,8 @@ npm-debug.*
 *.tgz
 web-build/
 .env
+.env.e2e
+Pixel_*
 
 # macOS
 .DS_Store

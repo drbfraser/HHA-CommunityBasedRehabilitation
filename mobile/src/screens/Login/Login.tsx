@@ -154,6 +154,7 @@ const Login = () => {
                 ) : (
                     <View>
                         <TextInput
+                            testID="login-username-input"
                             label={t("general.username")}
                             error={status.status === "failed" && !username}
                             value={username}
@@ -175,6 +176,7 @@ const Login = () => {
                 )}
                 <View>
                     <TextInput
+                        testID="login-password-input"
                         {...passwordTextInputProps}
                         label={t("general.password")}
                         error={status.status === "failed" && !password}
@@ -191,6 +193,7 @@ const Login = () => {
                     </HelperText>
                 </View>
                 <Button
+                    testID="login-button"
                     buttonColor={theme.colors.accent}
                     contentStyle={{ backgroundColor: theme.colors.accent }}
                     disabled={status.status === "submitting"}

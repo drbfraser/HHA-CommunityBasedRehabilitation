@@ -106,6 +106,7 @@
         "@types/react-test-renderer": "^18.0.7",
         "better-sqlite3": "^11.5.0",
         "detox": "^20.47.0",
+        "dotenv": "^17.2.3",
         "expo-modules-autolinking": "~2.0.0",
         "jest": "^29.7.0",
         "jest-expo": "~53.0.0",

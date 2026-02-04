@@ -204,3 +204,14 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 MEDIA_ROOT = "/uploads/"
+
+# Gmail SMTP settings for referral notification emails (dev only).
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get("CBR_GMAIL_USER", "cbr.referrals.test@gmail.com")
+EMAIL_HOST_PASSWORD = os.environ.get("CBR_GMAIL_PASSWORD", "")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+REFERRAL_NOTIFICATION_TO_EMAIL = os.environ.get("REFERRAL_NOTIFICATION_TO_EMAIL", "")
+REFERRAL_NOTIFICATION_SUBJECT = "New CBR Referral Created"

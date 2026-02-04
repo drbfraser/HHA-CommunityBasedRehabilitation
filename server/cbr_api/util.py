@@ -9,6 +9,7 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 
 from cbr_api import models
+from cbr_api.email_notifications import send_referral_created_email
 
 API_VERSION = "5.0.0"
 
@@ -294,6 +295,7 @@ def create_referral_data(validated_data, user, sync_time):
         record.update_at = data["updated_at"]
         record.server_created_at = sync_time
         record.save()
+        send_referral_created_email(record)
 
     updated_data = table_data.pop("updated")
     for data in updated_data:

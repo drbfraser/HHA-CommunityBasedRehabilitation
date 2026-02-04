@@ -30,7 +30,7 @@ const getBackgroundTimer = (): BackgroundTimerType => {
 
 export namespace SyncDatabaseTask {
     const TASK_TAG = "[SyncDatabaseTask]";
-    export const SYNC_INTERVAL_MILLISECONDS = 20 * 1000; // 20 seconds
+    export const SYNC_INTERVAL_MILLISECONDS = 10 * 60 * 1000; // 10 min
 
     const syncMutex = new Mutex();
 

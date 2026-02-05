@@ -1003,7 +1003,11 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
             "password_updated_at",
             "updated_at",
         ]
-        read_only_fields = ["updated_at", "from_email_password_set", "password_updated_at"]
+        read_only_fields = [
+            "updated_at",
+            "from_email_password_set",
+            "password_updated_at",
+        ]
 
     def get_from_email_password_set(self, obj):
         return bool(obj.from_email_password)

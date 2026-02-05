@@ -71,7 +71,9 @@ def send_referral_created_email(referral):
     if referral.mental_health_condition:
         details.append(f"Mental health condition: {referral.mental_health_condition}")
     if referral.prosthetic_injury_location:
-        details.append(f"Prosthetic injury location: {referral.prosthetic_injury_location}")
+        details.append(
+            f"Prosthetic injury location: {referral.prosthetic_injury_location}"
+        )
     if referral.orthotic_injury_location:
         details.append(f"Orthotic injury location: {referral.orthotic_injury_location}")
     if referral.hip_width:

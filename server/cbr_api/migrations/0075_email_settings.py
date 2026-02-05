@@ -23,7 +23,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("from_email", models.EmailField(max_length=254)),
-                ("from_email_password", models.CharField(blank=True, default="", max_length=128)),
+                (
+                    "from_email_password",
+                    models.CharField(blank=True, default="", max_length=128),
+                ),
                 ("to_email", models.EmailField(max_length=254)),
                 ("updated_at", models.BigIntegerField(default=current_milli_time)),
             ],

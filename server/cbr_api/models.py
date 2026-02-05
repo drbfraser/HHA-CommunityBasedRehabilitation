@@ -538,6 +538,10 @@ class Alert(models.Model):
     created_date = models.BigIntegerField(_("date created"), default=time.time)
 
 
+def generate_id():
+    return str(uuid.uuid4())
+
+
 class PatientNote(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 

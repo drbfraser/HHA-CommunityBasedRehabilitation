@@ -10,5 +10,10 @@
   "scripts": {
     "prepare": "husky && husky install",
     "format": "prettier --write common mobile web"
+  },
+  "lint-staged": {
+    "common/**/*.{js,ts,tsx,json,css,md}": "prettier --write",
+    "mobile/**/*.{js,ts,tsx,json,css,md}": "prettier --write",
+    "web/**/*.{js,ts,tsx,json,css,md}": "prettier --write"
   }
 }

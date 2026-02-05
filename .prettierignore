@@ -12,7 +12,3 @@ resources.d.ts
 .expo-shared
 dist
 public
-
-*.json
-!package.json
-!tsconfig*.json

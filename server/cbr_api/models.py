@@ -538,8 +538,11 @@ class Alert(models.Model):
     created_date = models.BigIntegerField(_("date created"), default=time.time)
 
 
+def generate_id():
+    return uuid.uuid4().hex  
+
 class PatientNote(models.Model):
-    id = models.CharField(primary_key=True, max_length=100)
+    id = models.CharField(primary_key=True, max_length=100, default=generate_id, editable=False)
 
     client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
 

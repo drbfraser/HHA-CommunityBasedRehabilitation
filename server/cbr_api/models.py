@@ -539,10 +539,13 @@ class Alert(models.Model):
 
 
 def generate_id():
-    return uuid.uuid4().hex  
+    return uuid.uuid4().hex
+
 
 class PatientNote(models.Model):
-    id = models.CharField(primary_key=True, max_length=100, default=generate_id, editable=False)
+    id = models.CharField(
+        primary_key=True, max_length=100, default=generate_id, editable=False
+    )
 
     client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
 

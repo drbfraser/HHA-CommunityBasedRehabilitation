@@ -1191,3 +1191,19 @@ class VersionCheckSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Error!")
 
         return data
+
+
+from cbr_api.models import PatientNote as Note
+
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = "__all__"
+        read_only_fields = [
+            "id",
+            "created_at",
+            "server_created_at",
+            "created_by",
+            "client",
+        ]

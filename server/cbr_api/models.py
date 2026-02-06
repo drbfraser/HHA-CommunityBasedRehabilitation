@@ -14,6 +14,8 @@ from cbr_api.storage import OverwriteStorage
 from cbr_api.validators import FileSizeValidator
 from cbr_api.util import current_milli_time
 
+import uuid
+
 
 class GoalOutcomes(models.TextChoices):
     CANCELLED = "CAN", _("Cancelled")
@@ -536,8 +538,12 @@ class Alert(models.Model):
     created_date = models.BigIntegerField(_("date created"), default=time.time)
 
 
+def generate_id():
+    return str(uuid.uuid4())
+
+
 class PatientNote(models.Model):
-    id = models.CharField(primary_key=True, max_length=100)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
 

@@ -37,12 +37,12 @@ The CBR Mobile app uses the React Native framework along with [WatermelonDB](htt
         sdk.dir = /D:\\Users\\Brian\\AndroidSDK
         ```
 
-If you need to change the version of node/npm, then try:
+**If you need to change the version of node/npm, then try:**
 
-1. Install nvm:  
-   `$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
-2. Close and reopen shell
-3. Install needed node versions:  
+1. If on windows, install nvm-windows by following the instructions at: https://github.com/coreybutler/nvm-windows#readme . For linux use the command:
+   `$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash`
+2. After installing, close and reopen your shell.
+3. Install needed node versions (e.g., 18.20.5):
    `$ nvm install 18.20.5`
 4. For each new shell you open, set the node (and hence also npm) version to use:  
    `$ nvm use 18.20.5`
@@ -92,6 +92,15 @@ After the app is up and running the first time, after you make a change to the c
 **TO BE FILLED IN!**
 
 -   How is it best to do hot-reloading?
+
+# Notes
+
+-   **First-Time Run**: The first time you run the mobile application, it may take a long time to start. This is normal as dependencies are being initialized.
+-   **Troubleshooting for mac**: If you encounter an issue where the first run works but subsequent runs fail, you can try running the following command to resolve it:
+    ```bash
+    pkill node
+    ```
+    Then, rerun the application, and it should work as expected.
 
 # Troubleshooting
 

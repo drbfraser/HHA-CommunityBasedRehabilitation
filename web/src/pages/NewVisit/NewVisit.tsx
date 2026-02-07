@@ -36,16 +36,17 @@ import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import ClientRisksModal from "../../pages/ClientDetails/Risks/ClientRisksModal";
 import PreviousGoalsModal from "../../pages/ClientDetails/PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 import GoalField from "./components/GoalField";
-
+import PatientNoteModal from "components/PatientNoteModal/PatientNoteModal";
 interface IStepProps {
     formikProps: FormikProps<any>;
     setRisk: (risk: IRisk) => void;
     setIsModalOpen: (val: boolean) => void;
     setIsPreviousGoalsModalOpen: (val: boolean) => void;
+    setOpenPatientNote: (val: boolean) => void; 
 }
 
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) => {
-    return ({ formikProps, setRisk, setIsModalOpen, setIsPreviousGoalsModalOpen }: IStepProps) => {
+    return ({ formikProps, setRisk, setIsModalOpen, setIsPreviousGoalsModalOpen, setOpenPatientNote }: IStepProps) => {
         const matchingRisk = risks.find(
             (risk) => risk.risk_type === (visitType as unknown as RiskType)
         );
@@ -135,6 +136,13 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                 {t("general.update")} {visitFieldLabels[visitType]}{" "}
                                 {t("general.goal")}
                             </Button>
+                            <Button
+                                variant="contained"
+                                color="primary" // Or another color to differentiate it
+                                onClick={() => setOpenPatientNote(true)}
+                            >
+                                {"Patient Note"}
+                            </Button>
                         </Stack>
                     </>
                 ) : null}
@@ -160,6 +168,8 @@ const NewVisit = () => {
     const zones = useZones();
     const { clientId } = useParams<{ clientId: string }>();
     const { t } = useTranslation();
+    const [openPatientNote, setOpenPatientNote] = useState(false);
+    const [patientNote, setPatientNote] = useState("Your default note text here...");
 
     useEffect(() => {
         apiFetch(Endpoint.CLIENT, `${clientId}`)
@@ -240,6 +250,7 @@ const NewVisit = () => {
                                             setIsPreviousGoalsModalOpen={
                                                 setIsPreviousGoalsModalOpen
                                             }
+                                            setOpenPatientNote={setOpenPatientNote} 
                                         />
                                         <br />
                                         <br />
@@ -293,6 +304,12 @@ const NewVisit = () => {
                             close={() => setIsPreviousGoalsModalOpen(false)}
                         />
                     )}
+                    <PatientNoteModal
+                        open={openPatientNote}
+                        note={patientNote}
+                        onClose={() => setOpenPatientNote(false)}
+                        onSave={(updatedNote) => setPatientNote(updatedNote)}
+                    />
                 </>
             )}
         </Formik>

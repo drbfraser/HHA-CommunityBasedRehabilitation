@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-mui";
-import {
+import { CheckboxWithLabel, TextField } from "formik-mui";import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
@@ -11,7 +10,11 @@ import {
     Grid,
     MenuItem,
     Typography,
+    Modal,
+    Box,
+    TextField as MuiTextField
 } from "@mui/material";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
@@ -34,6 +37,8 @@ import { IUser } from "@cbr/common/util/users";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { clientFormStyles } from "../NewClient/ClientForm.styles";
 
+import PatientNoteModal from "components/PatientNoteModal/PatientNoteModal";
+
 interface IProps {
     clientInfo: IClient;
 }
@@ -45,6 +50,12 @@ const ClientInfoForm = (props: IProps) => {
     const [loadingError, setLoadingError] = useState<string>();
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
+    const [openPatientNote, setOpenPatientNote] = useState(false);
+    const [patientNote, setPatientNote] = useState(
+        "Patient Note:\n\nThis is a hardcoded patient note. The patient is responding well to treatment and follow-up is scheduled next month."
+    );
+
+
 
     useEffect(() => {
         const getInfo = async () => {
@@ -146,6 +157,18 @@ const ClientInfoForm = (props: IProps) => {
                                     disabled={isSubmitting || !values.is_active}
                                 >
                                     {t("surveyAttr.baselineSurvey")}
+                                </Button>
+                            </Grid>
+                            <Grid sx={clientFormStyles.sideFormButtonWrapper} item md={10} xs={12}>
+                                <Button
+                                    sx={clientFormStyles.sideFormButton}
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={() => setOpenPatientNote(true)}
+                                    disabled={isSubmitting || !values.is_active}
+                                >
+                                    Patient Note
                                 </Button>
                             </Grid>
                         </Grid>
@@ -534,6 +557,12 @@ const ClientInfoForm = (props: IProps) => {
                             </Grid>
                         </Form>
                     </Grid>
+                    <PatientNoteModal
+                        open={openPatientNote}
+                        note={patientNote}
+                        onClose={() => setOpenPatientNote(false)}
+                        onSave={(updatedNote) => setPatientNote(updatedNote)}
+                    />
                 </Grid>
             )}
         </Formik>

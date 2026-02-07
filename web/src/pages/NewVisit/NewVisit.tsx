@@ -169,7 +169,6 @@ const NewVisit = () => {
     const { clientId } = useParams<{ clientId: string }>();
     const { t } = useTranslation();
     const [openPatientNote, setOpenPatientNote] = useState(false);
-    const [patientNote, setPatientNote] = useState("Your default note text here...");
 
     useEffect(() => {
         apiFetch(Endpoint.CLIENT, `${clientId}`)
@@ -306,9 +305,8 @@ const NewVisit = () => {
                     )}
                     <PatientNoteModal
                         open={openPatientNote}
-                        note={patientNote}
+                        clientId={clientId} 
                         onClose={() => setOpenPatientNote(false)}
-                        onSave={(updatedNote) => setPatientNote(updatedNote)}
                     />
                 </>
             )}

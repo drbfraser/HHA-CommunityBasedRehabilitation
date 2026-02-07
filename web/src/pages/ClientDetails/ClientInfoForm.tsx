@@ -10,9 +10,6 @@ import { CheckboxWithLabel, TextField } from "formik-mui";import {
     Grid,
     MenuItem,
     Typography,
-    Modal,
-    Box,
-    TextField as MuiTextField
 } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -51,11 +48,6 @@ const ClientInfoForm = (props: IProps) => {
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
     const [openPatientNote, setOpenPatientNote] = useState(false);
-    const [patientNote, setPatientNote] = useState(
-        "Patient Note:\n\nThis is a hardcoded patient note. The patient is responding well to treatment and follow-up is scheduled next month."
-    );
-
-
 
     useEffect(() => {
         const getInfo = async () => {
@@ -559,9 +551,8 @@ const ClientInfoForm = (props: IProps) => {
                     </Grid>
                     <PatientNoteModal
                         open={openPatientNote}
-                        note={patientNote}
+                        clientId={props.clientInfo.id} 
                         onClose={() => setOpenPatientNote(false)}
-                        onSave={(updatedNote) => setPatientNote(updatedNote)}
                     />
                 </Grid>
             )}

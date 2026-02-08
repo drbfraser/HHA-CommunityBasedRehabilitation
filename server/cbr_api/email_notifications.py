@@ -4,6 +4,7 @@ import logging
 from django.conf import settings
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.utils.html import escape
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +82,20 @@ def send_referral_created_email(referral):
     if referral.services_other:
         details.append(f"Other services: {referral.services_other}")
 
+    referred_by = ""
+    referrer = getattr(referral, "user_id", None)
+    if referrer:
+        referrer_first = getattr(referrer, "first_name", "")
+        referrer_last = getattr(referrer, "last_name", "")
+        referrer_username = getattr(referrer, "username", "")
+        referred_by = f"{referrer_first} {referrer_last}".strip()
+        if referrer_username:
+            referred_by = (
+                f"{referred_by} ({referrer_username})"
+                if referred_by
+                else referrer_username
+            )
+
     config = _get_referral_email_config()
     if not config:
         return
@@ -97,34 +112,68 @@ def send_referral_created_email(referral):
     base_url = (f"https://{domain}" if domain else DEFAULT_WEB_BASE_URL).rstrip("/")
     client_link = _build_client_link(client_id, base_url) if client_id else ""
 
-    body_lines = [
-        "A new referral has been created.",
-        "",
-        f"Created at: {created_pretty}",
-    ]
+    services_label = ", ".join(services)
+    subject_parts = []
     if client_name:
-        body_lines.append(f"Client name: {client_name}")
-    if services:
-        body_lines.append(f"Referral type(s): {', '.join(services)}")
-    if client_link:
-        body_lines.append("")
-        body_lines.append(f"Client link: {client_link}")
+        subject_parts.append(client_name)
+    if services_label:
+        subject_parts.append(services_label)
+    subject = EMAIL_SUBJECT
+    if subject_parts:
+        subject = f"{EMAIL_SUBJECT} - {' - '.join(subject_parts)}"
+
+    body_lines = ["A new referral has been created.", ""]
+    if client_name:
+        body_lines.append(f"Client name: **{client_name}**")
+    if services_label:
+        body_lines.append(f"Referral type(s): **{services_label}**")
+    if referred_by:
+        body_lines.append(f"Referred by: {referred_by}")
     if details:
         body_lines.append("")
         body_lines.append("Details:")
         body_lines.extend([f"- {item}" for item in details])
+    if client_link:
+        body_lines.append("")
+        body_lines.append(f"Client link: {client_link}")
+    body_lines.append("")
+    body_lines.append(f"Created at: {created_pretty}")
 
     body = "\n".join(body_lines)
+    html_lines = ["<p>A new referral has been created.</p>"]
+    if client_name:
+        html_lines.append(
+            f"<p>Client name: <strong>{escape(client_name)}</strong></p>"
+        )
+    if services_label:
+        html_lines.append(
+            f"<p>Referral type(s): <strong>{escape(services_label)}</strong></p>"
+        )
+    if referred_by:
+        html_lines.append(f"<p>Referred by: {escape(referred_by)}</p>")
+    if details:
+        html_lines.append("<p>Details:</p>")
+        html_lines.append("<ul>")
+        html_lines.extend([f"<li>{escape(item)}</li>" for item in details])
+        html_lines.append("</ul>")
+    if client_link:
+        escaped_link = escape(client_link)
+        html_lines.append(
+            f'<p>Client link: <a href="{escaped_link}">{escaped_link}</a></p>'
+        )
+    html_lines.append(f"<p>Created at: {escape(created_pretty)}</p>")
+    html_body = "\n".join(html_lines)
 
     try:
         send_mail(
-            EMAIL_SUBJECT,
+            subject,
             body,
             from_email,
             [to_email],
             fail_silently=False,
             auth_user=from_email,
             auth_password=from_password,
+            html_message=html_body,
         )
     except Exception:
         logger.exception(

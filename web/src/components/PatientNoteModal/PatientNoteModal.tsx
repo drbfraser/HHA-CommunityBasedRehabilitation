@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
     Modal,
     Typography,
@@ -43,13 +43,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (open && clientId) {
-            loadLatestNote();
-        }
-    }, [open, clientId]);
-
-    const loadLatestNote = () => {
+    const loadLatestNote = useCallback(() => {
         setIsLoading(true);
         apiFetch(Endpoint.PATIENT_NOTES, `latest/${clientId}/`)
             .then(async (resp) => {
@@ -61,7 +55,14 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
             })
             .catch(() => setError("Failed to load note."))
             .finally(() => setIsLoading(false));
-    };
+    }, [clientId]);
+    
+    useEffect(() => {
+        if (open && clientId) {
+            loadLatestNote();
+        }
+    }, [open, clientId, loadLatestNote]);
+    
 
     const loadHistory = () => {
         if (showHistory) {

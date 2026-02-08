@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from "react";
 import {
     Modal,
-    Box,
     Typography,
     Button,
     Grid,
     TextField,
     CircularProgress,
     Alert,
-    Divider,
     List,
     ListItem,
     ListItemText,
+    Box,
 } from "@mui/material";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import * as S from "./PatientNoteModal.styles"; // Import your styles
 
 interface INote {
     id: string;
     note: string;
     created_at: string;
-    created_by_name?: string; // Assuming your serializer provides the name
+    created_by_username?: string;
 }
 
 interface PatientNoteModalProps {
@@ -43,7 +43,6 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Fetch initial data
     useEffect(() => {
         if (open && clientId) {
             loadLatestNote();
@@ -70,7 +69,6 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
             return;
         }
         setIsLoading(true);
-        // This hits the NoteList view in your views.py
         apiFetch(Endpoint.PATIENT_NOTES, `${clientId}/`)
             .then(async (resp) => {
                 const data = await resp.json();
@@ -90,7 +88,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
             if (response.ok) {
                 setDbNote(localNote);
                 setIsEditing(false);
-                setShowHistory(false); // Reset history view to show newest
+                setShowHistory(false);
                 loadLatestNote(); 
             }
         } catch (e) {
@@ -109,12 +107,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
 
     return (
         <Modal open={open} onClose={handleClose}>
-            <Box sx={{
-                position: "absolute", top: "50%", left: "50%",
-                transform: "translate(-50%, -50%)", width: 550,
-                bgcolor: "background.paper", boxShadow: 24, p: 4, borderRadius: 2,
-                maxHeight: '90vh', overflowY: 'auto'
-            }}>
+            <S.ModalContainer>
                 <Typography variant="h6" gutterBottom>{title}</Typography>
 
                 {isLoading && <CircularProgress sx={{ display: 'block', m: '20px auto' }} />}
@@ -130,9 +123,9 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                 sx={{ mb: 2 }} autoFocus
                             />
                         ) : (
-                            <Box sx={{ p: 2, bgcolor: "#f5f5f5", borderRadius: 1, mb: 2, whiteSpace: "pre-wrap" }}>
+                            <S.NoteDisplayBox>
                                 <Typography>{dbNote || "No note recorded."}</Typography>
-                            </Box>
+                            </S.NoteDisplayBox>
                         )}
 
                         <Grid container justifyContent="space-between" alignItems="center">
@@ -143,7 +136,11 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                 {isEditing ? (
                                     <>
                                         <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-                                        <Button variant="contained" onClick={handleSave} disabled={isNoteEmpty || isNoteUnchanged}>
+                                        <Button 
+                                            variant="contained" 
+                                            onClick={handleSave} 
+                                            disabled={isNoteEmpty || isNoteUnchanged}
+                                        >
                                             Submit
                                         </Button>
                                     </>
@@ -157,25 +154,23 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                         </Grid>
 
                         {showHistory && (
-                            <Box sx={{ mt: 3 }}>
-                                <Divider sx={{ mb: 2 }} />
-                                <Typography variant="subtitle2" gutterBottom>History Log</Typography>
+                            <S.HistoryContainer>
+                                <S.HistoryTitle variant="subtitle2">History Log</S.HistoryTitle>
                                 <List dense>
                                     {history.map((item) => (
                                         <ListItem key={item.id} alignItems="flex-start" sx={{ px: 0 }}>
                                             <ListItemText
                                                 primary={item.note}
-                                                secondary={`${new Date(item.created_at).toLocaleDateString()} - ${item.created_by_name || 'System'}`}
-                                                secondaryTypographyProps={{ variant: 'caption' }}
+                                                secondary={`${new Date(item.created_at).toLocaleDateString()} ${new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${item.created_by_username || 'System'}`}                                                secondaryTypographyProps={{ variant: 'caption' }}
                                             />
                                         </ListItem>
                                     ))}
                                 </List>
-                            </Box>
+                            </S.HistoryContainer>
                         )}
                     </>
                 )}
-            </Box>
+            </S.ModalContainer>
         </Modal>
     );
 };

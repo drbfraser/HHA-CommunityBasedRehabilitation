@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Form, Formik, FormikProps } from "formik";
-import { CheckboxWithLabel, TextField } from "formik-mui";import {
+import { CheckboxWithLabel, TextField } from "formik-mui";
+import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
@@ -551,7 +552,7 @@ const ClientInfoForm = (props: IProps) => {
                     </Grid>
                     <PatientNoteModal
                         open={openPatientNote}
-                        clientId={props.clientInfo.id} 
+                        clientId={props.clientInfo.id}
                         onClose={() => setOpenPatientNote(false)}
                     />
                 </Grid>

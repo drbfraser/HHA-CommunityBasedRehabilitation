@@ -42,11 +42,17 @@ interface IStepProps {
     setRisk: (risk: IRisk) => void;
     setIsModalOpen: (val: boolean) => void;
     setIsPreviousGoalsModalOpen: (val: boolean) => void;
-    setOpenPatientNote: (val: boolean) => void; 
+    setOpenPatientNote: (val: boolean) => void;
 }
 
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) => {
-    return ({ formikProps, setRisk, setIsModalOpen, setIsPreviousGoalsModalOpen, setOpenPatientNote }: IStepProps) => {
+    return ({
+        formikProps,
+        setRisk,
+        setIsModalOpen,
+        setIsPreviousGoalsModalOpen,
+        setOpenPatientNote,
+    }: IStepProps) => {
         const matchingRisk = risks.find(
             (risk) => risk.risk_type === (visitType as unknown as RiskType)
         );
@@ -249,7 +255,7 @@ const NewVisit = () => {
                                             setIsPreviousGoalsModalOpen={
                                                 setIsPreviousGoalsModalOpen
                                             }
-                                            setOpenPatientNote={setOpenPatientNote} 
+                                            setOpenPatientNote={setOpenPatientNote}
                                         />
                                         <br />
                                         <br />
@@ -305,7 +311,7 @@ const NewVisit = () => {
                     )}
                     <PatientNoteModal
                         open={openPatientNote}
-                        clientId={clientId} 
+                        clientId={clientId}
                         onClose={() => setOpenPatientNote(false)}
                     />
                 </>

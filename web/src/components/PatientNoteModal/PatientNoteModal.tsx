@@ -89,7 +89,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                 setDbNote(localNote);
                 setIsEditing(false);
                 setShowHistory(false);
-                loadLatestNote(); 
+                loadLatestNote();
             }
         } catch (e) {
             setError("Could not save note.");
@@ -108,19 +108,29 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     return (
         <Modal open={open} onClose={handleClose}>
             <S.ModalContainer>
-                <Typography variant="h6" gutterBottom>{title}</Typography>
+                <Typography variant="h6" gutterBottom>
+                    {title}
+                </Typography>
 
-                {isLoading && <CircularProgress sx={{ display: 'block', m: '20px auto' }} />}
+                {isLoading && <CircularProgress sx={{ display: "block", m: "20px auto" }} />}
 
                 {!isLoading && (
                     <>
-                        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+                        {error && (
+                            <Alert severity="error" sx={{ mb: 2 }}>
+                                {error}
+                            </Alert>
+                        )}
 
                         {isEditing ? (
                             <TextField
-                                multiline rows={6} fullWidth value={localNote}
+                                multiline
+                                rows={6}
+                                fullWidth
+                                value={localNote}
                                 onChange={(e) => setLocalNote(e.target.value)}
-                                sx={{ mb: 2 }} autoFocus
+                                sx={{ mb: 2 }}
+                                autoFocus
                             />
                         ) : (
                             <S.NoteDisplayBox>
@@ -136,9 +146,9 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                 {isEditing ? (
                                     <>
                                         <Button onClick={() => setIsEditing(false)}>Cancel</Button>
-                                        <Button 
-                                            variant="contained" 
-                                            onClick={handleSave} 
+                                        <Button
+                                            variant="contained"
+                                            onClick={handleSave}
                                             disabled={isNoteEmpty || isNoteUnchanged}
                                         >
                                             Submit
@@ -146,8 +156,16 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                     </>
                                 ) : (
                                     <>
-                                        <Button variant="contained" onClick={() => setIsEditing(true)} sx={{ mr: 1 }}>Edit</Button>
-                                        <Button variant="outlined" onClick={handleClose}>Close</Button>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => setIsEditing(true)}
+                                            sx={{ mr: 1 }}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button variant="outlined" onClick={handleClose}>
+                                            Close
+                                        </Button>
                                     </>
                                 )}
                             </Box>
@@ -158,10 +176,22 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                 <S.HistoryTitle variant="subtitle2">History Log</S.HistoryTitle>
                                 <List dense>
                                     {history.map((item) => (
-                                        <ListItem key={item.id} alignItems="flex-start" sx={{ px: 0 }}>
+                                        <ListItem
+                                            key={item.id}
+                                            alignItems="flex-start"
+                                            sx={{ px: 0 }}
+                                        >
                                             <ListItemText
                                                 primary={item.note}
-                                                secondary={`${new Date(item.created_at).toLocaleDateString()} ${new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - ${item.created_by_username || 'System'}`}                                                secondaryTypographyProps={{ variant: 'caption' }}
+                                                secondary={`${new Date(
+                                                    item.created_at
+                                                ).toLocaleDateString()} ${new Date(
+                                                    item.created_at
+                                                ).toLocaleTimeString([], {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })} - ${item.created_by_username || "System"}`}
+                                                secondaryTypographyProps={{ variant: "caption" }}
                                             />
                                         </ListItem>
                                     ))}

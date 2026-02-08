@@ -10,9 +10,9 @@ export const ModalContainer = styled(Box)(({ theme }) => ({
     boxShadow: "24px", // matches shadow level 24
     padding: theme.spacing(4),
     borderRadius: theme.shape.borderRadius * 2,
-    maxHeight: '90vh',
-    overflowY: 'auto',
-    outline: 'none',
+    maxHeight: "90vh",
+    overflowY: "auto",
+    outline: "none",
 }));
 
 export const NoteDisplayBox = styled(Box)(({ theme }) => ({

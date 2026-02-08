@@ -1195,19 +1195,21 @@ class VersionCheckSerializer(serializers.Serializer):
 
 from cbr_api.models import PatientNote as Note
 
+
 class NoteSerializer(serializers.ModelSerializer):
-    created_by_name = serializers.ReadOnlyField(source='created_by.get_full_name')
-    created_by_username = serializers.ReadOnlyField(source='created_by.username')
+    created_by_name = serializers.ReadOnlyField(source="created_by.get_full_name")
+    created_by_username = serializers.ReadOnlyField(source="created_by.username")
+
     class Meta:
         model = Note
         fields = [
-            "id", 
-            "note", 
-            "created_at", 
-            "created_by",          
-            "created_by_name",     
+            "id",
+            "note",
+            "created_at",
+            "created_by",
+            "created_by_name",
             "created_by_username",
-            "client"
+            "client",
         ]
         read_only_fields = [
             "id",

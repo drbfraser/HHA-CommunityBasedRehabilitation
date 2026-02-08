@@ -129,7 +129,6 @@ export const getVisitGoalStatusLabel = (t: TFunction, visitType: string): string
         [VisitFormField.mental]: t("newVisit.clientMentalHealthGoalStatus"),
     };
 
-    
     if (visitType in goalStatusLabels) {
         return goalStatusLabels[visitType];
     } else {

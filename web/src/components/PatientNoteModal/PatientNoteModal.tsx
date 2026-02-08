@@ -56,13 +56,12 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
             .catch(() => setError("Failed to load note."))
             .finally(() => setIsLoading(false));
     }, [clientId]);
-    
+
     useEffect(() => {
         if (open && clientId) {
             loadLatestNote();
         }
     }, [open, clientId, loadLatestNote]);
-    
 
     const loadHistory = () => {
         if (showHistory) {

@@ -11,6 +11,8 @@ from rest_framework import status
 from rest_framework_condition import condition
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
+
 
 from cbr.settings import DEBUG
 from cbr_api import models, serializers, filters, permissions
@@ -669,3 +671,52 @@ def version_check(request):
         return Response(status=status.HTTP_200_OK)
     else:
         return Response(status=status.HTTP_403_FORBIDDEN)
+
+
+from cbr_api.models import PatientNote as Note, Client
+from cbr_api.serializers import NoteSerializer
+
+
+class NoteList(generics.ListAPIView):
+    serializer_class = NoteSerializer
+
+    def get_queryset(self):
+        client_id = self.kwargs.get("client_id")
+        if not client_id:
+            return Note.objects.none()
+        return Note.objects.filter(client_id=client_id).order_by("-created_at")
+
+
+class NoteCreate(generics.CreateAPIView):
+    serializer_class = NoteSerializer
+
+    def perform_create(self, serializer):
+        client_id = self.request.data.get("client")
+        if not client_id:
+            raise ValidationError({"client": "This field is required."})
+
+        client = generics.get_object_or_404(Client, pk=client_id)
+
+        serializer.save(created_by=self.request.user, client=client)
+
+
+class LatestPatientNote(generics.GenericAPIView):
+    serializer_class = NoteSerializer
+
+    def get(self, request, *args, **kwargs):
+        client_id = self.kwargs.get("client_id")
+        if not client_id:
+            return Response(
+                {"error": "No client_id provided in the URL."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        note = Note.objects.filter(client_id=client_id).order_by("-created_at").first()
+
+        if not note:
+            return Response(
+                {"error": f"No notes found for client with ID {client_id}."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        return Response(self.get_serializer(note).data)

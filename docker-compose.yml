@@ -9,12 +9,15 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - SECRET_KEY=${SECRET_KEY}
+      - CBR_GMAIL_USER=${CBR_GMAIL_USER}
+      - CBR_GMAIL_PASSWORD=${CBR_GMAIL_PASSWORD}
+      - REFERRAL_NOTIFICATION_TO_EMAIL=${REFERRAL_NOTIFICATION_TO_EMAIL}
     logging:
       driver: fluentd
       options:
-          tag: docker.{{.Name}}.{{.ID}}
-          fluentd-async: "true"
-          fluentd-address: tcp://localhost:24224
+        tag: docker.{{.Name}}.{{.ID}}
+        fluentd-async: "true"
+        fluentd-address: tcp://localhost:24224
     depends_on:
       - postgres
     volumes:
@@ -26,9 +29,9 @@ services:
     logging:
       driver: fluentd
       options:
-          tag: docker.{{.Name}}.{{.ID}}
-          fluentd-async: "true"
-          fluentd-address: tcp://localhost:24224
+        tag: docker.{{.Name}}.{{.ID}}
+        fluentd-async: "true"
+        fluentd-address: tcp://localhost:24224
     environment:
       - POSTGRES_DB=cbr
       - POSTGRES_USER=${POSTGRES_USER}

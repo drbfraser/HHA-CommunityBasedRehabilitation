@@ -155,11 +155,12 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                                 title="Submit" 
                                                 onPress={handleSave} 
                                                 disabled={isNoteEmpty || isNoteUnchanged} 
+                                                color="#283364"
                                             />
                                         </>
                                     ) : (
                                         <>
-                                            <RNButton title="Edit" onPress={() => setIsEditing(true)} />
+                                            <RNButton title="Edit" onPress={() => setIsEditing(true)} color="#283364" />
                                             <View style={{ width: 8 }} />
                                             <RNButton title="Close" onPress={handleClose} color="#757575" />
                                         </>

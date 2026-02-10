@@ -13,7 +13,12 @@
         "test": "jest --watchAll",
         "lint": "expo lint",
         "android": "expo run:android",
-        "ios": "expo run:ios"
+        "ios": "expo run:ios",
+        "detox:build:android": "cd android && .\\gradlew assembleDebug assembleAndroidTest",
+        "detox:start": "npx react-native start --port 8081",
+        "detox:test:android": "npx detox test -c android.emu.debug",
+        "e2e:android": "npm run detox:build:android && npm run detox:test:android",
+        "detox:run": "npm run detox:build:android && npx concurrently -k \"npm:detox:start\" \"npx wait-on tcp:8081 && npm run detox:test:android\""
     },
     "jest": {
         "preset": "jest-expo"
@@ -98,6 +103,7 @@
         "@babel/plugin-proposal-decorators": "^7.25.9",
         "@expo/config-plugins": "~9.0.0",
         "@expo/prebuild-config": "^8.2.0",
+        "@react-native-community/cli": "^20.0.1",
         "@types/jest": "^29.5.12",
         "@types/node": "^15.12.2",
         "@types/react": "19.0.0",

@@ -99,49 +99,56 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 ## Prerequisites
 
-1. Set the `ANDROID_SDK_ROOT` environment variable:
+1. One-time setup (per machine)
 
-    ```powershell
-    # Temporary (current session only)
-    $env:ANDROID_SDK_ROOT = "C:\Users\<YourUsername>\AppData\Local\Android\Sdk"
-
-    # Permanent (add to user environment variables)
-    [System.Environment]::SetEnvironmentVariable("ANDROID_SDK_ROOT", "C:\Users\<YourUsername>\AppData\Local\Android\Sdk", "User")
-    ```
-
-2. Create the e2e credentials file (not tracked by git):
-    ```powershell
-    cp .env.e2e.example .env.e2e
-    ```
-    Then edit `.env.e2e` with valid test credentials:
-    ```
-    E2E_USERNAME=your_test_username
-    E2E_PASSWORD=your_test_password
-    ```
-
-## Building for E2E Tests
-
-Build the debug APK and test APK:
+-   Install Android SDK and JDK and configure environment variables (`ANDROID_SDK_ROOT`, `JAVA_HOME`).
+-   Install node modules in the `mobile/` folder once:
 
 ```powershell
-cd android
-.\gradlew assembleDebug assembleAndroidTest
+cd mobile
+npm install
+```
+
+-   Create the e2e credentials file (not tracked by git):
+
+```powershell
+cp .env.e2e.example .env.e2e
+# then edit .env.e2e with valid credentials
+```
+
+Runtime prerequisites before running tests
+
+-   Have an Android emulator running or a device connected with USB debugging enabled.
+-   If your tests require backend services, start them:
+
+```powershell
+docker compose up
 ```
 
 ## Running E2E Tests
 
-1. **Start Metro bundler** (required for debug builds):
+Prerequisites: set `ANDROID_SDK_ROOT` (persistently), create `.env.e2e` from `.env.e2e.example` with valid test credentials, and run `npm install` in `mobile/` at least once.
 
-    ```powershell
-    cd mobile
-    npx expo start
-    ```
+Permanently set `ANDROID_SDK_ROOT` (PowerShell, user scope):
 
-2. **In a separate terminal**, run the tests:
-    ```powershell
-    cd mobile
-    npx detox test -c android.emu.debug
-    ```
+```powershell
+[System.Environment]::SetEnvironmentVariable('ANDROID_SDK_ROOT','C:\Users\<YourUsername>\AppData\Local\Android\Sdk','User')
+```
+
+After running the above, close and re-open any terminals so the new environment variable is available to new sessions.
+
+Run everything with one command from the `mobile/` folder:
+
+```powershell
+cd mobile
+npm run detox:run
+```
+
+What this does:
+
+-   Builds debug APK and test APK
+-   Starts Metro and waits for it to be ready
+-   Runs the Detox test suite (`android.emu.debug`)
 
 ### Available Configurations
 

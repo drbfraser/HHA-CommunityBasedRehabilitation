@@ -561,6 +561,7 @@ class EmailSettings(models.Model):
         self.updated_at = current_milli_time()
         return super().save(*args, **kwargs)
 
+
 def generate_id():
     return str(uuid.uuid4())
 

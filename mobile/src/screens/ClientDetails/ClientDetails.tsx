@@ -178,10 +178,10 @@ const ClientDetails = (props: ClientProps) => {
 
     const handleFormSubmit = (
         values: TClientValues,
-        formikHelpers: FormikHelpers<TClientValues>
+        formikHelpers: FormikHelpers<TClientValues>,
     ) => {
         handleSubmit(client, values, database, autoSync, cellularSync, imageChange).finally(() =>
-            formikHelpers.setSubmitting(false)
+            formikHelpers.setSubmitting(false),
         );
     };
 

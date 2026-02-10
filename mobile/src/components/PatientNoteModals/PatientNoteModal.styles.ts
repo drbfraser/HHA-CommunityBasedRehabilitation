@@ -19,7 +19,7 @@ export const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 12 },
         shadowOpacity: 0.58,
-        shadowRadius: 16.00,
+        shadowRadius: 16.0,
         elevation: 24,
     },
     title: {
@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
         borderRadius: 4,
         padding: 12,
         marginBottom: 16,
-        textAlignVertical: "top", 
+        textAlignVertical: "top",
         minHeight: 120,
     },
     buttonRow: {

@@ -103,19 +103,12 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     const isNoteUnchanged = localNote === dbNote;
 
     return (
-        <Modal
-            visible={open}
-            transparent={true}
-            animationType="fade"
-            onRequestClose={handleClose}
-        >
+        <Modal visible={open} transparent={true} animationType="fade" onRequestClose={handleClose}>
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
                     <Text style={styles.title}>{title}</Text>
 
-                    {isLoading && (
-                        <ActivityIndicator size="large" style={{ marginVertical: 20 }} />
-                    )}
+                    {isLoading && <ActivityIndicator size="large" style={{ marginVertical: 20 }} />}
 
                     {!isLoading && (
                         <ScrollView showsVerticalScrollIndicator={false}>
@@ -150,19 +143,31 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                 <View style={styles.actionButtons}>
                                     {isEditing ? (
                                         <>
-                                            <RNButton title="Cancel" onPress={() => setIsEditing(false)} color="#757575" />
-                                            <RNButton 
-                                                title="Submit" 
-                                                onPress={handleSave} 
-                                                disabled={isNoteEmpty || isNoteUnchanged} 
+                                            <RNButton
+                                                title="Cancel"
+                                                onPress={() => setIsEditing(false)}
+                                                color="#757575"
+                                            />
+                                            <RNButton
+                                                title="Submit"
+                                                onPress={handleSave}
+                                                disabled={isNoteEmpty || isNoteUnchanged}
                                                 color="#283364"
                                             />
                                         </>
                                     ) : (
                                         <>
-                                            <RNButton title="Edit" onPress={() => setIsEditing(true)} color="#283364" />
+                                            <RNButton
+                                                title="Edit"
+                                                onPress={() => setIsEditing(true)}
+                                                color="#283364"
+                                            />
                                             <View style={{ width: 8 }} />
-                                            <RNButton title="Close" onPress={handleClose} color="#757575" />
+                                            <RNButton
+                                                title="Close"
+                                                onPress={handleClose}
+                                                color="#757575"
+                                            />
                                         </>
                                     )}
                                 </View>
@@ -175,7 +180,12 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                         <View key={item.id} style={styles.historyItem}>
                                             <Text style={styles.historyNote}>{item.note}</Text>
                                             <Text style={styles.historyMeta}>
-                                                {new Date(item.created_at).toLocaleDateString()} {new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {item.created_by_username || "System"}
+                                                {new Date(item.created_at).toLocaleDateString()}{" "}
+                                                {new Date(item.created_at).toLocaleTimeString([], {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })}{" "}
+                                                - {item.created_by_username || "System"}
                                             </Text>
                                         </View>
                                     ))}

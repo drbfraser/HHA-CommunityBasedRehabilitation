@@ -45,8 +45,39 @@ const SwitchServer = () => {
     const [testServerURL, setTestServerURL] = useState("");
     const { t } = useTranslation();
 
+    const validateTestServerUrl = (inputUrl: string) => {
+        if (!inputUrl.startsWith("https://")) {
+            return 'Server URL must start with "https://".';
+        }
+        if (inputUrl.endsWith("/")) {
+            return 'Server URL must not end with "/".';
+        }
+        return "";
+    };
+
+    const testServerConnection = async (baseUrl: string) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        try {
+            await fetch(baseUrl, { method: "GET", signal: controller.signal });
+            return true;
+        } catch (error) {
+            return false;
+        } finally {
+            clearTimeout(timeoutId);
+        }
+    };
+
     const switchServer = async (server: ServerOption) => {
         if (server !== ServerOption.NONE) {
+            if (server === ServerOption.TEST) {
+                const validationError = validateTestServerUrl(testServerURL);
+                if (validationError) {
+                    showGenericAlert(i18n.t("general.alert"), validationError);
+                    return;
+                }
+            }
+
             const baseUrl = server === ServerOption.LIVE ? BASE_URL : testServerURL;
             const apiUrl = buildApiUrl(baseUrl);
 
@@ -61,6 +92,17 @@ const SwitchServer = () => {
 
             await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
                 if (connectionInfo?.isConnected && connectionInfo.isWifiEnabled) {
+                    if (server === ServerOption.TEST) {
+                        const canConnect = await testServerConnection(baseUrl);
+                        if (!canConnect) {
+                            showGenericAlert(
+                                i18n.t("general.alert"),
+                                `Unable to connect to server ${baseUrl}`
+                            );
+                            return;
+                        }
+                    }
+
                     confirmSwitchServer(server, apiUrl, baseUrl);
                 } else {
                     showGenericAlert(
@@ -163,6 +205,7 @@ const SwitchServer = () => {
                             error={false}
                             value={testServerURL}
                             onChangeText={(newURL) => setTestServerURL(newURL)}
+                            placeholder={"https://somewhere.com"}
                             mode="outlined"
                             blurOnSubmit={false}
                             autoCapitalize="none"
@@ -172,6 +215,9 @@ const SwitchServer = () => {
                             returnKeyType="next"
                             onSubmitEditing={() => switchServer(selectedServer)}
                         />
+                        <Text style={styles.hintText}>
+                            Server URL example: https://somewhere.com
+                        </Text>
                     </View>
                 ) : (
                     <View></View>

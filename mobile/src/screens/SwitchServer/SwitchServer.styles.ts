@@ -66,6 +66,12 @@ const useStyles = () => {
             marginTop: 20,
             marginBottom: 20,
         },
+        hintText: {
+            marginTop: 6,
+            marginLeft: 5,
+            color: themeColors.textGray,
+            fontSize: 13,
+        },
     });
 };
 

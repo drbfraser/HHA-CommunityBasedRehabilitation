@@ -25,8 +25,9 @@ export const ReferralDialogContent = styled(DialogContent)({
 
 export const ReferralSummaryContainer = styled("div")({
     display: "flex",
-    flexWrap: "wrap",
+    alignItems: "center",
     gap: "0.5rem",
+    width: "100%",
 });
 
 export const ResolveAccordion = styled(AccordionDetails)({
@@ -44,4 +45,10 @@ export const PendingIcon = styled(ScheduleIcon)({
     color: themeColors.riskRed,
     verticalAlign: "text-top",
     marginRight: "5px",
+});
+
+export const PhotoIndicator = styled("span")({
+    marginLeft: "auto",
+    display: "flex",
+    alignItems: "center",
 });

@@ -20,7 +20,7 @@ export const PhotoView = (props: Iprops) => {
         <Container>
             {thumb === undefined ? (
                 <FormLabel sx={{ display: "block" }}>
-                    {t("referral.attachWheelchairPhoto")}
+                    {t("referral.addImageDescription")}
                 </FormLabel>
             ) : (
                 <img alt="" src={thumb} width="200 px" />

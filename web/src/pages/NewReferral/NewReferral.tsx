@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { Alert, Button, Step, StepContent, StepLabel, Stepper } from "@mui/material";
+import * as Yup from "yup";
+
 
 import {
     ReferralFormField,
@@ -27,6 +29,7 @@ import {
     WheelchairForm,
 } from "./forms";
 import GoBackButton from "components/GoBackButton/GoBackButton";
+import { PhotoView } from "components/ReferralPhotoView/PhotoView";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -97,9 +100,24 @@ const NewReferral = () => {
             Form: services[serviceType].Form,
             validationSchema: services[serviceType].validationSchema,
         })),
+        {
+            // TODO: Update translation key
+            label: t("referral.addPicture"),
+            Form: ({ formikProps }) => (
+                <>
+                    <PhotoView
+                        onPictureChange={(pictureURL) => {
+                            void formikProps.setFieldValue(ReferralFormField.picture, pictureURL);
+                        }}
+                    />
+                </>
+            ),
+            validationSchema: () => Yup.object({}), // Empty, picture submission is optional
+        },
     ];
 
-    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+    // enabledSteps.length + 1 to account for picture upload
+    const isFinalStep = activeStep === (enabledSteps.length + 1) && activeStep !== 0;
     const prevStep = () => setActiveStep(activeStep - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {

@@ -11,10 +11,12 @@ import {
     Dialog,
     DialogActions,
     DialogTitle,
+    Tooltip,
     Typography,
 } from "@mui/material";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ImageIcon from '@mui/icons-material/Image';
 
 import {
     IReferral,
@@ -67,6 +69,8 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
             <Chip label={label} clickable={clickable} color="primary" variant="outlined" />
         );
 
+        const hasPhoto = Boolean(referral.picture?.trim?.().length);
+
         return (
             <Styled.ReferralSummaryContainer>
                 {referral.resolved ? (
@@ -93,6 +97,13 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                 )}
                 {referral.mental_health && <ReasonChip label={t("referral.mental")} />}
                 {referral.services_other && <ReasonChip label={t("referral.other")} />}
+
+                {hasPhoto && (
+                    <Styled.PhotoIndicator>
+                        <ImageIcon fontSize="medium" />
+                    </Styled.PhotoIndicator>
+                )}
+
             </Styled.ReferralSummaryContainer>
         );
     };
@@ -200,8 +211,6 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                             <br />
                             <b>{t("referral.repairability")}?</b>{" "}
                             {referral.wheelchair_repairable ? t("general.yes") : t("general.no")}
-                            <br />
-                            <Thumb Id={referral.id} Url={referral.picture} />
                         </div>
                     )}
                     {referral.physiotherapy && (
@@ -251,6 +260,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                                 : referral.services_other}
                         </div>
                     )}
+                    <Thumb Id={referral.id} Url={referral.picture} />
                     {!referral.resolved && <ResolveForm />}
                 </Styled.ReferralDialogContent>
 

@@ -88,7 +88,7 @@ const WheelchairForm = ({ formikProps }: IFormProps) => {
                 </Styled.FieldIndent>
             </div>
 
-            {formikProps.values[ReferralFormField.wheelchairOwned] &&
+            {/* {formikProps.values[ReferralFormField.wheelchairOwned] &&
                 formikProps.values[ReferralFormField.wheelchairRepairable] && (
                     <div>
                         <Alert sx={{ marginBottom: "1.5rem" }} severity="info">
@@ -100,7 +100,7 @@ const WheelchairForm = ({ formikProps }: IFormProps) => {
                             }}
                         />
                     </div>
-                )}
+                )} */}
         </Container>
     );
 };

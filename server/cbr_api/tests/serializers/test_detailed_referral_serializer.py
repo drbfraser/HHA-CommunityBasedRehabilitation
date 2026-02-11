@@ -11,25 +11,20 @@ from cbr_api.tests.helpers import create_client
 class DetailedReferralSerializerTests(TestCase):
     def setUp(self):
         self.zone = Zone.objects.create(zone_name="Test Zone")
-        self.user = UserCBR.objects.create_user(
+        self.super_user = UserCBR.objects.create_user(
             username="root",
             password="root",
             zone=self.zone.id,
         )
         self.client = create_client(
-            user=self.user,
+            user=self.super_user,
             first="John",
             last="Doe",
             contact="1234567890",
             zone=self.zone,
             gender=Client.Gender.MALE,
         )
-
-    def _mock_request(self):
-        return type("MockRequest", (), {"user": self.user})()
-
-    def _payload(self):
-        return {
+        self.payload = {
             "client_id": self.client.id,
             "wheelchair": True,
             "wheelchair_experience": Referral.Experience.BASIC,
@@ -57,15 +52,17 @@ class DetailedReferralSerializerTests(TestCase):
         self, _mock_uuid, _mock_now, mock_send_email
     ):
         serializer = DetailedReferralSerializer(
-            data=self._payload(),
-            context={"request": self._mock_request()},
+            data=self.payload,
+            context={
+                "request": type("MockRequest", (), {"user": self.super_user})(),
+            },
         )
         self.assertTrue(serializer.is_valid(), serializer.errors)
         referral = serializer.save()
 
         self.assertEqual(str(referral.id), "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
-        self.assertEqual(referral.user_id, self.user)
-        self.assertEqual(referral.client_id, self.client)
+        self.assertEqual(referral.user_id, self.super_user)
+        self.assertEqual(str(referral.client_id.id), str(self.client.id))
         self.assertEqual(referral.date_referred, 1700000000000)
         self.assertEqual(referral.server_created_at, 1700000000000)
         self.assertEqual(referral.date_resolved, 0)
@@ -83,7 +80,7 @@ class DetailedReferralSerializerTests(TestCase):
     def test_read_only_fields_are_ignored_on_input(
         self, _mock_uuid, _mock_now, mock_send_email
     ):
-        payload = self._payload()
+        payload = self.payload.copy()
         payload.update(
             {
                 "id": "spoofed-id",
@@ -99,13 +96,15 @@ class DetailedReferralSerializerTests(TestCase):
 
         serializer = DetailedReferralSerializer(
             data=payload,
-            context={"request": self._mock_request()},
+            context={
+                "request": type("MockRequest", (), {"user": self.super_user})(),
+            },
         )
         self.assertTrue(serializer.is_valid(), serializer.errors)
         referral = serializer.save()
 
         self.assertEqual(str(referral.id), "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
-        self.assertEqual(referral.user_id, self.user)
+        self.assertEqual(referral.user_id, self.super_user)
         self.assertEqual(referral.date_referred, 1700000000000)
         self.assertEqual(referral.server_created_at, 1700000000000)
         self.assertEqual(referral.date_resolved, 0)
@@ -114,12 +113,14 @@ class DetailedReferralSerializerTests(TestCase):
         mock_send_email.assert_called_once_with(referral)
 
     def test_missing_required_client_id_fails_validation(self):
-        payload = self._payload()
+        payload = self.payload.copy()
         del payload["client_id"]
 
         serializer = DetailedReferralSerializer(
             data=payload,
-            context={"request": self._mock_request()},
+            context={
+                "request": type("MockRequest", (), {"user": self.super_user})(),
+            },
         )
         self.assertFalse(serializer.is_valid())
         self.assertIn("client_id", serializer.errors)
@@ -130,7 +131,7 @@ class DetailedReferralSerializerTests(TestCase):
     def test_missing_request_context_raises_key_error(
         self, _mock_uuid, _mock_now, mock_send_email
     ):
-        serializer = DetailedReferralSerializer(data=self._payload())
+        serializer = DetailedReferralSerializer(data=self.payload)
         self.assertTrue(serializer.is_valid(), serializer.errors)
 
         with self.assertRaises(KeyError):

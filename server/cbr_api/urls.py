@@ -78,4 +78,3 @@ urlpatterns = [
         name="latest-patient-note",
     ),
 ]
-

@@ -3,8 +3,8 @@ import logging
 
 from django.conf import settings
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 from django.utils import timezone
-from django.utils.html import escape
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +49,7 @@ def send_referral_created_email(referral):
         created_ms / 1000, tz=timezone.get_current_timezone()
     )
     created_pretty = created_dt.strftime("%B %d, %Y %I:%M %p %Z")
+
     services = []
     if referral.wheelchair:
         services.append("Wheelchair")
@@ -121,6 +122,7 @@ def send_referral_created_email(referral):
         subject_parts.append(client_name)
     if services_label:
         subject_parts.append(services_label)
+
     subject = EMAIL_SUBJECT
     if subject_parts:
         subject = f"{EMAIL_SUBJECT} - {' - '.join(subject_parts)}"
@@ -143,109 +145,20 @@ def send_referral_created_email(referral):
     body_lines.append(f"Created at: {created_pretty}")
 
     body = "\n".join(body_lines)
-    escaped_client_name = escape(client_name)
-    escaped_services = escape(services_label)
-    escaped_referred_by = escape(referred_by)
-    escaped_created = escape(created_pretty)
-    escaped_link = escape(client_link)
-    detail_items = "\n".join([f"<li>{escape(item)}</li>" for item in details])
-    button_html = ""
-    if client_link:
-        button_html = f"""
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 20px auto 0;">
-                <tr>
-                    <td bgcolor="{SECONDARY_COLOR}" style="border-radius: 8px; text-align: center;">
-                        <a href="{escaped_link}" style="display: inline-block; padding: 12px 20px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 15px;">
-                            View Client Details
-                        </a>
-                    </td>
-                </tr>
-            </table>
-        """
-
-    details_block = ""
-    if details:
-        details_block = f"""
-            <tr>
-                <td style="padding: 0 24px 12px;">
-                    <p style="margin: 0 0 8px; color: #2a3340; font-size: 14px; font-weight: 600;">Details</p>
-                    <ul style="margin: 0; padding-left: 18px; color: #2a3340; font-size: 14px; line-height: 1.5;">
-                        {detail_items}
-                    </ul>
-                </td>
-            </tr>
-        """
-
-    html_body = f"""
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>New Referral</title>
-    </head>
-    <body style="margin: 0; padding: 0; background-color: #f4f7fb;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f7fb;">
-            <tr>
-                <td align="center" style="padding: 24px 12px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e6edf3; font-family: Arial, Helvetica, sans-serif;">
-                        <tr>
-                            <td style="background: linear-gradient(90deg, {PRIMARY_COLOR}, {ACCENT_COLOR}); padding: 18px 24px;">
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                                    <tr>
-                                        <td style="vertical-align: middle; color: #ffffff; font-size: 20px; font-weight: 700; letter-spacing: 0.3px;">
-                                            Hope Health Action
-                                        </td>
-                                        <td align="right" style="vertical-align: middle; color: #ffffff; font-size: 18px; font-weight: 700; letter-spacing: 0.2px;">
-                                            New Referral
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 24px 24px 12px;">
-                                <p style="margin: 0 0 12px; color: #2a3340; font-size: 16px;">
-                                    A new referral has been created.
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 0 24px 16px;">
-                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fbfd; border: 1px solid #e6edf3; border-radius: 10px;">
-                                    <tr>
-                                        <td style="padding: 14px 16px; color: #2a3340; font-size: 14px; line-height: 1.6;">
-                                            <div style="margin-bottom: 8px;">
-                                                <span style="color: #6b7280;">Client name:</span>
-                                                <strong style="color: #111827;">{escaped_client_name}</strong>
-                                            </div>
-                                            <div style="margin-bottom: 8px;">
-                                                <span style="color: #6b7280;">Referral type(s):</span>
-                                                <strong style="color: #111827;">{escaped_services}</strong>
-                                            </div>
-                                            {f'<div style="margin-bottom: 0;"><span style="color: #6b7280;">Referred by:</span> {escaped_referred_by}</div>' if referred_by else ''}
-                                        </td>
-                                    </tr>
-                                </table>
-                                {button_html}
-                            </td>
-                        </tr>
-                        {details_block}
-                        <tr>
-                            <td style="padding: 8px 24px 24px; color: #6b7280; font-size: 12px;">
-                                Created at: {escaped_created}
-                            </td>
-                        </tr>
-                    </table>
-                    <div style="padding: 12px 0 0; color: #9aa4b2; font-size: 11px; font-family: Arial, Helvetica, sans-serif;">
-                        Hope Health Action
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </body>
-</html>
-    """.strip()
+    html_body = render_to_string(
+        "cbr_api/referral_created_email.html",
+        {
+            "primary_color": PRIMARY_COLOR,
+            "accent_color": ACCENT_COLOR,
+            "secondary_color": SECONDARY_COLOR,
+            "client_name": client_name,
+            "services_label": services_label,
+            "referred_by": referred_by,
+            "details": details,
+            "client_link": client_link,
+            "created_pretty": created_pretty,
+        },
+    )
 
     try:
         send_mail(

@@ -7,12 +7,15 @@ export const dataGridStyles = {
     datagrid: {
         marginTop: "10px",
         border: 0,
+        backgroundColor: "white",
+        "--DataGrid-containerBackground": "white",
+        "--DataGrid-pinnedBackground": "white",
         WebkitFontSmoothing: "auto",
         letterSpacing: "normal",
-        "& .MuiDataGrid-menuIcon, .MuiDataGrid-iconSeparator": {
+        "& .MuiDataGrid-menuIcon, & .MuiDataGrid-iconSeparator": {
             display: "none",
         },
-        "& .MuiDataGrid-colCell, .MuiDataGrid-cell": {
+        "& .MuiDataGrid-colCell, & .MuiDataGrid-cell, & .MuiDataGrid-columnHeader": {
             padding: "1px 1px 1px 1px",
         },
         "& .MuiDataGrid-cell": {
@@ -22,7 +25,7 @@ export const dataGridStyles = {
             WebkitHyphens: "auto",
             msHyphens: "auto",
         },
-        "& .MuiDataGrid-colCellTitle": {
+        "& .MuiDataGrid-colCellTitle, & .MuiDataGrid-columnHeaderTitle": {
             userSelect: "none",
             textOverflow: "clip",
             lineHeight: "normal",
@@ -38,20 +41,24 @@ export const dataGridStyles = {
         "& .MuiDataGrid-row	": {
             cursor: "pointer",
         },
-        "& .MuiDataGrid-colCell:focus, .MuiDataGrid-cell:focus": {
+        "& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus, & .MuiDataGrid-columnHeader:focus":
+            {
             outline: "none",
         },
-        "& .MuiDataGrid-colHeader:focus, .MuiDataGrid-columnHeader:focus-within": {
+        "& .MuiDataGrid-colHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
             outline: "none",
         },
         // Hide scrollbars on Windows
-        "& .MuiDataGrid-window::-webkit-scrollbar": {
+        "& .MuiDataGrid-window::-webkit-scrollbar, & .MuiDataGrid-virtualScroller::-webkit-scrollbar":
+            {
             display: "none;", // Chrome, Safari, Opera
         },
-        "& .MuiDataGrid-window": {
+        "& .MuiDataGrid-window, & .MuiDataGrid-virtualScroller": {
             scrollbarWidth: "none", // Firefox
         },
-        "& .MuiDataGrid-overlay": {
+        // Keep dashboard grids white under the v7 DataGrid class structure.
+        "& .MuiDataGrid-main, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-virtualScroller, & .MuiDataGrid-filler, & .MuiDataGrid-overlayWrapper, & .MuiDataGrid-overlay, & .MuiDataGrid-topContainer, & .MuiDataGrid-bottomContainer":
+            {
             backgroundColor: "white",
         },
     },

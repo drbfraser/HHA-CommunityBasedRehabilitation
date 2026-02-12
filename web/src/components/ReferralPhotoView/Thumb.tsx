@@ -2,8 +2,9 @@ import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import React, { useEffect, useState } from "react";
 
 interface Iprops {
-    Id: number;
+    Id: string | number;
     Url: string;
+    endpoint: Endpoint;  // NEW: accept which endpoint to use
 }
 
 export const Thumb = (props: Iprops) => {
@@ -11,13 +12,13 @@ export const Thumb = (props: Iprops) => {
 
     useEffect(() => {
         if (props.Url) {
-            apiFetch(Endpoint.REFERRAL_PICTURE, `${props.Id}`)
+            apiFetch(props.endpoint, `${props.Id}`)  // Use the passed endpoint
                 .then((resp) => resp.blob())
                 .then((blob) => {
                     setThumb(URL.createObjectURL(blob));
                 });
         }
-    }, [props.Id, props.Url]);
+    }, [props.Id, props.Url, props.endpoint]);
 
-    return <img alt="" src={thumb} width="200px"></img>;
+    return thumb ? <img alt="" src={thumb} width="200px" /> : null;
 };

@@ -101,7 +101,6 @@ const NewReferral = () => {
             validationSchema: services[serviceType].validationSchema,
         })),
         {
-            // TODO: Update translation key
             label: t("referral.addPicture"),
             Form: ({ formikProps }) => (
                 <>

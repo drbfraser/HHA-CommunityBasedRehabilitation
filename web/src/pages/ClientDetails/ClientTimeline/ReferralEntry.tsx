@@ -72,7 +72,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
         const hasPhoto = Boolean(referral.picture?.trim?.().length);
 
         return (
-            <Styled.ReferralSummaryContainer>
+            <Styled.SummaryContainer>
                 {referral.resolved ? (
                     <div>
                         <Styled.CompleteIcon fontSize="small" />
@@ -104,7 +104,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     </Styled.PhotoIndicator>
                 )}
 
-            </Styled.ReferralSummaryContainer>
+            </Styled.SummaryContainer>
         );
     };
 
@@ -260,7 +260,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                                 : referral.services_other}
                         </div>
                     )}
-                    <Thumb Id={referral.id} Url={referral.picture} />
+                    <Thumb Id={referral.id} Url={referral.picture} endpoint={Endpoint.REFERRAL_PICTURE}/>
                     {!referral.resolved && <ResolveForm />}
                 </Styled.ReferralDialogContent>
 

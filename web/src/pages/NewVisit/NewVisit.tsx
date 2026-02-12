@@ -24,6 +24,7 @@ import {
     initialValidationSchema,
     visitTypeValidationSchema,
     getVisitGoalLabel,
+    VisitField,
 } from "@cbr/common/forms/newVisit/visitFormFields";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
@@ -36,6 +37,9 @@ import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import ClientRisksModal from "../../pages/ClientDetails/Risks/ClientRisksModal";
 import PreviousGoalsModal from "../../pages/ClientDetails/PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 import GoalField from "./components/GoalField";
+import * as Yup from "yup";
+import { PhotoView } from "components/ReferralPhotoView/PhotoView";
+
 
 interface IStepProps {
     formikProps: FormikProps<any>;
@@ -85,8 +89,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                         </Button>
                     </>
                 ) : matchingRisk &&
-                  (matchingRisk.goal_status === OutcomeGoalMet.CONCLUDED ||
-                      matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
+                    (matchingRisk.goal_status === OutcomeGoalMet.CONCLUDED ||
+                        matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
                         <Typography variant="body1">{t("goals.noCurrentOngoingGoals")}</Typography>
@@ -148,8 +152,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
 
 const visitReasonStepCallBack =
     (setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>, zones: TZoneMap) =>
-    ({ formikProps }: IStepProps) =>
-        VisitReasonStep(formikProps, setEnabledSteps, zones);
+        ({ formikProps }: IStepProps) =>
+            VisitReasonStep(formikProps, setEnabledSteps, zones);
 
 const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
@@ -173,7 +177,8 @@ const NewVisit = () => {
             });
     }, [clientId]);
 
-    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+    // Enabled steps + 1 to account for Image Upload
+    const isFinalStep = activeStep === (enabledSteps.length + 1) && activeStep !== 0;
 
     const visitSteps = [
         {
@@ -186,6 +191,19 @@ const NewVisit = () => {
             Form: VisitTypeStep(visitType, risks, t),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
+        {
+            label: t("referral.addPicture"),
+            Form: ({ formikProps }: IStepProps) => (
+                <>
+                    <PhotoView
+                        onPictureChange={(pictureURL) => {
+                            void formikProps.setFieldValue(VisitField.picture, pictureURL);
+                        }}
+                    />
+                </>
+            ),
+            validationSchema: () => Yup.object({}), // Empty, picture submission is optional
+        }
     ];
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {

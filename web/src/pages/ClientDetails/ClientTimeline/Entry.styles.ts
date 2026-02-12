@@ -23,7 +23,7 @@ export const ReferralDialogContent = styled(DialogContent)({
     gap: "1em",
 });
 
-export const ReferralSummaryContainer = styled("div")({
+export const SummaryContainer = styled("div")({
     display: "flex",
     alignItems: "center",
     gap: "0.5rem",

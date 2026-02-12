@@ -41,7 +41,9 @@ class ReferralEmailNotificationTests(TestCase):
         )
 
     @override_settings(DOMAIN="cbr.example.org")
-    @patch("cbr_api.email_notifications.render_to_string", return_value="<html>ok</html>")
+    @patch(
+        "cbr_api.email_notifications.render_to_string", return_value="<html>ok</html>"
+    )
     @patch("cbr_api.email_notifications.send_mail")
     @patch(
         "cbr_api.email_notifications._get_referral_email_config",
@@ -76,7 +78,8 @@ class ReferralEmailNotificationTests(TestCase):
         self.assertIn("Wheelchair", render_args[1]["services_label"])
         self.assertIn("Physiotherapy", render_args[1]["services_label"])
         self.assertEqual(
-            render_args[1]["client_link"], f"https://cbr.example.org/client/{self.client.id}"
+            render_args[1]["client_link"],
+            f"https://cbr.example.org/client/{self.client.id}",
         )
 
     @patch("cbr_api.email_notifications.send_mail")

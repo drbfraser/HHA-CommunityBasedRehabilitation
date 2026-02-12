@@ -5,7 +5,6 @@ import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { Cancel } from "@mui/icons-material";
 import {
     DataGrid,
-    GridDensityTypes,
     GridRowsProp,
     GridOverlay,
     GridRenderCellParams,
@@ -94,13 +93,13 @@ const ZoneList = () => {
                 <DataGrid
                     sx={dataGridStyles.datagrid}
                     loading={loading}
-                    components={{
-                        LoadingOverlay: RenderLoadingOverlay,
-                        NoRowsOverlay: RenderNoRowsOverlay,
+                    slots={{
+                        loadingOverlay: RenderLoadingOverlay,
+                        noRowsOverlay: RenderNoRowsOverlay,
                     }}
                     rows={filteredRows}
                     columns={adminColumns}
-                    density={GridDensityTypes.Comfortable}
+                    density="comfortable"
                     onRowClick={onRowClick}
                     pagination
                     initialState={{

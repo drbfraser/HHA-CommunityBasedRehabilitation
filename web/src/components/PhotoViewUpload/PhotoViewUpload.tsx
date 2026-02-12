@@ -135,7 +135,7 @@ export const ProfilePicCard = (props: IProps) => {
     };
 
     const CropModal = (cropperProps: ICropperModal) => {
-        const cropper = useRef<Cropper>();
+        const cropper = useRef<Cropper | null>(null);
 
         const [isSaving, setIsSaving] = useState(false);
         const isMounted = useIsMounted();

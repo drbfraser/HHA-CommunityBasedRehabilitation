@@ -1,4 +1,5 @@
 import { FormikProps } from "formik";
+import { ReactElement } from "react";
 import {
     Impairments,
     InjuryLocation,
@@ -301,7 +302,7 @@ export const serviceTypes: ReferralFormField[] = [
 
 export interface IReferralForm {
     label: string;
-    Form: (props: ReferralFormProps) => JSX.Element;
+    Form: (props: ReferralFormProps) => ReactElement;
     validationSchema: () => any;
 }
 export type ReferralFormValues = typeof referralInitialValues;

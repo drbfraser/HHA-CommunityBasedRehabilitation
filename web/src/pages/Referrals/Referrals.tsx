@@ -15,7 +15,6 @@ import {
 import Autocomplete from "@mui/material/Autocomplete";
 import {
     DataGrid,
-    GridDensityTypes,
     GridRowsProp,
     GridRenderCellParams,
     GridRowParams,
@@ -50,7 +49,7 @@ interface IReferralColumn {
     field: string;
     headerName: string;
     flex: number;
-    renderCell: (params: GridRenderCellParams) => JSX.Element;
+    renderCell: (params: GridRenderCellParams) => React.ReactElement;
     hide: boolean;
     hideFunction: (hidden: boolean) => void;
 }
@@ -433,7 +432,7 @@ const Referrals = () => {
                     }}
                 >
                     <Box sx={hideColumnsStyles.optionsContainer}>
-                        {referralColumns.map((column: IReferralColumn): JSX.Element => {
+                        {referralColumns.map((column: IReferralColumn): React.ReactElement => {
                             return (
                                 <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
@@ -457,13 +456,15 @@ const Referrals = () => {
             <Box sx={dataGridStyles.dashboardTables}>
                 <DataGrid
                     sx={dataGridStyles.datagrid}
-                    rowsPerPageOptions={[10, 25, 50]}
+                    pageSizeOptions={[10, 25, 50]}
                     rows={filteredReferrals}
                     loading={isLoading || clientsLoading}
                     columns={referralColumns}
-                    density={GridDensityTypes.Comfortable}
+                    density="comfortable"
                     onRowClick={handleReferralRowClick}
-                    initialState={{ pagination: { pageSize: 10 } }}
+                    initialState={{
+                        pagination: { paginationModel: { pageSize: 10, page: 0 } },
+                    }}
                 />
             </Box>
 

@@ -14,8 +14,8 @@ import {
 import { timelineStyles } from "./Timeline.styles";
 
 interface IProps {
-    date: string | JSX.Element;
-    content: string | JSX.Element;
+    date: string | React.ReactElement;
+    content: string | React.ReactElement;
     DotIcon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
     isBottomEntry?: boolean;
     onClick?: () => void;

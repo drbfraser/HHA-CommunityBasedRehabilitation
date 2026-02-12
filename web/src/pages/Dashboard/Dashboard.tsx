@@ -7,7 +7,6 @@ import {
     DataGrid,
     GridColumnHeaderParams,
     GridRowParams,
-    GridDensityTypes,
     GridOverlay,
     GridRowsProp,
     GridRowModel,
@@ -199,7 +198,7 @@ const Dashboard = () => {
         return risk1.level - risk2.level;
     };
 
-    const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
+    const RenderRiskHeader = (params: GridColumnHeaderParams): React.ReactElement => {
         const riskType: IRiskType = riskTypes[params.field];
         return (
             <div className="MuiDataGrid-colCellTitle">
@@ -343,11 +342,10 @@ const Dashboard = () => {
                                     hideFooter
                                     loading={isPriorityClientsLoading}
                                     columns={priorityClientsColumns}
-                                    pageSize={5}
-                                    density={GridDensityTypes.Comfortable}
+                                    density="comfortable"
                                     onRowClick={handleClientRowClick}
-                                    components={{
-                                        NoRowsOverlay: RenderNoPriorityClientsOverlay,
+                                    slots={{
+                                        noRowsOverlay: RenderNoPriorityClientsOverlay,
                                     }}
                                 />
                             </Box>
@@ -375,15 +373,17 @@ const Dashboard = () => {
                                             labelRowsPerPage: t("general.dataGridLabelRowsPerPage"),
                                         },
                                     }}
-                                    rowsPerPageOptions={[5, 25, 50]}
+                                    pageSizeOptions={[5, 25, 50]}
                                     rows={referrals}
                                     loading={referralsLoading}
                                     columns={outstandingReferralsColumns}
-                                    initialState={{ pagination: { pageSize: 5 } }}
-                                    density={GridDensityTypes.Comfortable}
+                                    initialState={{
+                                        pagination: { paginationModel: { pageSize: 5, page: 0 } },
+                                    }}
+                                    density="comfortable"
                                     onRowClick={handleReferralRowClick}
-                                    components={{
-                                        NoRowsOverlay: RenderNoOutstandingReferralsOverlay,
+                                    slots={{
+                                        noRowsOverlay: RenderNoOutstandingReferralsOverlay,
                                     }}
                                 />
                             </Box>

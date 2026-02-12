@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import {
     DataGrid,
-    GridDensityTypes,
     GridRowsProp,
     GridOverlay,
     GridRenderCellParams,
@@ -222,7 +221,7 @@ const AdminList = () => {
                     }}
                 >
                     <Box sx={hideColumnsStyles.optionsContainer}>
-                        {adminColumns.map((column): JSX.Element => {
+                        {adminColumns.map((column): React.ReactElement => {
                             return (
                                 <Box key={column.field} sx={hideColumnsStyles.optionsRow}>
                                     <Typography component={"span"} variant={"body2"}>
@@ -242,13 +241,13 @@ const AdminList = () => {
                 <DataGrid
                     sx={dataGridStyles.datagrid}
                     loading={loading}
-                    components={{
-                        LoadingOverlay: RenderLoadingOverlay,
-                        NoRowsOverlay: RenderNoRowsOverlay,
+                    slots={{
+                        loadingOverlay: RenderLoadingOverlay,
+                        noRowsOverlay: RenderNoRowsOverlay,
                     }}
                     rows={filteredRows}
                     columns={adminColumns}
-                    density={GridDensityTypes.Comfortable}
+                    density="comfortable"
                     onRowClick={onRowClick}
                     pagination
                     initialState={{

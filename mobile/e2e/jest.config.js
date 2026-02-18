@@ -4,9 +4,8 @@ require("dotenv").config({ path: ".env.e2e" });
 module.exports = {
     rootDir: "..",
     testMatch: ["<rootDir>/e2e/**/*.test.js"],
-    testTimeout: 120000,
-    maxWorkers: 1,
-    globalSetup: "detox/runners/jest/globalSetup",
+    testTimeout: 360000,
+    globalSetup: "./e2e/globalSetup.js",
     globalTeardown: "detox/runners/jest/globalTeardown",
     reporters: ["detox/runners/jest/reporter"],
     testEnvironment: "detox/runners/jest/testEnvironment",

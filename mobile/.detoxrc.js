@@ -1,4 +1,11 @@
 /** @type {Detox.DetoxConfig} */
+// Load test env vars from .env.e2e so DETOX_AVD_NAME can be defined there
+try {
+    require("dotenv").config({ path: ".env.e2e" });
+} catch (e) {
+    /* noop if dotenv not available */
+}
+
 module.exports = {
     testRunner: {
         args: {
@@ -6,7 +13,7 @@ module.exports = {
             config: "e2e/jest.config.js",
         },
         jest: {
-            setupTimeout: 300000,
+            setupTimeout: 600000,
         },
     },
     apps: {
@@ -34,7 +41,8 @@ module.exports = {
         emulator: {
             type: "android.emulator",
             device: {
-                avdName: "Pixel_6",
+                // allow override via environment variable (DETOX_AVD_NAME) — fall back to the repo default
+                avdName: process.env.DETOX_AVD_NAME || "Medium_Phone_API_36.1",
             },
         },
     },

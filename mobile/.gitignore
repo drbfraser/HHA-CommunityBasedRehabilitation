@@ -13,6 +13,7 @@ web-build/
 .env
 .env.e2e
 Pixel_*
+*.log
 
 # macOS
 .DS_Store

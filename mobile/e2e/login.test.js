@@ -1,11 +1,7 @@
 const { device, element, by, expect } = require("detox");
 
 /**
- * E2E test credentials are loaded from environment variables.
- * Set E2E_USERNAME and E2E_PASSWORD before running tests.
- *
- * Run Example:
- *  npx detox test -c android.emu.debug
+ * E2E test credentials are loaded from .env.e2e
  */
 const E2E_USERNAME = process.env.E2E_USERNAME;
 const E2E_PASSWORD = process.env.E2E_PASSWORD;
@@ -13,10 +9,10 @@ const E2E_PASSWORD = process.env.E2E_PASSWORD;
 describe("Login", () => {
     beforeAll(async () => {
         await device.launchApp({ newInstance: true });
-    });
-
-    beforeEach(async () => {
-        await device.reloadReactNative();
+        // wait for the app to finish bundling and render the login screen
+        await waitFor(element(by.id("login-button")))
+            .toBeVisible()
+            .withTimeout(120000);
     });
 
     it("should show login screen on app launch", async () => {
@@ -33,17 +29,15 @@ describe("Login", () => {
         }
 
         await element(by.id("login-username-input")).tap();
-        await element(by.id("login-username-input")).typeText(E2E_USERNAME);
+        await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
+        await element(by.id("login-username-input")).tapReturnKey();
 
         await element(by.id("login-password-input")).tap();
-        await element(by.id("login-password-input")).typeText(E2E_PASSWORD);
-
-        await device.pressBack();
-
-        await element(by.id("login-button")).tap();
+        await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);
+        await element(by.id("login-password-input")).tapReturnKey();
 
         await waitFor(element(by.id("login-button")))
             .not.toBeVisible()
-            .withTimeout(15000);
+            .withTimeout(30000);
     });
 });

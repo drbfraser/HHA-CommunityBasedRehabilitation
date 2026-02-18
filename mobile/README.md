@@ -99,56 +99,61 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 ## Prerequisites
 
-1. One-time setup (per machine)
+1.  **Set `ANDROID_SDK_ROOT`** (one-time, persistent). In PowerShell:
 
--   Install Android SDK and JDK and configure environment variables (`ANDROID_SDK_ROOT`, `JAVA_HOME`).
--   Install node modules in the `mobile/` folder once:
+    ```powershell
+    [System.Environment]::SetEnvironmentVariable('ANDROID_SDK_ROOT','C:\Users\<YourUsername>\AppData\Local\Android\Sdk','User')
+    ```
+
+    Or on Bash / Linux (persistent: add to `~/.bashrc` or `~/.profile`):
+
+    ```bash
+    # add to ~/.bashrc or ~/.profile
+    export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+    export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
+    ```
+
+    Close and re-open any terminals after running the above.
+
+2.  **Install dependencies** — run `npm install` in `mobile/`
+
+3.  **Create the credentials file** (not tracked by git):
+
+    ```powershell
+    cp .env.e2e.example .env.e2e
+    # then edit .env.e2e with valid test credentials
+    ```
+
+4.  **Set your AVD name** — add the name of your Android emulator to `.env.e2e`:
+
+    ```text
+    DETOX_AVD_NAME=My_AVD_Name
+    ```
+
+    `.detoxrc.js` reads this automatically. You can use any emulator — it does not have to be a specific device. <br>
+
+    Recommended to **close the device beforehand**, so the script can cold start the device.
+
+5.  **Start backend services** (if your tests require them):
+
+    ```powershell
+    docker compose up
+    ```
+
+    > **Note:** Current tests don't interact with backend services but syncronization tests likely will.
+
+## Running the Tests
 
 ```powershell
-cd mobile
-npm install
-```
-
--   Create the e2e credentials file (not tracked by git):
-
-```powershell
-cp .env.e2e.example .env.e2e
-# then edit .env.e2e with valid credentials
-```
-
-Runtime prerequisites before running tests
-
--   Have an Android emulator running or a device connected with USB debugging enabled.
--   If your tests require backend services, start them:
-
-```powershell
-docker compose up
-```
-
-## Running E2E Tests
-
-Prerequisites: set `ANDROID_SDK_ROOT` (persistently), create `.env.e2e` from `.env.e2e.example` with valid test credentials, and run `npm install` in `mobile/` at least once.
-
-Permanently set `ANDROID_SDK_ROOT` (PowerShell, user scope):
-
-```powershell
-[System.Environment]::SetEnvironmentVariable('ANDROID_SDK_ROOT','C:\Users\<YourUsername>\AppData\Local\Android\Sdk','User')
-```
-
-After running the above, close and re-open any terminals so the new environment variable is available to new sessions.
-
-Run everything with one command from the `mobile/` folder:
-
-```powershell
-cd mobile
 npm run detox:run
 ```
 
-What this does:
+This single command will:
 
--   Builds debug APK and test APK
--   Starts Metro and waits for it to be ready
--   Runs the Detox test suite (`android.emu.debug`)
+1. Build the debug APK and test APK
+2. Start Metro bundler and wait for it to be ready
+3. Boot the emulator, disable animations, and suppress ANR dialogs (via the custom `e2e/globalSetup.js`)
+4. Run the Detox test suite using the `android.emu.debug` configuration
 
 ### Available Configurations
 
@@ -159,20 +164,21 @@ What this does:
 | `android.att.debug`   | Run on attached Android device with debug build   |
 | `android.att.release` | Run on attached Android device with release build |
 
-<!-- ### Running Release Tests (No Metro Required) - NEED TO VERIFY THIS WORKS
+> **Note:** only `android.emu.debug` is tested and known to work. **TODOJL: get other configs to work.**
 
-For release builds, the JavaScript is bundled into the APK:
+### Helpful Scripts
 
-```powershell
-cd android
-.\gradlew assembleRelease assembleAndroidTest -DtestBuildType=release
-cd ..
-npx detox test -c android.emu.release
-``` -->
+| Script                  | Description                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| `npm run detox:build`   | Build debug + test APKs only (no test run)                                         |
+| `npm run detox:metro`   | Start Metro only (useful when running `detox:test` separately)                     |
+| `npm run detox:install` | Install debug & test APKs to a connected/emulator device                           |
+| `npm run detox:test`    | Run tests only (emulator and Metro must already be running)                        |
+| `npm run detox:run`     | Complete workflow. Build, start Metro, boot emulator, then run Detox (recommended) |
 
 ## Writing E2E Tests
 
-E2E tests are located in the `e2e/` directory. Tests use Jest and Detox APIs:
+Tests live in the `e2e/` directory and use Jest with Detox APIs:
 
 ```javascript
 describe("Feature", () => {
@@ -187,7 +193,8 @@ describe("Feature", () => {
 });
 ```
 
-Add `testID` props to React Native components to make them accessible in tests.
+-   Add `testID` props to React Native components to make them targetable in tests.
+-   Prefer `replaceText()` over `typeText()` for text input. `typeText` can double-type characters due to Detox synchronization issues with React Native's JS bridge.
 
 # Notes
 

@@ -3,7 +3,7 @@ import { SxProps, Theme } from "@mui/material";
 export const compressedDataGridWidth = 700;
 export const mediaCompressedDataGrid = "@media (max-width: " + compressedDataGridWidth + "px)";
 
-export const dataGridStyles = {
+export const dataGridStyles: Record<string, SxProps<Theme>> = {
     datagrid: {
         marginTop: "10px",
         border: 0,
@@ -38,29 +38,27 @@ export const dataGridStyles = {
         "& .MuiIconButton-sizeSmall": {
             padding: "0 0 0 0",
         },
-        "& .MuiDataGrid-row	": {
+        "& .MuiDataGrid-row": {
             cursor: "pointer",
         },
         "& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus, & .MuiDataGrid-columnHeader:focus":
             {
-            outline: "none",
-        },
+                outline: "none",
+            },
         "& .MuiDataGrid-colHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
             outline: "none",
         },
-        // Hide scrollbars on Windows
         "& .MuiDataGrid-window::-webkit-scrollbar, & .MuiDataGrid-virtualScroller::-webkit-scrollbar":
             {
-            display: "none;", // Chrome, Safari, Opera
-        },
+                display: "none", // Chrome, Safari, Opera
+            },
         "& .MuiDataGrid-window, & .MuiDataGrid-virtualScroller": {
             scrollbarWidth: "none", // Firefox
         },
-        // Keep dashboard grids white under the v7 DataGrid class structure.
         "& .MuiDataGrid-main, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-virtualScroller, & .MuiDataGrid-filler, & .MuiDataGrid-overlayWrapper, & .MuiDataGrid-overlay, & .MuiDataGrid-topContainer, & .MuiDataGrid-bottomContainer":
             {
-            backgroundColor: "white",
-        },
+                backgroundColor: "white",
+            },
     },
     dashboardTables: {
         height: 500,
@@ -72,4 +70,4 @@ export const dataGridStyles = {
     noRowsIcon: {
         fontSize: "65px",
     },
-} satisfies Record<string, SxProps<Theme>>;
+};

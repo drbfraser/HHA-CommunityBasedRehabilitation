@@ -34,6 +34,7 @@ export enum Endpoint {
     ALERT = "alert/",
     VERSION_CHECK = "versioncheck/",
     EMAIL_SETTINGS = "email_settings/",
+    PATIENT_NOTES = "patient-notes/",
 }
 
 export const APILoadError = "APILoadError";

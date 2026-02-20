@@ -3,12 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import AddLocationIcon from "@mui/icons-material/AddLocation";
 import { Cancel } from "@mui/icons-material";
-import {
-    DataGrid,
-    GridRowsProp,
-    GridOverlay,
-    GridRenderCellParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridRowsProp, GridOverlay, GridRenderCellParams } from "@mui/x-data-grid";
 import { Box, IconButton, LinearProgress, Typography } from "@mui/material";
 
 import { zoneListStyles } from "./ZoneList.styles";

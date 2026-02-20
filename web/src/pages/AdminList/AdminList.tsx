@@ -12,12 +12,7 @@ import {
     Switch,
     Box,
 } from "@mui/material";
-import {
-    DataGrid,
-    GridRowsProp,
-    GridOverlay,
-    GridRenderCellParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridRowsProp, GridOverlay, GridRenderCellParams } from "@mui/x-data-grid";
 import { Cancel, MoreVert } from "@mui/icons-material";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import SearchBar from "components/SearchBar/SearchBar";

@@ -27,6 +27,8 @@ interface PatientNoteModalProps {
     clientId: string;
     onClose: () => void;
     title?: string;
+    initialMode?: "view" | "edit" | "history";
+    onNoteUpdated?: () => void;
 }
 
 const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
@@ -34,6 +36,8 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     clientId,
     onClose,
     title = "Patient Note",
+    initialMode = "view",
+    onNoteUpdated,
 }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
@@ -60,8 +64,27 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     useEffect(() => {
         if (open && clientId) {
             loadLatestNote();
+            if (initialMode === "edit") {
+                setIsEditing(true);
+                setShowHistory(false);
+            } else if (initialMode === "history") {
+                setIsEditing(false);
+                // Load history immediately when opening in history mode
+                setIsLoading(true);
+                apiFetch(Endpoint.PATIENT_NOTES, `${clientId}/`)
+                    .then(async (resp) => {
+                        const data = await resp.json();
+                        setHistory(data);
+                        setShowHistory(true);
+                    })
+                    .catch(() => setError("Could not load history."))
+                    .finally(() => setIsLoading(false));
+            } else {
+                setIsEditing(false);
+                setShowHistory(false);
+            }
         }
-    }, [open, clientId, loadLatestNote]);
+    }, [open, clientId, loadLatestNote, initialMode]);
 
     const loadHistory = () => {
         if (showHistory) {
@@ -90,6 +113,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                 setIsEditing(false);
                 setShowHistory(false);
                 loadLatestNote();
+                onNoteUpdated?.();
             }
         } catch (e) {
             setError("Could not save note.");
@@ -102,8 +126,9 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
         onClose();
     };
 
-    const isNoteEmpty = localNote.trim() === "";
+    const isNoteBlank = localNote.trim() === "";
     const isNoteUnchanged = localNote === dbNote;
+    const isSaveDisabled = isNoteUnchanged || isNoteBlank;
 
     return (
         <Modal open={open} onClose={handleClose}>
@@ -129,6 +154,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                 fullWidth
                                 value={localNote}
                                 onChange={(e) => setLocalNote(e.target.value)}
+                                placeholder="No note recorded."
                                 sx={{ mb: 2 }}
                                 autoFocus
                             />
@@ -149,7 +175,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                         <Button
                                             variant="contained"
                                             onClick={handleSave}
-                                            disabled={isNoteEmpty || isNoteUnchanged}
+                                            disabled={isSaveDisabled}
                                         >
                                             Submit
                                         </Button>

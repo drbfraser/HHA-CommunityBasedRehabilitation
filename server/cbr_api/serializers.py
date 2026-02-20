@@ -1217,4 +1217,5 @@ class NoteSerializer(serializers.ModelSerializer):
             "created_by",
             "created_by_name",
             "created_by_username",
+            "client",
         ]

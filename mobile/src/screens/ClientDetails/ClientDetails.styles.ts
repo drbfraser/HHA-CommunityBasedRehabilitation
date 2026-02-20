@@ -98,6 +98,43 @@ const useStyles = () =>
             flex: 1,
             marginTop: 300,
         },
+        patientNoteCard: {
+            marginTop: 10,
+            marginBottom: 10,
+            paddingHorizontal: 16,
+            paddingVertical: 16,
+            borderRadius: 20,
+        },
+        patientNoteTitleRow: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 10,
+        },
+        patientNoteTitle: {
+            fontSize: 24,
+            fontWeight: "bold",
+            color: themeColors.textGray,
+        },
+        patientNoteButtonRow: {
+            flexDirection: "row",
+            gap: 8,
+        },
+        patientNoteButton: {
+            borderRadius: 5,
+        },
+        patientNoteDisplayBox: {
+            padding: 16,
+            backgroundColor: "#fafafa",
+            borderRadius: 8,
+            minHeight: 60,
+            borderWidth: 1,
+            borderColor: "#e0e0e0",
+        },
+        patientNoteText: {
+            fontSize: 14,
+            color: "#333",
+        },
     });
 
 export default useStyles;

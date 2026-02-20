@@ -722,9 +722,6 @@ class LatestPatientNote(generics.GenericAPIView):
         note = Note.objects.filter(client_id=client_id).order_by("-created_at").first()
 
         if not note:
-            return Response(
-                {"error": f"No notes found for client with ID {client_id}."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+            return Response({}, status=status.HTTP_200_OK)
 
         return Response(self.get_serializer(note).data)

@@ -31,6 +31,7 @@ import { modelName } from "../../models/constant";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
+import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModal";
 
 interface ClientProps {
     clientID: string;
@@ -51,6 +52,7 @@ const ClientDetails = (props: ClientProps) => {
     const [originaluri, setOriginaluri] = useState<string>("");
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
+    const [showPatientNote, setShowPatientNote] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<IRisk[]>();
     const [referrals, setReferrals] = useState<any>();
@@ -281,6 +283,14 @@ const ClientDetails = (props: ClientProps) => {
                                         >
                                             {t("visitAttr.newVisit")}
                                         </Button>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            disabled={!formikProps.values.is_active}
+                                            onPress={() => setShowPatientNote(true)}
+                                        >
+                                            Patient Note
+                                        </Button>
                                     </Card>
                                     <Divider />
                                     {formikProps.values.is_active ? (
@@ -364,6 +374,13 @@ const ClientDetails = (props: ClientProps) => {
                         )}
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>
+                    {client && (
+                        <PatientNoteModal
+                            open={showPatientNote}
+                            clientId={client.id}
+                            onClose={() => setShowPatientNote(false)}
+                        />
+                    )}
                 </View>
             )}
         </ScrollView>

@@ -112,4 +112,3 @@ class PatientNoteModelTests(TestCase):
             PatientNote.objects.create(
                 client=self.client_obj, created_by=None, note="No author"
             )
-

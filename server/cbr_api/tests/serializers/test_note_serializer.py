@@ -102,4 +102,3 @@ class NoteSerializerTests(TestCase):
         # Newest first (ordering by -created_at)
         self.assertEqual(serializer.data[0]["note"], "Second note.")
         self.assertEqual(serializer.data[1]["note"], "Initial note content.")
-

@@ -101,14 +101,18 @@ class NoteCreateTests(PatientNoteViewsTestCase):
 
 class NoteListTests(PatientNoteViewsTestCase):
     def test_list_notes_for_client(self):
-        url = reverse("patient-notes-for-client", kwargs={"client_id": str(self.client_obj.id)})
+        url = reverse(
+            "patient-notes-for-client", kwargs={"client_id": str(self.client_obj.id)}
+        )
         response = self.api_client.get(url)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 2)
 
     def test_list_notes_ordered_newest_first(self):
-        url = reverse("patient-notes-for-client", kwargs={"client_id": str(self.client_obj.id)})
+        url = reverse(
+            "patient-notes-for-client", kwargs={"client_id": str(self.client_obj.id)}
+        )
         response = self.api_client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -125,7 +129,9 @@ class NoteListTests(PatientNoteViewsTestCase):
 
     def test_list_notes_unauthenticated(self):
         self.api_client.force_authenticate(user=None)
-        url = reverse("patient-notes-for-client", kwargs={"client_id": str(self.client_obj.id)})
+        url = reverse(
+            "patient-notes-for-client", kwargs={"client_id": str(self.client_obj.id)}
+        )
         response = self.api_client.get(url)
 
         self.assertEqual(response.status_code, 401)
@@ -133,7 +139,9 @@ class NoteListTests(PatientNoteViewsTestCase):
 
 class LatestPatientNoteTests(PatientNoteViewsTestCase):
     def test_get_latest_note(self):
-        url = reverse("latest-patient-note", kwargs={"client_id": str(self.client_obj.id)})
+        url = reverse(
+            "latest-patient-note", kwargs={"client_id": str(self.client_obj.id)}
+        )
         response = self.api_client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -162,8 +170,9 @@ class LatestPatientNoteTests(PatientNoteViewsTestCase):
 
     def test_latest_note_unauthenticated(self):
         self.api_client.force_authenticate(user=None)
-        url = reverse("latest-patient-note", kwargs={"client_id": str(self.client_obj.id)})
+        url = reverse(
+            "latest-patient-note", kwargs={"client_id": str(self.client_obj.id)}
+        )
         response = self.api_client.get(url)
 
         self.assertEqual(response.status_code, 401)
-

@@ -147,9 +147,7 @@ const ClientDetails = () => {
                         <CircularProgress size={24} />
                     ) : (
                         <NoteDisplayBox>
-                            <Typography>
-                                {patientNote || "No note recorded."}
-                            </Typography>
+                            <Typography>{patientNote || "No note recorded."}</Typography>
                         </NoteDisplayBox>
                     )}
                 </Grid>

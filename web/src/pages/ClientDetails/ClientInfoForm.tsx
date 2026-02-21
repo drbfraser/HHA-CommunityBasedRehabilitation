@@ -35,8 +35,6 @@ import { IUser } from "@cbr/common/util/users";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { clientFormStyles } from "../NewClient/ClientForm.styles";
 
-
-
 interface IProps {
     clientInfo: IClient;
 }

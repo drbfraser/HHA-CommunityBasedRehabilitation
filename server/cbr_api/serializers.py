@@ -522,6 +522,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "improvements",
+            "picture",
         ]
         read_only_fields = ["id", "user_id", "created_at"]
 
@@ -573,6 +574,7 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
             "latitude",
             "zone",
             "village",
+            "picture",
         ]
 
 

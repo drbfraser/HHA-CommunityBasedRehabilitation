@@ -128,6 +128,7 @@ class RiskLevel(models.TextChoices):
 
 client_picture_upload_dir = "images/clients"
 referral_picture_upload_dir = "images/referrals"
+visit_picture_upload_dir = "images/visits"
 
 
 class Client(models.Model):
@@ -299,6 +300,23 @@ class Visit(models.Model):
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
+
+    def rename_file(self, original_filename):
+        # file_ext includes the "."
+        file_root, file_ext = os.path.splitext(original_filename)
+        new_filename = (
+            f"visit-{self.pk}{file_ext}"
+            if self.pk is not None
+            else f"visit-{get_random_string(10)}-{file_root}{file_ext}"
+        )
+        return os.path.join(visit_picture_upload_dir, new_filename)
+
+    picture = models.ImageField(
+        upload_to=rename_file,
+        storage=OverwriteStorage(),
+        blank=True,
+        null=True,
+    )  # if picture available
 
 
 class Referral(models.Model):

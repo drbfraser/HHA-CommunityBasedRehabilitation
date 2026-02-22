@@ -182,6 +182,7 @@ export default appSchema({
                 { name: VisitField.latitude, type: "string", isOptional: true },
                 { name: VisitField.zone, type: "number" },
                 { name: VisitField.village, type: "string" },
+                { name: VisitField.picture, type: "string", isOptional: true },
                 { name: mobileGenericField.created_at, type: "number" },
             ],
         }),

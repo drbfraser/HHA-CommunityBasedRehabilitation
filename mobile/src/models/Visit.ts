@@ -24,6 +24,7 @@ export default class Visit extends Model implements SyncableModel {
     @field(VisitField.latitude) latitude;
     @field(VisitField.zone) zone;
     @field(VisitField.village) village;
+    @field(VisitField.picture) picture;
 
     @readonly @date(mobileGenericField.created_at) createdAt;
 

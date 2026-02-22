@@ -3,7 +3,7 @@ import { SxProps, Theme } from "@mui/system";
 export const compressedDataGridWidth = 700;
 export const mediaCompressedDataGrid = "@media (max-width: " + compressedDataGridWidth + "px)";
 
-export const dataGridStyles = {
+export const dataGridStyles: Record<string, SxProps<Theme>> = {
     datagrid: {
         marginTop: "10px",
         border: 0,
@@ -70,4 +70,4 @@ export const dataGridStyles = {
     noRowsIcon: {
         fontSize: "65px",
     },
-} satisfies Record<string, SxProps<Theme>>;
+};

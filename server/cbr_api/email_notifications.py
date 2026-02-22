@@ -143,6 +143,10 @@ def send_referral_created_email(referral):
         body_lines.append(f"Client link: {client_link}")
     body_lines.append("")
     body_lines.append(f"Created at: {created_pretty}")
+    body_lines.append("")
+    body_lines.append(
+        "Please do not reply to this email; it was sent automatically and is not monitored."
+    )
 
     body = "\n".join(body_lines)
     html_body = render_to_string(

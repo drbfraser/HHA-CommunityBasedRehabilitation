@@ -1,6 +1,7 @@
 // Polyfill NativeEventEmitter arg shape warnings as early as possible
 import "./src/setup/nativeEventEmitterPolyfills";
 import { registerRootComponent } from "expo";
+import { LogBox } from "react-native";
 import App from "./src/App";
 import { initializeCommon, invalidateAllCachedAPI } from "@cbr/common";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -93,6 +94,11 @@ const bootstrapServerConfig = async () => {
 };
 
 const bootstrapPromise = bootstrapServerConfig();
+
+// disable LogBox in E2E / test builds to prevent error toasts from blocking Detox interactions
+if (__DEV__) {
+    LogBox.ignoreAllLogs(true);
+}
 
 const BootstrapApp = () => {
     const [ready, setReady] = useState(false);

@@ -35,8 +35,6 @@ import { IUser } from "@cbr/common/util/users";
 import { ProfilePicCard } from "components/PhotoViewUpload/PhotoViewUpload";
 import { clientFormStyles } from "../NewClient/ClientForm.styles";
 
-import PatientNoteModal from "components/PatientNoteModal/PatientNoteModal";
-
 interface IProps {
     clientInfo: IClient;
 }
@@ -48,8 +46,6 @@ const ClientInfoForm = (props: IProps) => {
     const [loadingError, setLoadingError] = useState<string>();
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
-    const [openPatientNote, setOpenPatientNote] = useState(false);
-
     useEffect(() => {
         const getInfo = async () => {
             try {
@@ -150,18 +146,6 @@ const ClientInfoForm = (props: IProps) => {
                                     disabled={isSubmitting || !values.is_active}
                                 >
                                     {t("surveyAttr.baselineSurvey")}
-                                </Button>
-                            </Grid>
-                            <Grid sx={clientFormStyles.sideFormButtonWrapper} item md={10} xs={12}>
-                                <Button
-                                    sx={clientFormStyles.sideFormButton}
-                                    color="primary"
-                                    variant="contained"
-                                    fullWidth
-                                    onClick={() => setOpenPatientNote(true)}
-                                    disabled={isSubmitting || !values.is_active}
-                                >
-                                    Patient Note
                                 </Button>
                             </Grid>
                         </Grid>
@@ -550,11 +534,6 @@ const ClientInfoForm = (props: IProps) => {
                             </Grid>
                         </Form>
                     </Grid>
-                    <PatientNoteModal
-                        open={openPatientNote}
-                        clientId={props.clientInfo.id}
-                        onClose={() => setOpenPatientNote(false)}
-                    />
                 </Grid>
             )}
         </Formik>

@@ -702,7 +702,6 @@ class NoteCreate(generics.CreateAPIView):
         client_id = self.request.data.get("client")
         if not client_id:
             raise ValidationError({"client": "This field is required."})
-
         client = generics.get_object_or_404(Client, pk=client_id)
 
         serializer.save(created_by=self.request.user, client=client)

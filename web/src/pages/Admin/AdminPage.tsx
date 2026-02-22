@@ -4,6 +4,7 @@ import { Box, Tab, Tabs, Typography } from "@mui/material";
 
 import AdminList from "../AdminList/AdminList";
 import ZoneList from "../ZoneList/ZoneList";
+import AdminEmailSettings from "./AdminEmailSettings";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -47,6 +48,7 @@ const AdminPage = () => {
                     <Tabs value={value} onChange={handleTabChange} aria-label="basic tabs">
                         <Tab label={t("general.users")} {...a11yProps(0)} />
                         <Tab label={t("general.zones")} {...a11yProps(1)} />
+                        <Tab label="Email settings" {...a11yProps(2)} />
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
@@ -55,6 +57,10 @@ const AdminPage = () => {
 
                 <TabPanel value={value} index={1}>
                     <ZoneList />
+                </TabPanel>
+
+                <TabPanel value={value} index={2}>
+                    <AdminEmailSettings />
                 </TabPanel>
             </Box>
         </div>

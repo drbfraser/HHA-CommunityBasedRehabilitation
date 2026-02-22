@@ -62,10 +62,16 @@ const PreviousGoalCard = ({ open, risk, close }: PreviousGoalCardProps) => {
     const translatedCancellationReason = t(`cancellation.${risk.cancellation_reason}`, {
         defaultValue: risk.cancellation_reason,
     });
+    const riskWithComments = risk as IRisk & { comments?: string };
+    const commentsValue =
+        riskWithComments.comments?.trim() ||
+        riskLevels[risk.risk_level]?.name ||
+        risk.risk_level ||
+        "";
 
     return (
         <Portal>
-            <Dialog visible={open} onDismiss={close} style={styles.dialog}>
+            <Dialog visible={open} onDismiss={close} style={[styles.dialog, styles.detailDialog]}>
                 <Dialog.Title>{t("goals.viewingPreviousGoals")}</Dialog.Title>
                 <Dialog.Content>
                     <ScrollView style={styles.detailScroll}>
@@ -110,6 +116,13 @@ const PreviousGoalCard = ({ open, risk, close }: PreviousGoalCardProps) => {
                             editable={false}
                             style={styles.detailInput}
                         />
+                        <TextInput
+                            mode="outlined"
+                            label={fieldLabels[FormField.comments]}
+                            value={commentsValue}
+                            editable={false}
+                            style={styles.detailInput}
+                        />
                         {risk.goal_status === OutcomeGoalMet.CANCELLED && (
                             <TextInput
                                 mode="outlined"
@@ -122,7 +135,14 @@ const PreviousGoalCard = ({ open, risk, close }: PreviousGoalCardProps) => {
                     </ScrollView>
                 </Dialog.Content>
                 <Dialog.Actions>
-                    <Button onPress={close}>{t("general.goBack")}</Button>
+                    <Button
+                        mode="outlined"
+                        style={styles.goBackButton}
+                        labelStyle={styles.goBackButtonText}
+                        onPress={close}
+                    >
+                        {t("general.goBack")}
+                    </Button>
                 </Dialog.Actions>
             </Dialog>
         </Portal>

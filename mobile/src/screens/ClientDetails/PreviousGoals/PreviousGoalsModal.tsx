@@ -109,7 +109,7 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
 
     return (
         <Portal>
-            <Dialog visible={open} onDismiss={close} style={styles.dialog}>
+            <Dialog visible={open} onDismiss={close} style={[styles.dialog, styles.listDialog]}>
                 <Dialog.Title>{t("goals.viewingPreviousGoals")}</Dialog.Title>
                 <Dialog.Content>
                     {previousGoals.length === 0 ? (
@@ -157,7 +157,11 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                                             </Text>
                                         </DataTable.Title>
                                         <DataTable.Title
-                                            style={[styles.headerCell, styles.statusColumn]}
+                                            style={[
+                                                styles.headerCell,
+                                                styles.statusColumn,
+                                                styles.statusHeaderCell,
+                                            ]}
                                         >
                                             <Text style={styles.headerText}>
                                                 {t("general.status")}
@@ -171,7 +175,11 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                                             onPress={() => handleRowClick(goal)}
                                         >
                                             <DataTable.Cell
-                                                style={[styles.cell, styles.riskLevelColumn]}
+                                                style={[
+                                                    styles.cell,
+                                                    styles.riskLevelColumn,
+                                                    styles.badgeCell,
+                                                ]}
                                             >
                                                 <View
                                                     style={[
@@ -223,7 +231,11 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                                                 </Text>
                                             </DataTable.Cell>
                                             <DataTable.Cell
-                                                style={[styles.cell, styles.statusColumn]}
+                                                style={[
+                                                    styles.cell,
+                                                    styles.statusColumn,
+                                                    styles.statusBadgeCell,
+                                                ]}
                                             >
                                                 <View
                                                     style={[
@@ -261,7 +273,14 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                     )}
                 </Dialog.Content>
                 <Dialog.Actions>
-                    <Button onPress={close}>{t("general.goBack")}</Button>
+                    <Button
+                        mode="outlined"
+                        style={styles.goBackButton}
+                        labelStyle={styles.goBackButtonText}
+                        onPress={close}
+                    >
+                        {t("general.goBack")}
+                    </Button>
                 </Dialog.Actions>
             </Dialog>
             {selectedGoal && (

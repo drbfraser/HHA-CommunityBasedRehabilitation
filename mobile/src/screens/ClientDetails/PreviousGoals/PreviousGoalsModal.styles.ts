@@ -3,8 +3,17 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     dialog: {
-        backgroundColor: "#eeeeee",
+        backgroundColor: "#f7f7f7",
         marginHorizontal: 12,
+        marginVertical: 20,
+    },
+    listDialog: {
+        minHeight: 0,
+        maxHeight: "82%",
+    },
+    detailDialog: {
+        minHeight: 620,
+        maxHeight: "90%",
     },
     tableContainer: {
         marginTop: 8,
@@ -22,6 +31,14 @@ const styles = StyleSheet.create({
     },
     cell: {
         paddingRight: 12,
+    },
+    badgeCell: {
+        justifyContent: "center",
+    },
+    statusBadgeCell: {
+        justifyContent: "center",
+        alignItems: "center",
+        paddingVertical: 6,
     },
     cellText: {
         color: "#202020",
@@ -48,6 +65,9 @@ const styles = StyleSheet.create({
         minWidth: 140,
         flex: 0,
     },
+    statusHeaderCell: {
+        justifyContent: "center",
+    },
     pagination: {
         alignSelf: "flex-end",
         marginTop: 4,
@@ -61,7 +81,6 @@ const styles = StyleSheet.create({
         borderRadius: 999,
         paddingHorizontal: 12,
         paddingVertical: 6,
-        alignSelf: "flex-start",
         minWidth: 70,
         alignItems: "center",
     },
@@ -74,19 +93,31 @@ const styles = StyleSheet.create({
         borderRadius: 2,
         paddingHorizontal: 8,
         paddingVertical: 4,
-        alignSelf: "flex-start",
+        minWidth: 92,
+        justifyContent: "center",
+        alignItems: "center",
+        marginVertical: 2,
     },
     statusBadgeText: {
         color: themeColors.white,
         fontWeight: "bold",
         fontSize: 14,
+        textAlign: "center",
+    },
+    goBackButton: {
+        borderColor: "#283364",
+    },
+    goBackButtonText: {
+        color: "#283364",
+        fontWeight: "700",
+        letterSpacing: 0.3,
     },
     emptyText: {
         marginVertical: 12,
         fontSize: 16,
     },
     detailScroll: {
-        maxHeight: 420,
+        maxHeight: 500,
     },
     detailMetaSection: {
         marginBottom: 12,

@@ -381,7 +381,7 @@ const ClientDetails = (props: ClientProps) => {
                     </Card>
                     <Divider />
 
-                    <Text style={styles.cardSectionTitle}>{t("clientAttr.clientRisks")}</Text>
+                    <Text style={styles.riskLevelsSectionTitle}>{t("clientAttr.riskLevels")}</Text>
                     <Divider />
                     <View style={styles.previousGoalsButtonContainer}>
                         <Button

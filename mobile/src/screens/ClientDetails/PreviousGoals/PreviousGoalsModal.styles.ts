@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     dialog: {
-        backgroundColor: themeColors.white,
+        backgroundColor: "#eeeeee",
         marginHorizontal: 12,
     },
     tableContainer: {
@@ -15,8 +15,18 @@ const styles = StyleSheet.create({
     headerCell: {
         paddingRight: 12,
     },
+    headerText: {
+        color: "#1f1f1f",
+        fontWeight: "700",
+        fontSize: 15,
+    },
     cell: {
         paddingRight: 12,
+    },
+    cellText: {
+        color: "#202020",
+        fontWeight: "600",
+        fontSize: 15,
     },
     riskLevelColumn: {
         minWidth: 100,
@@ -40,6 +50,36 @@ const styles = StyleSheet.create({
     },
     pagination: {
         alignSelf: "flex-end",
+        marginTop: 4,
+    },
+    paginationLabelText: {
+        color: "#1f1f1f",
+        fontWeight: "700",
+        fontSize: 14,
+    },
+    riskPill: {
+        borderRadius: 999,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        alignSelf: "flex-start",
+        minWidth: 70,
+        alignItems: "center",
+    },
+    riskPillText: {
+        color: themeColors.white,
+        fontWeight: "bold",
+        fontSize: 14,
+    },
+    statusBadge: {
+        borderRadius: 2,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        alignSelf: "flex-start",
+    },
+    statusBadgeText: {
+        color: themeColors.white,
+        fontWeight: "bold",
+        fontSize: 14,
     },
     emptyText: {
         marginVertical: 12,

@@ -8,7 +8,7 @@ import {
     timestampToFormDate,
 } from "@cbr/common";
 import React, { useEffect, useMemo, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button, DataTable, Dialog, Portal, Text } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import PreviousGoalCard from "./PreviousGoalCard";
@@ -97,6 +97,16 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                   previousGoals.length
               )} / ${previousGoals.length}`;
 
+    const getStatusColor = (status: OutcomeGoalMet): string => {
+        if (status === OutcomeGoalMet.CONCLUDED) {
+            return goalStatuses[OutcomeGoalMet.CONCLUDED]?.color ?? "#11b600";
+        }
+        if (status === OutcomeGoalMet.CANCELLED) {
+            return goalStatuses[OutcomeGoalMet.CANCELLED]?.color ?? "#cc0000";
+        }
+        return goalStatuses[status]?.color ?? "#666666";
+    };
+
     return (
         <Portal>
             <Dialog visible={open} onDismiss={close} style={styles.dialog}>
@@ -116,32 +126,42 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                                         <DataTable.Title
                                             style={[styles.headerCell, styles.riskLevelColumn]}
                                         >
-                                            {t("risks.riskLevel")}
+                                            <Text style={styles.headerText}>
+                                                {t("risks.riskLevel")}
+                                            </Text>
                                         </DataTable.Title>
                                         <DataTable.Title
                                             style={[styles.headerCell, styles.areaColumn]}
                                         >
-                                            {t("risks.area")}
+                                            <Text style={styles.headerText}>{t("risks.area")}</Text>
                                         </DataTable.Title>
                                         <DataTable.Title
                                             style={[styles.headerCell, styles.goalColumn]}
                                         >
-                                            {t("risks.goalDescription")}
+                                            <Text style={styles.headerText}>
+                                                {t("risks.goalDescription")}
+                                            </Text>
                                         </DataTable.Title>
                                         <DataTable.Title
                                             style={[styles.headerCell, styles.dateColumn]}
                                         >
-                                            {t("general.startDate")}
+                                            <Text style={styles.headerText}>
+                                                {t("general.startDate")}
+                                            </Text>
                                         </DataTable.Title>
                                         <DataTable.Title
                                             style={[styles.headerCell, styles.dateColumn]}
                                         >
-                                            {t("general.endDate")}
+                                            <Text style={styles.headerText}>
+                                                {t("general.endDate")}
+                                            </Text>
                                         </DataTable.Title>
                                         <DataTable.Title
                                             style={[styles.headerCell, styles.statusColumn]}
                                         >
-                                            {t("general.status")}
+                                            <Text style={styles.headerText}>
+                                                {t("general.status")}
+                                            </Text>
                                         </DataTable.Title>
                                     </DataTable.Header>
 
@@ -153,39 +173,73 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                                             <DataTable.Cell
                                                 style={[styles.cell, styles.riskLevelColumn]}
                                             >
-                                                {riskLevels[goal.risk_level]?.name ??
-                                                    goal.risk_level}
+                                                <View
+                                                    style={[
+                                                        styles.riskPill,
+                                                        {
+                                                            backgroundColor:
+                                                                riskLevels[goal.risk_level]
+                                                                    ?.color ?? "#888888",
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Text style={styles.riskPillText}>
+                                                        {riskLevels[goal.risk_level]?.name ??
+                                                            goal.risk_level}
+                                                    </Text>
+                                                </View>
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 style={[styles.cell, styles.areaColumn]}
                                             >
-                                                {getRiskTypeLabel(goal.risk_type)}
+                                                <Text style={styles.cellText}>
+                                                    {getRiskTypeLabel(goal.risk_type)}
+                                                </Text>
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 style={[styles.cell, styles.goalColumn]}
                                             >
-                                                {t(
-                                                    `${getRiskGoalsTranslationKey(
-                                                        goal.risk_type
-                                                    )}.${goal.goal_name}`,
-                                                    { defaultValue: goal.goal_name }
-                                                )}
+                                                <Text style={styles.cellText}>
+                                                    {t(
+                                                        `${getRiskGoalsTranslationKey(
+                                                            goal.risk_type
+                                                        )}.${goal.goal_name}`,
+                                                        { defaultValue: goal.goal_name }
+                                                    )}
+                                                </Text>
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 style={[styles.cell, styles.dateColumn]}
                                             >
-                                                {timestampToFormDate(goal.start_date, true)}
+                                                <Text style={styles.cellText}>
+                                                    {timestampToFormDate(goal.start_date, true)}
+                                                </Text>
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 style={[styles.cell, styles.dateColumn]}
                                             >
-                                                {timestampToFormDate(goal.end_date, true)}
+                                                <Text style={styles.cellText}>
+                                                    {timestampToFormDate(goal.end_date, true)}
+                                                </Text>
                                             </DataTable.Cell>
                                             <DataTable.Cell
                                                 style={[styles.cell, styles.statusColumn]}
                                             >
-                                                {goalStatuses[goal.goal_status]?.name ??
-                                                    goal.goal_status}
+                                                <View
+                                                    style={[
+                                                        styles.statusBadge,
+                                                        {
+                                                            backgroundColor: getStatusColor(
+                                                                goal.goal_status
+                                                            ),
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Text style={styles.statusBadgeText}>
+                                                        {goalStatuses[goal.goal_status]?.name ??
+                                                            goal.goal_status}
+                                                    </Text>
+                                                </View>
                                             </DataTable.Cell>
                                         </DataTable.Row>
                                     ))}
@@ -196,7 +250,11 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
                                 page={page}
                                 numberOfPages={numberOfPages}
                                 onPageChange={setPage}
-                                label={paginationLabel}
+                                label={
+                                    <Text style={styles.paginationLabelText}>
+                                        {paginationLabel}
+                                    </Text>
+                                }
                                 showFastPaginationControls
                             />
                         </>

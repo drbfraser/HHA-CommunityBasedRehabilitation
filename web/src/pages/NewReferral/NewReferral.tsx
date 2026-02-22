@@ -37,7 +37,7 @@ interface IFormProps {
 
 interface IService {
     label: string;
-    Form: (props: IFormProps) => JSX.Element;
+    Form: (props: IFormProps) => React.ReactElement;
     validationSchema: () => any;
 }
 

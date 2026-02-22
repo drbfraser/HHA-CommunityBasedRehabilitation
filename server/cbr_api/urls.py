@@ -61,6 +61,7 @@ urlpatterns = [
         name="referral-outstanding",
     ),
     path("stats", views.AdminStats.as_view(), name="admin-stats"),
+    path("email_settings/", views.EmailSettingsView.as_view(), name="email-settings"),
     path(
         "baselinesurveys",
         views.BaselineSurveyCreate.as_view(),
@@ -70,4 +71,15 @@ urlpatterns = [
     path("alert/<str:pk>", views.AlertDetail.as_view(), name="alert-detail"),
     re_path(r"^sync/$", views.sync, name="sync"),
     re_path(r"^versioncheck/$", views.version_check, name="version-check"),
+    path(
+        "patient-notes/<str:client_id>/",
+        views.NoteList.as_view(),
+        name="patient-notes-for-client",
+    ),
+    path("patient-notes/", views.NoteCreate.as_view(), name="create-patient-note"),
+    path(
+        "patient-notes/latest/<str:client_id>/",
+        views.LatestPatientNote.as_view(),
+        name="latest-patient-note",
+    ),
 ]

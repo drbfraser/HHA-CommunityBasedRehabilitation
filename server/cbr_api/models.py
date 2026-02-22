@@ -14,6 +14,8 @@ from cbr_api.storage import OverwriteStorage
 from cbr_api.validators import FileSizeValidator
 from cbr_api.util import current_milli_time
 
+import uuid
+
 
 class GoalOutcomes(models.TextChoices):
     CANCELLED = "CAN", _("Cancelled")
@@ -552,3 +554,51 @@ class Alert(models.Model):
     updated_at = models.BigIntegerField(_("date created"), default=0)
 
     created_date = models.BigIntegerField(_("date created"), default=time.time)
+
+
+class EmailSettings(models.Model):
+    from_email = models.EmailField(max_length=254)
+    from_email_password = models.CharField(max_length=128, blank=True, default="")
+    to_email = models.EmailField(max_length=254)
+    updated_at = models.BigIntegerField(default=current_milli_time)
+    password_updated_at = models.BigIntegerField(default=0)
+
+    @classmethod
+    def get_solo(cls):
+        existing = cls.objects.first()
+        if existing:
+            return existing
+        return cls.objects.create(
+            from_email="",
+            from_email_password="",
+            to_email="",
+            password_updated_at=0,
+        )
+
+    def save(self, *args, **kwargs):
+        self.updated_at = current_milli_time()
+        return super().save(*args, **kwargs)
+
+
+def generate_id():
+    return str(uuid.uuid4())
+
+
+class PatientNote(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
+
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, related_name="patient_notes", on_delete=models.PROTECT
+    )
+
+    note = models.TextField()
+
+    created_at = models.BigIntegerField(default=current_milli_time)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["client", "created_at"]),
+        ]

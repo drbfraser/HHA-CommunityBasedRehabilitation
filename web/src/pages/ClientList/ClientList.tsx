@@ -6,7 +6,6 @@ import { LinearProgress, Typography, debounce, Button, Box } from "@mui/material
 import {
     GridColumnHeaderParams,
     DataGrid,
-    GridDensityTypes,
     GridOverlay,
     GridRowParams,
     GridRowsProp,
@@ -27,7 +26,7 @@ import Toolbar from "./components/Toolbar";
 // manually define this type, as GridCellValue deprecated in MUI 5
 type GridCellValue = string | number | boolean | object | Date | null | undefined;
 
-const RenderRiskHeader = (params: GridColumnHeaderParams): JSX.Element => {
+const RenderRiskHeader = (params: GridColumnHeaderParams): React.ReactElement => {
     const { t } = useTranslation();
     const riskType: IRiskType = riskTypes[params.field];
 
@@ -240,11 +239,11 @@ const ClientList = () => {
                 columns={columns}
                 rows={rows}
                 loading={loading}
-                components={{
-                    LoadingOverlay: RenderLoadingOverlay,
-                    NoRowsOverlay: RenderNoRowsOverlay,
+                slots={{
+                    loadingOverlay: RenderLoadingOverlay,
+                    noRowsOverlay: RenderNoRowsOverlay,
                 }}
-                density={GridDensityTypes.Comfortable}
+                density="comfortable"
                 onRowClick={onRowClick}
                 pagination
                 initialState={{

@@ -9,6 +9,7 @@ from django.core.files import File
 from rest_framework import serializers
 
 from cbr_api import models
+from cbr_api.email_notifications import send_referral_created_email
 from cbr_api.util import (
     current_milli_time,
     create_client_data,
@@ -434,6 +435,7 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         validated_data["server_created_at"] = current_time
         referrals = models.Referral.objects.create(**validated_data)
         referrals.save()
+        send_referral_created_email(referrals)
         return referrals
 
 
@@ -987,6 +989,44 @@ class AlertListSerializer(serializers.ModelSerializer):
         ]
 
 
+class EmailSettingsSerializer(serializers.ModelSerializer):
+    from_email_password = serializers.CharField(
+        write_only=True, required=False, allow_blank=True
+    )
+    from_email_password_set = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = models.EmailSettings
+        fields = [
+            "from_email",
+            "to_email",
+            "from_email_password",
+            "from_email_password_set",
+            "password_updated_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "updated_at",
+            "from_email_password_set",
+            "password_updated_at",
+        ]
+
+    def get_from_email_password_set(self, obj):
+        return bool(obj.from_email_password)
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("from_email_password", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password is not None:
+            cleaned = "".join(password.split())
+            if cleaned:
+                instance.from_email_password = cleaned
+                instance.password_updated_at = current_milli_time()
+        instance.save()
+        return instance
+
+
 class AlertSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Alert
@@ -1191,3 +1231,31 @@ class VersionCheckSerializer(serializers.Serializer):
                 raise serializers.ValidationError("Error!")
 
         return data
+
+
+from cbr_api.models import PatientNote as Note
+
+
+class NoteSerializer(serializers.ModelSerializer):
+    created_by_name = serializers.ReadOnlyField(source="created_by.get_full_name")
+    created_by_username = serializers.ReadOnlyField(source="created_by.username")
+
+    class Meta:
+        model = Note
+        fields = [
+            "id",
+            "note",
+            "created_at",
+            "created_by",
+            "created_by_name",
+            "created_by_username",
+            "client",
+        ]
+        read_only_fields = [
+            "id",
+            "created_at",
+            "created_by",
+            "created_by_name",
+            "created_by_username",
+            "client",
+        ]

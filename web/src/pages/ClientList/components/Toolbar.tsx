@@ -158,7 +158,7 @@ const Toolbar = ({
                     }}
                 >
                     <Box sx={hideColumnsStyles.optionsContainer}>
-                        {columns.map((column: any): JSX.Element => {
+                        {columns.map((column: any): React.ReactElement => {
                             return (
                                 // todosd: possible source of slowdown?
                                 <Box key={column.field} sx={hideColumnsStyles.optionsRow}>

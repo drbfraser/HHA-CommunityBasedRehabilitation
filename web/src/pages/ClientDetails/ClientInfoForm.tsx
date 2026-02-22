@@ -12,6 +12,7 @@ import {
     MenuItem,
     Typography,
 } from "@mui/material";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 import {
@@ -45,7 +46,6 @@ const ClientInfoForm = (props: IProps) => {
     const [loadingError, setLoadingError] = useState<string>();
     const { t } = useTranslation();
     const disabilities = useDisabilities(t);
-
     useEffect(() => {
         const getInfo = async () => {
             try {

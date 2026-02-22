@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
@@ -11,6 +11,8 @@ import {
     mobileClientDetailsValidationSchema,
     ISurvey,
     IRisk,
+    apiFetch,
+    Endpoint,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -31,6 +33,7 @@ import { modelName } from "../../models/constant";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
+import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModal";
 
 interface ClientProps {
     clientID: string;
@@ -51,6 +54,10 @@ const ClientDetails = (props: ClientProps) => {
     const [originaluri, setOriginaluri] = useState<string>("");
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
+    const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
+    const [historyModalOpen, setHistoryModalOpen] = useState<boolean>(false);
+    const [patientNote, setPatientNote] = useState<string>("");
+    const [noteLoading, setNoteLoading] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<IRisk[]>();
     const [referrals, setReferrals] = useState<any>();
@@ -89,6 +96,26 @@ const ClientDetails = (props: ClientProps) => {
             console.error(e);
         }
     };
+
+    const loadPatientNote = useCallback(() => {
+        if (!props.route.params.clientID) return;
+        setNoteLoading(true);
+        apiFetch(Endpoint.PATIENT_NOTES, `latest/${props.route.params.clientID}/`)
+            .then(async (resp) => {
+                if (resp.status === 200) {
+                    const data = await resp.json();
+                    setPatientNote(data.note || "");
+                } else {
+                    setPatientNote("");
+                }
+            })
+            .catch(() => setPatientNote(""))
+            .finally(() => setNoteLoading(false));
+    }, [props.route.params.clientID]);
+
+    useEffect(() => {
+        loadPatientNote();
+    }, [loadPatientNote]);
 
     const getClientFormInitialValues = () => {
         if (client) {
@@ -317,6 +344,41 @@ const ClientDetails = (props: ClientProps) => {
                             )}
                         </Formik>
                     </Card>
+                    {/* Patient Note Section */}
+                    <Card style={styles.patientNoteCard}>
+                        <View style={styles.patientNoteTitleRow}>
+                            <Text style={styles.patientNoteTitle}>Patient Note</Text>
+                            <View style={styles.patientNoteButtonRow}>
+                                <Button
+                                    mode="contained"
+                                    compact
+                                    style={styles.patientNoteButton}
+                                    onPress={() => setEditModalOpen(true)}
+                                >
+                                    Edit
+                                </Button>
+                                <Button
+                                    mode="outlined"
+                                    compact
+                                    style={styles.patientNoteButton}
+                                    onPress={() => setHistoryModalOpen(true)}
+                                >
+                                    History
+                                </Button>
+                            </View>
+                        </View>
+                        {noteLoading ? (
+                            <ActivityIndicator size="small" color={themeColors.blueAccent} />
+                        ) : (
+                            <View style={styles.patientNoteDisplayBox}>
+                                <Text style={styles.patientNoteText}>
+                                    {patientNote || "No note recorded."}
+                                </Text>
+                            </View>
+                        )}
+                    </Card>
+                    <Divider />
+
                     <Text style={styles.cardSectionTitle}>{t("clientAttr.clientRisks")}</Text>
                     <Divider />
                     <ClientRisk
@@ -364,6 +426,26 @@ const ClientDetails = (props: ClientProps) => {
                         )}
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>
+                    {client && (
+                        <PatientNoteModal
+                            open={editModalOpen}
+                            clientId={client.id}
+                            onClose={() => setEditModalOpen(false)}
+                            initialMode="edit"
+                            title="Edit Patient Note"
+                            onNoteUpdated={loadPatientNote}
+                        />
+                    )}
+                    {client && (
+                        <PatientNoteModal
+                            open={historyModalOpen}
+                            clientId={client.id}
+                            onClose={() => setHistoryModalOpen(false)}
+                            initialMode="history"
+                            title="Patient Note History"
+                            onNoteUpdated={loadPatientNote}
+                        />
+                    )}
                 </View>
             )}
         </ScrollView>

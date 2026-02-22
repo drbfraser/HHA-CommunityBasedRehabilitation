@@ -93,14 +93,117 @@ After the app is up and running the first time, after you make a change to the c
 
 -   How is it best to do hot-reloading?
 
+# Running E2E Tests
+
+The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on Android.
+
+## Prerequisites
+
+1.  **Set `ANDROID_SDK_ROOT`** (one-time, persistent). In PowerShell:
+
+    ```powershell
+    [System.Environment]::SetEnvironmentVariable('ANDROID_SDK_ROOT','C:\Users\<YourUsername>\AppData\Local\Android\Sdk','User')
+    ```
+
+    Or on Bash / Linux (persistent: add to `~/.bashrc` or `~/.profile`):
+
+    ```bash
+    # add to ~/.bashrc or ~/.profile
+    export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+    export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
+    ```
+
+    Close and re-open any terminals after running the above.
+
+2.  **Install dependencies** — run `npm install` in `mobile/`
+
+3.  **Create the credentials file** (not tracked by git):
+
+    ```powershell
+    cp .env.e2e.example .env.e2e
+    # then edit .env.e2e with valid test credentials
+    ```
+
+4.  **Set your AVD name** — add the name of your Android emulator to `.env.e2e`:
+
+    ```text
+    DETOX_AVD_NAME=My_AVD_Name
+    ```
+
+    `.detoxrc.js` reads this automatically. You can use any emulator — it does not have to be a specific device. <br>
+
+    Recommended to **close the device beforehand**, so the script can cold start the device.
+
+5.  **Start backend services** (if your tests require them):
+
+    ```powershell
+    docker compose up
+    ```
+
+    > **Note:** Current tests don't interact with backend services but syncronization tests likely will.
+
+## Running the Tests
+
+```powershell
+npm run detox:run
+```
+
+This single command will:
+
+1. Build the debug APK and test APK
+2. Start Metro bundler and wait for it to be ready
+3. Boot the emulator, disable animations, and suppress ANR dialogs (via the custom `e2e/globalSetup.js`)
+4. Run the Detox test suite using the `android.emu.debug` configuration
+
+### Available Configurations
+
+| Configuration         | Description                                       |
+| --------------------- | ------------------------------------------------- |
+| `android.emu.debug`   | Run on Android emulator with debug build          |
+| `android.emu.release` | Run on Android emulator with release build        |
+| `android.att.debug`   | Run on attached Android device with debug build   |
+| `android.att.release` | Run on attached Android device with release build |
+
+> **Note:** only `android.emu.debug` is tested and known to work. **TODOJL: get other configs to work.**
+
+### Helpful Scripts
+
+| Script                  | Description                                                                        |
+| ----------------------- | ---------------------------------------------------------------------------------- |
+| `npm run detox:build`   | Build debug + test APKs only (no test run)                                         |
+| `npm run detox:metro`   | Start Metro only (useful when running `detox:test` separately)                     |
+| `npm run detox:install` | Install debug & test APKs to a connected/emulator device                           |
+| `npm run detox:test`    | Run tests only (emulator and Metro must already be running)                        |
+| `npm run detox:run`     | Complete workflow. Build, start Metro, boot emulator, then run Detox (recommended) |
+
+## Writing E2E Tests
+
+Tests live in the `e2e/` directory and use Jest with Detox APIs:
+
+```javascript
+describe("Feature", () => {
+    beforeAll(async () => {
+        await device.launchApp({ newInstance: true });
+    });
+
+    it("should do something", async () => {
+        await expect(element(by.id("my-element"))).toBeVisible();
+        await element(by.id("my-button")).tap();
+    });
+});
+```
+
+-   Add `testID` props to React Native components to make them targetable in tests.
+-   Prefer `replaceText()` over `typeText()` for text input. `typeText` can double-type characters due to Detox synchronization issues with React Native's JS bridge.
+
 # Notes
 
-- **First-Time Run**: The first time you run the mobile application, it may take a long time to start. This is normal as dependencies are being initialized.
-- **Troubleshooting for mac**: If you encounter an issue where the first run works but subsequent runs fail, you can try running the following command to resolve it:
-  ```bash
-  pkill node
-  ```
-  Then, rerun the application, and it should work as expected.
+-   **First-Time Run**: The first time you run the mobile application, it may take a long time to start. This is normal as dependencies are being initialized.
+-   **Troubleshooting for mac**: If you encounter an issue where the first run works but subsequent runs fail, you can try running the following command to resolve it:
+    ```bash
+    pkill node
+    ```
+    Then, rerun the application, and it should work as expected.
 
 # Troubleshooting
 

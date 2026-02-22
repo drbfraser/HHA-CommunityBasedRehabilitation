@@ -110,12 +110,14 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                 setDbNote(localNote);
                 setIsEditing(false);
                 setShowHistory(false);
+                setError(null);
                 setSuccessMessage("Note saved successfully.");
                 loadLatestNote();
                 onNoteUpdated?.();
             }
         } catch (e) {
             console.log(e);
+            setSuccessMessage(null);
             setError("Could not save note.");
         }
     };

@@ -43,6 +43,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     const [history, setHistory] = useState<INote[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const loadLatestNote = useCallback(() => {
         setIsLoading(true);
@@ -109,6 +110,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                 setDbNote(localNote);
                 setIsEditing(false);
                 setShowHistory(false);
+                setSuccessMessage("Note saved successfully.");
                 loadLatestNote();
                 onNoteUpdated?.();
             }
@@ -141,6 +143,12 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                             {error && (
                                 <View style={styles.errorAlert}>
                                     <Text style={styles.errorText}>{error}</Text>
+                                </View>
+                            )}
+
+                            {successMessage && (
+                                <View style={styles.successAlert}>
+                                    <Text style={styles.successText}>{successMessage}</Text>
                                 </View>
                             )}
 
@@ -186,7 +194,10 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                         <>
                                             <RNButton
                                                 title="Edit"
-                                                onPress={() => setIsEditing(true)}
+                                                onPress={() => {
+                                                    setIsEditing(true);
+                                                    setSuccessMessage(null);
+                                                }}
                                                 color="#283364"
                                             />
                                             <View style={{ width: 8 }} />

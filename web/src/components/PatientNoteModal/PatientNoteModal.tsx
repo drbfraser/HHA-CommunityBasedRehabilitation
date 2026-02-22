@@ -46,6 +46,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     const [history, setHistory] = useState<INote[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const loadLatestNote = useCallback(() => {
         setIsLoading(true);
@@ -112,6 +113,7 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                 setDbNote(localNote);
                 setIsEditing(false);
                 setShowHistory(false);
+                setSuccessMessage("Note saved successfully.");
                 loadLatestNote();
                 onNoteUpdated?.();
             }
@@ -144,6 +146,12 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                         {error && (
                             <Alert severity="error" sx={{ mb: 2 }}>
                                 {error}
+                            </Alert>
+                        )}
+
+                        {successMessage && (
+                            <Alert severity="success" sx={{ mb: 2 }}>
+                                {successMessage}
                             </Alert>
                         )}
 
@@ -184,7 +192,10 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                     <>
                                         <Button
                                             variant="contained"
-                                            onClick={() => setIsEditing(true)}
+                                            onClick={() => {
+                                                setIsEditing(true);
+                                                setSuccessMessage(null);
+                                            }}
                                             sx={{ mr: 1 }}
                                         >
                                             Edit
@@ -210,9 +221,9 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                             <ListItemText
                                                 primary={item.note}
                                                 secondary={`${new Date(
-                                                    item.created_at
+                                                    item.created_at,
                                                 ).toLocaleDateString()} ${new Date(
-                                                    item.created_at
+                                                    item.created_at,
                                                 ).toLocaleTimeString([], {
                                                     hour: "2-digit",
                                                     minute: "2-digit",

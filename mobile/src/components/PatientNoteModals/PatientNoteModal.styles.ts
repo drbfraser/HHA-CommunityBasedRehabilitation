@@ -87,4 +87,13 @@ export const styles = StyleSheet.create({
     errorText: {
         color: "#d32f2f",
     },
+    successAlert: {
+        backgroundColor: "#e8f5e9",
+        padding: 8,
+        borderRadius: 4,
+        marginBottom: 16,
+    },
+    successText: {
+        color: "#2e7d32",
+    },
 });

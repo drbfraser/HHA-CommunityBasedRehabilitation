@@ -79,6 +79,15 @@ const useStyles = () =>
             fontSize: 32,
             color: themeColors.textGray,
         },
+        previousGoalsButtonContainer: {
+            alignItems: "center",
+            marginTop: 12,
+            marginBottom: 2,
+        },
+        previousGoalsButton: {
+            borderRadius: 6,
+            minWidth: 220,
+        },
         archiveWarningStyle: {
             width: 250,
             textAlign: "center",

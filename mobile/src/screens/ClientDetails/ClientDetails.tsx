@@ -34,6 +34,7 @@ import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
 import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModal";
+import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal";
 
 interface ClientProps {
     clientID: string;
@@ -56,6 +57,7 @@ const ClientDetails = (props: ClientProps) => {
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
     const [historyModalOpen, setHistoryModalOpen] = useState<boolean>(false);
+    const [previousGoalsModalOpen, setPreviousGoalsModalOpen] = useState<boolean>(false);
     const [patientNote, setPatientNote] = useState<string>("");
     const [noteLoading, setNoteLoading] = useState<boolean>(false);
     const [client, setClient] = useState<any>();
@@ -381,6 +383,15 @@ const ClientDetails = (props: ClientProps) => {
 
                     <Text style={styles.cardSectionTitle}>{t("clientAttr.clientRisks")}</Text>
                     <Divider />
+                    <View style={styles.previousGoalsButtonContainer}>
+                        <Button
+                            mode="contained"
+                            style={styles.previousGoalsButton}
+                            onPress={() => setPreviousGoalsModalOpen(true)}
+                        >
+                            {t("goals.previousGoals")}
+                        </Button>
+                    </View>
                     <ClientRisk
                         clientRisks={risks || []}
                         presentRiskType={RiskType.HEALTH}
@@ -446,6 +457,11 @@ const ClientDetails = (props: ClientProps) => {
                             onNoteUpdated={loadPatientNote}
                         />
                     )}
+                    <PreviousGoalsModal
+                        open={previousGoalsModalOpen}
+                        close={() => setPreviousGoalsModalOpen(false)}
+                        clientRisks={risks || []}
+                    />
                 </View>
             )}
         </ScrollView>

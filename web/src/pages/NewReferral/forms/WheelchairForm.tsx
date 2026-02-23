@@ -2,12 +2,11 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Field, FormikProps } from "formik";
 import { CheckboxWithLabel, RadioGroup, TextField } from "formik-mui";
-import { Alert, FormLabel, InputAdornment, Radio, styled } from "@mui/material";
+import { FormLabel, InputAdornment, Radio, styled } from "@mui/material";
 
 import { wheelchairExperiences } from "@cbr/common/util/referrals";
 import { referralFieldLabels, ReferralFormField } from "@cbr/common/forms/Referral/referralFields";
 import * as Styled from "../NewReferral.styles";
-import { PhotoView } from "components/ReferralPhotoView/PhotoView";
 
 const Container = styled("div")({
     display: "flex",

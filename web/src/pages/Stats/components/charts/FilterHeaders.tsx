@@ -72,8 +72,8 @@ const FilterHeaders: React.FC<FilterHeadersProps> = ({
                                 gender.male
                                     ? "Gender: Male"
                                     : gender.female
-                                      ? "Gender: Female"
-                                      : undefined
+                                    ? "Gender: Female"
+                                    : undefined
                             }
                             color={chipColors.gender}
                             size="small"
@@ -94,7 +94,7 @@ const FilterHeaders: React.FC<FilterHeadersProps> = ({
                 const onlyAdult =
                     allAdultSelected && selectedBands.every((b) => ADULT_BANDS.includes(b));
                 const allBandsSelected = AGE_BANDS.map((b) => b.label).every((b) =>
-                    selectedBands.includes(b),
+                    selectedBands.includes(b)
                 );
 
                 if (allBandsSelected) return null;
@@ -135,7 +135,7 @@ const FilterHeaders: React.FC<FilterHeadersProps> = ({
             {dateRange?.from && dateRange?.to && (
                 <Chip
                     label={`Date: ${new Date(dateRange.from).toLocaleDateString()} – ${new Date(
-                        dateRange.to,
+                        dateRange.to
                     ).toLocaleDateString()}`}
                     color={chipColors.date}
                     variant="outlined"

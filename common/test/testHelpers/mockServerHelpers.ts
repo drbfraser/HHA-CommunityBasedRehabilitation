@@ -29,8 +29,8 @@ export const checkAuthHeader = (request: MockRequest): MockResponseObject | null
     } catch (e) {
         console.error(
             `Error when checking auth header: ${e}. Typeof auth header: ${JSON.stringify(
-                authorizationHeader,
-            )}. request: ${JSON.stringify(request)}`,
+                authorizationHeader
+            )}. request: ${JSON.stringify(request)}`
         );
         return { status: 555 };
     }

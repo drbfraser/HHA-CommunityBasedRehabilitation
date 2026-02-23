@@ -6,7 +6,7 @@ import { APIFetchFailError } from "../endpoints";
  */
 const buildFormErrorInternal = (
     error: APIFetchFailError,
-    formLabels: Record<string, string> | undefined | null,
+    formLabels: Record<string, string> | undefined | null
 ): string => {
     if (!error.response) {
         return getFallbackErrorMessage(error);

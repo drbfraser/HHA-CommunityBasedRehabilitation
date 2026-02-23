@@ -51,7 +51,7 @@ const ZoneEdit = () => {
                 setZone(theZone);
             } catch (e) {
                 setLoadingError(
-                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`,
+                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : `${e}`
                 );
             }
         };

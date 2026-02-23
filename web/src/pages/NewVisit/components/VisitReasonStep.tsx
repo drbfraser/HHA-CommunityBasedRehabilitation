@@ -24,7 +24,7 @@ const visitTypes: VisitFormField[] = [
 const VisitReasonStep = (
     formikProps: FormikProps<any>,
     setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>,
-    zones: TZoneMap,
+    zones: TZoneMap
 ) => {
     const { t } = useTranslation();
 
@@ -33,8 +33,8 @@ const VisitReasonStep = (
             visitTypes.filter(
                 (type) =>
                     (formikProps.values[type] && type !== visitType) ||
-                    (checked && type === visitType),
-            ),
+                    (checked && type === visitType)
+            )
         );
 
         if (checked) {

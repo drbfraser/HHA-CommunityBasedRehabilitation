@@ -22,7 +22,7 @@ export const untrackAllCaches = () => {
  * @return A Promise that resolves once all caches have been invalidated.
  */
 export const invalidateAllCachedAPI = async (
-    invalidationType: "login" | "refresh" | "logout",
+    invalidationType: "login" | "refresh" | "logout"
 ): Promise<void> => {
     switch (invalidationType) {
         case "login":
@@ -58,12 +58,12 @@ export const invalidateAllCachedAPIInternal = async (
     clearValues: boolean,
     clearBackups: boolean,
     reFetch: boolean,
-    notifyListeners: boolean = true,
+    notifyListeners: boolean = true
 ): Promise<void> => {
     await Promise.all(
         allCaches.map((cache) =>
-            cache.invalidate(clearValues, clearBackups, reFetch, notifyListeners),
-        ),
+            cache.invalidate(clearValues, clearBackups, reFetch, notifyListeners)
+        )
     );
 };
 
@@ -123,7 +123,7 @@ export class APICacheData<TValue, TLoading, TError> {
         transformData: (data: any) => TValue,
         loadingValue: TLoading,
         errorValue: TError,
-        fetchTimeoutMs: number = DEFAULT_FETCH_TIMEOUT_MILLIS,
+        fetchTimeoutMs: number = DEFAULT_FETCH_TIMEOUT_MILLIS
     ) {
         this.cacheBackupKey = cacheBackupKey;
         this.doFetch = doFetch;
@@ -186,7 +186,7 @@ export class APICacheData<TValue, TLoading, TError> {
         clearValue: boolean,
         clearBackup: boolean,
         reFetch: boolean = false,
-        notifyListeners: boolean = true,
+        notifyListeners: boolean = true
     ): Promise<void> {
         await this.clearExistingPromise();
 
@@ -198,7 +198,7 @@ export class APICacheData<TValue, TLoading, TError> {
                 await commonConfiguration.keyValStorageProvider.removeItem(this.cacheBackupKey);
             } catch (e) {
                 console.error(
-                    `invalidate(${this.cacheBackupKey}): error clearing value in backup: ${e}`,
+                    `invalidate(${this.cacheBackupKey}): error clearing value in backup: ${e}`
                 );
             }
         }
@@ -334,11 +334,11 @@ export class APICacheData<TValue, TLoading, TError> {
                 try {
                     await commonConfiguration.keyValStorageProvider.setItem(
                         this.cacheBackupKey,
-                        JSON.stringify(data),
+                        JSON.stringify(data)
                     );
                 } catch (e) {
                     console.error(
-                        `cachedAPIGetInner(${this.cacheBackupKey}): Error saving result to key-value storage: ${e}`,
+                        `cachedAPIGetInner(${this.cacheBackupKey}): Error saving result to key-value storage: ${e}`
                     );
                 }
             }
@@ -360,7 +360,7 @@ export class APICacheData<TValue, TLoading, TError> {
             if (commonConfiguration.useKeyValStorageForCachedAPIBackup) {
                 try {
                     const backup = await commonConfiguration.keyValStorageProvider.getItem(
-                        this.cacheBackupKey,
+                        this.cacheBackupKey
                     );
                     if (backup) {
                         const transformedBackup = this.transformData(JSON.parse(backup));
@@ -373,7 +373,7 @@ export class APICacheData<TValue, TLoading, TError> {
                     }
                 } catch (backupError) {
                     console.error(
-                        `${baseErrorMsg} and backup retrieval failed due to ${backupError}; using error value`,
+                        `${baseErrorMsg} and backup retrieval failed due to ${backupError}; using error value`
                     );
                     return this.makeCachedAPIResult(false, this.errorValue);
                 }
@@ -386,7 +386,7 @@ export class APICacheData<TValue, TLoading, TError> {
 
     private makeCachedAPIResult(
         isFresh: boolean,
-        value: TValue | TError,
+        value: TValue | TError
     ): ICachedAPIResult<TValue, TError> {
         return { isFresh: isFresh, value: value } as ICachedAPIResult<TValue, TError>;
     }

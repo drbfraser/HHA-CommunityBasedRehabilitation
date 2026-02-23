@@ -8,6 +8,6 @@ export const appendMobilePict = async (formData: FormData, pictureUrl: string) =
 
     formData.append(
         "picture",
-        JSON.parse(JSON.stringify({ uri: pictureUrl, name: filename, type })),
+        JSON.parse(JSON.stringify({ uri: pictureUrl, name: filename, type }))
     );
 };

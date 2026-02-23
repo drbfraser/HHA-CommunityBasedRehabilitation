@@ -5,7 +5,7 @@ const JWT_JOSE_HEADER: string = base64url.encode(
     JSON.stringify({
         typ: "JWT",
         alg: "HS256",
-    }),
+    })
 );
 
 /**
@@ -30,7 +30,7 @@ export const createFakeToken = (tokenType: "access" | "refresh", expireNow: bool
             exp: expireNow ? 1000 : Date.now() / 1000 + 120,
             jti: FAKE_JTI,
             user_id: 1,
-        } as IAPIToken),
+        } as IAPIToken)
     );
 
     return JWT_JOSE_HEADER + "." + jwtClaimsSet + "." + FAKE_JWS_SIGNATURE;

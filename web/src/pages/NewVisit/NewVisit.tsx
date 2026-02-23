@@ -58,7 +58,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
         setOpenPatientNote,
     }: IStepProps) => {
         const matchingRisk = risks.find(
-            (risk) => risk.risk_type === (visitType as unknown as RiskType),
+            (risk) => risk.risk_type === (visitType as unknown as RiskType)
         );
 
         return (
@@ -298,7 +298,7 @@ const NewVisit = () => {
                                                     formikProps.values[VisitFormField.social] ||
                                                     formikProps.values[VisitFormField.nutrition] ||
                                                     formikProps.values[VisitFormField.mental]
-                                                ),
+                                                )
                                             )}
                                         >
                                             {isFinalStep && index === activeStep

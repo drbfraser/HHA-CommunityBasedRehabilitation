@@ -38,7 +38,7 @@ const wasChangeMade = (values: IRisk, initialValues: IRisk) => {
 export const handleSubmit = async (
     values: IRisk,
     initialValues: IRisk,
-    setRisk: (risk: IRisk) => void,
+    setRisk: (risk: IRisk) => void
 ) => {
     if (!wasChangeMade(values, initialValues)) return;
     const updatedRisk = JSON.stringify({

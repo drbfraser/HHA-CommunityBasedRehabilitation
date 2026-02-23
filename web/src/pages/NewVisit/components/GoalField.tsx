@@ -38,7 +38,7 @@ const GoalField = (props: IModalProps) => {
     const fieldName = `${VisitFormField.outcomes}.${props.visitType}`;
     const { setFieldValue } = useFormikContext<any>();
     const matchingRisk = props.risks.find(
-        (risk) => risk.risk_type === (props.visitType as unknown as RiskType),
+        (risk) => risk.risk_type === (props.visitType as unknown as RiskType)
     );
 
     const [openEditGoals, setOpenEditGoals] = useState<boolean>(false);
@@ -95,7 +95,7 @@ const GoalField = (props: IModalProps) => {
                         }`,
                         {
                             defaultValue: matchingRisk.goal_name,
-                        },
+                        }
                     )}
             </Typography>
             <Box mt={1} />
@@ -123,7 +123,7 @@ const GoalField = (props: IModalProps) => {
                             }`,
                             {
                                 defaultValue: matchingRisk.requirement,
-                            },
+                            }
                         )}
                 </Typography>
             </div>

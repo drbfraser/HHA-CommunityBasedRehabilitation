@@ -78,7 +78,7 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                                         `risk.${riskTypes[
                                             risk.risk_type
                                         ].name.toLowerCase()}.requirement.${risk.requirement}`,
-                                        { defaultValue: risk.requirement },
+                                        { defaultValue: risk.requirement }
                                     )}
                                 </Typography>
                                 <br />
@@ -90,7 +90,7 @@ const ClientRisks = ({ clientInfo, refreshClient }: IProps) => {
                                         `risk.${riskTypes[
                                             risk.risk_type
                                         ].name.toLowerCase()}.goal.${risk.goal_name}`,
-                                        { defaultValue: risk.goal_name },
+                                        { defaultValue: risk.goal_name }
                                     )}
                                 </Typography>
                             </>

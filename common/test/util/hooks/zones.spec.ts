@@ -31,8 +31,8 @@ const mockGetWithDefaultZones = () => {
                         ({
                             id: id,
                             zone_name: zoneName,
-                        }) as IZone,
-                ),
+                        } as IZone)
+                )
             ),
         };
     });
@@ -75,7 +75,7 @@ describe("zones.ts", () => {
             const freshGetZonesFn = await fromNewCommonModule(async () =>
                 import("../../../src/util/hooks/zones").then((module) => {
                     return module.getZones;
-                }),
+                })
             );
 
             expect((await freshGetZonesFn()).size).toBe(0);

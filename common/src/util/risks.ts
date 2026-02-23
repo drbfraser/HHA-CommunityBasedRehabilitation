@@ -142,7 +142,7 @@ const refreshArrays = () => {
         Object.keys(en.cancellation).map((key) => [
             key,
             en.cancellation[key as keyof typeof en.cancellation],
-        ]),
+        ])
     );
 
     riskDropdownOptions = Object.fromEntries(
@@ -152,7 +152,7 @@ const refreshArrays = () => {
                 requirement: { ...(riskData.requirement || {}) },
                 goal: { ...(riskData.goal || {}) },
             },
-        ]),
+        ])
     );
 };
 refreshArrays();

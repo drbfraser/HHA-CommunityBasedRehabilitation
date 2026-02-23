@@ -52,7 +52,7 @@ beforeEach(() => {
                     status: 401,
                 };
             }
-        },
+        }
     );
     fetchMock.post(
         Endpoint.LOGIN_REFRESH,
@@ -94,7 +94,7 @@ beforeEach(() => {
                     status: 401,
                 };
             }
-        },
+        }
     );
 });
 
@@ -197,8 +197,8 @@ describe("auth.ts", () => {
             await setRefreshToken(
                 createFakeToken(
                     "refresh",
-                    spec.refreshErrorReason == RefreshErrorReason.REFRESH_TOKEN_EXPIRED,
-                ),
+                    spec.refreshErrorReason == RefreshErrorReason.REFRESH_TOKEN_EXPIRED
+                )
             );
 
             // Since we're testing getAuthToken's automatic token refreshing, we expect this to
@@ -322,7 +322,7 @@ describe("auth.ts", () => {
             expect(newAccessToken).not.toBeNull();
             expect(await getAccessToken()).toEqual(newAccessToken);
             expect((jwt_decode(newAccessToken as string) as IAPIToken).exp).toBeGreaterThan(
-                Date.now() / 1000,
+                Date.now() / 1000
             );
 
             expect(fetchMock.calls().length).toEqual(1);

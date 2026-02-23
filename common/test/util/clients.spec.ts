@@ -55,16 +55,16 @@ describe("clients.ts", () => {
             const clientsWithOneHighRisk: IClientSummary[] =
                 createPossibleClientsWithASingleExtremeRisk(RiskLevel.HIGH);
             const clientWithThreeMediumRisk = createClientWithAllRisksAsGivenLevel(
-                RiskLevel.MEDIUM,
+                RiskLevel.MEDIUM
             );
 
             // descending order
             for (const highRiskClient of clientsWithOneHighRisk) {
                 expect(
-                    clientPrioritySort(clientWithThreeMediumRisk, highRiskClient),
+                    clientPrioritySort(clientWithThreeMediumRisk, highRiskClient)
                 ).toBeGreaterThan(0);
                 expect(clientPrioritySort(highRiskClient, clientWithThreeMediumRisk)).toBeLessThan(
-                    0,
+                    0
                 );
             }
 
@@ -76,10 +76,10 @@ describe("clients.ts", () => {
 
             for (const criticalRiskClient of clientsWithOneCriticalRisk) {
                 expect(
-                    clientPrioritySort(clientWithThreeHighRisk, criticalRiskClient),
+                    clientPrioritySort(clientWithThreeHighRisk, criticalRiskClient)
                 ).toBeGreaterThan(0);
                 expect(
-                    clientPrioritySort(criticalRiskClient, clientWithThreeHighRisk),
+                    clientPrioritySort(criticalRiskClient, clientWithThreeHighRisk)
                 ).toBeLessThan(0);
             }
         });

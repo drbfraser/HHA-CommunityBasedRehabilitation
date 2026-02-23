@@ -8,7 +8,7 @@ describe("validations.ts", () => {
             expect("Battery horse car staple 1").toMatch(Validation.passwordRegExp);
             expect("ABC.D.E.FGHI*J/KL-M+NO*PQ RnSTUVWXYZ9").toMatch(Validation.passwordRegExp);
             expect("ó¥[¾.1vs,£ÆN<½MzP²WkgwµG!üÁ8ü}F>}Ë¬ä_ªÒI¨Ymÿ÷E¦Ø=EW¦xêª4").toMatch(
-                Validation.passwordRegExp,
+                Validation.passwordRegExp
             );
         });
         it("should not match invalid passwords", () => {

@@ -12,7 +12,7 @@ const requestClientRows = async (
     searchValue: string,
     searchOption: string,
     allClientsMode: boolean,
-    archivedMode: boolean,
+    archivedMode: boolean
 ) => {
     setLoading(true);
 

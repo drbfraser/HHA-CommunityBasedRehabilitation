@@ -1,7 +1,7 @@
 export const appendPicture = async (
     formData: FormData,
     pictureUrl: string,
-    clientId: number | undefined | null,
+    clientId: number | undefined | null
 ) => {
     const clientProfilePictureFetch = await fetch(pictureUrl);
     const contentType = clientProfilePictureFetch.headers.get("Content-Type");
@@ -19,6 +19,6 @@ export const appendPicture = async (
     formData.append(
         "picture",
         await clientProfilePictureFetch.blob(),
-        clientId ? `client-${clientId}.${imageExtension}` : `client-new.${imageExtension}`,
+        clientId ? `client-${clientId}.${imageExtension}` : `client-new.${imageExtension}`
     );
 };

@@ -14,11 +14,11 @@
         "lint": "expo lint",
         "android": "expo run:android",
         "ios": "expo run:ios",
-        "detox:build": "cd android && .\\gradlew assembleDebug assembleAndroidTest",
+        "detox:build": "node scripts/gradlew.js assembleDebug assembleAndroidTest",
         "detox:metro": "npx react-native start --port 8081",
         "detox:test": "npx detox test -c android.emu.debug",
-        "detox:install": "cd android && .\\gradlew installDebug installDebugAndroidTest -DtestBuildType=debug",
-        "detox:run": "detox build -c android.emu.debug && npx concurrently -k -s command-1 --names metro,test \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug\""
+        "detox:install": "node scripts/gradlew.js installDebug installDebugAndroidTest -DtestBuildType=debug",
+        "detox:run": "npm run detox:build && npx concurrently -k -s command-1 --names metro,test \"npm run detox:metro\" \"npx wait-on http-get://localhost:8081/status && npm run detox:test\""
     },
     "jest": {
         "preset": "jest-expo"

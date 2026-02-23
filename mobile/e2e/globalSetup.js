@@ -26,7 +26,7 @@ function waitForBoot(timeoutMs = Number(process.env.DETOX_BOOT_TIMEOUT_MS) || 24
         } catch (e) {
             // device may not be ready to accept shell commands yet — swallow and retry
         }
-        execSync(`ping -n ${pauseSeconds} 127.0.0.1 >nul`, { shell: true }); // ~2 s pause
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, pauseSeconds * 1000); // ~2 s pause
     }
     throw new Error(`Device did not finish booting within ${timeoutMs / 1000}s`);
 }
@@ -38,7 +38,7 @@ module.exports = async function () {
     // wait for the emulator to be fully booted, not just visible to ADB
     try {
         console.log("Waiting for emulator to fully boot...");
-        waitForBoot(120000);
+        waitForBoot();
         console.log("Emulator booted.");
 
         // dismiss the Recents / "no recent items" screen so the launcher is active

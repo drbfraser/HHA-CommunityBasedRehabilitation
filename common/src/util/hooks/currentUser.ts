@@ -9,7 +9,7 @@ const cache = new APICacheData<IUser, undefined, TAPILoadError>(
     () => apiFetch(Endpoint.USER_CURRENT),
     (user: IUser) => user,
     undefined,
-    APILoadError
+    APILoadError,
 );
 
 export const getCurrentUser = async (refreshValue: boolean = false) =>

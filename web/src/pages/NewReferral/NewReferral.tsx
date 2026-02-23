@@ -5,7 +5,6 @@ import { Form, Formik, FormikHelpers, FormikProps } from "formik";
 import { Alert, Button, Step, StepContent, StepLabel, Stepper } from "@mui/material";
 import * as Yup from "yup";
 
-
 import {
     ReferralFormField,
     referralInitialValidationSchema,
@@ -116,7 +115,7 @@ const NewReferral = () => {
     ];
 
     // enabledSteps.length + 1 to account for picture upload
-    const isFinalStep = activeStep === (enabledSteps.length + 1) && activeStep !== 0;
+    const isFinalStep = activeStep === enabledSteps.length + 1 && activeStep !== 0;
     const prevStep = () => setActiveStep(activeStep - 1);
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
         if (isFinalStep) {

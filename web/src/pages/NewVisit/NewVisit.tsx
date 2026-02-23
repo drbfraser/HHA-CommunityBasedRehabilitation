@@ -58,7 +58,7 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
         setOpenPatientNote,
     }: IStepProps) => {
         const matchingRisk = risks.find(
-            (risk) => risk.risk_type === (visitType as unknown as RiskType)
+            (risk) => risk.risk_type === (visitType as unknown as RiskType),
         );
 
         return (
@@ -96,8 +96,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                         </Button>
                     </>
                 ) : matchingRisk &&
-                    (matchingRisk.goal_status === OutcomeGoalMet.CONCLUDED ||
-                        matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
+                  (matchingRisk.goal_status === OutcomeGoalMet.CONCLUDED ||
+                      matchingRisk.goal_status === OutcomeGoalMet.CANCELLED) ? (
                     <>
                         <FormLabel focused={false}>{getVisitGoalLabel(t, visitType)}</FormLabel>
                         <Typography variant="body1">{t("goals.noCurrentOngoingGoals")}</Typography>
@@ -166,8 +166,8 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
 
 const visitReasonStepCallBack =
     (setEnabledSteps: React.Dispatch<React.SetStateAction<VisitFormField[]>>, zones: TZoneMap) =>
-        ({ formikProps }: IStepProps) =>
-            VisitReasonStep(formikProps, setEnabledSteps, zones);
+    ({ formikProps }: IStepProps) =>
+        VisitReasonStep(formikProps, setEnabledSteps, zones);
 
 const NewVisit = () => {
     const [activeStep, setActiveStep] = useState<number>(0);
@@ -193,7 +193,7 @@ const NewVisit = () => {
     }, [clientId]);
 
     // Enabled steps + 1 to account for Image Upload
-    const isFinalStep = activeStep === (enabledSteps.length + 1) && activeStep !== 0;
+    const isFinalStep = activeStep === enabledSteps.length + 1 && activeStep !== 0;
 
     const visitSteps = [
         {
@@ -218,7 +218,7 @@ const NewVisit = () => {
                 </>
             ),
             validationSchema: () => Yup.object({}), // Empty, picture submission is optional
-        }
+        },
     ];
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
@@ -298,7 +298,7 @@ const NewVisit = () => {
                                                     formikProps.values[VisitFormField.social] ||
                                                     formikProps.values[VisitFormField.nutrition] ||
                                                     formikProps.values[VisitFormField.mental]
-                                                )
+                                                ),
                                             )}
                                         >
                                             {isFinalStep && index === activeStep

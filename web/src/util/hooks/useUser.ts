@@ -13,7 +13,7 @@ export const useUser = (userId: string): [IUser | null, string | null] => {
                 setUser(user);
             } catch (e) {
                 setLoadingError(
-                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : String(e)
+                    e instanceof APIFetchFailError && e.details ? `${e}: ${e.details}` : String(e),
                 );
             }
         };

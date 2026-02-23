@@ -28,7 +28,7 @@ import DataCard from "components/DataCard/DataCard";
 import { getTranslatedRiskName } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { entryStyles, PhotoIndicator, SummaryContainer } from "./Entry.styles";
-import ImageIcon from '@mui/icons-material/Image';
+import ImageIcon from "@mui/icons-material/Image";
 import { Thumb } from "components/ReferralPhotoView/Thumb";
 
 interface IEntryProps {
@@ -81,14 +81,12 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                     {visitSummary.mental_visit && (
                         <RiskTypeChip risk={RiskType.MENTAL} clickable={clickable} />
                     )}{" "}
-
                     {hasPhoto && (
                         <PhotoIndicator>
                             <ImageIcon fontSize="medium" />
                         </PhotoIndicator>
                     )}
                 </SummaryContainer>
-
             </>
         );
     };
@@ -138,7 +136,6 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                     <DetailAccordion key={type} type={type} />
                 ))}
                 <Thumb Id={visit.id} Url={visit.picture} endpoint={Endpoint.VISIT_PICTURE} />
-
             </>
         );
     };

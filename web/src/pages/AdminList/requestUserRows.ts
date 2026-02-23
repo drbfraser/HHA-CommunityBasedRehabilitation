@@ -18,7 +18,7 @@ const requestUserRows = async (
     setFilteredRows: (rows: GridRowsProp) => void,
     setServerRows: (rows: GridRowsProp) => void,
     setLoading: (loading: boolean) => void,
-    t: TFunction
+    t: TFunction,
 ) => {
     setLoading(true);
 

@@ -139,8 +139,8 @@ const AdminList = () => {
                     serverRows.filter(
                         (r) =>
                             r.name.toLowerCase().startsWith(searchValue) ||
-                            r.last_name.toLowerCase().startsWith(searchValue)
-                    )
+                            r.last_name.toLowerCase().startsWith(searchValue),
+                    ),
                 );
                 break;
             case searchOptions.ZONE.value:

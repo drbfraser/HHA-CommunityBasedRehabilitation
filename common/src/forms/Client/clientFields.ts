@@ -252,14 +252,14 @@ export const mobileClientDetailsValidationSchema = () =>
                 i18n.t("clientFields.otherDisabilityRequired"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (otherDisability !== undefined && otherDisability.length > 0)
+                    (otherDisability !== undefined && otherDisability.length > 0),
             )
             .test(
                 "require-if-other-selected",
                 i18n.t("clientFields.otherDisabilityTooLong"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (otherDisability !== undefined && otherDisability.length <= 100)
+                    (otherDisability !== undefined && otherDisability.length <= 100),
             ),
         [ClientField.gender]: Yup.string().label(clientFieldLabels[ClientField.gender]).required(),
         [ClientField.village]: Yup.string()
@@ -309,14 +309,14 @@ export const webClientDetailsValidationSchema = () =>
                 i18n.t("clientFields.otherDisabilityRequired"),
                 async (other_disability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (other_disability !== undefined && other_disability.length > 0)
+                    (other_disability !== undefined && other_disability.length > 0),
             )
             .test(
                 "require-if-other-selected",
                 i18n.t("clientFields.otherDisabilityTooLong"),
                 async (other_disability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (other_disability !== undefined && other_disability.length <= 100)
+                    (other_disability !== undefined && other_disability.length <= 100),
             ),
         [ClientField.gender]: Yup.string()
             .label(updateClientfieldLabels[ClientField.gender])
@@ -371,14 +371,14 @@ export const newClientValidationSchema = () =>
                 i18n.t("clientFields.otherDisabilityRequired"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (otherDisability !== undefined && otherDisability.length > 0)
+                    (otherDisability !== undefined && otherDisability.length > 0),
             )
             .test(
                 "require-if-other-selected",
                 i18n.t("clientFields.otherDisabilityTooLong"),
                 async (otherDisability, schema) =>
                     !(await Validation.otherDisabilitySelected(schema.parent.disability)) ||
-                    (otherDisability !== undefined && otherDisability.length <= 100)
+                    (otherDisability !== undefined && otherDisability.length <= 100),
             ),
         [ClientField.gender]: Yup.string().label(clientFieldLabels[ClientField.gender]).required(),
         [ClientField.village]: Yup.string()

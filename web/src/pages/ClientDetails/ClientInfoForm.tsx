@@ -55,7 +55,7 @@ const ClientInfoForm = (props: IProps) => {
                 setLoadingError(
                     e instanceof APIFetchFailError && e.details
                         ? `${e}: ${e.details}`
-                        : (e as string)
+                        : (e as string),
                 );
             }
         };
@@ -77,14 +77,14 @@ const ClientInfoForm = (props: IProps) => {
             onSubmit={(values: TClientFormValues, formikHelpers) => {
                 handleUpdateClientSubmit(values, formikHelpers, setIsEditing)
                     .then(() =>
-                        formikHelpers.setFieldValue(ClientDetailsFields.pictureChanged, false)
+                        formikHelpers.setFieldValue(ClientDetailsFields.pictureChanged, false),
                     )
                     .catch((e) =>
                         alert(
                             `${t("clientFields.errorEditingClient")}: ${
                                 e instanceof APIFetchFailError ? JSON.stringify(e.response) : e
-                            }`
-                        )
+                            }`,
+                        ),
                     );
             }}
         >
@@ -345,7 +345,7 @@ const ClientInfoForm = (props: IProps) => {
                                         ))}
                                     </Field>
                                     {(values[ClientDetailsFields.disability] as number[]).includes(
-                                        getOtherDisabilityId(disabilities)
+                                        getOtherDisabilityId(disabilities),
                                     ) && (
                                         <div>
                                             <br />
@@ -522,7 +522,7 @@ const ClientInfoForm = (props: IProps) => {
                                             values.is_active = handleArchiveConfirmation(
                                                 values,
                                                 user!,
-                                                loadingError
+                                                loadingError,
                                             );
                                         }}
                                     >

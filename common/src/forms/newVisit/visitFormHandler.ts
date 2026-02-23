@@ -25,10 +25,10 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
     const sanitizedImprovements = Object.values(values[VisitFormField.improvements])
         .reduce(
             (improvements, typedImprovement) => improvements.concat(typedImprovement),
-            [] as any[]
+            [] as any[],
         )
         .filter(
-            (improvement) => improvement !== undefined && improvement[ImprovementFormField.enabled]
+            (improvement) => improvement !== undefined && improvement[ImprovementFormField.enabled],
         )
         .map((imp) => ({
             risk_type: imp[ImprovementFormField.riskType],

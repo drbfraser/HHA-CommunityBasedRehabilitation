@@ -43,12 +43,12 @@ const AdminEmailSettings = () => {
                 setPasswordUpdatedAt(
                     typeof data.password_updated_at === "number" && data.password_updated_at > 0
                         ? data.password_updated_at
-                        : null
+                        : null,
                 );
             })
             .catch((e) => {
                 const errMsg =
-                    e instanceof APIFetchFailError ? e.details ?? e.message : (e as string);
+                    e instanceof APIFetchFailError ? (e.details ?? e.message) : (e as string);
                 alert(errMsg);
             })
             .finally(() => setLoading(false));
@@ -119,7 +119,7 @@ const AdminEmailSettings = () => {
                                     typeof data.password_updated_at === "number" &&
                                         data.password_updated_at > 0
                                         ? data.password_updated_at
-                                        : null
+                                        : null,
                                 );
                                 helpers.resetForm({ values: nextValues });
                                 alert("Email settings updated.");
@@ -127,7 +127,7 @@ const AdminEmailSettings = () => {
                             .catch((e) => {
                                 const errMsg =
                                     e instanceof APIFetchFailError
-                                        ? e.details ?? e.message
+                                        ? (e.details ?? e.message)
                                         : (e as string);
                                 alert(errMsg);
                             })

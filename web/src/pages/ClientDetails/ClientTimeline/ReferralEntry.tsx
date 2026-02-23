@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import NearMeIcon from "@mui/icons-material/NearMe";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ImageIcon from '@mui/icons-material/Image';
+import ImageIcon from "@mui/icons-material/Image";
 
 import {
     IReferral,
@@ -103,7 +103,6 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                         <ImageIcon fontSize="medium" />
                     </Styled.PhotoIndicator>
                 )}
-
             </Styled.SummaryContainer>
         );
     };
@@ -260,7 +259,11 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                                 : referral.services_other}
                         </div>
                     )}
-                    <Thumb Id={referral.id} Url={referral.picture} endpoint={Endpoint.REFERRAL_PICTURE}/>
+                    <Thumb
+                        Id={referral.id}
+                        Url={referral.picture}
+                        endpoint={Endpoint.REFERRAL_PICTURE}
+                    />
                     {!referral.resolved && <ResolveForm />}
                 </Styled.ReferralDialogContent>
 

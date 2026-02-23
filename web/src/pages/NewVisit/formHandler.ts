@@ -8,7 +8,7 @@ import { APIFetchFailError } from "@cbr/common/util/endpoints";
 export const handleSubmit = async (
     values: TVisitFormValues,
     helpers: FormikHelpers<TVisitFormValues>,
-    setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>
+    setSubmissionError: React.Dispatch<React.SetStateAction<string | undefined>>,
 ) => {
     try {
         await handleSubmitVisitForm(values);
@@ -16,7 +16,7 @@ export const handleSubmit = async (
     } catch (e) {
         helpers.setSubmitting(false);
         setSubmissionError(
-            e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`
+            e instanceof APIFetchFailError ? e.buildFormError(visitFieldLabels) : `${e}`,
         );
         console.log(e);
     }

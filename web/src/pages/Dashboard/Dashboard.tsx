@@ -107,7 +107,7 @@ const Dashboard = () => {
                 const outstandingReferrals: GridRowsProp = tempReferrals
                     .sort(
                         (a: IOutstandingReferral, b: IOutstandingReferral) =>
-                            a.date_referred - b.date_referred
+                            a.date_referred - b.date_referred,
                     )
                     .map((row: IOutstandingReferral) => {
                         return {
@@ -160,7 +160,7 @@ const Dashboard = () => {
                 if (user !== APILoadError) {
                     const userID = user.id;
                     const unreadAlerts: IAlert[] = alertsList.filter((alert: IAlert) =>
-                        alert.unread_by_users.includes(userID)
+                        alert.unread_by_users.includes(userID),
                     );
                     setUnreadAlertsCount(unreadAlerts.length);
                 }
@@ -191,7 +191,7 @@ const Dashboard = () => {
         v1: GridCellValue,
         v2: GridCellValue,
         params1: GridSortCellParams,
-        params2: GridSortCellParams
+        params2: GridSortCellParams,
     ) => {
         const risk1: IRiskLevel = riskLevels[String(params1.value)];
         const risk2: IRiskLevel = riskLevels[String(params2.value)];

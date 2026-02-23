@@ -104,11 +104,11 @@ const DisabilityStats: React.FC<IProps> = ({
         const list = Array.isArray(disabilitiesData) ? (disabilitiesData as any[]) : [];
         if (!isCategorized(list)) return false;
         const keys = new Set<string>(
-            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? "")))
+            list.flatMap((c: any) => (c?.data ?? []).map((d: any) => String(d?.name ?? ""))),
         );
         const hasHostRefugee = Array.from(keys).some((k) => /\b(host|refugee)\b/i.test(k));
         const hasAnyDisability = disabilityNames.some((d) =>
-            Array.from(keys).some((k) => k.startsWith(String(d)))
+            Array.from(keys).some((k) => k.startsWith(String(d))),
         );
         return hasHostRefugee && hasAnyDisability;
     }, [isZoneHostGrouping, disabilitiesData, disabilityNames]);
@@ -143,16 +143,16 @@ const DisabilityStats: React.FC<IProps> = ({
                 keys = Array.from(
                     new Set(
                         disabilitiesData.flatMap((c: Categorized) =>
-                            (c.data || []).map((d) => d.name)
-                        )
-                    )
+                            (c.data || []).map((d) => d.name),
+                        ),
+                    ),
                 );
             }
 
             const rows = disabilitiesData.map((cat: Categorized) => {
                 const row: Record<string, any> = { category: String(cat.name) };
                 const lookup = new Map<string, number>(
-                    (cat.data || []).map((d) => [d.name, d.value])
+                    (cat.data || []).map((d) => [d.name, d.value]),
                 );
                 keys.forEach((k) => {
                     row[k] = lookup.get(k) ?? 0;
@@ -195,7 +195,7 @@ const DisabilityStats: React.FC<IProps> = ({
         }
         return Math.max(
             0,
-            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0)))
+            ...chartData.map((r: any) => Math.max(0, ...seriesKeys.map((k) => Number(r[k]) || 0))),
         );
     }, [chartData, seriesKeys]);
 
@@ -278,7 +278,7 @@ const DisabilityStats: React.FC<IProps> = ({
                                 const status = (m ? m[2] : "host").toLowerCase();
 
                                 const idxLabel = disabilityNames.findIndex(
-                                    (d) => d.toLowerCase().trim() === label.toLowerCase().trim()
+                                    (d) => d.toLowerCase().trim() === label.toLowerCase().trim(),
                                 );
 
                                 const color =

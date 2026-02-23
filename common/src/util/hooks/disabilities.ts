@@ -18,7 +18,7 @@ const cache = new APICacheData<TDisabilityMap, TDisabilityMap, TDisabilityMap>(
     () => apiFetch(Endpoint.DISABILITIES),
     (ds: IDisability[]) => new Map(ds.map((d) => [d.id, d.disability_type])),
     emptyMap,
-    emptyMap
+    emptyMap,
 );
 
 const OTHER_DISABILITY_LABEL = "Other";
@@ -56,7 +56,7 @@ export const useDisabilities = (t: TFunction) => {
     });
 
     items.sort((a, b) =>
-        a.weight !== b.weight ? a.weight - b.weight : a.label.localeCompare(b.label)
+        a.weight !== b.weight ? a.weight - b.weight : a.label.localeCompare(b.label),
     );
 
     const orderedMap = new Map<number, string>();

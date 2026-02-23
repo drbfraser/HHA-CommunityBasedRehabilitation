@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 interface Iprops {
     Id: string | number;
     Url: string;
-    endpoint: Endpoint;  // NEW: accept which endpoint to use
+    endpoint: Endpoint; // NEW: accept which endpoint to use
 }
 
 export const Thumb = (props: Iprops) => {
@@ -12,7 +12,7 @@ export const Thumb = (props: Iprops) => {
 
     useEffect(() => {
         if (props.Url) {
-            apiFetch(props.endpoint, `${props.Id}`)  // Use the passed endpoint
+            apiFetch(props.endpoint, `${props.Id}`) // Use the passed endpoint
                 .then((resp) => resp.blob())
                 .then((blob) => {
                     setThumb(URL.createObjectURL(blob));

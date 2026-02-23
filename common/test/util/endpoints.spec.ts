@@ -73,7 +73,7 @@ describe("endpoints.ts", () => {
                 });
 
                 expect(buildFormErrorInternal(error, formLabels)).toBe(
-                    "Username: Username doesn't exist\nPassword: Password too weak"
+                    "Username: Username doesn't exist\nPassword: Password too weak",
                 );
 
                 // not passing in the form labels results in the raw fields being used

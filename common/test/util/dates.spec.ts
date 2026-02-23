@@ -26,7 +26,7 @@ describe("dates.ts", () => {
 
             const bitLessThanOneWeekAgo = timestampNow + secondsInOneWeek - 5;
             expect(getDateFormatterFromReference(bitLessThanOneWeekAgo)).toBe(
-                timestampToWeekdayTime
+                timestampToWeekdayTime,
             );
 
             const bitOverOneWeekAgo = timestampNow + secondsInOneWeek + 5;

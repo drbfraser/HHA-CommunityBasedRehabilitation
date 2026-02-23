@@ -39,7 +39,7 @@ const mockGetWithDefaultTestDisabilityMap = () => {
                         id: id,
                         disability_type: disability,
                     } as IDisability;
-                })
+                }),
             ),
         };
     });
@@ -95,7 +95,7 @@ describe("disabilities.ts", () => {
 
             const freshGetDisabilitiesFn = await fromNewCommonModule(async () => {
                 return import("../../../src/util/hooks/disabilities").then(
-                    (module) => module.getDisabilities
+                    (module) => module.getDisabilities,
                 );
             });
 

@@ -223,9 +223,9 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
                                             <ListItemText
                                                 primary={item.note}
                                                 secondary={`${new Date(
-                                                    item.created_at
+                                                    item.created_at,
                                                 ).toLocaleDateString()} ${new Date(
-                                                    item.created_at
+                                                    item.created_at,
                                                 ).toLocaleTimeString([], {
                                                     hour: "2-digit",
                                                     minute: "2-digit",

@@ -222,7 +222,11 @@ const NewClient = () => {
 
     return (
         <SafeAreaView>
-            <KeyboardAwareScrollView keyboardShouldPersistTaps={"always"} ref={scrollRef}>
+            <KeyboardAwareScrollView
+                testID="new-client-scroll-view"
+                keyboardShouldPersistTaps={"always"}
+                ref={scrollRef}
+            >
                 <Formik
                     initialValues={clientInitialValues}
                     validationSchema={newClientValidationSchema}
@@ -275,6 +279,7 @@ const NewClient = () => {
                                     onDismiss={() => setShowImagePickerModal(false)}
                                 />
                                 <TextCheckBox
+                                    testID="new-client-consent-checkbox"
                                     field={ClientField.interviewConsent}
                                     label={clientFieldLabels[ClientField.interviewConsent]}
                                     setFieldTouched={formikProps.setFieldTouched}
@@ -312,6 +317,7 @@ const NewClient = () => {
 
                                     <View style={styles.submitButtonWrapper}>
                                         <Button
+                                            testID="new-client-submit-button"
                                             labelStyle={styles.submitButtonLabel}
                                             mode="contained"
                                             disabled={formikProps.isSubmitting}

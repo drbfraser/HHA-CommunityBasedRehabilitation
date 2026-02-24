@@ -60,11 +60,17 @@ export default function SyncAlert({
                                     </Text>
                                 </>
                             ) : (
-                                <Text style={{ fontSize: 18, marginTop: 24 }}>{displayMsg}</Text>
+                                <Text
+                                    testID="sync-alert-message"
+                                    style={{ fontSize: 18, marginTop: 24 }}
+                                >
+                                    {displayMsg}
+                                </Text>
                             )}
                         </View>
 
                         <TouchableOpacity
+                            testID="sync-alert-ok-button"
                             activeOpacity={0.9}
                             onPress={() => dismissAlert(false)}
                             style={{

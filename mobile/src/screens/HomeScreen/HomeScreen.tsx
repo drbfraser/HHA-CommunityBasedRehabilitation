@@ -104,6 +104,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                     navigation={navigation}
                 >
                     <Button
+                        testID="home-sync-modal-button"
                         mode="contained"
                         icon={SyncIcon}
                         style={styles.buttonContainer}

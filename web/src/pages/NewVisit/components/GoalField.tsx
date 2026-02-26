@@ -76,57 +76,69 @@ const GoalField = (props: IModalProps) => {
                     transKey={getRiskGoalsTranslationKey(props.risk.risk_type)}
                 />
             )}
-            <FormLabel focused={false}>
-                {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("risks.riskLevel")}
-            </FormLabel>
-            {matchingRisk && (
-                <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
-                    <RiskLevelChip risk={matchingRisk.risk_level} />
-                </Box>
-            )}
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+                <FormLabel focused={false}>
+                    {t("newVisit.clients")} {visitFieldLabels[props.visitType]} {t("risks.riskLevel")}
+                </FormLabel>
+                {matchingRisk && (
+                    <Box sx={clientRiskStyles.riskCardButtonAndBadge}>
+                        <RiskLevelChip risk={matchingRisk.risk_level} />
+                    </Box>
+                )}
+            </Box>
             <Box mt={1} />
 
-            <FormLabel focused={false}>{getVisitGoalLabel(t, props.visitType)}</FormLabel>
-            <Typography variant={"body1"}>
-                {matchingRisk &&
-                    t(
-                        `${getRiskGoalsTranslationKey(matchingRisk.risk_type)}.${
-                            matchingRisk.goal_name
-                        }`,
-                        {
-                            defaultValue: matchingRisk.goal_name,
-                        }
-                    )}
-            </Typography>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+                <FormLabel focused={false}
+                    sx={{ width: 220, flexShrink: 0 }}>{getVisitGoalLabel(t, props.visitType)}</FormLabel>
+                <Typography variant={"body1"}>
+                    {matchingRisk &&
+                        t(
+                            `${getRiskGoalsTranslationKey(matchingRisk.risk_type)}.${matchingRisk.goal_name
+                            }`,
+                            {
+                                defaultValue: matchingRisk.goal_name,
+                            }
+                        )}
+                </Typography>
+            </Box>
+
             <Box mt={1} />
 
-            <FormLabel focused={false}>{getVisitGoalStatusLabel(t, props.visitType)}</FormLabel>
-            <Grid container direction="column" spacing={3}>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+                <FormLabel
+                    focused={false}
+                    sx={{ width: 220, flexShrink: 0 }}>{getVisitGoalStatusLabel(t, props.visitType)}</FormLabel>
                 <Grid item>
                     <Stack direction="row" spacing={1}>
                         <GoalStatusChip goalStatus={editedRisk.goal_status} />
                     </Stack>
                 </Grid>
-            </Grid>
+            </Box>
+
             <Box mt={1} />
 
-            <div>
-                <FormLabel focused={false}>
+            <Box display="flex" alignItems="center" justifyContent="space-between">
+                <FormLabel
+                    focused={false}
+                    sx={{ width: 220, flexShrink: 0 }}>
                     {getVisitGoalRequirementLabel(t, props.visitType)}
                 </FormLabel>
                 <Typography variant={"body1"}>
                     {" "}
                     {matchingRisk &&
                         t(
-                            `${getRiskRequirementsTranslationKey(matchingRisk.risk_type)}.${
-                                matchingRisk.requirement
+                            `${getRiskRequirementsTranslationKey(matchingRisk.risk_type)}.${matchingRisk.requirement
                             }`,
                             {
                                 defaultValue: matchingRisk.requirement,
                             }
                         )}
                 </Typography>
-            </div>
+            </Box>
+
+
+
         </>
     );
 };

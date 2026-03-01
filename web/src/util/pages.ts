@@ -34,6 +34,10 @@ import UserChangePassword from "pages/User/UserPasswordEdit";
 import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import Referrals from "pages/Referrals/Referrals";
+import NewSuccessStory from "pages/NewSuccessStory/NewSuccessStory";
+import SuccessStoryView from "pages/SuccessStoryView/SuccessStoryView";
+import SuccessStoriesList from "pages/SuccessStoriesList/SuccessStoriesList";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 export enum PageName {
     DASHBOARD = "general.dashboard",
@@ -59,12 +63,16 @@ export enum PageName {
     NEW_ALERT = "screenNames.newAlert",
     INBOX = "screenNames.inbox",
     NOT_FOUND = "screenNames.notFound",
+    NEW_SUCCESS_STORY = "New Success Story",
+    EDIT_SUCCESS_STORY = "Edit Success Story",
+    VIEW_SUCCESS_STORY = "Success Story",
+    SUCCESS_STORIES_LIST = "Success Stories",
 }
 
 export interface IPage {
     path: string;
     exact?: boolean;
-    name: PageName;
+    name: PageName | string;
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     showInNav: boolean;
@@ -220,6 +228,32 @@ const pages: IPage[] = [
         showInNav: true,
         Component: AlertInbox,
         Icon: InboxIcon,
+    },
+    {
+        path: "/stories",
+        name: PageName.SUCCESS_STORIES_LIST,
+        roles: [UserRole.ADMIN],
+        Component: SuccessStoriesList,
+        showInNav: true,
+        Icon: AutoStoriesIcon,
+    },
+    {
+        path: "/client/:clientId/stories/new",
+        name: PageName.NEW_SUCCESS_STORY,
+        Component: NewSuccessStory,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/stories/:storyId/edit",
+        name: PageName.EDIT_SUCCESS_STORY,
+        Component: NewSuccessStory,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/stories/:storyId",
+        name: PageName.VIEW_SUCCESS_STORY,
+        Component: SuccessStoryView,
+        showInNav: false,
     },
     // must be at the bottom
     {

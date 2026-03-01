@@ -3,6 +3,10 @@ import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     Alert,
+    Card,
+    CardActionArea,
+    CardContent,
+    Chip,
     Grid,
     Skeleton,
     Typography,
@@ -24,6 +28,12 @@ import ClientRisks from "./Risks/ClientRisks";
 import ClientTimeline from "./ClientTimeline/ClientTimeline";
 import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 import PatientNoteModal from "components/PatientNoteModal/PatientNoteModal";
+import {
+    getStoriesForClient,
+    ISuccessStory,
+    StoryStatus,
+    seedMockStories,
+} from "util/successStories";
 
 interface IUrlParam {
     clientId: string;
@@ -53,6 +63,15 @@ const ClientDetails = () => {
     const [noteLoading, setNoteLoading] = useState(false);
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [historyModalOpen, setHistoryModalOpen] = useState(false);
+    const [stories, setStories] = useState<ISuccessStory[]>([]);
+
+    useEffect(() => {
+        if (clientId) {
+            // TODO: remove seedMockStories once real data exists
+            seedMockStories(clientId);
+            setStories(getStoriesForClient(clientId));
+        }
+    }, [clientId]);
 
     const handlePrevGoalsClick = () => {
         setPrevGoalsOpen((prevGoalsOpen) => !prevGoalsOpen);
@@ -199,6 +218,66 @@ const ClientDetails = () => {
                 </Grid>
                 <Grid item xs={12}>
                     <ClientTimeline refreshClient={getClient} client={clientInfo} />
+                </Grid>
+
+                <Grid item xs={12}>
+                    <hr />
+                </Grid>
+
+                <Grid item xs={6}>
+                    <SectionHeader variant="h5">
+                        <b>Success Stories</b>
+                    </SectionHeader>
+                </Grid>
+                <Grid item xs={12} sx={{ px: "20px" }}>
+                    {stories.length === 0 ? (
+                        <Typography color="text.secondary">
+                            No success stories submitted for this client yet.
+                        </Typography>
+                    ) : (
+                        stories
+                            .sort((a, b) => b.created_at - a.created_at)
+                            .map((story) => (
+                                <Card key={story.id} variant="outlined" sx={{ mb: 1 }}>
+                                    <CardActionArea
+                                        onClick={() =>
+                                            history.push(`/client/${clientId}/stories/${story.id}`)
+                                        }
+                                    >
+                                        <CardContent
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <Box>
+                                                <Typography variant="subtitle1" fontWeight="bold">
+                                                    {story.written_by_name || "Untitled"}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary">
+                                                    {story.date} &middot;{" "}
+                                                    {story.diagnosis || "No diagnosis"}
+                                                </Typography>
+                                            </Box>
+                                            <Chip
+                                                label={
+                                                    story.status === StoryStatus.READY
+                                                        ? "Ready"
+                                                        : "Work in Progress"
+                                                }
+                                                color={
+                                                    story.status === StoryStatus.READY
+                                                        ? "success"
+                                                        : "warning"
+                                                }
+                                                size="small"
+                                            />
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            ))
+                    )}
                 </Grid>
             </Grid>
 

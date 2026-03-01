@@ -57,7 +57,7 @@ const App = () => {
                                         }}
                                     >
                                         <Typography variant="h1" sx={appStyles.pageTitle}>
-                                            {t(page.name)}
+                                            {t(page.name as any)}
                                         </Typography>
                                         <LanguagePicker />
                                     </Box>

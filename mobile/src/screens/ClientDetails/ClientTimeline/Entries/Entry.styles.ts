@@ -26,7 +26,7 @@ const useStyles = () =>
             backgroundColor: themeColors.white,
             width: 128,
             height: 128,
-            marginTop: 10,
+            marginTop: 0,
             marginBottom: 10,
             shadowColor: "#FFFFFF",
             borderRadius: 30,

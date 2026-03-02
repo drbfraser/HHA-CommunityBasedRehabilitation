@@ -21,6 +21,7 @@ const useStyles = () =>
             width: "100%",
             height: "auto",
             aspectRatio: 1,
+            marginTop: 5,
         },
         checkBoxText: {
             flexDirection: "row",
@@ -30,9 +31,11 @@ const useStyles = () =>
             paddingRight: 50,
         },
         uploadButton: {
+            marginTop: 10,
             alignItems: "center",
             backgroundColor: "#DDDDDD",
             padding: 10,
+            borderRadius: 5,
         },
         buttonTextStyle: {
             color: themeColors.blueBgDark,

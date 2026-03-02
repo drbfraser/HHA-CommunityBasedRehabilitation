@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { ScrollView, View } from "react-native";
-import { Text, Divider, Appbar } from "react-native-paper";
+import { Text, Divider, Appbar, Card } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
 import { ProgressSteps, ProgressStep } from "react-native-progress-steps";
 import { handleSubmit } from "./formHandler";
@@ -38,8 +38,10 @@ import Alert from "../../components/Alert/Alert";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
-import { string } from "yup";
 import { useTranslation } from "react-i18next";
+import FormikImageModal from "@/src/components/FormikImageModal/FormikImageModal";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Yup from "yup";
 
 interface INewReferralProps {
     clientID: string;
@@ -89,10 +91,11 @@ const NewReferral = (props: INewReferralProps) => {
     const [enabledSteps, setEnabledSteps] = useState<ReferralFormField[]>([]);
     const [checkedSteps, setCheckedSteps] = useState<ReferralFormField[]>([]);
     const [submissionError, setSubmissionError] = useState(false);
-    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+    const isFinalStep = activeStep === enabledSteps.length + 1 && activeStep !== 0;
     const { autoSync, cellularSync } = useContext(SyncContext);
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const { t } = useTranslation();
+    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
 
     const prevStep = async (props: any) => {
         // Only adjust set of "good" states if we changed something:
@@ -222,6 +225,46 @@ const NewReferral = (props: INewReferralProps) => {
             Form: services[serviceType].Form,
             validationSchema: services[serviceType].validationSchema,
         })),
+        {
+            label: t("referral.addPicture"),
+            Form: ({ formikProps }) => (
+                <>
+                    <View style={styles.container}>
+                        <View style={styles.imageContainer}>
+                            {formikProps.values[ReferralFormField.picture] ? (
+                                <Card.Cover
+                                    style={styles.image}
+                                    source={{
+                                        uri: formikProps.values[ReferralFormField.picture],
+                                    }}
+                                />
+                            ) : (
+                                <></>
+                            )}
+                            <TouchableOpacity
+                                style={styles.uploadButton}
+                                onPress={() => {
+                                    setShowImagePickerModal(true);
+                                }}
+                            >
+                                <Text style={styles.buttonTextStyle}>
+                                    {t("referral.choosePhoto")}
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <FormikImageModal
+                            field={ReferralFormField.picture}
+                            fieldLabels={referralFieldLabels}
+                            formikProps={formikProps}
+                            visible={showImagePickerModal}
+                            onPictureChange={() => {}}
+                            onDismiss={() => setShowImagePickerModal(false)}
+                        />
+                    </View>
+                </>
+            ),
+            validationSchema: () => Yup.object({}), // Empty, picture submission is optional
+        },
     ];
 
     return (

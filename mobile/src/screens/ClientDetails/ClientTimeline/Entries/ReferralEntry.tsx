@@ -220,14 +220,6 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                             : t("general.no")}
                                     </Text>
                                 </View>
-                                {hasImage ? (
-                                    <Card.Cover
-                                        style={styles.referralCardImageStyle}
-                                        source={{ uri: uri }}
-                                    />
-                                ) : (
-                                    <></>
-                                )}
                             </>
                         )}
                         {referral.physiotherapy && (
@@ -323,6 +315,14 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                         {referral.services_other}
                                     </Text>
                                 </View>
+                            </>
+                        )}
+                        {hasImage && (
+                            <>
+                                <Card.Cover
+                                    style={styles.referralCardImageStyle}
+                                    source={{ uri: uri }}
+                                />
                             </>
                         )}
                         {!referral.resolved && <ResolveForm />}

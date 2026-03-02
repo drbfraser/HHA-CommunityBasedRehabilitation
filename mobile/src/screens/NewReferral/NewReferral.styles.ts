@@ -7,11 +7,19 @@ const useStyles = () =>
             flex: 1,
             justifyContent: "center",
             marginHorizontal: 10,
+            borderWidth: 1,
+            borderColor: "green",
         },
         formContainer: {
             marginTop: 20,
         },
-        imageContainer: {
+        uploadImageContainer: {
+            flex: 1,
+        },
+        centerImageContainer: {
+            flex: 1,                
+            justifyContent: "center",
+            alignItems: "center",
             paddingHorizontal: 50,
         },
         image: {
@@ -21,7 +29,7 @@ const useStyles = () =>
             width: "100%",
             height: "auto",
             aspectRatio: 1,
-            marginTop: 5,
+            marginTop: 10,
         },
         checkBoxText: {
             flexDirection: "row",
@@ -31,10 +39,11 @@ const useStyles = () =>
             paddingRight: 50,
         },
         uploadButton: {
-            marginTop: 10,
+            marginBottom: 10,
+            alignSelf: "stretch",  
             alignItems: "center",
             backgroundColor: "#DDDDDD",
-            padding: 10,
+            padding: 12,
             borderRadius: 5,
         },
         buttonTextStyle: {

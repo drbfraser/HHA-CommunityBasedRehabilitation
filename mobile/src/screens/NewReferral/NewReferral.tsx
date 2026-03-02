@@ -229,29 +229,22 @@ const NewReferral = (props: INewReferralProps) => {
             label: t("referral.addPicture"),
             Form: ({ formikProps }) => (
                 <>
-                    <View style={styles.container}>
-                        <View style={styles.imageContainer}>
-                            {formikProps.values[ReferralFormField.picture] ? (
+                    <View style={styles.uploadImageContainer}>
+                        <View style={styles.centerImageContainer}>
+                            {formikProps.values[ReferralFormField.picture] && (
                                 <Card.Cover
                                     style={styles.image}
-                                    source={{
-                                        uri: formikProps.values[ReferralFormField.picture],
-                                    }}
+                                    source={{ uri: formikProps.values[ReferralFormField.picture] }}
                                 />
-                            ) : (
-                                <></>
                             )}
-                            <TouchableOpacity
-                                style={styles.uploadButton}
-                                onPress={() => {
-                                    setShowImagePickerModal(true);
-                                }}
-                            >
-                                <Text style={styles.buttonTextStyle}>
-                                    {t("referral.choosePhoto")}
-                                </Text>
-                            </TouchableOpacity>
                         </View>
+
+                        <TouchableOpacity
+                            style={styles.uploadButton}
+                            onPress={() => setShowImagePickerModal(true)}
+                        >
+                            <Text style={styles.buttonTextStyle}>{t("referral.choosePhoto")}</Text>
+                        </TouchableOpacity>
                         <FormikImageModal
                             field={ReferralFormField.picture}
                             fieldLabels={referralFieldLabels}
@@ -327,7 +320,7 @@ const NewReferral = (props: INewReferralProps) => {
                                         <Divider
                                             style={{ backgroundColor: themeColors.blueBgDark }}
                                         />
-                                        <ScrollView>
+                                        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                                             <surveyStep.Form formikProps={formikProps} />
                                         </ScrollView>
                                     </ProgressStep>

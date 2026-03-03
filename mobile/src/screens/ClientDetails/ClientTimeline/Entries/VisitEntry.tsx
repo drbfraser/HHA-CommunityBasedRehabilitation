@@ -44,7 +44,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 zone: fetchedVisit.zone,
                 village: fetchedVisit.village,
                 improvements: [],
-                picture: "",
+                picture: fetchedVisit.picture, 
             };
             const fetchedImprov = await fetchedVisit.improvements.fetch();
             setVisitImprovement(fetchedImprov);
@@ -73,6 +73,15 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     );
 
     const Details = () => {
+        const [uri, setUri] = useState<string>("");
+        const [hasImage, setHasImage] = useState<boolean>(false);
+        
+        useEffect(() => {
+            if (visit && visit.picture && visit.picture !== null) {
+                setUri(visit.picture);
+                setHasImage(true);
+            }
+        });
         if (!visit) {
             return <ActivityIndicator size="small" color={themeColors.blueAccent} />;
         }
@@ -117,6 +126,15 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 {Object.values(RiskType).map((type) => (
                     <DetailAccordion key={type} type={type} />
                 ))}
+                {hasImage && (
+                    <>
+                        <Card.Cover
+                            style={styles.cardImageStyle}
+                            source={{ uri: uri }}
+                        />
+                    </>
+                )}
+
             </>
         );
     };

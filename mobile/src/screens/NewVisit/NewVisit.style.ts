@@ -6,6 +6,33 @@ const useStyles = () =>
         container: {
             flex: 1,
             justifyContent: "center",
+            marginHorizontal: 10,
+        },
+        uploadImageContainer: {
+            flex: 1,
+        },
+        centerImageContainer: {
+            flex: 1,                
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 50,
+        },
+        image: {
+            backgroundColor: themeColors.white,
+            borderRadius: 30,
+            resizeMode: "contain",
+            width: "100%",
+            height: "auto",
+            aspectRatio: 1,
+            marginTop: 10,
+        },
+        uploadButton: {
+            marginBottom: 10,
+            alignSelf: "stretch",  
+            alignItems: "center",
+            backgroundColor: "#DDDDDD",
+            padding: 12,
+            borderRadius: 5,
         },
         verticalSpacer: {
             marginTop: 10,

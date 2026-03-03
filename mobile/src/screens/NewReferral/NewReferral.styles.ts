@@ -7,8 +7,6 @@ const useStyles = () =>
             flex: 1,
             justifyContent: "center",
             marginHorizontal: 10,
-            borderWidth: 1,
-            borderColor: "green",
         },
         formContainer: {
             marginTop: 20,

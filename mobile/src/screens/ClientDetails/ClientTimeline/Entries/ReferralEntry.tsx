@@ -319,10 +319,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {hasImage && (
                             <>
-                                <Card.Cover
-                                    style={styles.cardImageStyle}
-                                    source={{ uri: uri }}
-                                />
+                                <Card.Cover style={styles.cardImageStyle} source={{ uri: uri }} />
                             </>
                         )}
                         {!referral.resolved && <ResolveForm />}

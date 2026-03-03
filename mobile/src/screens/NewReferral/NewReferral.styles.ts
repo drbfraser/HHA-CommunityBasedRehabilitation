@@ -15,7 +15,7 @@ const useStyles = () =>
             flex: 1,
         },
         centerImageContainer: {
-            flex: 1,                
+            flex: 1,
             justifyContent: "center",
             alignItems: "center",
             paddingHorizontal: 50,
@@ -38,7 +38,7 @@ const useStyles = () =>
         },
         uploadButton: {
             marginBottom: 10,
-            alignSelf: "stretch",  
+            alignSelf: "stretch",
             alignItems: "center",
             backgroundColor: "#DDDDDD",
             padding: 12,

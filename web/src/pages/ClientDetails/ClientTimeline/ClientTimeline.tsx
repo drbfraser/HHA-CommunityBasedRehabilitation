@@ -10,6 +10,7 @@ import ShowMoreEntry from "../Timeline/ShowMoreEntry";
 import VisitEntry from "./VisitEntry";
 import ReferralEntry from "./ReferralEntry";
 import BaseSurveyEntry from "./BaseSurveyEntry";
+import ImageIcon from "@mui/icons-material/Image";
 
 interface IProps {
     client?: IClient;

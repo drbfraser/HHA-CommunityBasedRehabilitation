@@ -44,7 +44,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 zone: fetchedVisit.zone,
                 village: fetchedVisit.village,
                 improvements: [],
-                picture: fetchedVisit.picture, 
+                picture: fetchedVisit.picture,
             };
             const fetchedImprov = await fetchedVisit.improvements.fetch();
             setVisitImprovement(fetchedImprov);
@@ -75,7 +75,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const Details = () => {
         const [uri, setUri] = useState<string>("");
         const [hasImage, setHasImage] = useState<boolean>(false);
-        
+
         useEffect(() => {
             if (visit && visit.picture && visit.picture !== null) {
                 setUri(visit.picture);
@@ -128,13 +128,9 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 ))}
                 {hasImage && (
                     <>
-                        <Card.Cover
-                            style={styles.cardImageStyle}
-                            source={{ uri: uri }}
-                        />
+                        <Card.Cover style={styles.cardImageStyle} source={{ uri: uri }} />
                     </>
                 )}
-
             </>
         );
     };

@@ -7,6 +7,10 @@ try {
 }
 
 module.exports = {
+    artifacts: {
+        rootDir: "e2e/artifacts",
+        pathBuilder: "./e2e/artifactPathBuilder.js",
+    },
     testRunner: {
         args: {
             $0: "jest",
@@ -22,8 +26,8 @@ module.exports = {
             binaryPath: "android/app/build/outputs/apk/debug/app-debug.apk",
             testBinaryPath:
                 "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
-            build: "cd android && gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
-            reversePorts: [8081],
+            build: "cd android && .\\gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
+            reversePorts: [8081, 8000],
         },
         "android.release": {
             type: "android.apk",

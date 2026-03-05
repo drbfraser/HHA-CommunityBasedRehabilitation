@@ -5,6 +5,8 @@ module.exports = {
     rootDir: "..",
     testMatch: ["<rootDir>/e2e/**/*.test.js"],
     testTimeout: 360000,
+    maxWorkers: 1,
+    testSequencer: "./e2e/testSequencer.js",
     globalSetup: "./e2e/globalSetup.js",
     globalTeardown: "detox/runners/jest/globalTeardown",
     reporters: ["detox/runners/jest/reporter"],

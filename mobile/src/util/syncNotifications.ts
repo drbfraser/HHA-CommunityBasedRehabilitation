@@ -8,8 +8,21 @@ const showToast = (message: string) => {
     }
 };
 
+const showBottomToast = (message: string) => {
+    if (Platform.OS === "android") {
+        ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+    } else {
+        console.log(`[SYNC NOTICE] ${message}`);
+    }
+};
+
 export const notifyAutoSyncStart = () => showToast("Automatic sync started");
 export const notifyAutoSyncSuccess = () => showToast("Automatic sync completed");
+export const notifyDashboardSyncComplete = () => showBottomToast("Synchronizing with server... [ok]");
+export const notifyStaleSyncWarning = (hoursSinceLastSync: number) =>
+    showBottomToast(
+        `Warning: It's been at least ${hoursSinceLastSync} hours since data was synchronized with the server. Please connect to the internet and synchronize soon.`
+    );
 export const notifyAutoSyncFailure = (reason?: "no_internet") => {
     if (reason === "no_internet") {
         showToast("Skipping automatic sync because no internet is available.");

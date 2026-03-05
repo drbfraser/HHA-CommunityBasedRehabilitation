@@ -211,11 +211,13 @@ export default function App() {
     }, [autoSync]);
 
     useEffect(() => {
-        if (authState.state === "loggedIn" && autoSync) {
-            AutoSyncDB(database, autoSync, cellularSync).then(() => {
-                setScreenRefresh(true);
-                SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
-            });
+        if (authState.state === "loggedIn") {
+            setScreenRefresh(true);
+            if (autoSync) {
+                AutoSyncDB(database, autoSync, cellularSync).then(() => {
+                    SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+                });
+            }
         }
     }, [authState]);
 

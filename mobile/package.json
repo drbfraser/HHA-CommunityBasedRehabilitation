@@ -18,7 +18,7 @@
         "detox:metro": "npx react-native start --port 8081",
         "detox:test": "npx detox test -c android.emu.debug",
         "detox:install": "cd android && .\\gradlew installDebug installDebugAndroidTest -DtestBuildType=debug",
-        "detox:run": "detox build -c android.emu.debug && npx concurrently -k -s command-1 --names metro,test \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug\""
+        "detox:run": "detox build -c android.emu.debug && npx concurrently -k -s command-1 --names metro,test -o stream \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug --record-logs all -a e2e/artifacts\""
     },
     "jest": {
         "preset": "jest-expo"

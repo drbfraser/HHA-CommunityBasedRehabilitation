@@ -63,16 +63,16 @@ export enum PageName {
     NEW_ALERT = "screenNames.newAlert",
     INBOX = "screenNames.inbox",
     NOT_FOUND = "screenNames.notFound",
-    NEW_SUCCESS_STORY = "New Success Story",
-    EDIT_SUCCESS_STORY = "Edit Success Story",
-    VIEW_SUCCESS_STORY = "Success Story",
-    SUCCESS_STORIES_LIST = "Success Stories",
+    NEW_SUCCESS_STORY = "screenNames.newSuccessStory",
+    EDIT_SUCCESS_STORY = "screenNames.editSuccessStory",
+    VIEW_SUCCESS_STORY = "screenNames.successStory",
+    SUCCESS_STORIES_LIST = "screenNames.successStories",
 }
 
 export interface IPage {
     path: string;
     exact?: boolean;
-    name: PageName | string;
+    name: PageName;
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     showInNav: boolean;

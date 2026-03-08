@@ -687,7 +687,11 @@
     "editZone": "Gweki tur , Gweki kötumit",
     "newAlert": "Gwiyet ludukötyo",
     "notFound": "Ako rye , A ko puö",
-    "clientRiskHistory": "Dekat ti yoŋit na ŋuto ŋode"
+    "clientRiskHistory": "Client Risk History",
+    "newSuccessStory": "New Success Story",
+    "editSuccessStory": "Edit Success Story",
+    "successStory": "Success Story",
+    "successStories": "Success Stories"
   },
   "statistics": {
     "statistics": "Nambajin/ ngo ling lo wuro",

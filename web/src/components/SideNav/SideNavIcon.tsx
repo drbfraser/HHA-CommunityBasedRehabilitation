@@ -65,7 +65,7 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
         return (
             <Link to={path}>
                 <Tooltip
-                    title={t(name as any)}
+                    title={t(name)}
                     placement="top"
                     arrow
                     componentsProps={{

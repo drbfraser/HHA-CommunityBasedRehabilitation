@@ -688,7 +688,7 @@ interface Resources {
       "editZone": "Gweki tur , Gweki kötumit",
       "newAlert": "Gwiyet ludukötyo",
       "notFound": "Ako rye , A ko puö",
-      "clientRiskHistory": "Client Risk History",
+      "clientRiskHistory": "Dekat ti yoŋit na ŋuto ŋode",
       "newSuccessStory": "New Success Story",
       "editSuccessStory": "Edit Success Story",
       "successStory": "Success Story",

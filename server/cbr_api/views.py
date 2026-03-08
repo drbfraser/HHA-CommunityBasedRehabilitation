@@ -546,6 +546,32 @@ class ReferralDetail(generics.RetrieveUpdateAPIView):
         return super().put(request)
 
 
+class SuccessStoryList(generics.ListCreateAPIView):
+    serializer_class = serializers.SuccessStorySerializer
+    queryset = models.SuccessStory.objects.select_related(
+        "client_id", "created_by_user_id"
+    ).all()
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        client_id = self.request.query_params.get("client_id")
+        if client_id:
+            queryset = queryset.filter(client_id=client_id)
+        return queryset
+
+
+class SuccessStoryDetail(generics.RetrieveUpdateAPIView):
+    queryset = models.SuccessStory.objects.select_related(
+        "client_id", "created_by_user_id"
+    ).all()
+    http_method_names = ["get", "put"]
+
+    def get_serializer_class(self):
+        if self.request.method == "PUT":
+            return serializers.UpdateSuccessStorySerializer
+        return serializers.SuccessStorySerializer
+
+
 class BaselineSurveyCreate(generics.CreateAPIView):
     queryset = models.BaselineSurvey.objects.all()
     serializer_class = serializers.BaselineSurveySerializer

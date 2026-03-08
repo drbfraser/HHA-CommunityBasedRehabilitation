@@ -49,6 +49,12 @@ urlpatterns = [
     ),
     path("referral/<str:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
+    path("successstories", views.SuccessStoryList.as_view(), name="success-story-list"),
+    path(
+        "successstories/<str:pk>",
+        views.SuccessStoryDetail.as_view(),
+        name="success-story-detail",
+    ),
     path("referrals/all", views.ReferralListALl.as_view(), name="referral-list-all"),
     path(
         "referral/picture/<str:pk>",

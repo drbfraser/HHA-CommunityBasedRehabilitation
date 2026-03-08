@@ -90,6 +90,17 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "center",
         },
+        offline_fallback_alert: {
+            marginTop: 10,
+        },
+        empty_state_row: {
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+        },
+        empty_state_text: {
+            color: themeColors.textGray,
+            fontSize: 14,
+        },
     });
 
 export default useStyles;

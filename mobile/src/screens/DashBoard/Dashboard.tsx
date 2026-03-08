@@ -29,7 +29,12 @@ import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../Sync/PrefConstants";
 import { useSyncStatus } from "../../util/useSyncStatus";
-import { notifyDashboardSyncComplete, notifyStaleSyncWarning } from "../../util/syncNotifications";
+import {
+    notifyAutoSyncFailure,
+    notifyDashboardSyncComplete,
+    notifyStaleSyncWarning,
+} from "../../util/syncNotifications";
+import { useNetInfo } from "@react-native-community/netinfo";
 
 const Dashboard = () => {
     const styles = useStyles();
@@ -43,8 +48,10 @@ const Dashboard = () => {
     const [lastSyncTimestamp, setLastSyncTimestamp] = useState<number | null>(null);
     const [hasCompletedFirstSync, setHasCompletedFirstSync] = useState<boolean>(false);
     const [syncStatsLoaded, setSyncStatsLoaded] = useState<boolean>(false);
+    const [allowDashboardFallback, setAllowDashboardFallback] = useState<boolean>(false);
 
     const isFocused = useIsFocused();
+    const netInfo = useNetInfo();
     const database = useDatabase();
     const { setUnSyncedChanges, screenRefresh } = useContext(SyncContext);
 
@@ -54,6 +61,7 @@ const Dashboard = () => {
     const previousDashboardLoading = useRef<boolean>(true);
     const hasShownDashboardLoadedToast = useRef<boolean>(false);
     const hasShownStaleSyncToastForFocus = useRef<boolean>(false);
+    const hasShownSyncFallbackToast = useRef<boolean>(false);
 
     const dashBoardClientComparator = (a: ClientListRow, b: ClientListRow): number => {
         return clientComparator(a, b, clientSortOption, clientSortDirection);
@@ -197,7 +205,9 @@ const Dashboard = () => {
 
     const locale = Localization.locale;
     const timezone = Localization.timezone; // todo: resolve deprecated
-    const showFirstSyncInProgress = !syncStatsLoaded || !hasCompletedFirstSync;
+    const showFirstSyncInProgress =
+        (!syncStatsLoaded || !hasCompletedFirstSync) && !allowDashboardFallback;
+    const showOfflineFallbackWarning = allowDashboardFallback && !hasCompletedFirstSync;
     const hoursSinceLastSync =
         lastSyncTimestamp !== null
             ? Math.floor((Date.now() - lastSyncTimestamp) / (1000 * 60 * 60))
@@ -205,11 +215,49 @@ const Dashboard = () => {
     const showStaleSyncWarning = hoursSinceLastSync !== null && hoursSinceLastSync >= 24;
 
     useEffect(() => {
+        if (hasCompletedFirstSync) {
+            setAllowDashboardFallback(false);
+            hasShownSyncFallbackToast.current = false;
+            return;
+        }
+
+        if (!isFocused || !syncStatsLoaded || allowDashboardFallback) return;
+
+        if (netInfo.isInternetReachable === false) {
+            setAllowDashboardFallback(true);
+            void refreshDashboardData();
+            if (!hasShownSyncFallbackToast.current) {
+                notifyAutoSyncFailure("no_internet");
+                hasShownSyncFallbackToast.current = true;
+            }
+            return;
+        }
+
+        const fallbackTimer = setTimeout(() => {
+            setAllowDashboardFallback(true);
+            void refreshDashboardData();
+            if (!hasShownSyncFallbackToast.current) {
+                notifyAutoSyncFailure();
+                hasShownSyncFallbackToast.current = true;
+            }
+        }, 15000);
+
+        return () => clearTimeout(fallbackTimer);
+    }, [
+        isFocused,
+        syncStatsLoaded,
+        hasCompletedFirstSync,
+        allowDashboardFallback,
+        netInfo.isInternetReachable,
+    ]);
+
+    useEffect(() => {
         if (!isFocused) return;
 
         if (
             previousDashboardLoading.current &&
             !showFirstSyncInProgress &&
+            hasCompletedFirstSync &&
             !hasShownDashboardLoadedToast.current
         ) {
             notifyDashboardSyncComplete();
@@ -269,6 +317,18 @@ const Dashboard = () => {
                         ) : (
                             <></>
                         )}
+                    </View>
+                    <View>
+                        {showOfflineFallbackWarning ? (
+                            <Alert
+                                style={styles.offline_fallback_alert}
+                                severity={"error"}
+                                text={t("dashboard.noSyncedDataWarning", {
+                                    defaultValue:
+                                        "Unable to synchronize right now. Showing locally stored data only. Please connect to the internet and synchronize.",
+                                })}
+                            />
+                        ) : null}
                     </View>
                     <View>
                         {showStaleSyncWarning ? (
@@ -398,6 +458,23 @@ const Dashboard = () => {
                                             </DataTable.Row>
                                         );
                                     })}
+                                    {clientList.length === 0 ? (
+                                        <DataTable.Row style={styles.item}>
+                                            <View style={styles.empty_state_row}>
+                                                <Text style={styles.empty_state_text}>
+                                                    {showOfflineFallbackWarning
+                                                        ? t("dashboard.noSyncedDataYet", {
+                                                              defaultValue:
+                                                                  "No synchronized dashboard data is available yet on this device.",
+                                                          })
+                                                        : t("dashboard.noPriorityClients", {
+                                                              defaultValue:
+                                                                  "No Priority Clients Found",
+                                                          })}
+                                                </Text>
+                                            </View>
+                                        </DataTable.Row>
+                                    ) : null}
                                 </DataTable>
                             </ScrollView>
                         </Card>
@@ -465,6 +542,23 @@ const Dashboard = () => {
                                             </DataTable.Row>
                                         );
                                     })}
+                                    {referralList.length === 0 ? (
+                                        <DataTable.Row style={styles.item}>
+                                            <View style={styles.empty_state_row}>
+                                                <Text style={styles.empty_state_text}>
+                                                    {showOfflineFallbackWarning
+                                                        ? t("dashboard.noSyncedDataYet", {
+                                                              defaultValue:
+                                                                  "No synchronized dashboard data is available yet on this device.",
+                                                          })
+                                                        : t("dashboard.noOutstandingReferrals", {
+                                                              defaultValue:
+                                                                  "No Outstanding Referrals Found",
+                                                          })}
+                                                </Text>
+                                            </View>
+                                        </DataTable.Row>
+                                    ) : null}
                                 </DataTable>
                             </ScrollView>
                         </Card>

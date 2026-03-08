@@ -28,12 +28,7 @@ import ClientRisks from "./Risks/ClientRisks";
 import ClientTimeline from "./ClientTimeline/ClientTimeline";
 import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 import PatientNoteModal from "components/PatientNoteModal/PatientNoteModal";
-import {
-    getStoriesForClient,
-    ISuccessStory,
-    StoryStatus,
-    seedMockStories,
-} from "util/successStories";
+import { getStoriesForClient, ISuccessStory, StoryStatus } from "util/successStories";
 
 interface IUrlParam {
     clientId: string;
@@ -64,12 +59,19 @@ const ClientDetails = () => {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [historyModalOpen, setHistoryModalOpen] = useState(false);
     const [stories, setStories] = useState<ISuccessStory[]>([]);
+    const [storiesLoadingError, setStoriesLoadingError] = useState(false);
 
     useEffect(() => {
         if (clientId) {
-            // TODO: remove seedMockStories once real data exists
-            seedMockStories(clientId);
-            setStories(getStoriesForClient(clientId));
+            getStoriesForClient(clientId)
+                .then((loadedStories: ISuccessStory[]) => {
+                    setStories(loadedStories);
+                    setStoriesLoadingError(false);
+                })
+                .catch(() => {
+                    setStories([]);
+                    setStoriesLoadingError(true);
+                });
         }
     }, [clientId]);
 
@@ -230,12 +232,14 @@ const ClientDetails = () => {
                     </SectionHeader>
                 </Grid>
                 <Grid item xs={12} sx={{ px: "20px" }}>
-                    {stories.length === 0 ? (
+                    {storiesLoadingError ? (
+                        <Alert severity="error">Could not load success stories.</Alert>
+                    ) : stories.length === 0 ? (
                         <Typography color="text.secondary">
                             No success stories submitted for this client yet.
                         </Typography>
                     ) : (
-                        stories
+                        [...stories]
                             .sort((a, b) => b.created_at - a.created_at)
                             .map((story) => (
                                 <Card key={story.id} variant="outlined" sx={{ mb: 1 }}>

@@ -49,16 +49,30 @@ const SuccessStoryView = () => {
     const { clientId, storyId } = useParams<IUrlParam>();
     const { t } = useTranslation();
     const [story, setStory] = useState<ISuccessStory>();
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
     useEffect(() => {
-        const s = getStoryById(storyId);
-        if (s) {
-            setStory(s);
-        } else {
-            setError(true);
-        }
+        setLoading(true);
+        getStoryById(storyId)
+            .then((loadedStory) => {
+                setStory(loadedStory);
+                setError(false);
+            })
+            .catch(() => setError(true))
+            .finally(() => setLoading(false));
     }, [storyId]);
+
+    if (loading) {
+        return (
+            <>
+                <Button startIcon={<ArrowBackIcon />} onClick={() => history.goBack()}>
+                    {t("general.goBack")}
+                </Button>
+                <Alert severity="info">Loading success story...</Alert>
+            </>
+        );
+    }
 
     if (error || !story) {
         return (

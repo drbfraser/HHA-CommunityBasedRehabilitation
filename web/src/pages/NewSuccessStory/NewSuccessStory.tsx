@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import {
     Alert,
     Button,
@@ -16,14 +15,16 @@ import {
 } from "@mui/material";
 import GoBackButton from "components/GoBackButton/GoBackButton";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
+import { Gender, HCRType, IClient } from "@cbr/common/util/clients";
 import {
     ISuccessStory,
     StoryStatus,
     PublishPermission,
-    generateStoryId,
-    saveStory,
+    ISuccessStoryWritePayload,
+    createStory,
     getStoryById,
-} from "util/successStories";
+    updateStory,
+} from "../../util/successStories";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { IUser } from "@cbr/common/util/users";
 import history from "@cbr/common/util/history";
@@ -34,13 +35,50 @@ interface IUrlParam {
     storyId?: string;
 }
 
+const getAgeFromBirthDate = (birthDate?: number | string): number | "" => {
+    if (!birthDate && birthDate !== 0) return "";
+
+    const parsedDate =
+        typeof birthDate === "number"
+            ? new Date(birthDate)
+            : /^\d+$/.test(String(birthDate))
+            ? new Date(Number(birthDate))
+            : new Date(String(birthDate));
+
+    if (Number.isNaN(parsedDate.getTime())) return "";
+
+    const today = new Date();
+    let age = today.getFullYear() - parsedDate.getFullYear();
+    const monthDiff = today.getMonth() - parsedDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < parsedDate.getDate())) {
+        age -= 1;
+    }
+
+    return age >= 0 ? age : "";
+};
+
+const getGenderLabel = (gender?: Gender): string => {
+    if (gender === Gender.MALE) return "Male";
+    if (gender === Gender.FEMALE) return "Female";
+    return "";
+};
+
+const getHcrStatusLabel = (hcrType?: HCRType): string => {
+    if (hcrType === HCRType.REFUGEE) return "Refugee";
+    if (hcrType === HCRType.HOST_COMMUNITY) return "Host Community";
+    return "";
+};
+
 const NewSuccessStory = () => {
     const { clientId, storyId } = useParams<IUrlParam>();
-    const { t } = useTranslation();
     const isEditing = Boolean(storyId);
 
     const [submissionError, setSubmissionError] = useState<string>();
     const [currentUser, setCurrentUser] = useState<IUser>();
+    const [clientInfo, setClientInfo] = useState<IClient>();
+    const [isLoadingStory, setIsLoadingStory] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const blank: Omit<ISuccessStory, "id" | "created_at" | "updated_at" | "created_by_user_id"> = {
         client_id: clientId,
@@ -74,15 +112,58 @@ const NewSuccessStory = () => {
     }, []);
 
     useEffect(() => {
+        if (!clientId) return;
+
+        apiFetch(Endpoint.CLIENT, clientId)
+            .then((resp) => resp.json())
+            .then((client: IClient) => setClientInfo(client))
+            .catch(() => {});
+    }, [clientId]);
+
+    useEffect(() => {
         if (storyId) {
-            const existing = getStoryById(storyId);
-            if (existing) {
-                const { id, created_at, updated_at, created_by_user_id, ...rest } = existing;
-                setForm(rest);
-                if (existing.photo) setPhotoUrl(existing.photo);
-            }
+            setIsLoadingStory(true);
+            getStoryById(storyId)
+                .then((existing: ISuccessStory) => {
+                    const { id, created_at, updated_at, created_by_user_id, ...rest } = existing;
+                    setForm(rest);
+                    setPhotoUrl(existing.photo || "");
+                })
+                .catch(() => setSubmissionError("Could not load the success story."))
+                .finally(() => setIsLoadingStory(false));
         }
     }, [storyId]);
+
+    const beneficiaryName = useMemo(
+        () => [clientInfo?.first_name, clientInfo?.last_name].filter(Boolean).join(" "),
+        [clientInfo]
+    );
+
+    const derivedWrittenByName = useMemo(
+        () =>
+            form.written_by_name ||
+            [currentUser?.first_name, currentUser?.last_name].filter(Boolean).join(" "),
+        [currentUser, form.written_by_name]
+    );
+
+    const derivedAge = useMemo(() => getAgeFromBirthDate(clientInfo?.birth_date), [clientInfo]);
+
+    const derivedGender = useMemo(() => getGenderLabel(clientInfo?.gender), [clientInfo]);
+
+    const derivedHcrStatus = useMemo(() => getHcrStatusLabel(clientInfo?.hcr_type), [clientInfo]);
+
+    useEffect(() => {
+        setForm((prev) => {
+            const nextForm = {
+                ...prev,
+                beneficiary_age: derivedAge !== "" ? derivedAge : prev.beneficiary_age,
+                beneficiary_gender: derivedGender || prev.beneficiary_gender,
+                hcr_status: derivedHcrStatus || prev.hcr_status,
+            };
+
+            return JSON.stringify(nextForm) === JSON.stringify(prev) ? prev : nextForm;
+        });
+    }, [derivedAge, derivedGender, derivedHcrStatus]);
 
     const set = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
         setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -91,23 +172,41 @@ const NewSuccessStory = () => {
         setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
     const handleSubmit = () => {
-        if (!form.written_by_name || !form.part1_background) {
+        if (!derivedWrittenByName || !form.part1_background) {
             setSubmissionError("Please fill in at least the writer name and Part 1 (Background).");
             return;
         }
-        const now = Date.now();
-        const existing = storyId ? getStoryById(storyId) : undefined;
-        const story: ISuccessStory = {
-            ...form,
-            id: existing?.id ?? generateStoryId(),
-            created_at: existing?.created_at ?? now,
-            updated_at: now,
-            created_by_user_id: existing?.created_by_user_id ?? currentUser?.id ?? "",
+
+        if (!clientId) {
+            setSubmissionError("Missing client information for this success story.");
+            return;
+        }
+
+        const storyPayload: ISuccessStoryWritePayload = {
+            client_id: clientId,
+            refugee_origin: form.refugee_origin,
+            refugee_duration: form.refugee_duration,
+            diagnosis: form.diagnosis,
+            treatment_service: form.treatment_service,
+            part1_background: form.part1_background,
+            part2_challenge: form.part2_challenge,
+            part3_introduction: form.part3_introduction,
+            part4_action: form.part4_action,
+            part5_impact: form.part5_impact,
             photo: photoUrl,
-            beneficiary_age: form.beneficiary_age === "" ? "" : Number(form.beneficiary_age),
+            publish_permission: form.publish_permission,
+            status: form.status,
+            date: form.date,
         };
-        saveStory(story);
-        history.goBack();
+
+        setIsSubmitting(true);
+        setSubmissionError(undefined);
+
+        const request = storyId ? updateStory(storyId, storyPayload) : createStory(storyPayload);
+        request
+            .then(() => history.goBack())
+            .catch(() => setSubmissionError("Could not save the success story."))
+            .finally(() => setIsSubmitting(false));
     };
 
     /* --- helper to build a narrative section --- */
@@ -135,6 +234,12 @@ const NewSuccessStory = () => {
                 {isEditing ? "Edit Success Story" : "New Beneficiary Case Study"}
             </Typography>
 
+            {isLoadingStory && (
+                <Alert severity="info" sx={{ mb: 2 }}>
+                    Loading success story...
+                </Alert>
+            )}
+
             {submissionError && (
                 <Alert
                     severity="error"
@@ -153,47 +258,51 @@ const NewSuccessStory = () => {
                         required
                         label="Written By (Name)"
                         variant="outlined"
-                        value={form.written_by_name}
-                        onChange={set("written_by_name")}
+                        value={derivedWrittenByName}
+                        InputProps={{ readOnly: true }}
+                    />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField
+                        fullWidth
+                        label="Beneficiary Name"
+                        variant="outlined"
+                        value={beneficiaryName}
+                        InputProps={{ readOnly: true }}
                     />
                 </Grid>
                 <Grid item xs={6} md={3}>
                     <TextField
                         fullWidth
                         label="Age of Beneficiary"
-                        type="number"
                         variant="outlined"
-                        value={form.beneficiary_age}
-                        onChange={set("beneficiary_age")}
+                        value={derivedAge !== "" ? derivedAge : form.beneficiary_age}
+                        InputProps={{ readOnly: true }}
                     />
                 </Grid>
                 <Grid item xs={6} md={3}>
-                    <FormControl fullWidth variant="outlined">
-                        <InputLabel>Gender</InputLabel>
-                        <Select
-                            value={form.beneficiary_gender}
-                            onChange={setSelect("beneficiary_gender")}
-                            label="Gender"
-                        >
-                            <MenuItem value="M">Male</MenuItem>
-                            <MenuItem value="F">Female</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        fullWidth
+                        label="Gender"
+                        variant="outlined"
+                        value={
+                            derivedGender ||
+                            getGenderLabel(form.beneficiary_gender as Gender) ||
+                            form.beneficiary_gender
+                        }
+                        InputProps={{ readOnly: true }}
+                    />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <FormControl fullWidth variant="outlined">
-                        <InputLabel>Host Community or Refugee?</InputLabel>
-                        <Select
-                            value={form.hcr_status}
-                            onChange={setSelect("hcr_status")}
-                            label="Host Community or Refugee?"
-                        >
-                            <MenuItem value="Host Community">Host Community</MenuItem>
-                            <MenuItem value="Refugee">Refugee</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        fullWidth
+                        label="Host Community or Refugee?"
+                        variant="outlined"
+                        value={derivedHcrStatus || form.hcr_status}
+                        InputProps={{ readOnly: true }}
+                    />
                 </Grid>
-                {form.hcr_status === "Refugee" && (
+                {(derivedHcrStatus || form.hcr_status) === "Refugee" && (
                     <>
                         <Grid item xs={12} md={6}>
                             <TextField
@@ -325,7 +434,13 @@ const NewSuccessStory = () => {
 
             {/* --- SUBMIT --- */}
             <Box sx={{ mt: 3, mb: 4 }}>
-                <Button variant="contained" color="primary" onClick={handleSubmit} sx={{ mr: 2 }}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleSubmit}
+                    sx={{ mr: 2 }}
+                    disabled={isSubmitting || isLoadingStory}
+                >
                     {isEditing ? "Save Changes" : "Submit Story"}
                 </Button>
                 <Button variant="outlined" onClick={() => history.goBack()}>

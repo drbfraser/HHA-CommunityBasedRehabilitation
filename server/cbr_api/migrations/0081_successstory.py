@@ -16,11 +16,31 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name="SuccessStory",
             fields=[
-                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ("created_at", models.BigIntegerField(default=cbr_api.util.current_milli_time)),
-                ("updated_at", models.BigIntegerField(default=cbr_api.util.current_milli_time)),
-                ("refugee_origin", models.CharField(blank=True, default="", max_length=200)),
-                ("refugee_duration", models.CharField(blank=True, default="", max_length=200)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "created_at",
+                    models.BigIntegerField(default=cbr_api.util.current_milli_time),
+                ),
+                (
+                    "updated_at",
+                    models.BigIntegerField(default=cbr_api.util.current_milli_time),
+                ),
+                (
+                    "refugee_origin",
+                    models.CharField(blank=True, default="", max_length=200),
+                ),
+                (
+                    "refugee_duration",
+                    models.CharField(blank=True, default="", max_length=200),
+                ),
                 ("diagnosis", models.TextField(blank=True, default="")),
                 ("treatment_service", models.TextField(blank=True, default="")),
                 ("part1_background", models.TextField(blank=True, default="")),
@@ -66,8 +86,14 @@ class Migration(migrations.Migration):
             options={
                 "ordering": ["-created_at"],
                 "indexes": [
-                    models.Index(fields=["client_id", "created_at"], name="cbr_api_suc_client__8163e4_idx"),
-                    models.Index(fields=["created_by_user_id", "created_at"], name="cbr_api_suc_created_b7401b_idx"),
+                    models.Index(
+                        fields=["client_id", "created_at"],
+                        name="cbr_api_suc_client__8163e4_idx",
+                    ),
+                    models.Index(
+                        fields=["created_by_user_id", "created_at"],
+                        name="cbr_api_suc_created_b7401b_idx",
+                    ),
                 ],
             },
         ),

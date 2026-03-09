@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Timeline } from "@mui/lab";
-
 import { IClient } from "@cbr/common/util/clients";
 import { getDateFormatterFromReference } from "@cbr/common/util/dates";
 import SkeletonEntry from "../Timeline/SkeletonEntry";
@@ -10,7 +9,6 @@ import ShowMoreEntry from "../Timeline/ShowMoreEntry";
 import VisitEntry from "./VisitEntry";
 import ReferralEntry from "./ReferralEntry";
 import BaseSurveyEntry from "./BaseSurveyEntry";
-import ImageIcon from "@mui/icons-material/Image";
 
 interface IProps {
     client?: IClient;

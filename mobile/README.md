@@ -119,7 +119,7 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 3.  **Create the credentials file** (not tracked by git):
 
-    ```powershell
+    ```bash
     cp .env.e2e.example .env.e2e
     # then edit .env.e2e with valid test credentials
     ```
@@ -136,7 +136,7 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 5.  **Start backend services** (if your tests require them):
 
-    ```powershell
+    ```bash
     docker compose up
     ```
 
@@ -144,8 +144,8 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 ## Running the Tests
 
-```powershell
-npm run detox:run
+```bash
+npm run e2e:ci
 ```
 
 This single command will:
@@ -154,6 +154,11 @@ This single command will:
 2. Start Metro bundler and wait for it to be ready
 3. Boot the emulator, disable animations, and suppress ANR dialogs (via the custom `e2e/globalSetup.js`)
 4. Run the Detox test suite using the `android.emu.debug` configuration
+
+If you already have the apks built via `npm run e2e:build` you can skip the build using:
+```bash
+npm run e2e:ci:nobuild
+```
 
 ### Available Configurations
 

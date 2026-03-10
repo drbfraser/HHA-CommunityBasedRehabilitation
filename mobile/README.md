@@ -99,16 +99,16 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 ## Prerequisites
 
-1.  **Set `ANDROID_SDK_ROOT`** (one-time, persistent). In PowerShell:
+1.  **Set `ANDROID_SDK_ROOT`** persistently. In PowerShell:
 
     ```powershell
     [System.Environment]::SetEnvironmentVariable('ANDROID_SDK_ROOT','C:\Users\<YourUsername>\AppData\Local\Android\Sdk','User')
     ```
 
-    Or on Bash / Linux (persistent: add to `~/.bashrc` or `~/.profile`):
+    Or on Bash / Linux (persistent: add to `~/.bashrc`):
 
     ```bash
-    # add to ~/.bashrc or ~/.profile
+    # add to ~/.bashrc
     export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
     export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
     ```
@@ -145,7 +145,8 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 ## Running the Tests
 
 ```bash
-npm run e2e:ci
+#OS = linux | win
+npm run e2e:ci:<OS>
 ```
 
 This single command will:
@@ -155,9 +156,11 @@ This single command will:
 3. Boot the emulator, disable animations, and suppress ANR dialogs (via the custom `e2e/globalSetup.js`)
 4. Run the Detox test suite using the `android.emu.debug` configuration
 
-If you already have the apks built via `npm run e2e:build` you can skip the build using:
+If you already have the apks built via `npm run e2e:build:<OS>` you can skip the build using:
+
 ```bash
-npm run e2e:ci:nobuild
+#OS = linux | win
+npm run e2e:ci:nobuild:<OS>
 ```
 
 ### Available Configurations

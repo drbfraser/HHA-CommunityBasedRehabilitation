@@ -1,8 +1,5 @@
 const { device, element, by, expect } = require("detox");
 
-/**
- * E2E test credentials are loaded from .env.e2e
- */
 const E2E_USERNAME = process.env.E2E_USERNAME;
 const E2E_PASSWORD = process.env.E2E_PASSWORD;
 

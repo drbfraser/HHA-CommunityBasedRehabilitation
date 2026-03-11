@@ -5,7 +5,7 @@ const E2E_PASSWORD = process.env.E2E_PASSWORD;
 
 describe("Login", () => {
     beforeAll(async () => {
-        await device.launchApp({ newInstance: true, delete: true });
+        await device.launchApp({ newInstance: true });
         // wait for the app to finish bundling and render the login screen
         await waitFor(element(by.id("login-button")))
             .toBeVisible()

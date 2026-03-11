@@ -103,7 +103,7 @@ function safeShell(cmd) {
 }
 
 module.exports = async function () {
-    const avdName = process.env.DETOX_AVD_NAME || "Medium_Phone_API_36.1";
+    const avdName = process.env.DETOX_AVD_NAME || "Pixel_6_API_30";
 
     let alreadyRunning = false;
     try {

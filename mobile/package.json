@@ -26,8 +26,8 @@
         "e2e:install:linux": "adb install -r android/app/build/outputs/apk/debug/app-debug.apk && adb install -r android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
         "e2e:ci:win": "npm run e2e:prep:win && detox build -c android.emu.debug && npx concurrently -k -s command-1 --names metro,test -o stream \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug --record-logs all -a e2e/artifacts\"",
         "e2e:ci:linux": "npm run e2e:prep:linux && detox build -c android.emu.debug && npx concurrently -k -s command-1 --names metro,test -o stream \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug --record-logs all -a e2e/artifacts\"",
-        "e2e:ci:nobuild:win": "npm run e2e:prep:win && npx concurrently -k -s command-1 --names metro,test -o stream \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug --record-logs all -a e2e/artifacts\"",
-        "e2e:ci:nobuild:linux": "npm run e2e:prep:linux && npx concurrently -k -s command-1 --names metro,test -o stream \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug --record-logs all -a e2e/artifacts\""
+        "e2e:ci:nobuild:win": "npx concurrently -k -s command-1 --names metro,test -o stream \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug --record-logs all -a e2e/artifacts\"",
+        "e2e:ci:nobuild:linux": "npx concurrently -k -s command-1 --names metro,test -o stream \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug --record-logs all -a e2e/artifacts\""
     },
     "jest": {
         "preset": "jest-expo"

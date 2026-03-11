@@ -196,7 +196,11 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        if (previousSyncPhase.current !== syncStatus.phase && syncStatus.phase === "success" && isFocused) {
+        if (
+            previousSyncPhase.current !== syncStatus.phase &&
+            syncStatus.phase === "success" &&
+            isFocused
+        ) {
             loadLastSyncTimestamp();
             refreshDashboardData();
         }
@@ -481,7 +485,9 @@ const Dashboard = () => {
                     </View>
                     <View>
                         <Card>
-                            <Card.Title title={t("dashboard.clientListOutstandingRefs")}></Card.Title>
+                            <Card.Title
+                                title={t("dashboard.clientListOutstandingRefs")}
+                            ></Card.Title>
                             <ScrollView>
                                 <DataTable>
                                     <DataTable.Header style={styles.item}>

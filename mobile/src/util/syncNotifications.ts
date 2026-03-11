@@ -18,7 +18,8 @@ const showBottomToast = (message: string) => {
 
 export const notifyAutoSyncStart = () => showToast("Automatic sync started");
 export const notifyAutoSyncSuccess = () => showToast("Automatic sync completed");
-export const notifyDashboardSyncComplete = () => showBottomToast("Synchronizing with server... [ok]");
+export const notifyDashboardSyncComplete = () =>
+    showBottomToast("Synchronizing with server... [ok]");
 export const notifyStaleSyncWarning = (hoursSinceLastSync: number) =>
     showBottomToast(
         `Warning: It's been at least ${hoursSinceLastSync} hours since data was synchronized with the server. Please connect to the internet and synchronize soon.`

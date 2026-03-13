@@ -1,8 +1,10 @@
 import { ImprovementFormField, TVisitFormValues } from "./visitFormFields";
 import { VisitFormField } from "./visitFormFields";
-import { apiFetch, Endpoint } from "../../util/endpoints";
+import { apiFetch, Endpoint, objectToFormData } from "../../util/endpoints";
+import { appendPic } from "../../util/referralImageSubmission";
+import { appendMobilePict } from "../../util/mobileImageSubmisson";
 
-const addVisit = async (visitInfo: string) => {
+const addVisit = async (visitInfo: FormData) => {
     const init: RequestInit = {
         method: "POST",
         body: visitInfo,
@@ -34,7 +36,7 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
             desc: imp[ImprovementFormField.description] ?? "",
         }));
 
-    const newVisit = JSON.stringify({
+    const newVisit = {
         client_id: values[VisitFormField.client_id],
         health_visit: values[VisitFormField.health],
         educat_visit: values[VisitFormField.education],
@@ -46,7 +48,14 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
         longitude: 0.0,
         latitude: 0.0,
         improvements: sanitizedImprovements,
-    });
+    };
 
-    return await addVisit(newVisit);
+    const visitObj = objectToFormData(newVisit);
+
+    //if referral picture exist, then attached into form data
+    if (values[VisitFormField.picture]) {
+        await appendPic(visitObj, values[VisitFormField.picture]);
+    }
+
+    return await addVisit(visitObj);
 };

@@ -15,6 +15,7 @@ export interface IVisitSummary {
     latitude: number;
     zone: number;
     village: number;
+    picture: string;
 }
 
 export interface IVisit {
@@ -31,6 +32,7 @@ export interface IVisit {
     latitude: number;
     zone: number;
     village: number;
+    picture: string;
     improvements: IVisitImprovement[];
 }
 

@@ -17,6 +17,7 @@ export enum FormField {
     mental = "MENTAL",
     outcomes = "outcomes",
     improvements = "improvements",
+    picture = "picture",
 }
 
 export enum OutcomeFormField {
@@ -73,6 +74,7 @@ export const initialValues = {
         [FormField.nutrition]: [],
         [FormField.mental]: [],
     },
+    [FormField.picture]: "",
 };
 
 export const provisionals: { [key: string]: string[] } = {

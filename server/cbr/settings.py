@@ -36,6 +36,7 @@ else:
     CORS_ALLOW_ALL_ORIGINS = False
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+DOMAIN = os.environ.get("DOMAIN", "")
 
 
 # Application definition

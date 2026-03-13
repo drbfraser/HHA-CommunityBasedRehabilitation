@@ -100,17 +100,9 @@ If your issue involves server updates i.e model, view, or serializer updates/cha
 
 Prior to submitting a merge request make sure to format your code - it won't pass the CI/CD pipeline without it. Note that both of these commands end in a `.` - that's important!
 
-**Common:**
-
-From within the `common` directory, run `npx prettier --write .`
-
-**Mobile:**
-
-From within the `mobile` directory, run `npx prettier --write .`
-
-**Frontend:**
-
-From within the `web` directory, run `npx prettier --write .`
+**Common / Mobile / Frontend:** 
+- Install the shared Husky/lint-staged/Prettier tooling once by running npm install from the repo root. The pre-commit hook (via lint-staged) now formats each staged file automatically, so you typically don’t need to run 'npx prettier --write .' inside subfolders unless you’re formatting tons of untracked files in bulk. 
+- If you do want to format everything in a specific area, you can cd into that directory (e.g., mobile/, common/, or web/) and run 'npx prettier --write .' to format all files in that subfolder.
 
 **Backend:**
 

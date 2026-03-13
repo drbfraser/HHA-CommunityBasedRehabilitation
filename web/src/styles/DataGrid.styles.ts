@@ -1,4 +1,4 @@
-import { SxProps, Theme } from "@mui/material";
+import { SxProps, Theme } from "@mui/system";
 
 export const compressedDataGridWidth = 700;
 export const mediaCompressedDataGrid = "@media (max-width: " + compressedDataGridWidth + "px)";
@@ -7,12 +7,15 @@ export const dataGridStyles: Record<string, SxProps<Theme>> = {
     datagrid: {
         marginTop: "10px",
         border: 0,
+        backgroundColor: "white",
+        "--DataGrid-containerBackground": "white",
+        "--DataGrid-pinnedBackground": "white",
         WebkitFontSmoothing: "auto",
         letterSpacing: "normal",
-        "& .MuiDataGrid-menuIcon, .MuiDataGrid-iconSeparator": {
+        "& .MuiDataGrid-menuIcon, & .MuiDataGrid-iconSeparator": {
             display: "none",
         },
-        "& .MuiDataGrid-colCell, .MuiDataGrid-cell": {
+        "& .MuiDataGrid-colCell, & .MuiDataGrid-cell, & .MuiDataGrid-columnHeader": {
             padding: "1px 1px 1px 1px",
         },
         "& .MuiDataGrid-cell": {
@@ -22,7 +25,7 @@ export const dataGridStyles: Record<string, SxProps<Theme>> = {
             WebkitHyphens: "auto",
             msHyphens: "auto",
         },
-        "& .MuiDataGrid-colCellTitle": {
+        "& .MuiDataGrid-colCellTitle, & .MuiDataGrid-columnHeaderTitle": {
             userSelect: "none",
             textOverflow: "clip",
             lineHeight: "normal",
@@ -35,25 +38,27 @@ export const dataGridStyles: Record<string, SxProps<Theme>> = {
         "& .MuiIconButton-sizeSmall": {
             padding: "0 0 0 0",
         },
-        "& .MuiDataGrid-row	": {
+        "& .MuiDataGrid-row": {
             cursor: "pointer",
         },
-        "& .MuiDataGrid-colCell:focus, .MuiDataGrid-cell:focus": {
+        "& .MuiDataGrid-colCell:focus, & .MuiDataGrid-cell:focus, & .MuiDataGrid-columnHeader:focus":
+            {
+                outline: "none",
+            },
+        "& .MuiDataGrid-colHeader:focus, & .MuiDataGrid-columnHeader:focus-within": {
             outline: "none",
         },
-        "& .MuiDataGrid-colHeader:focus, .MuiDataGrid-columnHeader:focus-within": {
-            outline: "none",
-        },
-        // Hide scrollbars on Windows
-        "& .MuiDataGrid-window::-webkit-scrollbar": {
-            display: "none;", // Chrome, Safari, Opera
-        },
-        "& .MuiDataGrid-window": {
+        "& .MuiDataGrid-window::-webkit-scrollbar, & .MuiDataGrid-virtualScroller::-webkit-scrollbar":
+            {
+                display: "none", // Chrome, Safari, Opera
+            },
+        "& .MuiDataGrid-window, & .MuiDataGrid-virtualScroller": {
             scrollbarWidth: "none", // Firefox
         },
-        "& .MuiDataGrid-overlay": {
-            backgroundColor: "white",
-        },
+        "& .MuiDataGrid-main, & .MuiDataGrid-columnHeaders, & .MuiDataGrid-virtualScroller, & .MuiDataGrid-filler, & .MuiDataGrid-overlayWrapper, & .MuiDataGrid-overlay, & .MuiDataGrid-topContainer, & .MuiDataGrid-bottomContainer":
+            {
+                backgroundColor: "white",
+            },
     },
     dashboardTables: {
         height: 500,

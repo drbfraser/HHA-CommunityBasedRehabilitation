@@ -6,7 +6,7 @@ import {
 } from "../../../src/util/hooks/cachedAPI";
 import { apiFetch, Endpoint } from "../../../src/util/endpoints";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
-import { renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import { sleep } from "../../../src/util/sleep";
 import { KeyValStorageProvider, reinitializeCommon } from "../../../src/init";
 import { testCommonConfig, testKeyValStorage } from "../../testHelpers/testCommonConfiguration";
@@ -608,7 +608,9 @@ describe("cachedAPI.ts", () => {
             const useCache = cache.useCacheHook();
             const renderHookResult = renderHook(() => useCache());
             expect(renderHookResult.result.current).toEqual(cache.loadingValue);
-            await renderHookResult.waitForNextUpdate();
+            await act(async () => {
+                await sleep(100);
+            });
             expect(renderHookResult.result.current).toEqual(expectedTestData);
             renderHookResult.unmount();
             expect(cache.promise).not.toBeUndefined();
@@ -631,7 +633,9 @@ describe("cachedAPI.ts", () => {
             const useCache = cache.useCacheHook();
             const renderHookResult = renderHook(() => useCache());
             expect(renderHookResult.result.current).toEqual(cache.loadingValue);
-            await renderHookResult.waitForNextUpdate();
+            await act(async () => {
+                await sleep(100);
+            });
             expect(renderHookResult.result.current).toEqual(cache.errorValue);
             renderHookResult.unmount();
             expect(cache.promise).toBeUndefined();
@@ -651,7 +655,9 @@ describe("cachedAPI.ts", () => {
 
             const firstReactComponent = renderHook(() => useCache());
             expect(firstReactComponent.result.current).toEqual(cache.loadingValue);
-            await firstReactComponent.waitForNextUpdate();
+            await act(async () => {
+                await sleep(100);
+            });
             expect(firstReactComponent.result.current).toEqual(firstTestDataValues);
 
             const secondReactComponent = renderHook(() => useCache());
@@ -670,10 +676,9 @@ describe("cachedAPI.ts", () => {
             // It should initially still use the first data values.
             expect(firstReactComponent.result.current).toEqual(firstTestDataValues);
             expect(secondReactComponent.result.current).toEqual(firstTestDataValues);
-            await Promise.all([
-                firstReactComponent.waitForNextUpdate(),
-                secondReactComponent.waitForNextUpdate(),
-            ]);
+            await act(async () => {
+                await sleep(100);
+            });
             expect(firstReactComponent.result.current).toEqual(secondTestDataValues);
             expect(secondReactComponent.result.current).toEqual(secondTestDataValues);
 
@@ -681,10 +686,9 @@ describe("cachedAPI.ts", () => {
             mockSuccessGetWithDelayedResponse(firstTestDataValues);
 
             await invalidateAllCachedAPIInternal(true, false, false, true);
-            await Promise.all([
-                firstReactComponent.waitForNextUpdate(),
-                secondReactComponent.waitForNextUpdate(),
-            ]);
+            await act(async () => {
+                await sleep(100);
+            });
             expect(firstReactComponent.result.current).toEqual(firstTestDataValues);
             expect(secondReactComponent.result.current).toEqual(firstTestDataValues);
 
@@ -705,7 +709,9 @@ describe("cachedAPI.ts", () => {
 
             const renderHookResult = renderHook(() => useCache());
             expect(renderHookResult.result.current).toBe(cache.loadingValue);
-            await renderHookResult.waitForNextUpdate();
+            await act(async () => {
+                await sleep(150);
+            });
             expect(renderHookResult.result.current).toStrictEqual(expectedData);
             // The resolved value from the hook should be the exact same object reference as the
             // initial promise.

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Divider, HelperText, Text, TextInput } from "react-native-paper";
+import { Button, Divider, HelperText, Text, TextInput } from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
@@ -36,6 +36,7 @@ import { modelName } from "../../models/constant";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
+import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModal";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -235,7 +236,8 @@ const VisitFocusForm = (
 const VisitTypeStep = (
     visitType: VisitFormField,
     risks: IRisk[],
-    setRisks: React.Dispatch<React.SetStateAction<IRisk[]>>
+    setRisks: React.Dispatch<React.SetStateAction<IRisk[]>>,
+    setOpenPatientNote: (val: boolean) => void
 ) => {
     const styles = useStyles();
     // Note: Not using the useTranslation hook here because it causes a crash:
@@ -259,6 +261,11 @@ const VisitTypeStep = (
                         ))
                     }
                 />
+                <View style={{ marginTop: 12 }}>
+                    <Button mode="contained" onPress={() => setOpenPatientNote(true)}>
+                        Patient Note
+                    </Button>
+                </View>
             </View>
         );
     };
@@ -279,6 +286,7 @@ const NewVisit = (props: INewVisitProps) => {
     const [risks, setRisks] = useState<IRisk[]>([]);
     const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
     const [saveError, setSaveError] = useState<string>();
+    const [openPatientNote, setOpenPatientNote] = useState(false);
     const clientId = props.route.params.clientID;
     const database = useDatabase();
     const { autoSync, cellularSync } = useContext(SyncContext);
@@ -312,7 +320,7 @@ const NewVisit = (props: INewVisitProps) => {
         },
         ...enabledSteps.map((visitType) => ({
             label: `${visitFieldLabels[visitType]} ${t("newVisit.visit")}`,
-            Form: VisitTypeStep(visitType, risks, setRisks),
+            Form: VisitTypeStep(visitType, risks, setRisks, setOpenPatientNote),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
     ];
@@ -468,6 +476,11 @@ const NewVisit = (props: INewVisitProps) => {
                     </>
                 )}
             </Formik>
+            <PatientNoteModal
+                open={openPatientNote}
+                clientId={clientId}
+                onClose={() => setOpenPatientNote(false)}
+            />
         </>
     );
 };

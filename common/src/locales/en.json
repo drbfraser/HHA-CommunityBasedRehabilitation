@@ -455,7 +455,9 @@
     "orthoticInjuryLocation": "Orthotic Injury Location",
     "clubFoot": "Club Foot",
     "injectionNeuritis": "Injection Neuritis",
-    "autism": "Autism"
+    "autism": "Autism",
+    "addPicture": "Upload Image",
+    "addImageDescription": "Add image if available"
   },
   "risks": {
     "riskLevel": "Risk Level",

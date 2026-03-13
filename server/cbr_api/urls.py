@@ -42,8 +42,19 @@ urlpatterns = [
     ),
     path("visits", views.VisitList.as_view(), name="visit-list"),
     path("visit/<str:pk>", views.VisitDetail.as_view(), name="visit-detail"),
+    path(
+        "visit/picture/<str:pk>",
+        views.VisitImage.as_view(),
+        name="visit-picture",
+    ),
     path("referral/<str:pk>", views.ReferralDetail.as_view(), name="referral-detail"),
     path("referrals", views.ReferralList.as_view(), name="referral-list"),
+    path("successstories", views.SuccessStoryList.as_view(), name="success-story-list"),
+    path(
+        "successstories/<str:pk>",
+        views.SuccessStoryDetail.as_view(),
+        name="success-story-detail",
+    ),
     path("referrals/all", views.ReferralListALl.as_view(), name="referral-list-all"),
     path(
         "referral/picture/<str:pk>",
@@ -56,6 +67,7 @@ urlpatterns = [
         name="referral-outstanding",
     ),
     path("stats", views.AdminStats.as_view(), name="admin-stats"),
+    path("email_settings/", views.EmailSettingsView.as_view(), name="email-settings"),
     path(
         "baselinesurveys",
         views.BaselineSurveyCreate.as_view(),

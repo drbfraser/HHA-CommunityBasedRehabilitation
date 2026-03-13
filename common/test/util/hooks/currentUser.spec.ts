@@ -1,12 +1,13 @@
 import fetchMock, { MockResponseObject } from "fetch-mock";
 import { APILoadError, Endpoint, TAPILoadError } from "../../../src/util/endpoints";
-import { renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import { addValidTokens } from "../../testHelpers/authTokenHelpers";
 import { fromNewCommonModule } from "../../testHelpers/testCommonConfiguration";
 import { checkAuthHeader } from "../../testHelpers/mockServerHelpers";
 import { IUser, UserRole } from "../../../src/util/users";
 import { getCurrentUser, useCurrentUser } from "../../../src/util/hooks/currentUser";
 import { invalidateAllCachedAPIInternal } from "../../../src/util/hooks/cachedAPI";
+import { sleep } from "../../../src/util/sleep";
 
 const testUser: IUser = {
     id: "1",
@@ -48,7 +49,9 @@ describe("currentUser.ts", () => {
             //  work well with testing these hooks with different local state.
             const renderHookResult = renderHook(() => useCurrentUser());
             expect(renderHookResult.result.current).toBeUndefined();
-            await renderHookResult.waitForNextUpdate();
+            await act(async () => {
+                await sleep(100);
+            });
             expect(renderHookResult.result.current).toEqual(testUser);
         });
     });

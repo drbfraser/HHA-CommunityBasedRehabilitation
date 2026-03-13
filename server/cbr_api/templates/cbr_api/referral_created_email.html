@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>New Referral</title>
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f4f7fb;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f7fb;">
+            <tr>
+                <td align="center" style="padding: 24px 12px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e6edf3; font-family: Arial, Helvetica, sans-serif;">
+                        <tr>
+                            <td style="background: linear-gradient(90deg, {{ primary_color }}, {{ accent_color }}); padding: 18px 24px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="vertical-align: middle; color: #ffffff; font-size: 20px; font-weight: 700; letter-spacing: 0.3px;">
+                                            Hope Health Action
+                                        </td>
+                                        <td align="right" style="vertical-align: middle; color: #ffffff; font-size: 18px; font-weight: 700; letter-spacing: 0.2px;">
+                                            New Referral
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 24px 24px 12px;">
+                                <p style="margin: 0 0 12px; color: #2a3340; font-size: 16px;">
+                                    A new referral has been created.
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 24px 16px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fbfd; border: 1px solid #e6edf3; border-radius: 10px;">
+                                    <tr>
+                                        <td style="padding: 14px 16px; color: #2a3340; font-size: 14px; line-height: 1.6;">
+                                            {% if client_name %}
+                                            <div style="margin-bottom: 8px;">
+                                                <span style="color: #6b7280;">Client name:</span>
+                                                <strong style="color: #111827;">{{ client_name }}</strong>
+                                            </div>
+                                            {% endif %}
+                                            {% if services_label %}
+                                            <div style="margin-bottom: 8px;">
+                                                <span style="color: #6b7280;">Referral type(s):</span>
+                                                <strong style="color: #111827;">{{ services_label }}</strong>
+                                            </div>
+                                            {% endif %}
+                                            {% if referred_by %}
+                                            <div style="margin-bottom: 0;">
+                                                <span style="color: #6b7280;">Referred by:</span> {{ referred_by }}
+                                            </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                </table>
+                                {% if client_link %}
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 20px auto 0;">
+                                    <tr>
+                                        <td bgcolor="{{ secondary_color }}" style="border-radius: 8px; text-align: center;">
+                                            <a href="{{ client_link }}" style="display: inline-block; padding: 12px 20px; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 15px;">
+                                                View Client Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if details %}
+                        <tr>
+                            <td style="padding: 0 24px 12px;">
+                                <p style="margin: 0 0 8px; color: #2a3340; font-size: 14px; font-weight: 600;">Details</p>
+                                <ul style="margin: 0; padding-left: 18px; color: #2a3340; font-size: 14px; line-height: 1.5;">
+                                    {% for item in details %}
+                                    <li>{{ item }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <td style="padding: 8px 24px 24px; color: #6b7280; font-size: 12px;">
+                                Created at: {{ created_pretty }}
+                            </td>
+                        </tr>
+                    </table>
+                    <div style="padding: 12px 0 0; color: #9aa4b2; font-size: 11px; font-family: Arial, Helvetica, sans-serif;">
+                        Hope Health Action
+                    </div>
+
+                    <div style="padding: 8px 0 0; color: #555555; font-size: 10px; font-family: Arial, Helvetica, sans-serif; text-align: center;">
+                        Please do not reply to this email; it was sent automatically and is not monitored.
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

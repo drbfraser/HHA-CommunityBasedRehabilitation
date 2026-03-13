@@ -1,9 +1,16 @@
 import { themeColors } from "@cbr/common/util/colors";
 import { createTheme } from "@mui/material";
+import type {} from "@mui/x-data-grid/themeAugmentation";
 
 export const mediaMobile = "@media (max-width: 800px)";
 
 export const themeMui = createTheme({
+    mixins: {
+        MuiDataGrid: {
+            containerBackground: themeColors.white,
+            pinnedBackground: themeColors.white,
+        },
+    },
     components: {
         MuiCssBaseline: {
             styleOverrides: {

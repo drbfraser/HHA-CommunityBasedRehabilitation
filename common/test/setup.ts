@@ -3,6 +3,10 @@ import * as TestCommonConfig from "./testHelpers/testCommonConfiguration";
 import AbortController from "node-abort-controller";
 import { Request } from "node-fetch";
 
+// React 19 + @testing-library/react-hooks in a non-DOM Jest environment requires this flag
+// so async state updates are tracked as act-compatible in tests.
+(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+
 // @ts-expect-error: TODO node-abort-controller should no longer be needed, as Node
 // has AbortController as a builtin global as of v15.  For now, the common tests
 // still work with this polyfill

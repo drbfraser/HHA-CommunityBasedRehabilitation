@@ -258,6 +258,14 @@ class AdminStats(generics.RetrieveAPIView):
         }
 
 
+class EmailSettingsView(generics.RetrieveUpdateAPIView):
+    permission_classes = [permissions.AdminAll]
+    serializer_class = serializers.EmailSettingsSerializer
+
+    def get_object(self):
+        return models.EmailSettings.get_solo()
+
+
 class UserCurrent(generics.RetrieveAPIView):
     queryset = models.UserCBR.objects.all()
     serializer_class = serializers.UserCBRSerializer
@@ -438,6 +446,42 @@ class VisitDetail(generics.RetrieveAPIView):
     serializer_class = serializers.DetailedVisitSerializer
 
 
+# Reused ReferralImage VIew
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
+class VisitImage(AuthenticatedObjectDownloadView):
+    model = models.Visit
+    file_field = "picture"
+
+    @extend_schema(
+        description="Gets the image of Visit if it exists.",
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+    )
+    def get(self, request, pk):
+        if DEBUG:
+
+            def super_get(self_new, request_new, pk_new):
+                return super().get(self_new, request_new, pk_new)
+
+            return super_get(self, request, pk)
+
+        visit = models.Visit.objects.get(pk=pk)
+        if visit:
+            if len(visit.picture.name) <= 0:
+                return HttpResponseNotFound()
+
+            # dir_name, file_name = os.path.split(visit.picture.name)
+            # response = HttpResponse()
+            # # Redirect the image request to Caddy.
+            # response["X-Accel-Redirect"] = visit.picture.name
+            # response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+            # return response
+            return super().get(self, request, pk)
+        else:
+            return HttpResponseNotFound()
+
+
 @method_decorator(
     cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
 )
@@ -500,6 +544,32 @@ class ReferralDetail(generics.RetrieveUpdateAPIView):
     )
     def put(self, request, pk):
         return super().put(request)
+
+
+class SuccessStoryList(generics.ListCreateAPIView):
+    serializer_class = serializers.SuccessStorySerializer
+    queryset = models.SuccessStory.objects.select_related(
+        "client_id", "created_by_user_id"
+    ).all()
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        client_id = self.request.query_params.get("client_id")
+        if client_id:
+            queryset = queryset.filter(client_id=client_id)
+        return queryset
+
+
+class SuccessStoryDetail(generics.RetrieveUpdateAPIView):
+    queryset = models.SuccessStory.objects.select_related(
+        "client_id", "created_by_user_id"
+    ).all()
+    http_method_names = ["get", "put"]
+
+    def get_serializer_class(self):
+        if self.request.method == "PUT":
+            return serializers.UpdateSuccessStorySerializer
+        return serializers.SuccessStorySerializer
 
 
 class BaselineSurveyCreate(generics.CreateAPIView):
@@ -629,6 +699,7 @@ def sync(request):
         else:
             validation_fail(survey_serializer)
 
+        decode_image(request.data["visits"])
         visit_serializer = serializers.pushVisitSerializer(
             data=request.data, context={"sync_time": sync_time}
         )
@@ -694,7 +765,6 @@ class NoteCreate(generics.CreateAPIView):
         client_id = self.request.data.get("client")
         if not client_id:
             raise ValidationError({"client": "This field is required."})
-
         client = generics.get_object_or_404(Client, pk=client_id)
 
         serializer.save(created_by=self.request.user, client=client)
@@ -714,9 +784,6 @@ class LatestPatientNote(generics.GenericAPIView):
         note = Note.objects.filter(client_id=client_id).order_by("-created_at").first()
 
         if not note:
-            return Response(
-                {"error": f"No notes found for client with ID {client_id}."},
-                status=status.HTTP_404_NOT_FOUND,
-            )
+            return Response({}, status=status.HTTP_200_OK)
 
         return Response(self.get_serializer(note).data)

@@ -1,4 +1,5 @@
 from curses.ascii import isdigit
+from datetime import date, datetime
 import imghdr
 import os
 import time
@@ -522,6 +523,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
             "zone",
             "village",
             "improvements",
+            "picture",
         ]
         read_only_fields = ["id", "user_id", "created_at"]
 
@@ -573,6 +575,7 @@ class SummaryVisitSerializer(serializers.ModelSerializer):
             "latitude",
             "zone",
             "village",
+            "picture",
         ]
 
 
@@ -987,6 +990,44 @@ class AlertListSerializer(serializers.ModelSerializer):
         ]
 
 
+class EmailSettingsSerializer(serializers.ModelSerializer):
+    from_email_password = serializers.CharField(
+        write_only=True, required=False, allow_blank=True
+    )
+    from_email_password_set = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = models.EmailSettings
+        fields = [
+            "from_email",
+            "to_email",
+            "from_email_password",
+            "from_email_password_set",
+            "password_updated_at",
+            "updated_at",
+        ]
+        read_only_fields = [
+            "updated_at",
+            "from_email_password_set",
+            "password_updated_at",
+        ]
+
+    def get_from_email_password_set(self, obj):
+        return bool(obj.from_email_password)
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("from_email_password", None)
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if password is not None:
+            cleaned = "".join(password.split())
+            if cleaned:
+                instance.from_email_password = cleaned
+                instance.password_updated_at = current_milli_time()
+        instance.save()
+        return instance
+
+
 class AlertSyncSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Alert
@@ -1197,13 +1238,130 @@ from cbr_api.models import PatientNote as Note
 
 
 class NoteSerializer(serializers.ModelSerializer):
+    created_by_name = serializers.ReadOnlyField(source="created_by.get_full_name")
+    created_by_username = serializers.ReadOnlyField(source="created_by.username")
+
     class Meta:
         model = Note
-        fields = "__all__"
+        fields = [
+            "id",
+            "note",
+            "created_at",
+            "created_by",
+            "created_by_name",
+            "created_by_username",
+            "client",
+        ]
         read_only_fields = [
             "id",
             "created_at",
-            "server_created_at",
             "created_by",
+            "created_by_name",
+            "created_by_username",
             "client",
         ]
+
+
+class SuccessStorySerializer(serializers.ModelSerializer):
+    written_by_name = serializers.SerializerMethodField()
+    beneficiary_age = serializers.SerializerMethodField()
+    beneficiary_gender = serializers.SerializerMethodField()
+    hcr_status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = models.SuccessStory
+        fields = [
+            "id",
+            "client_id",
+            "created_by_user_id",
+            "created_at",
+            "updated_at",
+            "written_by_name",
+            "beneficiary_age",
+            "beneficiary_gender",
+            "hcr_status",
+            "refugee_origin",
+            "refugee_duration",
+            "diagnosis",
+            "treatment_service",
+            "part1_background",
+            "part2_challenge",
+            "part3_introduction",
+            "part4_action",
+            "part5_impact",
+            "photo",
+            "publish_permission",
+            "status",
+            "date",
+        ]
+        read_only_fields = [
+            "id",
+            "created_by_user_id",
+            "created_at",
+            "updated_at",
+            "written_by_name",
+            "beneficiary_age",
+            "beneficiary_gender",
+            "hcr_status",
+        ]
+
+    def get_written_by_name(self, success_story):
+        user = success_story.created_by_user_id
+        full_name = f"{user.first_name} {user.last_name}".strip()
+        return full_name or user.username
+
+    def get_beneficiary_age(self, success_story):
+        birth_date = success_story.client_id.birth_date
+        if not birth_date or int(birth_date) <= 0:
+            return ""
+
+        try:
+            parsed_date = datetime.fromtimestamp(int(birth_date) / 1000).date()
+        except (OverflowError, OSError, TypeError, ValueError):
+            return ""
+
+        today = date.today()
+        age = today.year - parsed_date.year
+        if (today.month, today.day) < (parsed_date.month, parsed_date.day):
+            age -= 1
+
+        return age if age >= 0 else ""
+
+    def get_beneficiary_gender(self, success_story):
+        return success_story.client_id.gender or ""
+
+    def get_hcr_status(self, success_story):
+        if success_story.client_id.hcr_type == models.Client.HCRType.REFUGEE:
+            return "Refugee"
+        if success_story.client_id.hcr_type == models.Client.HCRType.HOST_COMMUNITY:
+            return "Host Community"
+        return ""
+
+    def create(self, validated_data):
+        current_time = current_milli_time()
+        return models.SuccessStory.objects.create(
+            id=uuid.uuid4(),
+            created_by_user_id=self.context["request"].user,
+            created_at=current_time,
+            updated_at=current_time,
+            **validated_data,
+        )
+
+
+class UpdateSuccessStorySerializer(SuccessStorySerializer):
+    class Meta(SuccessStorySerializer.Meta):
+        read_only_fields = [
+            "id",
+            "client_id",
+            "created_by_user_id",
+            "created_at",
+            "updated_at",
+            "written_by_name",
+            "beneficiary_age",
+            "beneficiary_gender",
+            "hcr_status",
+        ]
+
+    def update(self, instance, validated_data):
+        validated_data["updated_at"] = current_milli_time()
+        return super().update(instance, validated_data)

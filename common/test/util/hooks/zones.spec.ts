@@ -54,8 +54,11 @@ describe("zones.ts", () => {
             const renderHookResult = renderHook(() => useZones());
             // The loading value is an empty map.
             expect(renderHookResult.result.current.size).toBe(0);
-            await renderHookResult.waitForNextUpdate();
-            expect(renderHookResult.result.current.entries()).toEqual(testZoneMap.entries());
+            await renderHookResult.waitFor(() => {
+                expect([...renderHookResult.result.current.entries()]).toEqual([
+                    ...testZoneMap.entries(),
+                ]);
+            });
         });
     });
 

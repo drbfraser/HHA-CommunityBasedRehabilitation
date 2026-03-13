@@ -24,6 +24,7 @@ import {
     initialValidationSchema,
     visitTypeValidationSchema,
     getVisitGoalLabel,
+    VisitField,
 } from "@cbr/common/forms/newVisit/visitFormFields";
 import { IRisk, RiskType } from "@cbr/common/util/risks";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
@@ -36,16 +37,26 @@ import { OutcomeGoalMet } from "@cbr/common/util/visits";
 import ClientRisksModal from "../../pages/ClientDetails/Risks/ClientRisksModal";
 import PreviousGoalsModal from "../../pages/ClientDetails/PreviousGoals/PreviousGoalsModal/PreviousGoalsModal";
 import GoalField from "./components/GoalField";
+import * as Yup from "yup";
+import { PhotoView } from "components/ReferralPhotoView/PhotoView";
+import PatientNoteModal from "components/PatientNoteModal/PatientNoteModal";
 
 interface IStepProps {
     formikProps: FormikProps<any>;
     setRisk: (risk: IRisk) => void;
     setIsModalOpen: (val: boolean) => void;
     setIsPreviousGoalsModalOpen: (val: boolean) => void;
+    setOpenPatientNote: (val: boolean) => void;
 }
 
 const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) => {
-    return ({ formikProps, setRisk, setIsModalOpen, setIsPreviousGoalsModalOpen }: IStepProps) => {
+    return ({
+        formikProps,
+        setRisk,
+        setIsModalOpen,
+        setIsPreviousGoalsModalOpen,
+        setOpenPatientNote,
+    }: IStepProps) => {
         const matchingRisk = risks.find(
             (risk) => risk.risk_type === (visitType as unknown as RiskType)
         );
@@ -135,6 +146,13 @@ const VisitTypeStep = (visitType: VisitFormField, risks: IRisk[], t: TFunction) 
                                 {t("general.update")} {visitFieldLabels[visitType]}{" "}
                                 {t("general.goal")}
                             </Button>
+                            <Button
+                                variant="contained"
+                                color="primary" // Or another color to differentiate it
+                                onClick={() => setOpenPatientNote(true)}
+                            >
+                                {"Patient Note"}
+                            </Button>
                         </Stack>
                     </>
                 ) : null}
@@ -160,6 +178,7 @@ const NewVisit = () => {
     const zones = useZones();
     const { clientId } = useParams<{ clientId: string }>();
     const { t } = useTranslation();
+    const [openPatientNote, setOpenPatientNote] = useState(false);
 
     useEffect(() => {
         apiFetch(Endpoint.CLIENT, `${clientId}`)
@@ -173,7 +192,8 @@ const NewVisit = () => {
             });
     }, [clientId]);
 
-    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+    // Enabled steps + 1 to account for Image Upload
+    const isFinalStep = activeStep === enabledSteps.length + 1 && activeStep !== 0;
 
     const visitSteps = [
         {
@@ -186,6 +206,19 @@ const NewVisit = () => {
             Form: VisitTypeStep(visitType, risks, t),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
+        {
+            label: t("referral.addPicture"),
+            Form: ({ formikProps }: IStepProps) => (
+                <>
+                    <PhotoView
+                        onPictureChange={(pictureURL) => {
+                            void formikProps.setFieldValue(VisitField.picture, pictureURL);
+                        }}
+                    />
+                </>
+            ),
+            validationSchema: () => Yup.object({}), // Empty, picture submission is optional
+        },
     ];
 
     const nextStep = (values: any, helpers: FormikHelpers<any>) => {
@@ -240,6 +273,7 @@ const NewVisit = () => {
                                             setIsPreviousGoalsModalOpen={
                                                 setIsPreviousGoalsModalOpen
                                             }
+                                            setOpenPatientNote={setOpenPatientNote}
                                         />
                                         <br />
                                         <br />
@@ -293,6 +327,11 @@ const NewVisit = () => {
                             close={() => setIsPreviousGoalsModalOpen(false)}
                         />
                     )}
+                    <PatientNoteModal
+                        open={openPatientNote}
+                        clientId={clientId}
+                        onClose={() => setOpenPatientNote(false)}
+                    />
                 </>
             )}
         </Formik>

@@ -26,6 +26,7 @@ export enum Endpoint {
     RISKS = "risks",
     DISABILITIES = "disabilities",
     VISIT = "visit/",
+    VISIT_PICTURE = "visit/picture/",
     STATS = "stats",
     BASELINE_SURVEY = "baselinesurveys",
     USER_PASSWORD = "user/password/",
@@ -33,6 +34,8 @@ export enum Endpoint {
     ALERTS = "alerts",
     ALERT = "alert/",
     VERSION_CHECK = "versioncheck/",
+    EMAIL_SETTINGS = "email_settings/",
+    PATIENT_NOTES = "patient-notes/",
 }
 
 export const APILoadError = "APILoadError";

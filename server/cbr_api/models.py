@@ -128,6 +128,7 @@ class RiskLevel(models.TextChoices):
 
 client_picture_upload_dir = "images/clients"
 referral_picture_upload_dir = "images/referrals"
+visit_picture_upload_dir = "images/visits"
 
 
 class Client(models.Model):
@@ -299,6 +300,23 @@ class Visit(models.Model):
     latitude = models.DecimalField(max_digits=22, decimal_places=16)
     zone = models.ForeignKey(Zone, on_delete=models.PROTECT)
     village = models.CharField(max_length=50)
+
+    def rename_file(self, original_filename):
+        # file_ext includes the "."
+        file_root, file_ext = os.path.splitext(original_filename)
+        new_filename = (
+            f"visit-{self.pk}{file_ext}"
+            if self.pk is not None
+            else f"visit-{get_random_string(10)}-{file_root}{file_ext}"
+        )
+        return os.path.join(visit_picture_upload_dir, new_filename)
+
+    picture = models.ImageField(
+        upload_to=rename_file,
+        storage=OverwriteStorage(),
+        blank=True,
+        null=True,
+    )  # if picture available
 
 
 class Referral(models.Model):
@@ -538,6 +556,30 @@ class Alert(models.Model):
     created_date = models.BigIntegerField(_("date created"), default=time.time)
 
 
+class EmailSettings(models.Model):
+    from_email = models.EmailField(max_length=254)
+    from_email_password = models.CharField(max_length=128, blank=True, default="")
+    to_email = models.EmailField(max_length=254)
+    updated_at = models.BigIntegerField(default=current_milli_time)
+    password_updated_at = models.BigIntegerField(default=0)
+
+    @classmethod
+    def get_solo(cls):
+        existing = cls.objects.first()
+        if existing:
+            return existing
+        return cls.objects.create(
+            from_email="",
+            from_email_password="",
+            to_email="",
+            password_updated_at=0,
+        )
+
+    def save(self, *args, **kwargs):
+        self.updated_at = current_milli_time()
+        return super().save(*args, **kwargs)
+
+
 def generate_id():
     return str(uuid.uuid4())
 
@@ -559,4 +601,59 @@ class PatientNote(models.Model):
         ordering = ["-created_at"]
         indexes = [
             models.Index(fields=["client", "created_at"]),
+        ]
+
+
+class SuccessStory(models.Model):
+    class StoryStatus(models.TextChoices):
+        WORK_IN_PROGRESS = "WIP", _("Work in Progress")
+        READY = "READY", _("Ready")
+
+    class PublishPermission(models.TextChoices):
+        YES = "YES", _("Yes")
+        NO = "NO", _("No")
+        ANONYMOUS = "ANON", _("Anonymous")
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    client_id = models.ForeignKey(
+        Client, related_name="success_stories", on_delete=models.CASCADE
+    )
+    created_by_user_id = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="created_success_stories",
+        on_delete=models.PROTECT,
+    )
+
+    created_at = models.BigIntegerField(default=current_milli_time)
+    updated_at = models.BigIntegerField(default=current_milli_time)
+
+    refugee_origin = models.CharField(max_length=200, blank=True, default="")
+    refugee_duration = models.CharField(max_length=200, blank=True, default="")
+    diagnosis = models.TextField(blank=True, default="")
+    treatment_service = models.TextField(blank=True, default="")
+    part1_background = models.TextField(blank=True, default="")
+    part2_challenge = models.TextField(blank=True, default="")
+    part3_introduction = models.TextField(blank=True, default="")
+    part4_action = models.TextField(blank=True, default="")
+    part5_impact = models.TextField(blank=True, default="")
+    photo = models.TextField(blank=True, default="")
+
+    publish_permission = models.CharField(
+        max_length=5,
+        choices=PublishPermission.choices,
+        default=PublishPermission.NO,
+    )
+    status = models.CharField(
+        max_length=5,
+        choices=StoryStatus.choices,
+        default=StoryStatus.WORK_IN_PROGRESS,
+    )
+    date = models.DateField()
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["client_id", "created_at"]),
+            models.Index(fields=["created_by_user_id", "created_at"]),
         ]

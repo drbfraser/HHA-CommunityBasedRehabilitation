@@ -44,6 +44,7 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 zone: fetchedVisit.zone,
                 village: fetchedVisit.village,
                 improvements: [],
+                picture: "",
             };
             const fetchedImprov = await fetchedVisit.improvements.fetch();
             setVisitImprovement(fetchedImprov);

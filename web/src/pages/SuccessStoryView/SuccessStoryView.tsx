@@ -15,6 +15,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import history from "@cbr/common/util/history";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { getStoryById, ISuccessStory, StoryStatus, PublishPermission } from "util/successStories";
 
 interface IUrlParam {
@@ -51,6 +52,7 @@ const SuccessStoryView = () => {
     const [story, setStory] = useState<ISuccessStory>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+    const [photoBlobUrl, setPhotoBlobUrl] = useState<string>("");
 
     useEffect(() => {
         setLoading(true);
@@ -58,6 +60,13 @@ const SuccessStoryView = () => {
             .then((loadedStory) => {
                 setStory(loadedStory);
                 setError(false);
+
+                if (loadedStory.photo) {
+                    apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
+                        .then((resp) => resp.blob())
+                        .then((blob) => setPhotoBlobUrl(URL.createObjectURL(blob)))
+                        .catch(() => setPhotoBlobUrl(""));
+                }
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
@@ -193,14 +202,14 @@ const SuccessStoryView = () => {
             <Section title="Part 4: Action" body={story.part4_action} />
             <Section title="Part 5: Impact" body={story.part5_impact} />
 
-            {story.photo && (
+            {photoBlobUrl && (
                 <Box sx={{ mt: 3 }}>
                     <Typography variant="h6" fontWeight="bold">
                         Photograph
                     </Typography>
                     <Box
                         component="img"
-                        src={story.photo}
+                        src={photoBlobUrl}
                         alt="Beneficiary photograph"
                         sx={{
                             maxWidth: 500,

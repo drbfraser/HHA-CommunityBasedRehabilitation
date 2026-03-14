@@ -184,7 +184,13 @@ export const ProfilePicCard = (props: IProps) => {
                             }
 
                             setIsSaving(true);
-                            cropper.current.getCroppedCanvas().toBlob((blob: Blob | null) => {
+                            const canvas = cropper.current.getCroppedCanvas();
+                            if (!canvas) {
+                                alert("Failed to get image!");
+                                setIsSaving(false);
+                                return;
+                            }
+                            canvas.toBlob((blob: Blob | null) => {
                                 if (!isMounted()) {
                                     return;
                                 }

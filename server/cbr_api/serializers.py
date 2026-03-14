@@ -1364,4 +1364,11 @@ class UpdateSuccessStorySerializer(SuccessStorySerializer):
 
     def update(self, instance, validated_data):
         validated_data["updated_at"] = current_milli_time()
+        new_photo: Optional[File] = validated_data.get("photo")
+        if new_photo:
+            file_root, file_ext = os.path.splitext(new_photo.name)
+            actual_image_type: Optional[str] = imghdr.what(new_photo.file)
+            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
+                new_photo.name = f"{file_root}.{actual_image_type}"
+
         return super().update(instance, validated_data)

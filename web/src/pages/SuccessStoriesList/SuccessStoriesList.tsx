@@ -5,16 +5,75 @@ import {
     Card,
     CardActionArea,
     CardContent,
+    CardMedia,
     Chip,
     Grid,
     MenuItem,
     Typography,
     TextField,
 } from "@mui/material";
+import PhotoIcon from "@mui/icons-material/Photo";
 import history from "@cbr/common/util/history";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { getAllStories, ISuccessStory, StoryStatus } from "util/successStories";
 
 type TSortOption = "newest" | "oldest" | "updated" | "author";
+
+/** Fetches and renders a small thumbnail for a story; shows a placeholder icon if none. */
+const StoryThumbnail = ({ storyId, hasPhoto }: { storyId: string; hasPhoto: boolean }) => {
+    const [blobUrl, setBlobUrl] = useState<string>("");
+
+    useEffect(() => {
+        if (!hasPhoto) return;
+        let revoked = false;
+        apiFetch(Endpoint.SUCCESS_STORY_PHOTO, storyId)
+            .then((resp) => resp.blob())
+            .then((blob) => {
+                if (!revoked) setBlobUrl(URL.createObjectURL(blob));
+            })
+            .catch(() => {});
+        return () => {
+            revoked = true;
+            if (blobUrl) URL.revokeObjectURL(blobUrl);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [storyId, hasPhoto]);
+
+    if (blobUrl) {
+        return (
+            <CardMedia
+                component="img"
+                image={blobUrl}
+                alt="Story thumbnail"
+                sx={{
+                    width: 80,
+                    height: 80,
+                    objectFit: "contain",
+                    borderRadius: 1,
+                    flexShrink: 0,
+                    bgcolor: "grey.100",
+                }}
+            />
+        );
+    }
+
+    return (
+        <Box
+            sx={{
+                width: 80,
+                height: 80,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                bgcolor: "grey.200",
+                borderRadius: 1,
+                flexShrink: 0,
+            }}
+        >
+            <PhotoIcon sx={{ color: "grey.400", fontSize: 32 }} />
+        </Box>
+    );
+};
 
 const SuccessStoriesList = () => {
     const [stories, setStories] = useState<ISuccessStory[]>([]);
@@ -157,41 +216,58 @@ const SuccessStoriesList = () => {
                                         <Box
                                             sx={{
                                                 display: "flex",
-                                                justifyContent: "space-between",
-                                                gap: 1,
-                                                mb: 1,
+                                                gap: 2,
+                                                alignItems: "flex-start",
                                             }}
                                         >
-                                            <Typography variant="h6">
-                                                {story.written_by_name || "Untitled Story"}
-                                            </Typography>
-                                            <Chip
-                                                label={
-                                                    story.status === StoryStatus.READY
-                                                        ? "Ready"
-                                                        : "Work in Progress"
-                                                }
-                                                color={
-                                                    story.status === StoryStatus.READY
-                                                        ? "success"
-                                                        : "warning"
-                                                }
-                                                size="small"
+                                            <StoryThumbnail
+                                                storyId={story.id}
+                                                hasPhoto={!!story.photo}
                                             />
+                                            <Box sx={{ flex: 1, minWidth: 0 }}>
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        gap: 1,
+                                                        mb: 1,
+                                                    }}
+                                                >
+                                                    <Typography variant="h6">
+                                                        {story.written_by_name || "Untitled Story"}
+                                                    </Typography>
+                                                    <Chip
+                                                        label={
+                                                            story.status === StoryStatus.READY
+                                                                ? "Ready"
+                                                                : "Work in Progress"
+                                                        }
+                                                        color={
+                                                            story.status === StoryStatus.READY
+                                                                ? "success"
+                                                                : "warning"
+                                                        }
+                                                        size="small"
+                                                    />
+                                                </Box>
+                                                <Typography
+                                                    variant="body2"
+                                                    color="text.secondary"
+                                                    sx={{ mb: 0.5 }}
+                                                >
+                                                    {story.date} · Client #{story.client_id}
+                                                </Typography>
+                                                <Typography variant="body2" sx={{ mb: 1 }}>
+                                                    {story.diagnosis || "No diagnosis recorded"}
+                                                </Typography>
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                >
+                                                    Permission: {story.publish_permission}
+                                                </Typography>
+                                            </Box>
                                         </Box>
-                                        <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                            sx={{ mb: 0.5 }}
-                                        >
-                                            {story.date} · Client #{story.client_id}
-                                        </Typography>
-                                        <Typography variant="body2" sx={{ mb: 1 }}>
-                                            {story.diagnosis || "No diagnosis recorded"}
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary">
-                                            Permission: {story.publish_permission}
-                                        </Typography>
                                     </CardContent>
                                 </CardActionArea>
                             </Card>

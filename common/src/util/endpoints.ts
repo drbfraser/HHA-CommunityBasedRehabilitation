@@ -12,6 +12,7 @@ export enum Endpoint {
     CLIENTS = "clients",
     SUCCESS_STORIES = "successstories",
     SUCCESS_STORY = "successstories/",
+    SUCCESS_STORY_PHOTO = "successstories/photo/",
     VISITS = "visits",
     REFERRALS = "referrals",
     REFERRALS_OUTSTANDING = "referrals/outstanding",

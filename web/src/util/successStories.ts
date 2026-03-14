@@ -1,4 +1,4 @@
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, Endpoint, objectToFormData } from "@cbr/common/util/endpoints";
 
 export enum StoryStatus {
     WORK_IN_PROGRESS = "WIP",
@@ -72,21 +72,64 @@ export const getStoryById = async (id: string): Promise<ISuccessStory> => {
     return resp.json();
 };
 
-export const createStory = async (story: ISuccessStoryWritePayload): Promise<ISuccessStory> => {
+const appendPhoto = async (
+    formData: FormData,
+    photoUrl: string,
+    storyId: string | undefined | null
+) => {
+    const photoFetch = await fetch(photoUrl);
+    const contentType = photoFetch.headers.get("Content-Type");
+
+    // If needed, fall back to PNG so that the upload can continue; the server will figure out the
+    // image type. The cropper library by default makes PNGs anyway.
+    const imageExtension = contentType?.includes("image/")
+        ? contentType
+              .split(";")
+              .find((value) => value.includes("image/"))
+              ?.trim()
+              ?.split("/")[1]
+        : "png";
+
+    formData.append(
+        "photo",
+        await photoFetch.blob(),
+        storyId
+            ? `success-story-${storyId}.${imageExtension}`
+            : `success-story-new.${imageExtension}`
+    );
+};
+
+export const createStory = async (
+    story: ISuccessStoryWritePayload,
+    photoUrl?: string
+): Promise<ISuccessStory> => {
+    const formData = objectToFormData(story);
+
+    if (photoUrl && photoUrl.startsWith("blob:")) {
+        await appendPhoto(formData, photoUrl, null);
+    }
+
     const resp = await apiFetch(Endpoint.SUCCESS_STORIES, "", {
         method: "POST",
-        body: JSON.stringify(story),
+        body: formData,
     });
     return resp.json();
 };
 
 export const updateStory = async (
     id: string,
-    story: ISuccessStoryWritePayload
+    story: ISuccessStoryWritePayload,
+    photoUrl?: string
 ): Promise<ISuccessStory> => {
+    const formData = objectToFormData(story);
+
+    if (photoUrl && photoUrl.startsWith("blob:")) {
+        await appendPhoto(formData, photoUrl, id);
+    }
+
     const resp = await apiFetch(Endpoint.SUCCESS_STORY, id, {
         method: "PUT",
-        body: JSON.stringify(story),
+        body: formData,
     });
     return resp.json();
 };

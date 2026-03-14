@@ -201,7 +201,7 @@ module.exports = async function () {
         const e2eEnvPath = path.resolve(__dirname, "..", ".env.e2e");
         const dotenvPath = path.resolve(__dirname, "..", ".env");
         if (fs.existsSync(e2eEnvPath)) {
-            const APP_KEYS = ["APP_ENV", "LOCAL_URL"];
+            const APP_KEYS = ["APP_ENV", "LOCAL_URL", "REACT_NATIVE_PACKAGER_HOSTNAME"];
             const lines = fs.readFileSync(e2eEnvPath, "utf8").split(/\r?\n/);
             const appLines = lines.filter((l) => APP_KEYS.some((k) => l.startsWith(k + "=")));
             if (appLines.length) {

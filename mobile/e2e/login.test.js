@@ -5,7 +5,10 @@ const E2E_PASSWORD = process.env.E2E_PASSWORD;
 
 describe("Login", () => {
     beforeAll(async () => {
-        await device.launchApp({ newInstance: true });
+        await device.launchApp({
+            newInstance: true,
+            url: "cbr://expo-development-client/?url=http%3A%2F%2F10.0.2.2%3A8081",
+        });
         // wait for the app to finish bundling and render the login screen
         await waitFor(element(by.id("login-button")))
             .toBeVisible()

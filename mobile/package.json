@@ -18,7 +18,7 @@
         "e2e:prep:linux": "npm run prebuild && chmod +x android/gradlew",
         "e2e:build:win": "cd android && gradlew.bat assembleDebug assembleAndroidTest -DtestBuildType=debug",
         "e2e:build:linux": "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
-        "e2e:metro": "npx react-native start --port 8081",
+        "e2e:metro": "npx expo start --port 8081",
         "e2e:test": "npx detox test -c android.emu.debug --reuse",
         "e2e:test:attached": "npx detox test -c android.att.debug",
         "e2e:test:verbose": "npx detox test -c android.att.debug --loglevel verbose",

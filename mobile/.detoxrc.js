@@ -26,17 +26,19 @@ module.exports = {
             binaryPath: "android/app/build/outputs/apk/debug/app-debug.apk",
             testBinaryPath:
                 "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
-            build: process.platform === "win32"
-                ? "cd android && gradlew.bat assembleDebug assembleAndroidTest -DtestBuildType=debug"
-                : "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
+            build:
+                process.platform === "win32"
+                    ? "cd android && gradlew.bat assembleDebug assembleAndroidTest -DtestBuildType=debug"
+                    : "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
             reversePorts: [8081, 8000],
         },
         "android.release": {
             type: "android.apk",
             binaryPath: "android/app/build/outputs/apk/release/app-release.apk",
-            build: process.platform === "win32"
-                ? "cd android && gradlew.bat assembleRelease"
-                : "cd android && ./gradlew assembleRelease",
+            build:
+                process.platform === "win32"
+                    ? "cd android && gradlew.bat assembleRelease"
+                    : "cd android && ./gradlew assembleRelease",
         },
     },
     devices: {

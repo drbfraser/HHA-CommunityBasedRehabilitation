@@ -148,6 +148,20 @@ const ClientInfoForm = (props: IProps) => {
                                     {t("surveyAttr.baselineSurvey")}
                                 </Button>
                             </Grid>
+                            <Grid sx={clientFormStyles.sideFormButtonWrapper} item md={10} xs={12}>
+                                <Button
+                                    sx={clientFormStyles.sideFormButton}
+                                    color="primary"
+                                    variant="contained"
+                                    fullWidth
+                                    onClick={() =>
+                                        history.push(`/client/${props.clientInfo.id}/stories/new`)
+                                    }
+                                    disabled={isSubmitting || !values.is_active}
+                                >
+                                    Submit Story
+                                </Button>
+                            </Grid>
                         </Grid>
                     </Grid>
 

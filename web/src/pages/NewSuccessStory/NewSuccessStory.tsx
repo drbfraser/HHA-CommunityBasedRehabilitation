@@ -399,10 +399,15 @@ const NewSuccessStory = () => {
                 Please take a photograph if possible.
             </Typography>
             <Box sx={{ mt: 2, mb: 2 }}>
-                <PhotoView
-                    onPictureChange={(url) => setPhotoUrl(url)}
-                    existingPhotoUrl={photoUrl || undefined}
-                />
+                {photoUrl && (
+                    <Box
+                        component="img"
+                        src={photoUrl}
+                        alt="Story photo"
+                        sx={{ maxWidth: 200, display: "block", mb: 1 }}
+                    />
+                )}
+                <PhotoView onPictureChange={(url) => setPhotoUrl(url)} />
             </Box>
 
             {/* --- PERMISSION & STATUS --- */}

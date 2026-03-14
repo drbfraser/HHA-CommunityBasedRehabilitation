@@ -10,21 +10,18 @@ const Container = styled("div")({
 
 interface Iprops {
     onPictureChange: (newPictureURL: string) => void;
-    existingPhotoUrl?: string;
 }
 
 export const PhotoView = (props: Iprops) => {
     const [thumb, setThumb] = useState<string | undefined>(undefined);
     const { t } = useTranslation();
 
-    const displayUrl = thumb ?? props.existingPhotoUrl;
-
     return (
         <Container>
-            {displayUrl ? (
-                <img alt="" src={displayUrl} width="200 px" />
-            ) : (
+            {thumb === undefined ? (
                 <FormLabel sx={{ display: "block" }}>{t("referral.addImageDescription")}</FormLabel>
+            ) : (
+                <img alt="" src={thumb} width="200 px" />
             )}
 
             <input

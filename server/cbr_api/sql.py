@@ -74,15 +74,13 @@ def _format_rows_for_frontend(rows, categorize_by, group_by):
 def getOutstandingReferrals():
 
     with connection.cursor() as cursor:
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT c.id, c.full_name, r.services_other, r.physiotherapy, r.wheelchair, r.prosthetic, r.orthotic, r.hha_nutrition_and_agriculture_project, r.date_referred, r.mental_health, r.id as referral_id
             FROM cbr_api_referral as r
             INNER JOIN cbr_api_client as c
             ON c.id = r.client_id_id
             WHERE r.resolved=False
-        """
-        )
+        """)
         # it seems that '_id' is automatically appended to the end of foreign key column names.
         # So client_id -> client_id_id
 

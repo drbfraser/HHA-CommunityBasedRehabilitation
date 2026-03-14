@@ -672,9 +672,7 @@ class SuccessStory(models.Model):
         # The image might need to be renamed if this is a new story, since a new story would be missing the
         # UUID primary key (id).
         needs_image_rename = (
-            self.pk is None
-            and self.photo.name is not None
-            and len(self.photo.name) > 0
+            self.pk is None and self.photo.name is not None and len(self.photo.name) > 0
         )
 
         super().save(*args, **kwargs)

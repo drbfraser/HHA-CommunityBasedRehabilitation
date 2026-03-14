@@ -103,6 +103,7 @@ const NewSuccessStory = () => {
 
     const [form, setForm] = useState(blank);
     const [photoUrl, setPhotoUrl] = useState<string>("");
+    const [existingPhotoUrl, setExistingPhotoUrl] = useState<string>("");
 
     useEffect(() => {
         apiFetch(Endpoint.USER_CURRENT)
@@ -132,7 +133,11 @@ const NewSuccessStory = () => {
                     if (existing.photo) {
                         apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
                             .then((resp) => resp.blob())
-                            .then((blob) => setPhotoUrl(URL.createObjectURL(blob)))
+                            .then((blob) => {
+                                const url = URL.createObjectURL(blob);
+                                setPhotoUrl(url);
+                                setExistingPhotoUrl(url);
+                            })
                             .catch(() => setPhotoUrl(""));
                     }
                 })
@@ -399,15 +404,20 @@ const NewSuccessStory = () => {
                 Please take a photograph if possible.
             </Typography>
             <Box sx={{ mt: 2, mb: 2 }}>
-                {photoUrl && (
+                {existingPhotoUrl && (
                     <Box
                         component="img"
-                        src={photoUrl}
+                        src={existingPhotoUrl}
                         alt="Story photo"
                         sx={{ maxWidth: 200, display: "block", mb: 1 }}
                     />
                 )}
-                <PhotoView onPictureChange={(url) => setPhotoUrl(url)} />
+                <PhotoView
+                    onPictureChange={(url) => {
+                        setPhotoUrl(url);
+                        setExistingPhotoUrl("");
+                    }}
+                />
             </Box>
 
             {/* --- PERMISSION & STATUS --- */}

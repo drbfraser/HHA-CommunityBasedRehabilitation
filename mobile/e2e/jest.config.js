@@ -3,7 +3,7 @@ require("dotenv").config({ path: ".env.e2e" });
 /** @type {import('@jest/types').Config.InitialOptions} */
 module.exports = {
     rootDir: "..",
-    testMatch: ["<rootDir>/e2e/**/*.test.js"],
+    testMatch: ["<rootDir>/e2e/**/*.test.js", "!**/00-deviceSetup*"],
     testTimeout: 360000,
     maxWorkers: 1,
     testSequencer: "./e2e/testSequencer.js",

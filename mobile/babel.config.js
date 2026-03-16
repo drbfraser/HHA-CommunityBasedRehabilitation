@@ -12,15 +12,6 @@ module.exports = function (api) {
                     allowUndefined: true,
                 },
             ],
-            [
-                "module-resolver",
-                {
-                    root: ["./"],
-                    alias: {
-                        "@": "./",
-                    },
-                },
-            ],
             ["@babel/plugin-proposal-decorators", { legacy: true }],
             [
                 "module-resolver",

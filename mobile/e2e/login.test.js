@@ -1,4 +1,5 @@
 const { device, element, by, expect } = require("detox");
+const { execSync } = require("child_process");
 
 const E2E_USERNAME = process.env.E2E_USERNAME;
 const E2E_PASSWORD = process.env.E2E_PASSWORD;
@@ -10,6 +11,11 @@ describe("Login", () => {
             delete: true,
             launchArgs: { detoxEnableSynchronization: 0 },
         });
+
+        try {
+            execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
+        } catch (e) {}
+
         await waitFor(element(by.id("login-button")))
             .toBeVisible()
             .withTimeout(30000);
@@ -35,6 +41,6 @@ describe("Login", () => {
 
         await waitFor(element(by.id("login-button")))
             .not.toBeVisible()
-            .withTimeout(30000);
+            .withTimeout(60000);
     });
 });

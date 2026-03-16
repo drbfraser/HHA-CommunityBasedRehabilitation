@@ -92,7 +92,15 @@ async function navigateBackToHome() {
 
 describe("Sync: offline caching via WatermelonDB then online server sync", () => {
     beforeAll(async () => {
-        await device.launchApp({ newInstance: true });
+        await device.launchApp({
+            newInstance: true,
+            delete: true,
+            launchArgs: { detoxEnableSynchronization: 0 },
+        });
+
+        try {
+            execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
+        } catch (e) {}
 
         await waitFor(element(by.id("login-button")))
             .toBeVisible()

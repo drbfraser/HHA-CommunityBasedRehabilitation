@@ -5,16 +5,71 @@ import {
     Card,
     CardActionArea,
     CardContent,
+    CardMedia,
     Chip,
     Grid,
     MenuItem,
     Typography,
     TextField,
 } from "@mui/material";
+import PhotoIcon from "@mui/icons-material/Photo";
 import history from "@cbr/common/util/history";
+import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { getAllStories, ISuccessStory, StoryStatus } from "util/successStories";
 
 type TSortOption = "newest" | "oldest" | "updated" | "author";
+
+/** Fetches and renders a small thumbnail for a story; shows a placeholder icon if none. */
+const StoryThumbnail = ({ storyId, hasPhoto }: { storyId: string; hasPhoto: boolean }) => {
+    const [blobUrl, setBlobUrl] = useState<string>("");
+
+    useEffect(() => {
+        if (!hasPhoto) return;
+        let revoked = false;
+        apiFetch(Endpoint.SUCCESS_STORY_PHOTO, storyId)
+            .then((resp) => resp.blob())
+            .then((blob) => {
+                if (!revoked) setBlobUrl(URL.createObjectURL(blob));
+            })
+            .catch(() => {});
+        return () => {
+            revoked = true;
+            if (blobUrl) URL.revokeObjectURL(blobUrl);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [storyId, hasPhoto]);
+
+    if (blobUrl) {
+        return (
+            <CardMedia
+                component="img"
+                image={blobUrl}
+                alt="Story thumbnail"
+                sx={{
+                    width: "100%",
+                    height: 180,
+                    objectFit: "contain",
+                    bgcolor: "grey.100",
+                }}
+            />
+        );
+    }
+
+    return (
+        <Box
+            sx={{
+                width: "100%",
+                height: 180,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                bgcolor: "grey.200",
+            }}
+        >
+            <PhotoIcon sx={{ color: "grey.400", fontSize: 48 }} />
+        </Box>
+    );
+};
 
 const SuccessStoriesList = () => {
     const [stories, setStories] = useState<ISuccessStory[]>([]);
@@ -144,16 +199,23 @@ const SuccessStoriesList = () => {
             ) : (
                 <Grid container spacing={2}>
                     {filteredStories.map((story) => (
-                        <Grid item xs={12} key={story.id}>
-                            <Card variant="outlined">
+                        <Grid item xs={12} sm={6} md={4} key={story.id}>
+                            <Card variant="outlined" sx={{ height: "100%" }}>
                                 <CardActionArea
                                     onClick={() =>
                                         history.push(
                                             `/client/${story.client_id}/stories/${story.id}`
                                         )
                                     }
+                                    sx={{
+                                        height: "100%",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "stretch",
+                                    }}
                                 >
-                                    <CardContent>
+                                    <StoryThumbnail storyId={story.id} hasPhoto={!!story.photo} />
+                                    <CardContent sx={{ flex: 1 }}>
                                         <Box
                                             sx={{
                                                 display: "flex",
@@ -162,7 +224,11 @@ const SuccessStoriesList = () => {
                                                 mb: 1,
                                             }}
                                         >
-                                            <Typography variant="h6">
+                                            <Typography
+                                                variant="subtitle1"
+                                                fontWeight="bold"
+                                                noWrap
+                                            >
                                                 {story.written_by_name || "Untitled Story"}
                                             </Typography>
                                             <Chip
@@ -186,7 +252,7 @@ const SuccessStoriesList = () => {
                                         >
                                             {story.date} · Client #{story.client_id}
                                         </Typography>
-                                        <Typography variant="body2" sx={{ mb: 1 }}>
+                                        <Typography variant="body2" sx={{ mb: 1 }} noWrap>
                                             {story.diagnosis || "No diagnosis recorded"}
                                         </Typography>
                                         <Typography variant="caption" color="text.secondary">

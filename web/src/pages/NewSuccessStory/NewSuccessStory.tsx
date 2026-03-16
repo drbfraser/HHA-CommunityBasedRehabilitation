@@ -103,6 +103,7 @@ const NewSuccessStory = () => {
 
     const [form, setForm] = useState(blank);
     const [photoUrl, setPhotoUrl] = useState<string>("");
+    const [existingPhotoUrl, setExistingPhotoUrl] = useState<string>("");
 
     useEffect(() => {
         apiFetch(Endpoint.USER_CURRENT)
@@ -127,7 +128,18 @@ const NewSuccessStory = () => {
                 .then((existing: ISuccessStory) => {
                     const { id, created_at, updated_at, created_by_user_id, ...rest } = existing;
                     setForm(rest);
-                    setPhotoUrl(existing.photo || "");
+
+                    // If the story has a photo, fetch it via the photo endpoint and create a blob URL
+                    if (existing.photo) {
+                        apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
+                            .then((resp) => resp.blob())
+                            .then((blob) => {
+                                const url = URL.createObjectURL(blob);
+                                setPhotoUrl(url);
+                                setExistingPhotoUrl(url);
+                            })
+                            .catch(() => setPhotoUrl(""));
+                    }
                 })
                 .catch(() => setSubmissionError("Could not load the success story."))
                 .finally(() => setIsLoadingStory(false));
@@ -193,7 +205,7 @@ const NewSuccessStory = () => {
             part3_introduction: form.part3_introduction,
             part4_action: form.part4_action,
             part5_impact: form.part5_impact,
-            photo: photoUrl,
+            photo: "",
             publish_permission: form.publish_permission,
             status: form.status,
             date: form.date,
@@ -202,7 +214,9 @@ const NewSuccessStory = () => {
         setIsSubmitting(true);
         setSubmissionError(undefined);
 
-        const request = storyId ? updateStory(storyId, storyPayload) : createStory(storyPayload);
+        const request = storyId
+            ? updateStory(storyId, storyPayload, photoUrl)
+            : createStory(storyPayload, photoUrl);
         request
             .then(() => history.goBack())
             .catch(() => setSubmissionError("Could not save the success story."))
@@ -389,15 +403,22 @@ const NewSuccessStory = () => {
             <Typography sx={storyFormStyles.helperText}>
                 Please take a photograph if possible.
             </Typography>
-            {photoUrl && (
-                <Box
-                    component="img"
-                    src={photoUrl}
-                    alt="Story photo"
-                    sx={storyFormStyles.photoPreview}
+            <Box sx={{ mt: 2, mb: 2 }}>
+                {existingPhotoUrl && (
+                    <Box
+                        component="img"
+                        src={existingPhotoUrl}
+                        alt="Story photo"
+                        sx={{ maxWidth: 200, display: "block", mb: 1 }}
+                    />
+                )}
+                <PhotoView
+                    onPictureChange={(url) => {
+                        setPhotoUrl(url);
+                        setExistingPhotoUrl("");
+                    }}
                 />
-            )}
-            <PhotoView onPictureChange={(url) => setPhotoUrl(url)} />
+            </Box>
 
             {/* --- PERMISSION & STATUS --- */}
             <Grid container spacing={2} sx={{ mt: 2 }}>

@@ -391,7 +391,7 @@ const NewSuccessStory = () => {
             {renderNarrativeSection(
                 "Part 2: Challenge",
                 "part2_challenge",
-                "Explain the challenge the person had before. What was life like for them before HHA EA helped them? (not just clinically – socially, emotionally, etc.)"
+                "Explain the challenge the person had before. What was life like for them before HHA EA helped them? (not just clinically but socially, emotionally, etc.)"
             )}
             {renderNarrativeSection(
                 "Part 3: Introduction",

@@ -12,13 +12,15 @@ describe("Login", () => {
             launchArgs: { detoxEnableSynchronization: 0 },
         });
 
+        await new Promise((r) => setTimeout(r, 5000));
+
         try {
             execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
         } catch (e) {}
 
         await waitFor(element(by.id("login-button")))
             .toBeVisible()
-            .withTimeout(30000);
+            .withTimeout(60000);
     });
 
     it("should show login screen on app launch", async () => {

@@ -13,6 +13,7 @@ const useStyles = () =>
         },
         uploadImageContainer: {
             flex: 1,
+            position: "relative",
         },
         centerImageContainer: {
             flex: 1,
@@ -65,6 +66,19 @@ const useStyles = () =>
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
         picker: { height: 40, width: 250 },
         question: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
+        uploadHintContainer: {
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            backgroundColor: "#F2F2F2",
+            borderRadius: 12,
+            position: "absolute",
+            left: 16,
+            right: 16,
+            top: "40%",
+        },
+        uploadHintText: {
+            textAlign: "center",
+        },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
         hipWidthInput: {
             backgroundColor: "transparent",

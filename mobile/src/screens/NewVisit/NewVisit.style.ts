@@ -10,6 +10,7 @@ const useStyles = () =>
         },
         uploadImageContainer: {
             flex: 1,
+            position: "relative",
         },
         centerImageContainer: {
             flex: 1,
@@ -58,6 +59,19 @@ const useStyles = () =>
         },
         errorAlert: { marginVertical: 10 },
         errorText: { color: themeColors.helperTextRed, paddingLeft: 12 },
+        uploadHintContainer: {
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            backgroundColor: "#F2F2F2",
+            borderRadius: 12,
+            position: "absolute",
+            left: 16,
+            right: 16,
+            top: "40%",
+        },
+        uploadHintText: {
+            textAlign: "center",
+        },
     });
 
 export const progressStepsStyle = {

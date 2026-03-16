@@ -230,6 +230,11 @@ const NewReferral = (props: INewReferralProps) => {
             Form: ({ formikProps }) => (
                 <>
                     <View style={styles.uploadImageContainer}>
+                        <View style={styles.uploadHintContainer}>
+                            <Text style={styles.uploadHintText}>
+                                Upload your picture if available.
+                            </Text>
+                        </View>
                         <View style={styles.centerImageContainer}>
                             {formikProps.values[ReferralFormField.picture] && (
                                 <Card.Cover

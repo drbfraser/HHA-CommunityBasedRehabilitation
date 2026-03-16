@@ -332,6 +332,11 @@ const NewVisit = (props: INewVisitProps) => {
             Form: ({ formikProps }) => (
                 <>
                     <View style={styles.uploadImageContainer}>
+                        <View style={styles.uploadHintContainer}>
+                            <Text style={styles.uploadHintText}>
+                                Upload your picture if available.
+                            </Text>
+                        </View>
                         <View style={styles.centerImageContainer}>
                             {formikProps.values[VisitFormField.picture] && (
                                 <Card.Cover

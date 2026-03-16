@@ -108,7 +108,7 @@ const SuccessStoryView = () => {
                     mb: 2,
                 }}
             >
-                <Typography variant="h4">Beneficiary Case Study</Typography>
+                <Typography variant="h4">{story.title || "Beneficiary Case Study"}</Typography>
                 <Button
                     variant="contained"
                     startIcon={<EditIcon />}

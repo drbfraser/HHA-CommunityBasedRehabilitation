@@ -257,11 +257,10 @@ const ClientDetails = () => {
                                         >
                                             <Box>
                                                 <Typography variant="subtitle1" fontWeight="bold">
-                                                    {story.written_by_name || "Untitled"}
+                                                    {story.title || "Untitled"}
                                                 </Typography>
                                                 <Typography variant="body2" color="text.secondary">
-                                                    {story.date} &middot;{" "}
-                                                    {story.diagnosis || "No diagnosis"}
+                                                    {story.date} &middot; {story.written_by_name}
                                                 </Typography>
                                             </Box>
                                             <Chip

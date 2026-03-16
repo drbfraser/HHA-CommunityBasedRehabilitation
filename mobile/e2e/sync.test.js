@@ -95,7 +95,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         await device.launchApp({
             newInstance: true,
             delete: true,
-            launchArgs: { detoxEnableSynchronization: 0 },
+            launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },
         });
 
         try {

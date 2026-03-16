@@ -9,14 +9,15 @@ describe("Login", () => {
         await device.launchApp({
             newInstance: true,
             delete: true,
-            launchArgs: { detoxEnableSynchronization: 0 },
+            launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },
         });
 
-        await new Promise((r) => setTimeout(r, 5000));
-
-        try {
-            execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
-        } catch (e) {}
+        for (let i = 0; i < 5; i++) {
+            await new Promise((r) => setTimeout(r, 2000));
+            try {
+                execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
+            } catch (e) {}
+        }
 
         await waitFor(element(by.id("login-button")))
             .toBeVisible()

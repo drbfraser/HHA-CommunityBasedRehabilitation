@@ -200,7 +200,7 @@
     "requestTokenFailureInvalid": "Do ako tiki kido I sondo na ŋutu logilö (ŋodeki) böŋö pini pi, duma I lot",
     "startDate": "Perok suluesi",
     "endDate": "Perok dutesi",
-    "goBackWarning": "You may have unsaved changes. Are you sure you want to go back?"
+    "goBackWarning": "&You may have unsaved changes. Are you sure you want to go back?"
   },
   "alert": {
     "generalFailure": "Lyanget a konda 'borik",
@@ -371,7 +371,7 @@
     "dearchive": "Titimakindya",
     "cannotEditArchived": "Doti bulo dendya ŋutu lo gilö kulu , ko lepeŋat alayi",
     "sureToClearForm": "Do gwak dekuri seja nana manini?",
-    "imageSubtitle": "Press the icon to upload an image."
+    "imageSubtitle": "&Press the icon to upload an image."
   },
   "referral": {
     "client_id": "Ngutuu' lo Ngangaraki'",
@@ -455,7 +455,9 @@
     "orthoticInjuryLocation": "Suki na tito lo luduk",
     "clubFoot": "Dapanit na mokot ludukö",
     "injectionNeuritis": "Gilioti lo'bo'boŋötu parik ko nyarju na geleŋ lwölwöŋ kuleliŋ",
-    "autism": "Gilöti Lo kwiŋit."
+    "autism": "Gilöti Lo kwiŋit.",
+    "addPicture": "&Upload Image",
+    "addImageDescription": "&Add image if available"
   },
   "risks": {
     "riskLevel": "Ngo' naron na gba da",
@@ -488,7 +490,7 @@
     "mentalSet": "<1>Kelan na yeyeisi (kwinit)</1> Yöŋit a togwidiki kata",
     "mentalChanged": "<1>Kelan na yeyeisi (kwinit)</1> Yöŋit a lewusaji i",
     "area": "Gwoke / Pirit",
-    "specify": "Please specify"
+    "specify": "&Please specify"
   },
   "riskLevelsAbbreviated": {
     "low": "GK",
@@ -607,57 +609,57 @@
     "clientNutritionGoalStatus": "Tirikwesi ti nyesu na ŋuto ŋode",
     "clientMentalHealthGoalStatus": "Tirikwesi ti yeyesi ko kelan na ŋuto ŋode",
     "PLACEHOLDER-socialRequirements": {
-      "0": "Improve connection with community",
-      "1": "Improve connection with family",
-      "2": "Be more social with others"
+      "0": "&Improve connection with community",
+      "1": "&Improve connection with family",
+      "2": "&Be more social with others"
     },
     "PLACEHOLDER-nutritionRequirements": {
-      "0": "Obtain additional food supplies",
-      "1": "Have a balanced diet"
+      "0": "&Obtain additional food supplies",
+      "1": "&Have a balanced diet"
     },
     "PLACEHOLDER-mentalRequirements": {
-      "0": "Recieve counselling",
-      "1": "Recieve medication"
+      "0": "&Recieve counselling",
+      "1": "&Recieve medication"
     },
     "PLACEHOLDER-healthRequirements": {
-      "0": "Recieve medication",
-      "1": "Recieve wheelchair",
-      "2": "Recieve crutches",
-      "3": "Improve personal hygeine"
+      "0": "&Recieve medication",
+      "1": "&Recieve wheelchair",
+      "2": "&Recieve crutches",
+      "3": "&Improve personal hygeine"
     },
     "PLACEHOLDER-educationRequirements": {
-      "0": "Recieve technical training",
-      "1": "Enroll in a skills development course"
+      "0": "&Recieve technical training",
+      "1": "&Enroll in a skills development course"
     },
     "PLACEHOLDER-socialGoals": {
-      "0": "Achieved",
-      "1": "In progress",
-      "2": "Not Achieved",
-      "3": "No goals"
+      "0": "&Achieved",
+      "1": "&In progress",
+      "2": "&Not Achieved",
+      "3": "&No goals"
     },
     "PLACEHOLDER-nutritionGoals": {
-      "0": "Achieved",
-      "1": "In progress",
-      "2": "Not Achieved",
-      "3": "No goals"
+      "0": "&Achieved",
+      "1": "&In progress",
+      "2": "&Not Achieved",
+      "3": "&No goals"
     },
     "PLACEHOLDER-mentalGoals": {
-      "0": "Achieved",
-      "1": "In progress",
-      "2": "Not Achieved",
-      "3": "No goals"
+      "0": "&Achieved",
+      "1": "&In progress",
+      "2": "&Not Achieved",
+      "3": "&No goals"
     },
     "PLACEHOLDER-healthGoals": {
-      "0": "Achieved",
-      "1": "In progress",
-      "2": "Not Achieved",
-      "3": "No goals"
+      "0": "&Achieved",
+      "1": "&In progress",
+      "2": "&Not Achieved",
+      "3": "&No goals"
     },
     "PLACEHOLDER-educationGoals": {
-      "0": "Achieved",
-      "1": "In progress",
-      "2": "Not Achieved",
-      "3": "No goals"
+      "0": "&Achieved",
+      "1": "&In progress",
+      "2": "&Not Achieved",
+      "3": "&No goals"
     },
     "clientHealthGoalRequirement": "Tirikuesi na 'dede kurikin ti kelan na ŋutu lo gilö",
     "clientEducationGoalRequirement": "Tirikuesi na 'dede kurikin ti kendya na ŋutu lo gilö",
@@ -756,7 +758,7 @@
     "monthly": "Ko yapa",
     "downloadAsCSV": "Suki na mokot node könin ludukös",
     "clickBarToFilter": "Nyadote I wuriot anyen lili piriton/no tumiton ka'de-ka'de",
-    "totalNewFAdult": "Total New Female Adult Clients:"
+    "totalNewFAdult": "&Total New Female Adult Clients:"
   },
   "sync": {
     "sureResetLocalDB": "A to'diri do mimindi nyogu tunda/ pedda/ tetenakinda 'bura'",
@@ -835,88 +837,88 @@
     "createNew": "Gweyu liduko",
     "viewPrevious": "Mete ŋo ti bot",
     "noCurrentOngoingGoals": "Togwidiesi ti yana 'bayin na tu ŋerot",
-    "healthSet": "<1>Health</1> goal status set to",
-    "educationSet": "<1>Education</1> goal status set to",
-    "socialSet": "<1>Social</1> goal status set to",
-    "nutritionSet": "<1>Nutrition</1> goal status set to",
-    "mentalSet": "<1>Mental Health</1> goal status set to"
+    "healthSet": "&<1>Health</1> goal status set to",
+    "educationSet": "&<1>Education</1> goal status set to",
+    "socialSet": "&<1>Social</1> goal status set to",
+    "nutritionSet": "&<1>Nutrition</1> goal status set to",
+    "mentalSet": "&<1>Mental Health</1> goal status set to"
   },
   "cancellation": {
-    "_$dead": "Patient has died",
-    "_$moved": "Patient has moved away",
-    "_$circumstances": "Patient's circumstances have changed",
-    "_$abandoned": "Patient has abandoned this goal",
-    "_$unwilling": "Patient is no longer willing to work with us"
+    "_$dead": "&Patient has died",
+    "_$moved": "&Patient has moved away",
+    "_$circumstances": "&Patient's circumstances have changed",
+    "_$abandoned": "&Patient has abandoned this goal",
+    "_$unwilling": "&Patient is no longer willing to work with us"
   },
   "risk": {
     "health": {
       "requirement": {
-        "_$Malaria": "Malaria treatment",
-        "_$Medical": "Medical assistance",
-        "_$Wound": "Wound care for pressure sores",
-        "_$Mobility": "Mobility device - crutches",
-        "_$Physiotherapy": "Physiotherapy"
+        "_$Malaria": "&Malaria treatment",
+        "_$Medical": "&Medical assistance",
+        "_$Wound": "&Wound care for pressure sores",
+        "_$Mobility": "&Mobility device - crutches",
+        "_$Physiotherapy": "&Physiotherapy"
       },
       "goal": {
-        "_$Medical": "Medical treatment provided",
-        "_$Sores": "Sores managed/healed",
-        "_$Mobility": "Mobility device provided",
-        "_$Pain": "Pain managed"
+        "_$Medical": "&Medical treatment provided",
+        "_$Sores": "&Sores managed/healed",
+        "_$Mobility": "&Mobility device provided",
+        "_$Pain": "&Pain managed"
       }
     },
     "social": {
       "requirement": {
-        "_$Contact": "Contact with community",
-        "_$Inclusion": "Inclusion in family",
-        "_$Training": "Training for family members"
+        "_$Contact": "&Contact with community",
+        "_$Inclusion": "&Inclusion in family",
+        "_$Training": "&Training for family members"
       },
       "goal": {
-        "_$Community": "Take part in a community event",
-        "_$Inclusion": "Inclusion in family time"
+        "_$Community": "&Take part in a community event",
+        "_$Inclusion": "&Inclusion in family time"
       }
     },
     "nutrition": {
       "requirement": {
-        "_$Diabetic": "Special dietary need - diabetic",
-        "_$Allergies": "Special dietary need - allergies",
-        "_$Malnutrition": "Special dietary need - malnutrition",
-        "_$Training": "Nutrition training",
-        "_$Agricultural": "Inclusion in Agricultural project"
+        "_$Diabetic": "&Special dietary need - diabetic",
+        "_$Allergies": "&Special dietary need - allergies",
+        "_$Malnutrition": "&Special dietary need - malnutrition",
+        "_$Training": "&Nutrition training",
+        "_$Agricultural": "&Inclusion in Agricultural project"
       },
       "goal": {
-        "_$ManageDiet": "Manage diet to meet needs",
-        "_$Sustainable": "Sustainable food source"
+        "_$ManageDiet": "&Manage diet to meet needs",
+        "_$Sustainable": "&Sustainable food source"
       }
     },
     "education": {
       "requirement": {
-        "_$School": "Attend school",
-        "_$Vocational": "Vocational training",
-        "_$Family": "Training for family - learning through play"
+        "_$School": "&Attend school",
+        "_$Vocational": "&Vocational training",
+        "_$Family": "&Training for family - learning through play"
       },
       "goal": {
-        "_$Education": "Have an education",
-        "_$Income": "Sustainable source of income",
-        "_$Child": "Child ready to start school"
+        "_$Education": "&Have an education",
+        "_$Income": "&Sustainable source of income",
+        "_$Child": "&Child ready to start school"
       }
     },
     "mental": {
       "requirement": {
-        "_$Medical": "Needs medical attention",
-        "_$Family": "Promote understanding in the family",
-        "_$Community": "Promote understanding in the community",
-        "_$Refer": "Refer to mental health agencies",
-        "_$CounsellingStressTrauma": "Advice and counselling - stress and trauma",
-        "_$CounsellingOther": "Advice and counselling - other"
+        "_$Medical": "&Needs medical attention",
+        "_$Family": "&Promote understanding in the family",
+        "_$Community": "&Promote understanding in the community",
+        "_$Refer": "&Refer to mental health agencies",
+        "_$CounsellingStressTrauma": "&Advice and counselling - stress and trauma",
+        "_$CounsellingOther": "&Advice and counselling - other"
       },
       "goal": {
-        "_$Family": "Inclusion in family",
-        "_$Community": "Inclusion in community",
-        "_$Medical": "Medical assistance provided",
-        "_$Agency": "Seen by mental health agency",
-        "_$Improvement": "Improvement in mental health",
-        "_$Reduction": "Reduction of stress and trauma",
-        "_$Improvements": "Improvements"
+        "_$Family": "&Inclusion in family",
+        "_$Community": "&Inclusion in community",
+        "_$Medical": "&Medical assistance provided",
+        "_$Agency": "&Seen by mental health agency",
+        "_$Improvement": "&Improvement in mental health",
+        "_$Reduction": "&Reduction of stress and trauma",
+        "_$Improvements": "&Improvements"
       }
     }
   }

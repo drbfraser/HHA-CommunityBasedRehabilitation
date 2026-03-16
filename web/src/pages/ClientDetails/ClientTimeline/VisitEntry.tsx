@@ -27,7 +27,9 @@ import RiskTypeChip from "components/RiskTypeChip/RiskTypeChip";
 import DataCard from "components/DataCard/DataCard";
 import { getTranslatedRiskName } from "util/risks";
 import TimelineEntry from "../Timeline/TimelineEntry";
-import { entryStyles } from "./Entry.styles";
+import { entryStyles, PhotoIndicator, SummaryContainer } from "./Entry.styles";
+import ImageIcon from "@mui/icons-material/Image";
+import { Thumb } from "components/ReferralPhotoView/Thumb";
 
 interface IEntryProps {
     visitSummary: IVisitSummary;
@@ -57,27 +59,34 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
 
     const Summary = ({ clickable }: { clickable: boolean }) => {
         const zone = zones.get(visitSummary.zone) ?? t("general.unknown");
-
+        const hasPhoto = Boolean(visitSummary.picture?.trim?.().length);
         return (
             <>
-                <Trans i18nKey="visitAttr.visitLocation">
-                    -<b>Visit</b> in {{ body: zone }}
-                </Trans>
-                {visitSummary.health_visit && (
-                    <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
-                )}{" "}
-                {visitSummary.educat_visit && (
-                    <RiskTypeChip risk={RiskType.EDUCATION} clickable={clickable} />
-                )}{" "}
-                {visitSummary.social_visit && (
-                    <RiskTypeChip risk={RiskType.SOCIAL} clickable={clickable} />
-                )}{" "}
-                {visitSummary.nutrit_visit && (
-                    <RiskTypeChip risk={RiskType.NUTRITION} clickable={clickable} />
-                )}{" "}
-                {visitSummary.mental_visit && (
-                    <RiskTypeChip risk={RiskType.MENTAL} clickable={clickable} />
-                )}{" "}
+                <SummaryContainer>
+                    <Trans i18nKey="visitAttr.visitLocation">
+                        -<b>Visit</b> in {{ body: zone }}
+                    </Trans>
+                    {visitSummary.health_visit && (
+                        <RiskTypeChip risk={RiskType.HEALTH} clickable={clickable} />
+                    )}{" "}
+                    {visitSummary.educat_visit && (
+                        <RiskTypeChip risk={RiskType.EDUCATION} clickable={clickable} />
+                    )}{" "}
+                    {visitSummary.social_visit && (
+                        <RiskTypeChip risk={RiskType.SOCIAL} clickable={clickable} />
+                    )}{" "}
+                    {visitSummary.nutrit_visit && (
+                        <RiskTypeChip risk={RiskType.NUTRITION} clickable={clickable} />
+                    )}{" "}
+                    {visitSummary.mental_visit && (
+                        <RiskTypeChip risk={RiskType.MENTAL} clickable={clickable} />
+                    )}{" "}
+                    {hasPhoto && (
+                        <PhotoIndicator>
+                            <ImageIcon fontSize="medium" />
+                        </PhotoIndicator>
+                    )}
+                </SummaryContainer>
             </>
         );
     };
@@ -126,6 +135,7 @@ const VisitEntry = ({ visitSummary, dateFormatter }: IEntryProps) => {
                 {Object.values(RiskType).map((type) => (
                     <DetailAccordion key={type} type={type} />
                 ))}
+                <Thumb Id={visit.id} Url={visit.picture} endpoint={Endpoint.VISIT_PICTURE} />
             </>
         );
     };

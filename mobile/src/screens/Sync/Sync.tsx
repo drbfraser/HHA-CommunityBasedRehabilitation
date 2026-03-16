@@ -257,6 +257,7 @@ const Sync = () => {
                 {renderSyncingNotice()}
                 <View style={styles.btnContainer}>
                     <Button
+                        testID="sync-database-button"
                         icon="database-sync"
                         mode="contained"
                         labelStyle={styles.syncBtnLabel}

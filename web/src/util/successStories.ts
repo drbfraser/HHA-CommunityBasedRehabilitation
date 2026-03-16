@@ -21,6 +21,8 @@ export interface ISuccessStory {
     beneficiary_age: number | "";
     beneficiary_gender: string;
     hcr_status: string;
+    client_name: string;
+    title: string;
     refugee_origin: string;
     refugee_duration: string;
     diagnosis: string;
@@ -39,6 +41,7 @@ export interface ISuccessStory {
 export type ISuccessStoryWritePayload = Pick<
     ISuccessStory,
     | "client_id"
+    | "title"
     | "refugee_origin"
     | "refugee_duration"
     | "diagnosis"

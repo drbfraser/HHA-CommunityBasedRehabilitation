@@ -86,6 +86,8 @@ const NewSuccessStory = () => {
         beneficiary_age: "",
         beneficiary_gender: "",
         hcr_status: "",
+        client_name: "",
+        title: "",
         refugee_origin: "",
         refugee_duration: "",
         diagnosis: "",
@@ -196,6 +198,7 @@ const NewSuccessStory = () => {
 
         const storyPayload: ISuccessStoryWritePayload = {
             client_id: clientId,
+            title: form.title,
             refugee_origin: form.refugee_origin,
             refugee_duration: form.refugee_duration,
             diagnosis: form.diagnosis,
@@ -266,6 +269,16 @@ const NewSuccessStory = () => {
 
             {/* --- HEADER FIELDS --- */}
             <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TextField
+                        fullWidth
+                        label="Story Title"
+                        variant="outlined"
+                        value={form.title}
+                        onChange={set("title")}
+                        placeholder="Give your success story a title"
+                    />
+                </Grid>
                 <Grid item xs={12} md={6}>
                     <TextField
                         fullWidth
@@ -378,7 +391,7 @@ const NewSuccessStory = () => {
             {renderNarrativeSection(
                 "Part 2: Challenge",
                 "part2_challenge",
-                "Explain the challenge the person had before. What was life like for them before HHA EA helped them? (not just clinically – socially, emotionally, etc.)"
+                "Explain the challenge the person had before. What was life like for them before HHA EA helped them? (not just clinically but socially, emotionally, etc.)"
             )}
             {renderNarrativeSection(
                 "Part 3: Introduction",

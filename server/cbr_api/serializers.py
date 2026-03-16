@@ -1267,6 +1267,7 @@ class SuccessStorySerializer(serializers.ModelSerializer):
     beneficiary_age = serializers.SerializerMethodField()
     beneficiary_gender = serializers.SerializerMethodField()
     hcr_status = serializers.SerializerMethodField()
+    client_name = serializers.SerializerMethodField()
 
     class Meta:
         model = models.SuccessStory
@@ -1280,6 +1281,8 @@ class SuccessStorySerializer(serializers.ModelSerializer):
             "beneficiary_age",
             "beneficiary_gender",
             "hcr_status",
+            "client_name",
+            "title",
             "refugee_origin",
             "refugee_duration",
             "diagnosis",
@@ -1303,6 +1306,7 @@ class SuccessStorySerializer(serializers.ModelSerializer):
             "beneficiary_age",
             "beneficiary_gender",
             "hcr_status",
+            "client_name",
         ]
 
     def get_written_by_name(self, success_story):
@@ -1337,6 +1341,10 @@ class SuccessStorySerializer(serializers.ModelSerializer):
             return "Host Community"
         return ""
 
+    def get_client_name(self, success_story):
+        client = success_story.client_id
+        return client.full_name or ""
+
     def create(self, validated_data):
         current_time = current_milli_time()
         return models.SuccessStory.objects.create(
@@ -1360,6 +1368,7 @@ class UpdateSuccessStorySerializer(SuccessStorySerializer):
             "beneficiary_age",
             "beneficiary_gender",
             "hcr_status",
+            "client_name",
         ]
 
     def update(self, instance, validated_data):

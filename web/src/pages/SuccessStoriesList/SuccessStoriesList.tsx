@@ -99,8 +99,9 @@ const SuccessStoriesList = () => {
                 permissionFilter === "ALL" || story.publish_permission === permissionFilter;
             const matchesSearch =
                 searchValue.length === 0 ||
+                (story.title || "").toLowerCase().includes(searchValue) ||
                 story.written_by_name.toLowerCase().includes(searchValue) ||
-                story.diagnosis.toLowerCase().includes(searchValue) ||
+                (story.client_name || "").toLowerCase().includes(searchValue) ||
                 story.client_id.toLowerCase().includes(searchValue);
 
             return matchesStatus && matchesPermission && matchesSearch;
@@ -134,7 +135,7 @@ const SuccessStoriesList = () => {
                     <TextField
                         fullWidth
                         label="Search"
-                        placeholder="Writer, diagnosis, or client ID"
+                        placeholder="Title, writer, or client name"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                     />
@@ -229,7 +230,7 @@ const SuccessStoriesList = () => {
                                                 fontWeight="bold"
                                                 noWrap
                                             >
-                                                {story.written_by_name || "Untitled Story"}
+                                                {story.title || "Untitled Story"}
                                             </Typography>
                                             <Chip
                                                 label={
@@ -250,13 +251,10 @@ const SuccessStoriesList = () => {
                                             color="text.secondary"
                                             sx={{ mb: 0.5 }}
                                         >
-                                            {story.date} · Client #{story.client_id}
+                                            {story.date} · {story.written_by_name}
                                         </Typography>
                                         <Typography variant="body2" sx={{ mb: 1 }} noWrap>
-                                            {story.diagnosis || "No diagnosis recorded"}
-                                        </Typography>
-                                        <Typography variant="caption" color="text.secondary">
-                                            Permission: {story.publish_permission}
+                                            {story.client_name || `Client #${story.client_id}`}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>

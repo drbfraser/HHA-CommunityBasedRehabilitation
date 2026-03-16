@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Box, Button, Alert, Skeleton } from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
+import BugReportIcon from "@mui/icons-material/BugReport";
 
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
@@ -19,6 +20,10 @@ const UserView = () => {
         return history.push("/user/password");
     };
 
+    const handleReportBug = () => {
+        return history.push("/report-bug");
+    };
+
     return (
         <Box sx={userStyles.container}>
             {user === APILoadError ? (
@@ -29,14 +34,24 @@ const UserView = () => {
                         <h1>
                             {user.first_name} {user.last_name}
                         </h1>
-                        <Button
-                            sx={userStyles.changePasswordButton}
-                            color="primary"
-                            onClick={handleChangePassword}
-                        >
-                            <LockOpenIcon />
-                            {t("login.changePassword")}
-                        </Button>
+                        <Box sx={userStyles.headerActions}>
+                            <Button
+                                sx={userStyles.reportBugButton}
+                                variant="outlined"
+                                onClick={handleReportBug}
+                            >
+                                <BugReportIcon />
+                                Report a Bug
+                            </Button>
+                            <Button
+                                sx={userStyles.changePasswordButton}
+                                color="primary"
+                                onClick={handleChangePassword}
+                            >
+                                <LockOpenIcon />
+                                {t("login.changePassword")}
+                            </Button>
+                        </Box>
                     </Box>
 
                     <b>{t("general.username")}</b>

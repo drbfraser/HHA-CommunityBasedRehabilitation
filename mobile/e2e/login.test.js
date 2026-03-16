@@ -1,18 +1,18 @@
 const { device, element, by, expect } = require("detox");
 
-/**
- * E2E test credentials are loaded from .env.e2e
- */
 const E2E_USERNAME = process.env.E2E_USERNAME;
 const E2E_PASSWORD = process.env.E2E_PASSWORD;
 
 describe("Login", () => {
     beforeAll(async () => {
-        await device.launchApp({ newInstance: true });
-        // wait for the app to finish bundling and render the login screen
+        await device.launchApp({
+            newInstance: true,
+            delete: true,
+            launchArgs: { detoxEnableSynchronization: 0 },
+        });
         await waitFor(element(by.id("login-button")))
             .toBeVisible()
-            .withTimeout(120000);
+            .withTimeout(30000);
     });
 
     it("should show login screen on app launch", async () => {
@@ -28,13 +28,10 @@ describe("Login", () => {
             );
         }
 
-        await element(by.id("login-username-input")).tap();
         await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
-        await element(by.id("login-username-input")).tapReturnKey();
-
-        await element(by.id("login-password-input")).tap();
         await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);
-        await element(by.id("login-password-input")).tapReturnKey();
+
+        await element(by.id("login-button")).tap();
 
         await waitFor(element(by.id("login-button")))
             .not.toBeVisible()

@@ -37,7 +37,8 @@
                 }
             ],
             "expo-localization",
-            "./plugins/withAndroidSigningConfig.ts"
+            "./plugins/withAndroidSigningConfig.ts",
+            "./plugins/withDetoxTest.ts"
         ],
         "experiments": {
             "typedRoutes": true

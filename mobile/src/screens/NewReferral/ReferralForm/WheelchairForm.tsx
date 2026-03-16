@@ -1,25 +1,14 @@
 import React, { useState } from "react";
 import { View } from "react-native";
 import TextCheckBox from "../../../components/TextCheckBox/TextCheckBox";
-import {
-    Text,
-    HelperText,
-    TextInput,
-    Paragraph,
-    RadioButton,
-    List,
-    Card,
-} from "react-native-paper";
+import { Text, HelperText, TextInput, Paragraph, RadioButton, List } from "react-native-paper";
 import useStyles from "../NewReferral.styles";
 import { ReferralFormField, referralFieldLabels } from "@cbr/common";
 import { IFormProps, wheelchairExperiences } from "@cbr/common";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import FormikImageModal from "../../../components/FormikImageModal/FormikImageModal";
 import { useTranslation } from "react-i18next";
 
 const WheelchairForm = (props: IFormProps) => {
     const styles = useStyles();
-    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
     const { t } = useTranslation();
 
     const helperText = props.formikProps.errors[ReferralFormField.hipWidth];
@@ -80,41 +69,6 @@ const WheelchairForm = (props: IFormProps) => {
                     />
                 </View>
             )}
-            {props.formikProps.values[ReferralFormField.wheelchairOwned] &&
-                props.formikProps.values[ReferralFormField.wheelchairRepairable] && (
-                    <View style={styles.container}>
-                        <View style={styles.imageContainer}>
-                            {props.formikProps.values[ReferralFormField.picture] ? (
-                                <Card.Cover
-                                    style={styles.image}
-                                    source={{
-                                        uri: props.formikProps.values[ReferralFormField.picture],
-                                    }}
-                                />
-                            ) : (
-                                <></>
-                            )}
-                            <TouchableOpacity
-                                style={styles.uploadButton}
-                                onPress={() => {
-                                    setShowImagePickerModal(true);
-                                }}
-                            >
-                                <Text style={styles.buttonTextStyle}>
-                                    {t("referral.choosePhoto")}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
-                        <FormikImageModal
-                            field={ReferralFormField.picture}
-                            fieldLabels={referralFieldLabels}
-                            formikProps={props.formikProps}
-                            visible={showImagePickerModal}
-                            onPictureChange={() => {}}
-                            onDismiss={() => setShowImagePickerModal(false)}
-                        />
-                    </View>
-                )}
         </View>
     );
 };

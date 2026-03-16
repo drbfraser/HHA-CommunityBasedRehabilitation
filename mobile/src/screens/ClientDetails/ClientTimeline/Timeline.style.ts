@@ -10,7 +10,7 @@ const useStyles = () =>
             width: 320,
             height: 88,
             flexDirection: "row",
-            justifyContent: "space-between",
+            justifyContent: "flex-start",
             alignItems: "center",
         },
         activityTypeView: {
@@ -61,6 +61,7 @@ const useStyles = () =>
             marginEnd: 10,
             paddingLeft: 10,
             color: themeColors.textGray,
+            textAlign: "left",
         },
         subItemTextDark: {
             marginLeft: 40,
@@ -72,6 +73,7 @@ const useStyles = () =>
         },
         textGray: {
             color: themeColors.textGray,
+            textAlign: "center",
         },
         dividerStyle: {
             borderBottomColor: "black",
@@ -88,6 +90,26 @@ const useStyles = () =>
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: 10,
+        },
+        rowContainer: {
+            position: "relative",
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+        },
+
+        imageContainer: {
+            width: 20,
+            alignItems: "flex-end",
+            position: "absolute",
+            top: 6,
+            right: 0,
+            paddingTop: 2,
+        },
+        contentColumn: {
+            flex: 1,
+            marginLeft: 10,
         },
     });
 

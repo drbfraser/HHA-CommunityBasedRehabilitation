@@ -60,7 +60,7 @@ const BugReport = () => {
             return;
         }
 
-        // Frontend-only placeholder submit behavior until backend endpoint is available.
+        // Frontend-only placeholder submit behavior until backend endpoint is available. Will be implemented later
         setIsSubmitting(true);
         window.setTimeout(() => {
             setIsSubmitting(false);

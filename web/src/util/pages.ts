@@ -143,7 +143,7 @@ const pages: IPage[] = [
     {
         path: "/report-bug",
         name: PageName.BUG_REPORT,
-        title: "Report a Bug",
+        title: "Bug/Suggestion",
         Component: BugReport,
         showInNav: false,
     },

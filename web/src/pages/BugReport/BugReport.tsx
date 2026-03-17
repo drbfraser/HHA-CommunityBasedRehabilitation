@@ -75,7 +75,7 @@ const BugReport = () => {
     return (
         <Box component="form" onSubmit={onSubmit} sx={bugReportStyles.form}>
             <Alert severity="info">
-                Frontend preview only: this form does not send data to the server yet.
+                Submitting this form sends an email with your description and attached image.
             </Alert>
 
             <Card sx={bugReportStyles.card}>
@@ -166,7 +166,7 @@ const BugReport = () => {
 
             {isSubmitted && (
                 <Alert severity="success">
-                    Bug report captured in the UI preview. Backend submission will be added later.
+                    An email has been submitted with your description and image.
                 </Alert>
             )}
         </Box>

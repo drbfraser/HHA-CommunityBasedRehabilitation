@@ -48,7 +48,5 @@ class Migration(migrations.Migration):
                 max_length=30,
             ),
         ),
-        migrations.RunPython(
-            seed_email_settings_categories, migrations.RunPython.noop
-        ),
+        migrations.RunPython(seed_email_settings_categories, migrations.RunPython.noop),
     ]

@@ -268,7 +268,9 @@ def send_bug_report_email(
         if screenshot:
             screenshot_bytes = screenshot.read()
             screenshot_name = screenshot.name or "bug-report-attachment"
-            screenshot_content_type = screenshot.content_type or "application/octet-stream"
+            screenshot_content_type = (
+                screenshot.content_type or "application/octet-stream"
+            )
 
             # Keep a normal attachment so recipients can download/open the original file.
             message.attach(
@@ -280,7 +282,9 @@ def send_bug_report_email(
             # Also embed the image inline in the HTML body.
             inline_image = MIMEImage(screenshot_bytes)
             inline_image.add_header("Content-ID", "<bug-report-screenshot>")
-            inline_image.add_header("Content-Disposition", "inline", filename=screenshot_name)
+            inline_image.add_header(
+                "Content-Disposition", "inline", filename=screenshot_name
+            )
             message.attach(inline_image)
         message.send(fail_silently=False)
         return True, None

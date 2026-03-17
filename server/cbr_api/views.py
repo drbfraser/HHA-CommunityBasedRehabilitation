@@ -291,9 +291,7 @@ class BugReportEmailView(generics.CreateAPIView):
         data = serializer.validated_data
 
         user = request.user
-        submitted_by_name = (
-            f"{getattr(user, 'first_name', '')} {getattr(user, 'last_name', '')}".strip()
-        )
+        submitted_by_name = f"{getattr(user, 'first_name', '')} {getattr(user, 'last_name', '')}".strip()
         submitted_by_username = getattr(user, "username", "")
 
         success, error_message = send_bug_report_email(

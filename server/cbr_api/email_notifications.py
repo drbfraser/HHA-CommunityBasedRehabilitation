@@ -218,11 +218,14 @@ def send_bug_report_email(
 
     report_type_label = "Suggestion" if report_type == "suggestion" else "Bug Report"
 
-    subject = SUGGESTION_SUBJECT if report_type == "suggestion" else BUG_REPORT_SUBJECT
-
     submitter = submitted_by_name or submitted_by_username or "Unknown User"
     if submitted_by_name and submitted_by_username:
         submitter = f"{submitted_by_name} ({submitted_by_username})"
+
+    subject = SUGGESTION_SUBJECT if report_type == "suggestion" else BUG_REPORT_SUBJECT
+    subject_identity = submitted_by_name or submitted_by_username
+    if subject_identity:
+        subject = f"{subject} - {subject_identity}"
 
     body_lines = [
         f"Type: {report_type_label}",

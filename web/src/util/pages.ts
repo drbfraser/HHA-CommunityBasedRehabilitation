@@ -34,6 +34,7 @@ import UserChangePassword from "pages/User/UserPasswordEdit";
 import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import Referrals from "pages/Referrals/Referrals";
+import BugReport from "pages/BugReport/BugReport";
 import NewSuccessStory from "pages/NewSuccessStory/NewSuccessStory";
 import SuccessStoryView from "pages/SuccessStoryView/SuccessStoryView";
 import SuccessStoriesList from "pages/SuccessStoriesList/SuccessStoriesList";
@@ -50,6 +51,7 @@ export enum PageName {
     NEW_SURVEY = "screenNames.newBaselineSurvey",
     NEW_REFERRAL = "screenNames.newReferral",
     PROFILE = "screenNames.profile",
+    BUG_REPORT = "screenNames.profile",
     CHANGE_PASSWORD = "login.changePassword",
     STATS = "statistics.statistics",
     ADMIN = "users.admin",
@@ -73,6 +75,7 @@ export interface IPage {
     path: string;
     exact?: boolean;
     name: PageName;
+    title?: string;
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     showInNav: boolean;
@@ -144,6 +147,13 @@ const pages: IPage[] = [
         Component: UserView,
         showInNav: true,
         Icon: PersonIcon,
+    },
+    {
+        path: "/report-bug",
+        name: PageName.BUG_REPORT,
+        title: "Bug/Suggestion",
+        Component: BugReport,
+        showInNav: false,
     },
     {
         path: "/user/password",

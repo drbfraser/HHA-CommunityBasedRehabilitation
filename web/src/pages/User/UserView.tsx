@@ -1,9 +1,17 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Box, Button, Alert, Skeleton } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Skeleton,
+    Typography,
+} from "@mui/material";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import BugReportIcon from "@mui/icons-material/BugReport";
 
 import { useCurrentUser } from "@cbr/common/util/hooks/currentUser";
 import { APILoadError } from "@cbr/common/util/endpoints";
@@ -36,14 +44,6 @@ const UserView = () => {
                         </h1>
                         <Box sx={userStyles.headerActions}>
                             <Button
-                                sx={userStyles.reportBugButton}
-                                variant="outlined"
-                                onClick={handleReportBug}
-                            >
-                                <BugReportIcon />
-                                Report a Bug
-                            </Button>
-                            <Button
                                 sx={userStyles.changePasswordButton}
                                 color="primary"
                                 onClick={handleChangePassword}
@@ -54,14 +54,39 @@ const UserView = () => {
                         </Box>
                     </Box>
 
-                    <b>{t("general.username")}</b>
-                    <p>{user.username}</p>
+                    <Box sx={userStyles.profileRow}>
+                        <Box sx={userStyles.profileItem}>
+                            <Typography sx={userStyles.profileText}>
+                                <strong>{t("general.username")}:</strong> {user.username}
+                            </Typography>
+                        </Box>
+                        <Box sx={userStyles.profileItem}>
+                            <Typography sx={userStyles.profileText}>
+                                <strong>{t("general.zone")}:</strong>{" "}
+                                {zones.get(user.zone) ?? "Unknown"}
+                            </Typography>
+                        </Box>
+                        <Box sx={userStyles.profileItem}>
+                            <Typography sx={userStyles.profileText}>
+                                <strong>{t("general.phoneNumber")}:</strong> {user.phone_number}
+                            </Typography>
+                        </Box>
+                    </Box>
 
-                    <b>{t("general.zone")}</b>
-                    <p> {zones.get(user.zone) ?? "Unknown"} </p>
+                    <Card sx={userStyles.bugReportCard}>
+                        <CardContent>
+                            <Typography variant="h6">Submit a Bug Report or Suggestion</Typography>
+                            <Typography variant="body2" sx={userStyles.bugReportDescription}>
+                                Report app issues or share improvement ideas with the team.
+                            </Typography>
+                        </CardContent>
+                        <CardActions sx={userStyles.bugReportCardActions}>
+                            <Button variant="contained" onClick={handleReportBug}>
+                                Open Report Form
+                            </Button>
+                        </CardActions>
+                    </Card>
 
-                    <b>{t("general.phoneNumber")}</b>
-                    <p> {user.phone_number} </p>
                     <Box sx={userStyles.logOutButton}>
                         <Button
                             onClick={() => history.push("/logout")}

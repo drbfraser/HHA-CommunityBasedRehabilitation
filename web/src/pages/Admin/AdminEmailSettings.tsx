@@ -9,8 +9,6 @@ import {
     CardContent,
     CardHeader,
     Grid,
-    Tab,
-    Tabs,
     Typography,
 } from "@mui/material";
 import * as Yup from "yup";
@@ -124,16 +122,48 @@ const AdminEmailSettings = () => {
 
     return (
         <Container>
-            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
-                <Tabs
-                    value={tabIndex}
-                    onChange={(_event, nextTabIndex: number) => setTabIndex(nextTabIndex)}
-                    aria-label="email settings tabs"
-                >
-                    {emailSettingsTabs.map((tab) => (
-                        <Tab key={tab.category} label={tab.label} />
-                    ))}
-                </Tabs>
+            <Box
+                sx={{
+                    mb: 2,
+                    p: "4px",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: "999px",
+                    display: "inline-flex",
+                    gap: "4px",
+                    flexWrap: "wrap",
+                    backgroundColor: "background.paper",
+                }}
+                aria-label="email settings category selector"
+            >
+                {emailSettingsTabs.map((tab, index) => {
+                    const isActive = tabIndex === index;
+                    return (
+                        <Button
+                            key={tab.category}
+                            onClick={() => setTabIndex(index)}
+                            variant={isActive ? "contained" : "text"}
+                            color={isActive ? "primary" : "inherit"}
+                            aria-pressed={isActive}
+                            sx={{
+                                borderRadius: "999px",
+                                px: 2.25,
+                                py: 0.75,
+                                textTransform: "none",
+                                fontWeight: isActive ? 700 : 500,
+                                boxShadow: isActive ? "none" : "none",
+                                color: isActive ? "primary.contrastText" : "text.secondary",
+                                backgroundColor: isActive ? "primary.main" : "transparent",
+                                "&:hover": {
+                                    backgroundColor: isActive ? "primary.dark" : "action.hover",
+                                },
+                                minWidth: { xs: "100%", sm: "auto" },
+                            }}
+                        >
+                            {tab.label}
+                        </Button>
+                    );
+                })}
             </Box>
 
             <Card variant="outlined">

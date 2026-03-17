@@ -127,6 +127,8 @@ const PatientNoteModal: React.FC<PatientNoteModalProps> = ({
     const handleClose = () => {
         setIsEditing(false);
         setShowHistory(false);
+        setError(null);
+        setSuccessMessage(null);
         onClose();
     };
 

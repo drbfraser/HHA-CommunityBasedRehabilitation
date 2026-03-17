@@ -572,6 +572,35 @@ class SuccessStoryDetail(generics.RetrieveUpdateAPIView):
         return serializers.SuccessStorySerializer
 
 
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
+class SuccessStoryImage(AuthenticatedObjectDownloadView):
+    model = models.SuccessStory
+    file_field = "photo"
+
+    @extend_schema(
+        description="Gets the photo of a success story if it exists.",
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+    )
+    def get(self, request, pk):
+        if DEBUG:
+
+            def super_get(self_new, request_new, pk_new):
+                return super().get(self_new, request_new, pk_new)
+
+            return super_get(self, request, pk)
+
+        success_story = models.SuccessStory.objects.get(pk=pk)
+        if success_story:
+            if not success_story.photo or len(success_story.photo.name) <= 0:
+                return HttpResponseNotFound()
+
+            return super().get(self, request, pk)
+        else:
+            return HttpResponseNotFound()
+
+
 class BaselineSurveyCreate(generics.CreateAPIView):
     queryset = models.BaselineSurvey.objects.all()
     serializer_class = serializers.BaselineSurveySerializer

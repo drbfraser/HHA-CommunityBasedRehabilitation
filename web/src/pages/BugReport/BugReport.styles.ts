@@ -19,6 +19,11 @@ export const bugReportStyles: Record<string, SxProps<Theme>> = {
         marginBottom: "8px",
         fontWeight: 700,
     },
+    reportTypeToggle: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "8px",
+    },
     descriptionField: {
         marginTop: "8px",
     },

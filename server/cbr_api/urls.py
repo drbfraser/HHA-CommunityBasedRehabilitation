@@ -73,6 +73,7 @@ urlpatterns = [
     ),
     path("stats", views.AdminStats.as_view(), name="admin-stats"),
     path("email_settings/", views.EmailSettingsView.as_view(), name="email-settings"),
+    path("bug_report/", views.BugReportEmailView.as_view(), name="bug-report-email"),
     path(
         "baselinesurveys",
         views.BaselineSurveyCreate.as_view(),

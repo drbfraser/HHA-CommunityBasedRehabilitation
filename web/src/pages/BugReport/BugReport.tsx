@@ -9,21 +9,27 @@ import {
     Chip,
     Divider,
     TextField,
+    ToggleButton,
+    ToggleButtonGroup,
     Typography,
 } from "@mui/material";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
+import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
 import { bugReportStyles } from "./BugReport.styles";
 
 const MAX_DESCRIPTION_LENGTH = 1200;
+type ReportType = "bug_report" | "suggestion";
 
 const BugReport = () => {
+    const [reportType, setReportType] = useState<ReportType>("bug_report");
     const [description, setDescription] = useState("");
     const [attachedImage, setAttachedImage] = useState<File | null>(null);
     const [previewURL, setPreviewURL] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!attachedImage) {
@@ -43,6 +49,7 @@ const BugReport = () => {
         const selectedImage = event.target.files?.[0] ?? null;
         setAttachedImage(selectedImage);
         setIsSubmitted(false);
+        setSubmitError(null);
         event.target.value = "";
     };
 
@@ -50,6 +57,7 @@ const BugReport = () => {
         setDescription("");
         setAttachedImage(null);
         setIsSubmitted(false);
+        setSubmitError(null);
     };
 
     const descriptionLength = useMemo(() => description.trim().length, [description]);
@@ -60,34 +68,76 @@ const BugReport = () => {
             return;
         }
 
-        // Frontend-only placeholder submit behavior until backend endpoint is available.
+        const payload = new FormData();
+        payload.append("report_type", reportType);
+        payload.append("description", description.trim());
+        if (attachedImage) {
+            payload.append("image", attachedImage);
+        }
+
         setIsSubmitting(true);
-        window.setTimeout(() => {
-            setIsSubmitting(false);
-            setIsSubmitted(true);
-            setDescription("");
-            setAttachedImage(null);
-        }, 450);
+        setSubmitError(null);
+        apiFetch(Endpoint.BUG_REPORT, "", {
+            method: "POST",
+            body: payload,
+        })
+            .then(() => {
+                setIsSubmitted(true);
+                setDescription("");
+                setAttachedImage(null);
+            })
+            .catch((e) => {
+                const message =
+                    e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
+                setSubmitError(message);
+            })
+            .finally(() => setIsSubmitting(false));
     };
 
     const imageSizeInKB = attachedImage ? Math.max(1, Math.round(attachedImage.size / 1024)) : 0;
+    const submitLabel = reportType === "suggestion" ? "Submit Suggestion" : "Submit Bug Report";
+    const reportTypeLabel = reportType === "suggestion" ? "suggestion" : "bug report";
 
     return (
         <Box component="form" onSubmit={onSubmit} sx={bugReportStyles.form}>
             <Alert severity="info">
-                Submitting this form sends an email with your description and attached image.
+                Submitting this form sends an email with your description and attached image. You
+                can choose either Bug report or Suggestion.
             </Alert>
 
             <Card sx={bugReportStyles.card}>
                 <CardContent>
                     <Typography variant="h6" sx={bugReportStyles.subheading}>
-                        Describe the bug
+                        Type
+                    </Typography>
+                    <ToggleButtonGroup
+                        value={reportType}
+                        exclusive
+                        onChange={(_event, selectedType: ReportType | null) => {
+                            if (!selectedType) {
+                                return;
+                            }
+                            setReportType(selectedType);
+                            setIsSubmitted(false);
+                            setSubmitError(null);
+                        }}
+                        sx={bugReportStyles.reportTypeToggle}
+                    >
+                        <ToggleButton value="bug_report">Bug report</ToggleButton>
+                        <ToggleButton value="suggestion">Suggestion</ToggleButton>
+                    </ToggleButtonGroup>
+
+                    <Divider sx={{ margin: "18px 0" }} />
+
+                    <Typography variant="h6" sx={bugReportStyles.subheading}>
+                        Describe the {reportTypeLabel}
                     </Typography>
                     <TextField
                         value={description}
                         onChange={(event) => {
                             setDescription(event.target.value);
                             setIsSubmitted(false);
+                            setSubmitError(null);
                         }}
                         placeholder="What happened, where it happened, and what you expected instead."
                         multiline
@@ -159,14 +209,16 @@ const BugReport = () => {
                         startIcon={<SendIcon />}
                         disabled={isSubmitting || descriptionLength === 0}
                     >
-                        {isSubmitting ? "Submitting..." : "Submit Bug Report"}
+                        {isSubmitting ? "Submitting..." : submitLabel}
                     </Button>
                 </CardActions>
             </Card>
 
+            {submitError && <Alert severity="error">{submitError}</Alert>}
+
             {isSubmitted && (
                 <Alert severity="success">
-                    An email has been submitted with your description and image.
+                    Your {reportTypeLabel} email has been submitted with your description and image.
                 </Alert>
             )}
         </Box>

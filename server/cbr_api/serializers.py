@@ -999,6 +999,7 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.EmailSettings
         fields = [
+            "category",
             "from_email",
             "to_email",
             "from_email_password",
@@ -1007,6 +1008,7 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = [
+            "category",
             "updated_at",
             "from_email_password_set",
             "password_updated_at",
@@ -1026,6 +1028,19 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
                 instance.password_updated_at = current_milli_time()
         instance.save()
         return instance
+
+
+class BugReportSubmissionSerializer(serializers.Serializer):
+    REPORT_TYPE_CHOICES = (
+        ("bug_report", "Bug Report"),
+        ("suggestion", "Suggestion"),
+    )
+
+    report_type = serializers.ChoiceField(
+        choices=REPORT_TYPE_CHOICES, default="bug_report"
+    )
+    description = serializers.CharField(max_length=1200, trim_whitespace=True)
+    image = serializers.ImageField(required=False, allow_null=True)
 
 
 class AlertSyncSerializer(serializers.ModelSerializer):

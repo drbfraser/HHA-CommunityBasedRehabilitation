@@ -558,6 +558,16 @@ class Alert(models.Model):
 
 
 class EmailSettings(models.Model):
+    class Category(models.TextChoices):
+        REFERRAL = "referral", _("Referral")
+        BUG_REPORT = "bug_report", _("Bug Report / Suggestion")
+
+    category = models.CharField(
+        max_length=30,
+        choices=Category.choices,
+        default=Category.REFERRAL,
+        db_index=True,
+    )
     from_email = models.EmailField(max_length=254)
     from_email_password = models.CharField(max_length=128, blank=True, default="")
     to_email = models.EmailField(max_length=254)
@@ -565,11 +575,12 @@ class EmailSettings(models.Model):
     password_updated_at = models.BigIntegerField(default=0)
 
     @classmethod
-    def get_solo(cls):
-        existing = cls.objects.first()
+    def get_solo(cls, category=Category.REFERRAL):
+        existing = cls.objects.filter(category=category).order_by("id").first()
         if existing:
             return existing
         return cls.objects.create(
+            category=category,
             from_email="",
             from_email_password="",
             to_email="",

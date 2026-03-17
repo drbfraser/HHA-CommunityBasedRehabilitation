@@ -12,6 +12,7 @@ class EmailSettingsModelTests(TestCase):
         email_settings = EmailSettings.get_solo()
 
         self.assertEqual(EmailSettings.objects.count(), 1)
+        self.assertEqual(email_settings.category, EmailSettings.Category.REFERRAL)
         self.assertEqual(email_settings.from_email, "")
         self.assertEqual(email_settings.from_email_password, "")
         self.assertEqual(email_settings.to_email, "")
@@ -29,9 +30,19 @@ class EmailSettingsModelTests(TestCase):
         self.assertEqual(fetched.id, existing.id)
         self.assertEqual(EmailSettings.objects.count(), 1)
 
+    def test_get_solo_returns_per_category_record(self):
+        referral_settings = EmailSettings.get_solo(EmailSettings.Category.REFERRAL)
+        bug_settings = EmailSettings.get_solo(EmailSettings.Category.BUG_REPORT)
+
+        self.assertNotEqual(referral_settings.id, bug_settings.id)
+        self.assertEqual(referral_settings.category, EmailSettings.Category.REFERRAL)
+        self.assertEqual(bug_settings.category, EmailSettings.Category.BUG_REPORT)
+        self.assertEqual(EmailSettings.objects.count(), 2)
+
     @patch("cbr_api.models.current_milli_time", return_value=1700000000000)
     def test_save_updates_updated_at(self, _mock_now):
         email_settings = EmailSettings.objects.create(
+            category=EmailSettings.Category.REFERRAL,
             from_email="from@example.com",
             from_email_password="secret",
             to_email="to@example.com",

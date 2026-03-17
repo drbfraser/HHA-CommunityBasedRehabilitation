@@ -1,14 +1,17 @@
 from datetime import datetime
 import logging
+from email.mime.image import MIMEImage
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives, get_connection, send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 
 logger = logging.getLogger(__name__)
 
 EMAIL_SUBJECT = "New CBR Referral Created"
+BUG_REPORT_SUBJECT = "New CBR Bug Report"
+SUGGESTION_SUBJECT = "New CBR Suggestion"
 DEFAULT_WEB_BASE_URL = "http://localhost:3000"
 PRIMARY_COLOR = "#009dc5"
 ACCENT_COLOR = "#56af31"
@@ -23,7 +26,7 @@ def _get_referral_email_config():
     try:
         from cbr_api.models import EmailSettings
 
-        email_settings = EmailSettings.get_solo()
+        email_settings = EmailSettings.get_solo(EmailSettings.Category.REFERRAL)
         return (
             email_settings.from_email,
             email_settings.from_email_password,
@@ -180,3 +183,104 @@ def send_referral_created_email(referral):
             "Failed to send referral notification email",
             extra={"referral_id": str(referral.id)},
         )
+
+
+def _get_bug_report_email_config():
+    try:
+        from cbr_api.models import EmailSettings
+
+        email_settings = EmailSettings.get_solo(EmailSettings.Category.BUG_REPORT)
+        return (
+            email_settings.from_email,
+            email_settings.from_email_password,
+            email_settings.to_email,
+        )
+    except Exception:
+        logger.exception("Failed to load bug report email settings")
+        return None
+
+
+def send_bug_report_email(
+    *,
+    report_type,
+    description,
+    submitted_by_name,
+    submitted_by_username,
+    screenshot=None,
+):
+    config = _get_bug_report_email_config()
+    if not config:
+        return False, "Unable to load bug report email settings."
+
+    from_email, from_password, to_email = config
+    if not from_email or not to_email or not from_password:
+        return False, "Bug report email settings are incomplete."
+
+    report_type_label = "Suggestion" if report_type == "suggestion" else "Bug Report"
+
+    subject = SUGGESTION_SUBJECT if report_type == "suggestion" else BUG_REPORT_SUBJECT
+
+    submitter = submitted_by_name or submitted_by_username or "Unknown User"
+    if submitted_by_name and submitted_by_username:
+        submitter = f"{submitted_by_name} ({submitted_by_username})"
+
+    body_lines = [
+        f"Type: {report_type_label}",
+        f"Submitted by: {submitter}",
+        "",
+        "Description:",
+        description,
+        "",
+        "Please do not reply to this email; it was sent automatically and is not monitored.",
+    ]
+    body = "\n".join(body_lines)
+
+    html_body = render_to_string(
+        "cbr_api/bug_report_email.html",
+        {
+            "primary_color": PRIMARY_COLOR,
+            "accent_color": ACCENT_COLOR,
+            "secondary_color": SECONDARY_COLOR,
+            "report_type_label": report_type_label,
+            "submitter": submitter,
+            "description": description,
+            "show_screenshot_preview": bool(screenshot),
+        },
+    )
+
+    try:
+        connection = get_connection(
+            username=from_email,
+            password=from_password,
+            fail_silently=False,
+        )
+        message = EmailMultiAlternatives(
+            subject=subject,
+            body=body,
+            from_email=from_email,
+            to=[to_email],
+            connection=connection,
+        )
+        message.attach_alternative(html_body, "text/html")
+        if screenshot:
+            screenshot_bytes = screenshot.read()
+            screenshot_name = screenshot.name or "bug-report-attachment"
+            screenshot_content_type = screenshot.content_type or "application/octet-stream"
+
+            # Keep a normal attachment so recipients can download/open the original file.
+            message.attach(
+                screenshot_name,
+                screenshot_bytes,
+                screenshot_content_type,
+            )
+
+            # Also embed the image inline in the HTML body.
+            inline_image = MIMEImage(screenshot_bytes)
+            inline_image.add_header("Content-ID", "<bug-report-screenshot>")
+            inline_image.add_header("Content-Disposition", "inline", filename=screenshot_name)
+            message.attach(inline_image)
+        message.send(fail_silently=False)
+        return True, None
+    except Exception:
+        logger.exception("Failed to send bug report/suggestion email")
+        return False, "Failed to send bug report email."

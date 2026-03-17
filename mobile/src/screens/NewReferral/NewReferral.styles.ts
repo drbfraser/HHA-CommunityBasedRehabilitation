@@ -11,7 +11,14 @@ const useStyles = () =>
         formContainer: {
             marginTop: 20,
         },
-        imageContainer: {
+        uploadImageContainer: {
+            flex: 1,
+            position: "relative",
+        },
+        centerImageContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
             paddingHorizontal: 50,
         },
         image: {
@@ -21,6 +28,7 @@ const useStyles = () =>
             width: "100%",
             height: "auto",
             aspectRatio: 1,
+            marginTop: 10,
         },
         checkBoxText: {
             flexDirection: "row",
@@ -30,9 +38,12 @@ const useStyles = () =>
             paddingRight: 50,
         },
         uploadButton: {
+            marginBottom: 10,
+            alignSelf: "stretch",
             alignItems: "center",
             backgroundColor: "#DDDDDD",
-            padding: 10,
+            padding: 12,
+            borderRadius: 5,
         },
         buttonTextStyle: {
             color: themeColors.blueBgDark,
@@ -55,6 +66,19 @@ const useStyles = () =>
         stepLabelText: { fontSize: 25, fontWeight: "bold" },
         picker: { height: 40, width: 250 },
         question: { fontSize: 15, fontWeight: "bold", paddingLeft: 6 },
+        uploadHintContainer: {
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            backgroundColor: "#F2F2F2",
+            borderRadius: 12,
+            position: "absolute",
+            left: 16,
+            right: 16,
+            top: "40%",
+        },
+        uploadHintText: {
+            textAlign: "center",
+        },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
         hipWidthInput: {
             backgroundColor: "transparent",

@@ -78,13 +78,13 @@ const Timeline = (props: ISummaryProps) => {
                         />
                         <View style={styles.verticleLine}></View>
                     </View>
-                    <View>
+                    <View style={styles.contentColumn}>
                         {props.activity.type === ActivityType.VISIT && props.activity.visit ? (
-                            <View>
-                                <Text style={styles.textGray}>
-                                    {zone} {t("visitAttr.visitVerb")}
-                                </Text>
+                            <View style={styles.rowContainer}>
                                 <View>
+                                    <Text style={styles.textGray}>
+                                        {zone} {t("visitAttr.visitVerb")}
+                                    </Text>
                                     {props.activity.visit.educat_visit ? (
                                         <View style={styles.subItem}>
                                             {riskTypes.EDUCAT.Icon(themeColors.riskBlack)}
@@ -136,6 +136,18 @@ const Timeline = (props: ISummaryProps) => {
                                         <></>
                                     )}
                                 </View>
+                                <View style={styles.imageContainer}>
+                                    {props.activity.visit.picture ? (
+                                        <Icon
+                                            name="image"
+                                            size={16}
+                                            color={themeColors.blueBgDark}
+                                        />
+                                    ) : (
+                                        <></>
+                                    )}
+                                </View>
+
                                 <Portal>
                                     <Modal
                                         visible={detailsVisible}
@@ -151,12 +163,12 @@ const Timeline = (props: ISummaryProps) => {
                             </View>
                         ) : props.activity.type === ActivityType.REFERAL &&
                           props.activity.referral ? (
-                            <View style={styles.subItem}>
+                            <View style={styles.rowContainer}>
                                 <View>
                                     <Text style={styles.subItemText}>
                                         {t("referralAttr.referralPosted")}
                                     </Text>
-                                    <View style={styles.subItemRow}>
+                                    <View style={styles.subItem}>
                                         {props.activity.referral.resolved ? (
                                             <>
                                                 <Text style={styles.subItemText}>
@@ -180,6 +192,7 @@ const Timeline = (props: ISummaryProps) => {
                                                 />
                                             </>
                                         )}
+
                                         <Portal>
                                             <Modal
                                                 visible={detailsVisible}
@@ -195,6 +208,18 @@ const Timeline = (props: ISummaryProps) => {
                                             </Modal>
                                         </Portal>
                                     </View>
+                                </View>
+
+                                <View style={styles.imageContainer}>
+                                    {props.activity.referral.picture ? (
+                                        <Icon
+                                            name="image"
+                                            size={16}
+                                            color={themeColors.blueBgDark}
+                                        />
+                                    ) : (
+                                        <></>
+                                    )}
                                 </View>
                             </View>
                         ) : (

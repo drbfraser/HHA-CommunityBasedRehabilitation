@@ -129,6 +129,7 @@ class RiskLevel(models.TextChoices):
 client_picture_upload_dir = "images/clients"
 referral_picture_upload_dir = "images/referrals"
 visit_picture_upload_dir = "images/visits"
+success_story_picture_upload_dir = "images/success_stories"
 
 
 class Client(models.Model):
@@ -628,6 +629,7 @@ class SuccessStory(models.Model):
     created_at = models.BigIntegerField(default=current_milli_time)
     updated_at = models.BigIntegerField(default=current_milli_time)
 
+    title = models.CharField(max_length=300, blank=True, default="")
     refugee_origin = models.CharField(max_length=200, blank=True, default="")
     refugee_duration = models.CharField(max_length=200, blank=True, default="")
     diagnosis = models.TextField(blank=True, default="")
@@ -637,7 +639,23 @@ class SuccessStory(models.Model):
     part3_introduction = models.TextField(blank=True, default="")
     part4_action = models.TextField(blank=True, default="")
     part5_impact = models.TextField(blank=True, default="")
-    photo = models.TextField(blank=True, default="")
+
+    def rename_file(self, original_filename):
+        # file_ext includes the "."
+        file_root, file_ext = os.path.splitext(original_filename)
+        new_filename = (
+            f"success-story-{self.pk}{file_ext}"
+            if self.pk
+            else f"temp-{get_random_string(10)}-{file_root}{file_ext}"
+        )
+        return os.path.join(success_story_picture_upload_dir, new_filename)
+
+    photo = models.ImageField(
+        upload_to=rename_file,
+        storage=OverwriteStorage(),
+        blank=True,
+        null=True,
+    )
 
     publish_permission = models.CharField(
         max_length=5,
@@ -650,6 +668,18 @@ class SuccessStory(models.Model):
         default=StoryStatus.WORK_IN_PROGRESS,
     )
     date = models.DateField()
+
+    def save(self, *args, **kwargs):
+        # The image might need to be renamed if this is a new story, since a new story would be missing the
+        # UUID primary key (id).
+        needs_image_rename = (
+            self.pk is None and self.photo.name is not None and len(self.photo.name) > 0
+        )
+
+        super().save(*args, **kwargs)
+
+        if needs_image_rename:
+            self.photo.save(self.photo.name, self.photo.file, save=True)
 
     class Meta:
         ordering = ["-created_at"]

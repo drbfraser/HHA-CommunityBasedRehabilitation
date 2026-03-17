@@ -35,6 +35,10 @@ import NewSurvey from "pages/BaseSurvey/BaseSurvey";
 import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import Referrals from "pages/Referrals/Referrals";
 import BugReport from "pages/BugReport/BugReport";
+import NewSuccessStory from "pages/NewSuccessStory/NewSuccessStory";
+import SuccessStoryView from "pages/SuccessStoryView/SuccessStoryView";
+import SuccessStoriesList from "pages/SuccessStoriesList/SuccessStoriesList";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 
 export enum PageName {
     DASHBOARD = "general.dashboard",
@@ -61,6 +65,10 @@ export enum PageName {
     NEW_ALERT = "screenNames.newAlert",
     INBOX = "screenNames.inbox",
     NOT_FOUND = "screenNames.notFound",
+    NEW_SUCCESS_STORY = "screenNames.newSuccessStory",
+    EDIT_SUCCESS_STORY = "screenNames.editSuccessStory",
+    VIEW_SUCCESS_STORY = "screenNames.successStory",
+    SUCCESS_STORIES_LIST = "screenNames.successStories",
 }
 
 export interface IPage {
@@ -230,6 +238,32 @@ const pages: IPage[] = [
         showInNav: true,
         Component: AlertInbox,
         Icon: InboxIcon,
+    },
+    {
+        path: "/stories",
+        name: PageName.SUCCESS_STORIES_LIST,
+        roles: [UserRole.ADMIN],
+        Component: SuccessStoriesList,
+        showInNav: true,
+        Icon: AutoStoriesIcon,
+    },
+    {
+        path: "/client/:clientId/stories/new",
+        name: PageName.NEW_SUCCESS_STORY,
+        Component: NewSuccessStory,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/stories/:storyId/edit",
+        name: PageName.EDIT_SUCCESS_STORY,
+        Component: NewSuccessStory,
+        showInNav: false,
+    },
+    {
+        path: "/client/:clientId/stories/:storyId",
+        name: PageName.VIEW_SUCCESS_STORY,
+        Component: SuccessStoryView,
+        showInNav: false,
     },
     // must be at the bottom
     {

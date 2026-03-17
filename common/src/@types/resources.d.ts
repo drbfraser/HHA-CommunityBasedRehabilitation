@@ -688,7 +688,11 @@ interface Resources {
       "editZone": "Gweki tur , Gweki kötumit",
       "newAlert": "Gwiyet ludukötyo",
       "notFound": "Ako rye , A ko puö",
-      "clientRiskHistory": "Dekat ti yoŋit na ŋuto ŋode"
+      "clientRiskHistory": "Dekat ti yoŋit na ŋuto ŋode",
+      "newSuccessStory": "New Success Story",
+      "editSuccessStory": "Edit Success Story",
+      "successStory": "Success Story",
+      "successStories": "Success Stories"
     },
     "statistics": {
       "statistics": "Nambajin/ ngo ling lo wuro",
@@ -1613,7 +1617,11 @@ interface Resources {
       "editZone": "Edit Zone",
       "newAlert": "New Alert",
       "notFound": "Not Found",
-      "clientRiskHistory": "Client Risk History"
+      "clientRiskHistory": "Client Risk History",
+      "newSuccessStory": "New Success Story",
+      "editSuccessStory": "Edit Success Story",
+      "successStory": "Success Story",
+      "successStories": "Success Stories"
     },
     "statistics": {
       "statistics": "Statistics",

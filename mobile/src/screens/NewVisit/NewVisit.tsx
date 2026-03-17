@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { Button, Divider, HelperText, Text, TextInput } from "react-native-paper";
+import { Button, Divider, HelperText, Text, TextInput, Card } from "react-native-paper";
 import { ProgressStep, ProgressSteps } from "react-native-progress-steps";
 import { FieldArray, Formik, FormikHelpers, FormikProps, getIn } from "formik";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import {
     APIFetchFailError,
     countObjectKeys,
@@ -37,6 +38,8 @@ import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
 import i18n from "i18next";
 import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModal";
+import FormikImageModal from "@/src/components/FormikImageModal/FormikImageModal";
+import * as Yup from "yup";
 
 interface IFormProps {
     formikProps: FormikProps<any>;
@@ -284,13 +287,14 @@ const NewVisit = (props: INewVisitProps) => {
     const [checkedSteps, setCheckedSteps] = useState<VisitFormField[]>([]);
 
     const [risks, setRisks] = useState<IRisk[]>([]);
-    const isFinalStep = activeStep === enabledSteps.length && activeStep !== 0;
+    const isFinalStep = activeStep === enabledSteps.length + 1 && activeStep !== 0;
     const [saveError, setSaveError] = useState<string>();
     const [openPatientNote, setOpenPatientNote] = useState(false);
     const clientId = props.route.params.clientID;
     const database = useDatabase();
     const { autoSync, cellularSync } = useContext(SyncContext);
     const { t } = useTranslation();
+    const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
 
     const getClientDetails = async () => {
         try {
@@ -323,6 +327,44 @@ const NewVisit = (props: INewVisitProps) => {
             Form: VisitTypeStep(visitType, risks, setRisks, setOpenPatientNote),
             validationSchema: visitTypeValidationSchema(visitType),
         })),
+        {
+            label: t("referral.addPicture"),
+            Form: ({ formikProps }) => (
+                <>
+                    <View style={styles.uploadImageContainer}>
+                        <View style={styles.uploadHintContainer}>
+                            <Text style={styles.uploadHintText}>
+                                Upload your picture if available.
+                            </Text>
+                        </View>
+                        <View style={styles.centerImageContainer}>
+                            {formikProps.values[VisitFormField.picture] && (
+                                <Card.Cover
+                                    style={styles.image}
+                                    source={{ uri: formikProps.values[VisitFormField.picture] }}
+                                />
+                            )}
+                        </View>
+
+                        <TouchableOpacity
+                            style={styles.uploadButton}
+                            onPress={() => setShowImagePickerModal(true)}
+                        >
+                            <Text style={styles.buttonTextStyle}>{t("referral.choosePhoto")}</Text>
+                        </TouchableOpacity>
+                        <FormikImageModal
+                            field={VisitFormField.picture}
+                            fieldLabels={visitFieldLabels}
+                            formikProps={formikProps}
+                            visible={showImagePickerModal}
+                            onPictureChange={() => {}}
+                            onDismiss={() => setShowImagePickerModal(false)}
+                        />
+                    </View>
+                </>
+            ),
+            validationSchema: () => Yup.object({}), // Empty, picture submission is optional
+        },
     ];
 
     const prevStep = (props: any) => {
@@ -465,7 +507,7 @@ const NewVisit = (props: INewVisitProps) => {
                                                     backgroundColor: themeColors.blueBgDark,
                                                 }}
                                             />
-                                            <ScrollView>
+                                            <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                                                 <surveyStep.Form formikProps={formikProps} />
                                             </ScrollView>
                                         </ProgressStep>

@@ -2,15 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Formik } from "formik";
 import { TextField } from "formik-mui";
-import {
-    Box,
-    Button,
-    Card,
-    CardContent,
-    CardHeader,
-    Grid,
-    Typography,
-} from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import * as Yup from "yup";
 
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
@@ -292,8 +284,7 @@ const AdminEmailSettings = () => {
                                                 sx={{ margin: "4px 0 0 16px" }}
                                             >
                                                 <li>
-                                                    Enable 2-Step Verification on the Gmail
-                                                    account.
+                                                    Enable 2-Step Verification on the Gmail account.
                                                 </li>
                                                 <li>
                                                     Go to Google Account, then Security, then App
@@ -313,9 +304,7 @@ const AdminEmailSettings = () => {
                                                     component="div"
                                                 >
                                                     Password last updated:{" "}
-                                                    {new Date(
-                                                        passwordUpdatedAt
-                                                    ).toLocaleString()}
+                                                    {new Date(passwordUpdatedAt).toLocaleString()}
                                                 </Typography>
                                             )}
                                         </Grid>

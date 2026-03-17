@@ -87,8 +87,7 @@ const BugReport = () => {
                 setAttachedImage(null);
             })
             .catch((e) => {
-                const message =
-                    e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
+                const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
                 setSubmitError(message);
             })
             .finally(() => setIsSubmitting(false));

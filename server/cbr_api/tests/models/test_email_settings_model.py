@@ -9,14 +9,18 @@ class EmailSettingsModelTests(TestCase):
     def test_get_solo_creates_default_record_when_none_exists(self):
         EmailSettings.objects.filter(category=EmailSettings.Category.REFERRAL).delete()
         self.assertEqual(
-            EmailSettings.objects.filter(category=EmailSettings.Category.REFERRAL).count(),
+            EmailSettings.objects.filter(
+                category=EmailSettings.Category.REFERRAL
+            ).count(),
             0,
         )
 
         email_settings = EmailSettings.get_solo(EmailSettings.Category.REFERRAL)
 
         self.assertEqual(
-            EmailSettings.objects.filter(category=EmailSettings.Category.REFERRAL).count(),
+            EmailSettings.objects.filter(
+                category=EmailSettings.Category.REFERRAL
+            ).count(),
             1,
         )
         self.assertEqual(email_settings.category, EmailSettings.Category.REFERRAL)
@@ -38,7 +42,9 @@ class EmailSettingsModelTests(TestCase):
 
         self.assertEqual(fetched.id, existing.id)
         self.assertEqual(
-            EmailSettings.objects.filter(category=EmailSettings.Category.REFERRAL).count(),
+            EmailSettings.objects.filter(
+                category=EmailSettings.Category.REFERRAL
+            ).count(),
             1,
         )
 
@@ -50,11 +56,15 @@ class EmailSettingsModelTests(TestCase):
         self.assertEqual(referral_settings.category, EmailSettings.Category.REFERRAL)
         self.assertEqual(bug_settings.category, EmailSettings.Category.BUG_REPORT)
         self.assertEqual(
-            EmailSettings.objects.filter(category=EmailSettings.Category.REFERRAL).count(),
+            EmailSettings.objects.filter(
+                category=EmailSettings.Category.REFERRAL
+            ).count(),
             1,
         )
         self.assertEqual(
-            EmailSettings.objects.filter(category=EmailSettings.Category.BUG_REPORT).count(),
+            EmailSettings.objects.filter(
+                category=EmailSettings.Category.BUG_REPORT
+            ).count(),
             1,
         )
 

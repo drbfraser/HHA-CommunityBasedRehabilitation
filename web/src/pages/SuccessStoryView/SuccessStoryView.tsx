@@ -120,20 +120,25 @@ const SuccessStoryView = () => {
 
             <Card variant="outlined" sx={{ mb: 2 }}>
                 <CardContent>
-                    <Grid container spacing={1}>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
+                        Beneficiary Information
+                    </Typography>
+                    <Grid container spacing={2}>
                         <Grid item xs={6} md={3}>
                             <Typography variant="subtitle2" color="text.secondary">
-                                Written By
+                                Name
                             </Typography>
-                            <Typography>{story.written_by_name}</Typography>
+                            <Typography>
+                                {story.client_name || `Client #${story.client_id}`}
+                            </Typography>
                         </Grid>
-                        <Grid item xs={6} md={2}>
+                        <Grid item xs={6} md={3}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Age
                             </Typography>
                             <Typography>{story.beneficiary_age || "—"}</Typography>
                         </Grid>
-                        <Grid item xs={6} md={2}>
+                        <Grid item xs={6} md={3}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Gender
                             </Typography>
@@ -159,66 +164,77 @@ const SuccessStoryView = () => {
                                     `, ${story.refugee_duration} in Uganda`}
                             </Typography>
                         </Grid>
-                        <Grid item xs={6} md={2}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                                Story Date
-                            </Typography>
-                            <Typography>{story.date}</Typography>
-                        </Grid>
-                        <Grid item xs={6} md={4}>
+                        <Grid item xs={6} md={3}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Diagnosis
                             </Typography>
                             <Typography>{story.diagnosis || "—"}</Typography>
                         </Grid>
-                        <Grid item xs={6} md={4}>
+                        <Grid item xs={12} md={6}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Treatment / Service
                             </Typography>
                             <Typography>{story.treatment_service || "—"}</Typography>
                         </Grid>
-                        <Grid item xs={6} md={2}>
+                    </Grid>
+                </CardContent>
+            </Card>
+
+            <Card variant="outlined" sx={{ mb: 2 }}>
+                <CardContent>
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
+                        Story Details
+                    </Typography>
+                    <Grid container spacing={2}>
+                        <Grid item xs={6} md={3}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                                Written By
+                            </Typography>
+                            <Typography>{story.written_by_name}</Typography>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                                Story Date
+                            </Typography>
+                            <Typography>{story.date}</Typography>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                                Status
+                            </Typography>
                             <Chip
                                 label={statusLabel(story.status)}
                                 color={story.status === StoryStatus.READY ? "success" : "warning"}
                                 size="small"
                             />
                         </Grid>
-                        <Grid item xs={6} md={2}>
+                        <Grid item xs={6} md={3}>
                             <Typography variant="subtitle2" color="text.secondary">
                                 Publish Permission
                             </Typography>
                             <Typography>{permissionLabel(story.publish_permission)}</Typography>
                         </Grid>
-                        <Grid item xs={6} md={3}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                                Created At
-                            </Typography>
-                            <Typography>
-                                {new Date(story.created_at).toLocaleString(undefined, {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "numeric",
-                                    minute: "2-digit",
-                                })}
-                            </Typography>
-                        </Grid>
-                        <Grid item xs={6} md={3}>
-                            <Typography variant="subtitle2" color="text.secondary">
-                                Updated At
-                            </Typography>
-                            <Typography>
-                                {new Date(story.updated_at).toLocaleString(undefined, {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                    hour: "numeric",
-                                    minute: "2-digit",
-                                })}
-                            </Typography>
-                        </Grid>
                     </Grid>
+                    <Divider sx={{ my: 1.5 }} />
+                    <Typography variant="caption" color="text.secondary">
+                        Created{" "}
+                        {new Date(story.created_at).toLocaleString(undefined, {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                        })}
+                        {" · "}
+                        Updated{" "}
+                        {new Date(story.updated_at).toLocaleString(undefined, {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                        })}
+                    </Typography>
                 </CardContent>
             </Card>
 

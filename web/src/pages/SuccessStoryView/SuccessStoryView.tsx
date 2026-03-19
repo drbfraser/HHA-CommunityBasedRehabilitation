@@ -161,7 +161,7 @@ const SuccessStoryView = () => {
                         </Grid>
                         <Grid item xs={6} md={2}>
                             <Typography variant="subtitle2" color="text.secondary">
-                                Date
+                                Story Date
                             </Typography>
                             <Typography>{story.date}</Typography>
                         </Grid>
@@ -189,6 +189,34 @@ const SuccessStoryView = () => {
                                 Publish Permission
                             </Typography>
                             <Typography>{permissionLabel(story.publish_permission)}</Typography>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                                Created At
+                            </Typography>
+                            <Typography>
+                                {new Date(story.created_at).toLocaleString(undefined, {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                })}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={6} md={3}>
+                            <Typography variant="subtitle2" color="text.secondary">
+                                Updated At
+                            </Typography>
+                            <Typography>
+                                {new Date(story.updated_at).toLocaleString(undefined, {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                    hour: "numeric",
+                                    minute: "2-digit",
+                                })}
+                            </Typography>
                         </Grid>
                     </Grid>
                 </CardContent>

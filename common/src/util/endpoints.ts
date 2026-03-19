@@ -38,6 +38,7 @@ export enum Endpoint {
     ALERT = "alert/",
     VERSION_CHECK = "versioncheck/",
     EMAIL_SETTINGS = "email_settings/",
+    BUG_REPORT = "bug_report/",
     PATIENT_NOTES = "patient-notes/",
 }
 

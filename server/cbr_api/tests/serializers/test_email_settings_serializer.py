@@ -9,6 +9,7 @@ from cbr_api.serializers import EmailSettingsSerializer
 class EmailSettingsSerializerTests(TestCase):
     def setUp(self):
         self.email_settings = EmailSettings.objects.create(
+            category=EmailSettings.Category.REFERRAL,
             from_email="from@example.com",
             from_email_password="old-password",
             to_email="to@example.com",
@@ -18,7 +19,19 @@ class EmailSettingsSerializerTests(TestCase):
     def test_from_email_password_set_flag(self):
         serializer = EmailSettingsSerializer(self.email_settings)
         self.assertTrue(serializer.data["from_email_password_set"])
+        self.assertEqual(serializer.data["category"], EmailSettings.Category.REFERRAL)
         self.assertNotIn("from_email_password", serializer.data)
+
+    def test_category_is_read_only(self):
+        serializer = EmailSettingsSerializer(
+            self.email_settings,
+            data={"category": EmailSettings.Category.BUG_REPORT},
+            partial=True,
+        )
+        self.assertTrue(serializer.is_valid(), serializer.errors)
+        updated = serializer.save()
+
+        self.assertEqual(updated.category, EmailSettings.Category.REFERRAL)
 
     def test_blank_password_does_not_overwrite_existing_password(self):
         serializer = EmailSettingsSerializer(

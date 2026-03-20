@@ -36,8 +36,6 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
       - cbr_postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"  
 
 volumes:
   cbr_postgres_data:

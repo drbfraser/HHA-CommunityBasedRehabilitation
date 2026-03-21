@@ -251,7 +251,7 @@ const SuccessStoriesList = () => {
                                             color="text.secondary"
                                             sx={{ mb: 0.5 }}
                                         >
-                                            {story.date} · {story.written_by_name}
+                                            Story Date: {story.date} · {story.written_by_name}
                                         </Typography>
                                         <Typography variant="body2" sx={{ mb: 1 }} noWrap>
                                             {story.client_name || `Client #${story.client_id}`}

@@ -204,6 +204,26 @@ describe("Feature", () => {
 -   Add `testID` props to React Native components to make them targetable in tests.
 -   Prefer `replaceText()` over `typeText()` for text input. `typeText` can double-type characters due to Detox synchronization issues with React Native's JS bridge.
 
+## Debugging E2E Tests
+
+After each test run, Detox saves artifacts to `mobile/e2e/artifacts/<config>.<timestamp>/`. Each test gets its own subfolder (e.g. `OK_navigates to the Sync screen/` or `FAIL_completes an initial sync/`) containing:
+
+| Artifact       | Description                                                                      |
+| -------------- | -------------------------------------------------------------------------------- |
+| `device.log`   | Android logcat output which contains RN JS errors, native crashes, Detox actions |
+| `test.mp4`     | Screen recording of the test (captures red error popups and all UI)              |
+| `testDone.png` | Screenshot taken at test completion                                              |
+
+To inspect a failed run, look for folders prefixed with `FAIL_`. For example:
+
+```powershell
+# Open the device log for a failed test
+code "mobile/e2e/artifacts/android.emu.debug.<timestamp>/FAIL_<test name>/device.log"
+
+# Search all logs for a specific error
+Get-ChildItem -Recurse "mobile/e2e/artifacts" -Filter "device.log" | Select-String "RangeError|Exception"
+```
+
 # Notes
 
 -   **First-Time Run**: The first time you run the mobile application, it may take a long time to start. This is normal as dependencies are being initialized.

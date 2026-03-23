@@ -6,6 +6,9 @@ class ShortPathBuilder {
     }
 
     buildPathForTestArtifact(artifactName, testSummary) {
+        if (!testSummary) {
+            return path.join(this._rootDir, artifactName);
+        }
         const status = testSummary.status === "passed" ? "OK" : "FAIL";
         const title = (testSummary.title || "unknown")
             .replace(/[<>:"/\\|?*✗✓–]/g, "_")

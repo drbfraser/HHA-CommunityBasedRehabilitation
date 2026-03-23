@@ -10,6 +10,19 @@ module.exports = {
     artifacts: {
         rootDir: "e2e/artifacts",
         pathBuilder: "./e2e/artifactPathBuilder.js",
+        plugins: {
+            log: { enabled: true },
+            screenshot: {
+                enabled: true,
+                shouldTakeAutomaticSnapshots: true,
+                keepOnlyFailedTestsArtifacts: false,
+                takeWhen: { testStart: false, testDone: true },
+            },
+            video: {
+                enabled: true,
+                keepOnlyFailedTestsArtifacts: false,
+            },
+        },
     },
     testRunner: {
         args: {

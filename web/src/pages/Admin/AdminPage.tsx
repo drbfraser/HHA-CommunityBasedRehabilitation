@@ -47,7 +47,6 @@ const AdminPage = () => {
                 <Box sx={{ borderBottom: 1, borderColor: "divider", width: "100%" }}>
                     <Tabs value={value} onChange={handleTabChange} aria-label="basic tabs">
                         <Tab label={t("general.users")} {...a11yProps(0)} />
-
                         <Tab label={t("general.zones")} {...a11yProps(1)} />
                         <Tab label="Email settings" {...a11yProps(2)} />
                     </Tabs>

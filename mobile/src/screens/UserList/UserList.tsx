@@ -215,7 +215,7 @@ const UserList = () => {
                     </Modal>
                 </Portal>
             </View>
-            <ScrollView>
+            <ScrollView testID="user-list-scroll-view">
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title style={styles.column_icon}>{""}</DataTable.Title>

@@ -6,6 +6,7 @@ const E2E_PASSWORD = process.env.E2E_PASSWORD;
 
 const TEST_CLIENT_FIRST_NAME = "SyncE2E";
 const TEST_CLIENT_LAST_NAME = `Offline${Date.now()}`;
+const TEST_CLIENT_FULL_NAME = `${TEST_CLIENT_FIRST_NAME} ${TEST_CLIENT_LAST_NAME}`;
 
 function getEmulatorSerial() {
     try {
@@ -51,7 +52,47 @@ async function loginWithCredentials() {
         .withTimeout(30000);
 }
 
+async function ensureTabNavigatorVisible() {
+    // Already inside Sync screen in some flows.
+    try {
+        await expect(element(by.id("sync-database-button"))).toBeVisible();
+        return;
+    } catch {}
+
+    // If app got bounced to login (e.g., token/network transitions), recover.
+    try {
+        await waitFor(element(by.id("login-button")))
+            .toBeVisible()
+            .withTimeout(1500);
+        await loginWithCredentials();
+        await waitFor(element(by.id("tab-dashboard")))
+            .toBeVisible()
+            .withTimeout(30000);
+        return;
+    } catch {}
+
+    // Try to unwind stacked screens until tabs reappear.
+    for (let i = 0; i < 4; i++) {
+        try {
+            await expect(element(by.id("tab-sync"))).toBeVisible();
+            return;
+        } catch {}
+        await device.pressBack();
+    }
+
+    await waitFor(element(by.id("tab-sync")))
+        .toBeVisible()
+        .withTimeout(10000);
+}
+
 async function navigateToSyncScreen() {
+    await ensureTabNavigatorVisible();
+
+    try {
+        await expect(element(by.id("sync-database-button"))).toBeVisible();
+        return;
+    } catch {}
+
     await element(by.id("tab-sync")).tap();
 
     await waitFor(element(by.id("home-sync-modal-button")))
@@ -69,6 +110,27 @@ async function triggerSyncAndWaitForAlert() {
     await waitFor(element(by.id("sync-alert-ok-button")))
         .toBeVisible()
         .withTimeout(60000);
+}
+
+async function ensureCellularSyncEnabled() {
+    try {
+        await expect(element(by.id("sync-cellular-switch"))).toHaveToggleValue(true);
+        return;
+    } catch {}
+
+    await element(by.id("sync-cellular-switch")).tap();
+    await expect(element(by.id("sync-cellular-switch"))).toHaveToggleValue(true);
+}
+
+async function scrollUntilTextVisible(text, scrollViewId, maxScrolls = 14) {
+    for (let i = 0; i < maxScrolls; i++) {
+        try {
+            await expect(element(by.text(text))).toBeVisible();
+            return;
+        } catch {}
+        await element(by.id(scrollViewId)).scroll(260, "down");
+    }
+    await expect(element(by.text(text))).toBeVisible();
 }
 
 async function navigateBackToHome() {
@@ -123,6 +185,10 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         it("navigates to the Sync screen", async () => {
             await navigateToSyncScreen();
             await expect(element(by.id("sync-database-button"))).toBeVisible();
+        });
+
+        it("enables sync over cellular for offline sync test flow", async () => {
+            await ensureCellularSyncEnabled();
         });
 
         it("completes an initial sync with the server", async () => {
@@ -232,6 +298,42 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await element(by.id("client-disability-save-btn")).tap();
         });
 
+        it("selects one complete risk (required for new client validation)", async () => {
+            await element(by.id("new-client-scroll-view")).scroll(450, "down");
+
+            await waitFor(element(by.id("health-risk-checkbox")))
+                .toBeVisible()
+                .withTimeout(5000);
+            await element(by.id("health-risk-checkbox")).tap();
+
+            await waitFor(element(by.id("health-risk-dropdown")))
+                .toBeVisible()
+                .withTimeout(5000);
+            await element(by.id("health-risk-dropdown")).tap();
+            await waitFor(element(by.text("Low")))
+                .toBeVisible()
+                .withTimeout(5000);
+            await element(by.text("Low")).tap();
+
+            await waitFor(element(by.id("health-requirements-dropdown")))
+                .toBeVisible()
+                .withTimeout(5000);
+            await element(by.id("health-requirements-dropdown")).tap();
+            await waitFor(element(by.text("Malaria treatment")))
+                .toBeVisible()
+                .withTimeout(5000);
+            await element(by.text("Malaria treatment")).tap();
+
+            await waitFor(element(by.id("health-goals-dropdown")))
+                .toBeVisible()
+                .withTimeout(5000);
+            await element(by.id("health-goals-dropdown")).tap();
+            await waitFor(element(by.text("Pain managed")))
+                .toBeVisible()
+                .withTimeout(5000);
+            await element(by.text("Pain managed")).tap();
+        });
+
         it("submits the form – client is persisted locally in WatermelonDB as unsynced", async () => {
             await element(by.id("new-client-scroll-view")).scroll(500, "down");
 
@@ -267,10 +369,11 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
     describe("Phase 4: Re-enable Wi-Fi and sync locally cached changes to the server", () => {
         beforeAll(async () => {
             enableWifi();
-            await sleep(3000);
+            await sleep(5000);
         });
 
         it("successfully syncs local WatermelonDB changes to the server", async () => {
+            await navigateToSyncScreen();
             await triggerSyncAndWaitForAlert();
             await expect(element(by.id("sync-alert-message"))).toBeVisible();
             await element(by.id("sync-alert-ok-button")).tap();
@@ -280,10 +383,10 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await navigateBackToHome();
 
             await element(by.id("tab-client-list")).tap();
-
-            await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))
+            await waitFor(element(by.id("client-list-scroll-view")))
                 .toBeVisible()
-                .withTimeout(15000);
+                .withTimeout(10000);
+            await scrollUntilTextVisible(TEST_CLIENT_FULL_NAME, "client-list-scroll-view");
         });
     });
 });

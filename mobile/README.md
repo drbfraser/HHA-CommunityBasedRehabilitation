@@ -144,23 +144,44 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 ## Running the Tests
 
+Run the full Detox workflow:
+
 ```bash
-#OS = linux | win
-npm run e2e:ci:<OS>
+npm run detox:run
 ```
 
 This single command will:
 
-1. Build the debug APK and test APK
-2. Start Metro bundler and wait for it to be ready
-3. Boot the emulator, disable animations, and suppress ANR dialogs (via the custom `e2e/globalSetup.js`)
-4. Run the Detox test suite using the `android.emu.debug` configuration
+1. Bundle the app for Android (detox:bundle)
+2. Build the debug APK and test APK (detox build)
+3. Run the Detox test suite using the android.emu.debug configuration
 
-If you already have the apks built via `npm run e2e:build:<OS>` you can skip the build using:
+## Manual Step-by-Step
+
+If you want more control over each step:
+
+1. Bundle the app
 
 ```bash
-#OS = linux | win
-npm run e2e:ci:nobuild:<OS>
+npm run detox:bundle
+```
+
+2. Build APKs
+
+```bash
+npm run detox:build
+```
+
+3. Install APKs
+
+```bash
+npm run detox:install
+```
+
+4. Run tests
+
+```bash
+npm run detox:test
 ```
 
 ### Available Configurations
@@ -178,8 +199,8 @@ npm run e2e:ci:nobuild:<OS>
 
 | Script                  | Description                                                                        |
 | ----------------------- | ---------------------------------------------------------------------------------- |
+| `npm run detox:bundle`  | Generate Android JS bundle for testing                                             |
 | `npm run detox:build`   | Build debug + test APKs only (no test run)                                         |
-| `npm run detox:metro`   | Start Metro only (useful when running `detox:test` separately)                     |
 | `npm run detox:install` | Install debug & test APKs to a connected/emulator device                           |
 | `npm run detox:test`    | Run tests only (emulator and Metro must already be running)                        |
 | `npm run detox:run`     | Complete workflow. Build, start Metro, boot emulator, then run Detox (recommended) |

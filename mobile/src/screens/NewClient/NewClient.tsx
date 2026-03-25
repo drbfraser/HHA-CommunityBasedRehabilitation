@@ -121,6 +121,7 @@ const RiskForm = ({
     return (
         <View style={containerStyle}>
             <TextCheckBox
+                testID={`${riskPrefix}-risk-checkbox`}
                 field={checkedField}
                 label={clientFieldLabels[`${riskPrefix}Risk`]}
                 setFieldTouched={formikProps.setFieldTouched}
@@ -133,6 +134,7 @@ const RiskForm = ({
                 <>
                     <FormikExposedDropdownMenu
                         style={styles.field}
+                        testID={`${riskPrefix}-risk-dropdown`}
                         valuesType="map"
                         values={riskMap}
                         fieldLabels={clientFieldLabels}
@@ -143,6 +145,7 @@ const RiskForm = ({
                     />
                     <FormikExposedDropdownMenu
                         style={styles.field}
+                        testID={`${riskPrefix}-requirements-dropdown`}
                         valuesType="record-string"
                         values={localizedRequirements}
                         fieldLabels={clientFieldLabels}
@@ -165,6 +168,7 @@ const RiskForm = ({
 
                     <FormikExposedDropdownMenu
                         style={styles.field}
+                        testID={`${riskPrefix}-goals-dropdown`}
                         valuesType="record-string"
                         values={localizedGoals}
                         fieldLabels={clientFieldLabels}

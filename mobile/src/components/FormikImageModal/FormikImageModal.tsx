@@ -75,7 +75,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                         ? ImagePicker.launchCameraAsync
                         : ImagePicker.launchImageLibraryAsync;
                 const image = await imagePicker({
-                    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                    mediaTypes: "images",
                     base64: true,
                     allowsEditing: true,
                     aspect: [1, 1],

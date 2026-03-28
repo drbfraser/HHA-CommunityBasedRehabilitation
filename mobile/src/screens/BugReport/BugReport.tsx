@@ -40,7 +40,7 @@ const BugReport = () => {
         }
 
         const imagePickerResult = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsEditing: false,
             quality: 1,
         });
@@ -105,138 +105,145 @@ const BugReport = () => {
         : 0;
 
     return (
-        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-            <View style={styles.form}>
-                <Alert
-                    severity="info"
-                    text="Submitting this form sends an email with your description and attached image. You can choose either Bug report or Suggestion."
-                />
+        <View style={styles.screen}>
+            <ScrollView
+                style={styles.scrollView}
+                contentContainerStyle={styles.contentContainer}
+                keyboardShouldPersistTaps="handled"
+                nestedScrollEnabled
+            >
+                <View style={styles.form}>
+                    <Alert
+                        severity="info"
+                        text="Submitting this form sends an email with your description and attached image. You can choose either Bug report or Suggestion."
+                    />
 
-                <Card style={styles.card}>
-                    <Card.Content style={styles.cardContent}>
-                        <Title style={styles.subheading}>Type</Title>
-                        <SegmentedButtons
-                            value={reportType}
-                            onValueChange={(selectedType) => {
-                                if (!selectedType) {
-                                    return;
-                                }
-                                setReportType(selectedType as ReportType);
-                                setIsSubmitted(false);
-                                setSubmitError(null);
-                            }}
-                            style={styles.reportTypeToggle}
-                            buttons={[
-                                {
-                                    value: "bug_report",
-                                    label: "Bug report",
-                                },
-                                {
-                                    value: "suggestion",
-                                    label: "Suggestion",
-                                },
-                            ]}
-                        />
+                    <Card style={styles.card}>
+                        <Card.Content style={styles.cardContent}>
+                            <Title style={styles.subheading}>Type</Title>
+                            <SegmentedButtons
+                                value={reportType}
+                                onValueChange={(selectedType) => {
+                                    if (!selectedType) {
+                                        return;
+                                    }
+                                    setReportType(selectedType as ReportType);
+                                    setIsSubmitted(false);
+                                    setSubmitError(null);
+                                }}
+                                style={styles.reportTypeToggle}
+                                buttons={[
+                                    {
+                                        value: "bug_report",
+                                        label: "Bug report",
+                                    },
+                                    {
+                                        value: "suggestion",
+                                        label: "Suggestion",
+                                    },
+                                ]}
+                            />
 
-                        <Divider style={styles.divider} />
+                            <Divider style={styles.divider} />
 
-                        <Title style={styles.subheading}>Describe the {reportTypeLabel}</Title>
-                        <TextInput
-                            value={description}
-                            onChangeText={(value) => {
-                                setDescription(value);
-                                setIsSubmitted(false);
-                                setSubmitError(null);
-                            }}
-                            placeholder="What happened, where it happened, and what you expected instead."
-                            mode="outlined"
-                            outlineColor={themeColors.borderGray}
-                            activeOutlineColor={themeColors.blueBgDark}
-                            multiline
-                            numberOfLines={6}
-                            maxLength={MAX_DESCRIPTION_LENGTH}
-                            style={styles.descriptionField}
-                        />
-                        <Text style={styles.helperText}>
-                            {descriptionLength}/{MAX_DESCRIPTION_LENGTH}
-                        </Text>
+                            <Title style={styles.subheading}>Describe the {reportTypeLabel}</Title>
+                            <TextInput
+                                value={description}
+                                onChangeText={(value) => {
+                                    setDescription(value);
+                                    setIsSubmitted(false);
+                                    setSubmitError(null);
+                                }}
+                                placeholder="What happened, where it happened, and what you expected instead."
+                                mode="outlined"
+                                outlineColor={themeColors.borderGray}
+                                activeOutlineColor={themeColors.blueBgDark}
+                                multiline
+                                numberOfLines={6}
+                                maxLength={MAX_DESCRIPTION_LENGTH}
+                                style={styles.descriptionField}
+                            />
+                            <Text style={styles.helperText}>
+                                {descriptionLength}/{MAX_DESCRIPTION_LENGTH}
+                            </Text>
 
-                        <Divider style={styles.divider} />
+                            <Divider style={styles.divider} />
 
-                        <Title style={styles.subheading}>Add screenshot or image</Title>
-                        <Text style={styles.helperText}>
-                            Attach a screenshot/photo from your device to show the issue clearly.
-                        </Text>
+                            <Title style={styles.subheading}>Add screenshot or image</Title>
+                            <Text style={styles.helperText}>
+                                Attach a screenshot/photo from your device to show the issue
+                                clearly.
+                            </Text>
 
-                        <View style={styles.attachControls}>
+                            <View style={styles.attachControls}>
+                                <Button
+                                    mode="outlined"
+                                    style={[styles.outlinedActionButton, styles.chooseImageButton]}
+                                    textColor={themeColors.blueBgDark}
+                                    icon="file-upload-outline"
+                                    onPress={onImageSelect}
+                                >
+                                    Choose Image
+                                </Button>
+                                {attachedImage && (
+                                    <Button
+                                        mode="text"
+                                        textColor={themeColors.riskBlack}
+                                        icon="delete-outline"
+                                        onPress={() => setAttachedImage(null)}
+                                    >
+                                        Remove
+                                    </Button>
+                                )}
+                            </View>
+
+                            {attachedImage && (
+                                <View style={styles.imageMeta}>
+                                    <Chip>{`${imageFileName} (${imageSizeInKB} KB)`}</Chip>
+                                </View>
+                            )}
+
+                            {attachedImage && (
+                                <Image
+                                    source={{ uri: attachedImage.uri }}
+                                    style={styles.imagePreview}
+                                    resizeMode="contain"
+                                />
+                            )}
+                        </Card.Content>
+                        <Card.Actions style={styles.cardActions}>
                             <Button
                                 mode="outlined"
-                                style={[styles.outlinedActionButton, styles.chooseImageButton]}
-                                textColor={themeColors.blueBgDark}
-                                icon="file-upload-outline"
-                                onPress={onImageSelect}
+                                style={[styles.outlinedActionButton, styles.clearButton]}
+                                textColor={themeColors.errorRed}
+                                onPress={onClear}
                             >
-                                Choose Image
+                                Clear
                             </Button>
-                            {attachedImage && (
-                                <Button
-                                    mode="text"
-                                    textColor={themeColors.riskBlack}
-                                    icon="delete-outline"
-                                    onPress={() => setAttachedImage(null)}
-                                >
-                                    Remove
-                                </Button>
-                            )}
+                            <Button
+                                mode="contained"
+                                icon="send"
+                                onPress={onSubmit}
+                                disabled={isSubmitting || descriptionLength === 0}
+                            >
+                                {isSubmitting ? "Submitting..." : submitLabel}
+                            </Button>
+                        </Card.Actions>
+                    </Card>
+
+                    {submitError && <Alert severity="error" text={submitError} />}
+
+                    {isSubmitted && (
+                        <View style={styles.successAlert}>
+                            <Text style={styles.successAlertText}>
+                                Your {reportTypeLabel} email has been submitted with your
+                                description and image.
+                            </Text>
                         </View>
-
-                        {attachedImage && (
-                            <View style={styles.imageMeta}>
-                                <Chip>{`${imageFileName} (${imageSizeInKB} KB)`}</Chip>
-                            </View>
-                        )}
-
-                        {attachedImage && (
-                            <Image
-                                source={{ uri: attachedImage.uri }}
-                                style={styles.imagePreview}
-                                resizeMode="contain"
-                            />
-                        )}
-                    </Card.Content>
-
-                    <Card.Actions style={styles.cardActions}>
-                        <Button
-                            mode="outlined"
-                            style={[styles.outlinedActionButton, styles.clearButton]}
-                            textColor={themeColors.errorRed}
-                            onPress={onClear}
-                        >
-                            Clear
-                        </Button>
-                        <Button
-                            mode="contained"
-                            icon="send"
-                            onPress={onSubmit}
-                            disabled={isSubmitting || descriptionLength === 0}
-                        >
-                            {isSubmitting ? "Submitting..." : submitLabel}
-                        </Button>
-                    </Card.Actions>
-                </Card>
-
-                {submitError && <Alert severity="error" text={submitError} />}
-
-                {isSubmitted && (
-                    <View style={styles.successAlert}>
-                        <Text style={styles.successAlertText}>
-                            Your {reportTypeLabel} email has been submitted with your description
-                            and image.
-                        </Text>
-                    </View>
-                )}
-            </View>
-        </ScrollView>
+                    )}
+                </View>
+            </ScrollView>
+        </View>
     );
 };
 

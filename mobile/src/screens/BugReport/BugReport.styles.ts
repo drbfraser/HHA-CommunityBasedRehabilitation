@@ -3,11 +3,18 @@ import { StyleSheet } from "react-native";
 
 const useStyles = () =>
     StyleSheet.create({
-        container: {
+        screen: {
             flex: 1,
+            backgroundColor: themeColors.white,
+        },
+        scrollView: {
+            flex: 1,
+        },
+        contentContainer: {
+            flexGrow: 1,
             paddingHorizontal: 16,
             paddingTop: 12,
-            paddingBottom: 20,
+            paddingBottom: 48,
         },
         form: {
             gap: 16,
@@ -65,17 +72,11 @@ const useStyles = () =>
         imagePreview: {
             marginTop: 12,
             width: "100%",
-            maxHeight: 360,
-            minHeight: 180,
+            height: 160,
             borderRadius: 12,
             borderWidth: 1,
             borderColor: themeColors.blueBgLight,
             backgroundColor: themeColors.white,
-        },
-        cardActions: {
-            paddingHorizontal: 16,
-            paddingBottom: 16,
-            gap: 8,
         },
         outlinedActionButton: {
             borderWidth: 2,
@@ -85,6 +86,11 @@ const useStyles = () =>
         },
         clearButton: {
             borderColor: themeColors.errorRed,
+        },
+        cardActions: {
+            paddingHorizontal: 16,
+            paddingBottom: 16,
+            gap: 8,
         },
         successAlert: {
             borderRadius: 4,

@@ -2,7 +2,16 @@ import React, { useContext, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
 import { ScrollView, View } from "react-native";
 import Alert from "../Alert/Alert";
-import { Button, Dialog, Portal, Snackbar, Subheading, Text, Title } from "react-native-paper";
+import {
+    Button,
+    Card,
+    Dialog,
+    Portal,
+    Snackbar,
+    Subheading,
+    Text,
+    Title,
+} from "react-native-paper";
 import { IUser, userRoles, useZones } from "@cbr/common";
 import useStyles from "./UserProfileContents.styles";
 import ChangePasswordDialog from "./ChangePasswordDialog";
@@ -117,34 +126,46 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                 {user.first_name} {user.last_name}
                             </Title>
 
-                            <Subheading style={styles.profileInfoHeader}>
-                                {t("general.username")}
-                            </Subheading>
-                            <Text style={styles.profileInfoText}>{user.username}</Text>
+                            <View style={styles.profileInfoRow}>
+                                <Subheading style={styles.profileInfoHeader}>
+                                    {t("general.username")}
+                                </Subheading>
+                                <Text style={styles.profileInfoText}>{user.username}</Text>
+                            </View>
 
-                            <Subheading style={styles.profileInfoHeader}>
-                                {t("general.zone")}
-                            </Subheading>
-                            <Text style={styles.profileInfoText}>
-                                {zones.get(user.zone) ?? `Unknown (ID ${user.zone})`}
-                            </Text>
+                            <View style={styles.profileInfoRow}>
+                                <Subheading style={styles.profileInfoHeader}>
+                                    {t("general.zone")}
+                                </Subheading>
+                                <Text style={styles.profileInfoText}>
+                                    {zones.get(user.zone) ?? `Unknown (ID ${user.zone})`}
+                                </Text>
+                            </View>
 
-                            <Subheading style={styles.profileInfoHeader}>
-                                {t("general.phoneNumber")}
-                            </Subheading>
-                            <Text style={styles.profileInfoText}>{user.phone_number}</Text>
+                            <View style={styles.profileInfoRow}>
+                                <Subheading style={styles.profileInfoHeader}>
+                                    {t("general.phoneNumber")}
+                                </Subheading>
+                                <Text style={styles.profileInfoText}>{user.phone_number}</Text>
+                            </View>
 
-                            <Subheading style={styles.profileInfoHeader}>
-                                {t("general.type")}
-                            </Subheading>
-                            <Text style={styles.profileInfoText}>{userRoles[user.role].name}</Text>
+                            <View style={styles.profileInfoRow}>
+                                <Subheading style={styles.profileInfoHeader}>
+                                    {t("general.type")}
+                                </Subheading>
+                                <Text style={styles.profileInfoText}>
+                                    {userRoles[user.role].name}
+                                </Text>
+                            </View>
 
-                            <Subheading style={styles.profileInfoHeader}>
-                                {t("general.status")}
-                            </Subheading>
-                            <Text style={styles.profileInfoText}>
-                                {user.is_active ? t("general.active") : t("general.disabled")}
-                            </Text>
+                            <View style={styles.profileInfoRow}>
+                                <Subheading style={styles.profileInfoHeader}>
+                                    {t("general.status")}
+                                </Subheading>
+                                <Text style={styles.profileInfoText}>
+                                    {user.is_active ? t("general.active") : t("general.disabled")}
+                                </Text>
+                            </View>
 
                             <Button
                                 style={styles.button}
@@ -169,6 +190,27 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                             >
                                 {t("login.changePassword")}
                             </Button>
+
+                            <Card style={styles.bugReportCard}>
+                                <Card.Content style={styles.bugReportCardContent}>
+                                    <Text style={styles.bugReportTitle}>
+                                        Submit a Bug Report or Suggestion
+                                    </Text>
+                                    <Text style={styles.bugReportDescription}>
+                                        Report app issues or share improvement ideas with the team.
+                                    </Text>
+                                </Card.Content>
+                                <Card.Actions style={styles.bugReportCardActions}>
+                                    <Button
+                                        mode="contained"
+                                        onPress={() =>
+                                            navigation.navigate(StackScreenName.BUG_REPORT)
+                                        }
+                                    >
+                                        Open Report Form
+                                    </Button>
+                                </Card.Actions>
+                            </Card>
 
                             {isSelf ? (
                                 <Button

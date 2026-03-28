@@ -19,6 +19,7 @@ import SwitchServer from "../screens/SwitchServer/SwitchServer";
 import AlertInbox from "../screens/AlertInbox/AlertInbox";
 import i18n from "i18next";
 import Referrals from "../screens/Referrals/Referrals";
+import BugReport from "../screens/BugReport/BugReport";
 
 export const stackScreenProps: Record<
     StackScreenName | NoAuthScreenName,
@@ -27,6 +28,7 @@ export const stackScreenProps: Record<
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
     [StackScreenName.REFERRALS]: Referrals,
+    [StackScreenName.BUG_REPORT]: BugReport,
     [StackScreenName.ADMIN_VIEW]: AdminView,
     [StackScreenName.ADMIN_EDIT]: AdminEdit,
     [StackScreenName.ADMIN_NEW]: AdminNew,
@@ -73,6 +75,10 @@ const refreshArrays = () => {
                 }`
             ),
         }),
+        [StackScreenName.BUG_REPORT]: {
+            headerShown: true,
+            header: DefaultHeader("Bug/Suggestion"),
+        },
         [StackScreenName.ADMIN_VIEW]: {
             headerShown: true,
             header: DefaultHeader(i18n.t("screenNames.viewUser")),
@@ -143,6 +149,7 @@ export type StackParamList = {
         clientID: string;
         clientName?: string;
     };
+    [StackScreenName.BUG_REPORT]: undefined;
     [StackScreenName.VISIT]: {
         clientID: string;
         clientName?: string;

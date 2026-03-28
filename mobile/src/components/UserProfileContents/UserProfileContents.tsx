@@ -197,7 +197,7 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                         Submit a Bug Report or Suggestion
                                     </Text>
                                     <Text style={styles.bugReportDescription}>
-                                        Report app issues or share improvement ideas with the team.
+                                        Share bugs or suggestions with the team.
                                     </Text>
                                 </Card.Content>
                                 <Card.Actions style={styles.bugReportCardActions}>

@@ -58,16 +58,17 @@ const useStyles = () => {
             paddingBottom: 4,
         },
         bugReportTitle: {
-            fontSize: 17,
+            fontSize: 19,
             fontWeight: "700",
         },
         bugReportDescription: {
             marginTop: 4,
-            fontSize: 13,
+            fontSize: 14,
         },
         bugReportCardActions: {
-            justifyContent: "flex-end",
+            justifyContent: "center",
             paddingHorizontal: 8,
+            paddingTop: 6,
             paddingBottom: 8,
         },
     });

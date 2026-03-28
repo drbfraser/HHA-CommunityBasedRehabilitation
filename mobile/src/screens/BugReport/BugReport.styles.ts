@@ -91,9 +91,10 @@ const useStyles = () =>
             borderColor: themeColors.errorRed,
         },
         cardActions: {
+            justifyContent: "space-between",
+            marginTop: 10,
             paddingHorizontal: 16,
             paddingBottom: 16,
-            gap: 8,
         },
         successAlert: {
             borderRadius: 4,

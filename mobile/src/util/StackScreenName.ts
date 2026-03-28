@@ -10,6 +10,9 @@ export enum StackScreenName {
     VISIT = "NewVisit",
     SYNC = "Sync",
     ALERT_INBOX = "AlertInbox",
+    SUCCESS_STORIES = "SuccessStories",
+    SUCCESS_STORY_VIEW = "SuccessStoryView",
+    SUCCESS_STORY_NEW = "SuccessStoryNew",
 }
 
 export enum NoAuthScreenName {

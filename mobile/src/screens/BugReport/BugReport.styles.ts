@@ -54,6 +54,9 @@ const useStyles = () =>
             minHeight: 140,
             backgroundColor: themeColors.white,
         },
+        descriptionFieldContent: {
+            paddingTop: 10,
+        },
         helperText: {
             marginTop: 10,
             color: themeColors.textGray,

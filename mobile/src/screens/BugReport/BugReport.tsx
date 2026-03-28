@@ -162,6 +162,7 @@ const BugReport = () => {
                                 numberOfLines={6}
                                 maxLength={MAX_DESCRIPTION_LENGTH}
                                 style={styles.descriptionField}
+                                contentStyle={styles.descriptionFieldContent}
                             />
                             <Text style={styles.helperText}>
                                 {descriptionLength}/{MAX_DESCRIPTION_LENGTH}

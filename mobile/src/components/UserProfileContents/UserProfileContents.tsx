@@ -203,6 +203,8 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                 <Card.Actions style={styles.bugReportCardActions}>
                                     <Button
                                         mode="contained"
+                                        style={styles.bugReportButton}
+                                        contentStyle={styles.bugReportButtonContent}
                                         onPress={() =>
                                             navigation.navigate(StackScreenName.BUG_REPORT)
                                         }

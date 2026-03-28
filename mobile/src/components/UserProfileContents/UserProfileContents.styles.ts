@@ -67,9 +67,16 @@ const useStyles = () => {
         },
         bugReportCardActions: {
             justifyContent: "center",
-            paddingHorizontal: 8,
-            paddingTop: 6,
-            paddingBottom: 8,
+            paddingHorizontal: 14,
+            paddingTop: 14,
+            paddingBottom: 14,
+        },
+        bugReportButton: {
+            borderRadius: 8,
+        },
+        bugReportButtonContent: {
+            paddingHorizontal: 14,
+            paddingVertical: 6,
         },
     });
 };

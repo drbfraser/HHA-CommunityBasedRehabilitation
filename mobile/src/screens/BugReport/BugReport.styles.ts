@@ -45,6 +45,7 @@ const useStyles = () =>
             marginTop: 8,
             textAlignVertical: "top",
             minHeight: 140,
+            backgroundColor: themeColors.white,
         },
         helperText: {
             marginTop: 10,
@@ -75,6 +76,15 @@ const useStyles = () =>
             paddingHorizontal: 16,
             paddingBottom: 16,
             gap: 8,
+        },
+        outlinedActionButton: {
+            borderWidth: 2,
+        },
+        chooseImageButton: {
+            borderColor: themeColors.blueBgDark,
+        },
+        clearButton: {
+            borderColor: themeColors.errorRed,
         },
         successAlert: {
             borderRadius: 4,

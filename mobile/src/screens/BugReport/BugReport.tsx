@@ -150,6 +150,8 @@ const BugReport = () => {
                             }}
                             placeholder="What happened, where it happened, and what you expected instead."
                             mode="outlined"
+                            outlineColor={themeColors.borderGray}
+                            activeOutlineColor={themeColors.blueBgDark}
                             multiline
                             numberOfLines={6}
                             maxLength={MAX_DESCRIPTION_LENGTH}
@@ -169,6 +171,8 @@ const BugReport = () => {
                         <View style={styles.attachControls}>
                             <Button
                                 mode="outlined"
+                                style={[styles.outlinedActionButton, styles.chooseImageButton]}
+                                textColor={themeColors.blueBgDark}
                                 icon="file-upload-outline"
                                 onPress={onImageSelect}
                             >
@@ -202,7 +206,12 @@ const BugReport = () => {
                     </Card.Content>
 
                     <Card.Actions style={styles.cardActions}>
-                        <Button mode="outlined" textColor={themeColors.errorRed} onPress={onClear}>
+                        <Button
+                            mode="outlined"
+                            style={[styles.outlinedActionButton, styles.clearButton]}
+                            textColor={themeColors.errorRed}
+                            onPress={onClear}
+                        >
                             Clear
                         </Button>
                         <Button

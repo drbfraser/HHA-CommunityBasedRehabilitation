@@ -36,7 +36,7 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
-import { StatusBar } from "react-native";
+import { Platform, StatusBar } from "react-native";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -277,7 +277,15 @@ export default function App() {
                                     }}
                                 >
                                     <DatabaseProvider database={database}>
-                                        <Stack.Navigator>
+                                        <Stack.Navigator
+                                            screenOptions={{
+                                                // Disable stack transition animations on Android to prevent
+                                                // "connectAnimatedNodes: Animated node with tag (parent) does not exist"
+                                                // crash caused by a native animation race condition.
+                                                // See: https://github.com/facebook/react-native/issues/33375
+                                                animationEnabled: Platform.OS !== "android",
+                                            }}
+                                        >
                                             {authState.state === "loggedIn" ? (
                                                 Object.values(StackScreenName).map((name) => (
                                                     <Stack.Screen

@@ -86,6 +86,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                             options={{
                                 tabBarIcon: screen.iconName,
                                 tabBarBadge: screen.iconBadge,
+                                tabBarTestID: `tab-${screen.name.toLowerCase().replace(/ /g, "-")}`,
                                 tabBarLabel:
                                     screen.name === "Dashboard" ? (
                                         <Text style={{ fontSize: 11 }}>Dashboard</Text>
@@ -104,6 +105,7 @@ const HomeScreen = (props: IHomeScreenProps) => {
                     navigation={navigation}
                 >
                     <Button
+                        testID="home-sync-modal-button"
                         mode="contained"
                         icon={SyncIcon}
                         style={styles.buttonContainer}

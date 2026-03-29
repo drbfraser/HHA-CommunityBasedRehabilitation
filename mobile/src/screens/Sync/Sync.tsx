@@ -257,6 +257,7 @@ const Sync = () => {
                 {renderSyncingNotice()}
                 <View style={styles.btnContainer}>
                     <Button
+                        testID="sync-database-button"
                         icon="database-sync"
                         mode="contained"
                         labelStyle={styles.syncBtnLabel}
@@ -324,6 +325,7 @@ const Sync = () => {
                             {t("sync.autoSyncing")}
                         </Text>
                         <Switch
+                            testID="sync-auto-switch"
                             style={styles.switch}
                             trackColor={{ false: themeColors.white, true: themeColors.yellow }}
                             thumbColor={autoSync ? themeColors.white : themeColors.white}
@@ -343,6 +345,7 @@ const Sync = () => {
                             {t("sync.syncOverCellular")}
                         </Text>
                         <Switch
+                            testID="sync-cellular-switch"
                             style={styles.switch}
                             trackColor={{ false: themeColors.white, true: themeColors.yellow }}
                             thumbColor={cellularSync ? themeColors.white : themeColors.white}

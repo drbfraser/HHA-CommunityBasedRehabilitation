@@ -99,16 +99,16 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 ## Prerequisites
 
-1.  **Set `ANDROID_SDK_ROOT`** (one-time, persistent). In PowerShell:
+1.  **Set `ANDROID_SDK_ROOT`** persistently. In PowerShell:
 
     ```powershell
     [System.Environment]::SetEnvironmentVariable('ANDROID_SDK_ROOT','C:\Users\<YourUsername>\AppData\Local\Android\Sdk','User')
     ```
 
-    Or on Bash / Linux (persistent: add to `~/.bashrc` or `~/.profile`):
+    Or on Bash / Linux (persistent: add to `~/.bashrc`):
 
     ```bash
-    # add to ~/.bashrc or ~/.profile
+    # add to ~/.bashrc
     export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
     export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
     ```
@@ -119,7 +119,7 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 3.  **Create the credentials file** (not tracked by git):
 
-    ```powershell
+    ```bash
     cp .env.e2e.example .env.e2e
     # then edit .env.e2e with valid test credentials
     ```
@@ -136,7 +136,7 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 5.  **Start backend services** (if your tests require them):
 
-    ```powershell
+    ```bash
     docker compose up
     ```
 
@@ -144,16 +144,45 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
 ## Running the Tests
 
-```powershell
+Run the full Detox workflow:
+
+```bash
 npm run detox:run
 ```
 
 This single command will:
 
-1. Build the debug APK and test APK
-2. Start Metro bundler and wait for it to be ready
-3. Boot the emulator, disable animations, and suppress ANR dialogs (via the custom `e2e/globalSetup.js`)
-4. Run the Detox test suite using the `android.emu.debug` configuration
+1. Bundle the app for Android (detox:bundle)
+2. Build the debug APK and test APK (detox build)
+3. Run the Detox test suite using the android.emu.debug configuration
+
+## Manual Step-by-Step
+
+If you want more control over each step:
+
+1. Bundle the app
+
+```bash
+npm run detox:bundle
+```
+
+2. Build APKs
+
+```bash
+npm run detox:build
+```
+
+3. Install APKs
+
+```bash
+npm run detox:install
+```
+
+4. Run tests
+
+```bash
+npm run detox:test
+```
 
 ### Available Configurations
 
@@ -170,8 +199,8 @@ This single command will:
 
 | Script                  | Description                                                                        |
 | ----------------------- | ---------------------------------------------------------------------------------- |
+| `npm run detox:bundle`  | Generate Android JS bundle for testing                                             |
 | `npm run detox:build`   | Build debug + test APKs only (no test run)                                         |
-| `npm run detox:metro`   | Start Metro only (useful when running `detox:test` separately)                     |
 | `npm run detox:install` | Install debug & test APKs to a connected/emulator device                           |
 | `npm run detox:test`    | Run tests only (emulator and Metro must already be running)                        |
 | `npm run detox:run`     | Complete workflow. Build, start Metro, boot emulator, then run Detox (recommended) |
@@ -195,6 +224,26 @@ describe("Feature", () => {
 
 -   Add `testID` props to React Native components to make them targetable in tests.
 -   Prefer `replaceText()` over `typeText()` for text input. `typeText` can double-type characters due to Detox synchronization issues with React Native's JS bridge.
+
+## Debugging E2E Tests
+
+After each test run, Detox saves artifacts to `mobile/e2e/artifacts/<config>.<timestamp>/`. Each test gets its own subfolder (e.g. `OK_navigates to the Sync screen/` or `FAIL_completes an initial sync/`) containing:
+
+| Artifact       | Description                                                                      |
+| -------------- | -------------------------------------------------------------------------------- |
+| `device.log`   | Android logcat output which contains RN JS errors, native crashes, Detox actions |
+| `test.mp4`     | Screen recording of the test (captures red error popups and all UI)              |
+| `testDone.png` | Screenshot taken at test completion                                              |
+
+To inspect a failed run, look for folders prefixed with `FAIL_`. For example:
+
+```powershell
+# Open the device log for a failed test
+code "mobile/e2e/artifacts/android.emu.debug.<timestamp>/FAIL_<test name>/device.log"
+
+# Search all logs for a specific error
+Get-ChildItem -Recurse "mobile/e2e/artifacts" -Filter "device.log" | Select-String "RangeError|Exception"
+```
 
 # Notes
 

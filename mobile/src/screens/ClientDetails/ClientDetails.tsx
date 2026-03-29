@@ -35,6 +35,8 @@ import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { useTranslation } from "react-i18next";
 import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModal";
 import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal";
+import { TouchableOpacity } from "react-native";
+import { getStoriesForClient, ISuccessStory, StoryStatus } from "../SuccessStories/successStoryApi";
 
 interface ClientProps {
     clientID: string;
@@ -60,6 +62,8 @@ const ClientDetails = (props: ClientProps) => {
     const [previousGoalsModalOpen, setPreviousGoalsModalOpen] = useState<boolean>(false);
     const [patientNote, setPatientNote] = useState<string>("");
     const [noteLoading, setNoteLoading] = useState<boolean>(false);
+    const [stories, setStories] = useState<ISuccessStory[]>([]);
+    const [storiesError, setStoriesError] = useState(false);
     const [client, setClient] = useState<any>();
     const [risks, setRisk] = useState<IRisk[]>();
     const [referrals, setReferrals] = useState<any>();
@@ -118,6 +122,26 @@ const ClientDetails = (props: ClientProps) => {
     useEffect(() => {
         loadPatientNote();
     }, [loadPatientNote]);
+
+    const loadStories = useCallback(() => {
+        if (!props.route.params.clientID) return;
+        getStoriesForClient(props.route.params.clientID)
+            .then((data) => {
+                data.sort((a, b) => b.created_at - a.created_at);
+                setStories(data);
+                setStoriesError(false);
+            })
+            .catch(() => {
+                setStories([]);
+                setStoriesError(true);
+            });
+    }, [props.route.params.clientID]);
+
+    useEffect(() => {
+        if (isFocused) {
+            loadStories();
+        }
+    }, [isFocused, loadStories]);
 
     const getClientFormInitialValues = () => {
         if (client) {
@@ -310,6 +334,24 @@ const ClientDetails = (props: ClientProps) => {
                                         >
                                             {t("visitAttr.newVisit")}
                                         </Button>
+                                        <Button
+                                            mode="contained"
+                                            style={styles.clientButtons}
+                                            disabled={!formikProps.values.is_active}
+                                            onPress={() => {
+                                                navigation.navigate(
+                                                    StackScreenName.SUCCESS_STORY_NEW,
+                                                    {
+                                                        clientID: client?.id,
+                                                        clientName: `${client?.first_name ?? ""} ${
+                                                            client?.last_name ?? ""
+                                                        }`,
+                                                    }
+                                                );
+                                            }}
+                                        >
+                                            New Success Story
+                                        </Button>
                                     </Card>
                                     <Divider />
                                     {formikProps.values.is_active ? (
@@ -437,6 +479,88 @@ const ClientDetails = (props: ClientProps) => {
                         )}
                         <View style={styles.clientDetailsFinalView}></View>
                     </Card>
+                    {/* Success Stories Section */}
+                    <Divider />
+                    <Text style={styles.riskLevelsSectionTitle}>Success Stories</Text>
+                    <Divider />
+                    <View style={{ paddingHorizontal: 12, marginTop: 8, marginBottom: 16 }}>
+                        {storiesError ? (
+                            <Text style={{ color: "#d32f2f", textAlign: "center", marginTop: 8 }}>
+                                Could not load success stories.
+                            </Text>
+                        ) : stories.length === 0 ? (
+                            <Text
+                                style={{
+                                    color: "#757575",
+                                    textAlign: "center",
+                                    marginTop: 8,
+                                }}
+                            >
+                                No success stories submitted for this client yet.
+                            </Text>
+                        ) : (
+                            stories.map((story) => (
+                                <TouchableOpacity
+                                    key={story.id}
+                                    activeOpacity={0.7}
+                                    onPress={() =>
+                                        navigation.navigate(StackScreenName.SUCCESS_STORY_VIEW, {
+                                            clientID: client?.id,
+                                            storyId: story.id,
+                                            clientName: `${client?.first_name ?? ""} ${
+                                                client?.last_name ?? ""
+                                            }`,
+                                        })
+                                    }
+                                    style={{
+                                        backgroundColor: "#fff",
+                                        borderRadius: 8,
+                                        borderWidth: 1,
+                                        borderColor: "#e0e0e0",
+                                        padding: 12,
+                                        marginBottom: 8,
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <View style={{ flex: 1, marginRight: 8 }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 15,
+                                                fontWeight: "bold",
+                                                color: "#333",
+                                            }}
+                                            numberOfLines={1}
+                                        >
+                                            {story.title || "Untitled"}
+                                        </Text>
+                                        <Text style={{ fontSize: 13, color: "#757575" }}>
+                                            {story.date} · {story.written_by_name}
+                                        </Text>
+                                    </View>
+                                    <View
+                                        style={{
+                                            backgroundColor:
+                                                story.status === StoryStatus.READY
+                                                    ? "#e8f5e9"
+                                                    : "#fff3e0",
+                                            paddingHorizontal: 10,
+                                            paddingVertical: 4,
+                                            borderRadius: 12,
+                                        }}
+                                    >
+                                        <Text style={{ fontSize: 11, fontWeight: "600" }}>
+                                            {story.status === StoryStatus.READY
+                                                ? "Ready"
+                                                : "Work in Progress"}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            ))
+                        )}
+                    </View>
+
                     {client && (
                         <PatientNoteModal
                             open={editModalOpen}

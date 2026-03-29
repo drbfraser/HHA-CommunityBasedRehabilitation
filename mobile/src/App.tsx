@@ -61,6 +61,9 @@ type RootStackParamList = {
     SwitchServer: undefined;
     Loading: undefined; // todosd: verify, where is this used?
     ClientDetails: { clientID: string };
+    SuccessStories: { clientID: string; clientName?: string };
+    SuccessStoryView: { clientID: string; storyId: string; clientName?: string };
+    SuccessStoryNew: { clientID: string; storyId?: string; clientName?: string };
 };
 
 // todosd: better place for this?

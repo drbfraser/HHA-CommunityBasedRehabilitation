@@ -8,10 +8,9 @@ import history from "@cbr/common/util/history";
 
 interface IEntryProps {
     story: ISuccessStory;
-    dateFormatter: (timestamp: number) => string;
 }
 
-const SuccessStoryEntry = ({ story, dateFormatter }: IEntryProps) => {
+const SuccessStoryEntry = ({ story }: IEntryProps) => {
     const statusLabel = story.status === StoryStatus.READY ? "Ready" : "WIP";
     const statusColor = story.status === StoryStatus.READY ? "success" : "warning";
 
@@ -24,7 +23,7 @@ const SuccessStoryEntry = ({ story, dateFormatter }: IEntryProps) => {
 
     return (
         <TimelineEntry
-            date={dateFormatter(story.created_at)}
+            date={story.date}
             content={<Summary />}
             DotIcon={AutoStoriesIcon}
             onClick={() => history.push(`/client/${story.client_id}/stories/${story.id}`)}

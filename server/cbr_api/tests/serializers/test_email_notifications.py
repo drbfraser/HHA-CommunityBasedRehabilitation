@@ -1,9 +1,14 @@
 import uuid
+from base64 import b64decode
 from unittest.mock import patch
 
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase, override_settings
 
-from cbr_api.email_notifications import send_referral_created_email
+from cbr_api.email_notifications import (
+    send_bug_report_email,
+    send_referral_created_email,
+)
 from cbr_api.models import Client, Referral, UserCBR, Zone
 from cbr_api.tests.helpers import create_client
 
@@ -100,3 +105,170 @@ class ReferralEmailNotificationTests(TestCase):
     ):
         send_referral_created_email(self.referral)
         mock_send_mail.assert_not_called()
+
+
+class BugReportEmailNotificationTests(TestCase):
+    ONE_BY_ONE_PNG_BYTES = b64decode(
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7+Xg0AAAAASUVORK5CYII="
+    )
+
+    @patch(
+        "cbr_api.email_notifications.render_to_string", return_value="<html>bug</html>"
+    )
+    @patch("cbr_api.email_notifications.EmailMultiAlternatives")
+    @patch("cbr_api.email_notifications.get_connection", return_value="smtp-connection")
+    @patch(
+        "cbr_api.email_notifications._get_bug_report_email_config",
+        return_value=("from@example.com", "secret-password", "to@example.com"),
+    )
+    def test_send_bug_report_email_sends_expected_email_without_attachment(
+        self, _mock_cfg, mock_get_connection, mock_email_cls, mock_render
+    ):
+        mock_message = mock_email_cls.return_value
+        mock_message.send.return_value = 1
+
+        success, error = send_bug_report_email(
+            report_type="bug_report",
+            description="Cannot save referral details",
+            submitted_by_name="Jane Doe",
+            submitted_by_username="jdoe",
+        )
+
+        self.assertTrue(success)
+        self.assertIsNone(error)
+
+        mock_get_connection.assert_called_once_with(
+            username="from@example.com",
+            password="secret-password",
+            fail_silently=False,
+        )
+        mock_email_cls.assert_called_once()
+        _, kwargs = mock_email_cls.call_args
+
+        self.assertIn("New CBR Bug Report", kwargs["subject"])
+        self.assertIn("Jane Doe", kwargs["subject"])
+        self.assertEqual(kwargs["from_email"], "from@example.com")
+        self.assertEqual(kwargs["to"], ["to@example.com"])
+        self.assertEqual(kwargs["connection"], "smtp-connection")
+        self.assertIn("Type: Bug Report", kwargs["body"])
+        self.assertIn("Submitted by: Jane Doe (jdoe)", kwargs["body"])
+        self.assertIn("Cannot save referral details", kwargs["body"])
+
+        mock_message.attach_alternative.assert_called_once_with(
+            "<html>bug</html>", "text/html"
+        )
+        mock_message.attach.assert_not_called()
+        mock_message.send.assert_called_once_with(fail_silently=False)
+
+        mock_render.assert_called_once()
+        render_args, _ = mock_render.call_args
+        self.assertEqual(render_args[0], "cbr_api/bug_report_email.html")
+        self.assertEqual(render_args[1]["report_type_label"], "Bug Report")
+        self.assertEqual(render_args[1]["submitter"], "Jane Doe (jdoe)")
+        self.assertFalse(render_args[1]["show_screenshot_preview"])
+
+    @patch(
+        "cbr_api.email_notifications.render_to_string", return_value="<html>suggest</html>"
+    )
+    @patch("cbr_api.email_notifications.EmailMultiAlternatives")
+    @patch("cbr_api.email_notifications.get_connection", return_value="smtp-connection")
+    @patch(
+        "cbr_api.email_notifications._get_bug_report_email_config",
+        return_value=("from@example.com", "secret-password", "to@example.com"),
+    )
+    def test_send_bug_report_email_attaches_screenshot_for_suggestion(
+        self, _mock_cfg, _mock_get_connection, mock_email_cls, mock_render
+    ):
+        mock_message = mock_email_cls.return_value
+        screenshot = SimpleUploadedFile(
+            "screenshot.png",
+            self.ONE_BY_ONE_PNG_BYTES,
+            content_type="image/png",
+        )
+
+        success, error = send_bug_report_email(
+            report_type="suggestion",
+            description="Please add sorting to the table.",
+            submitted_by_name="",
+            submitted_by_username="jdoe",
+            screenshot=screenshot,
+        )
+
+        self.assertTrue(success)
+        self.assertIsNone(error)
+
+        _, kwargs = mock_email_cls.call_args
+        self.assertIn("New CBR Suggestion", kwargs["subject"])
+        self.assertIn("jdoe", kwargs["subject"])
+        self.assertIn("Type: Suggestion", kwargs["body"])
+        self.assertIn("Submitted by: jdoe", kwargs["body"])
+
+        self.assertEqual(mock_message.attach.call_count, 2)
+        file_attach_args = mock_message.attach.call_args_list[0][0]
+        self.assertEqual(file_attach_args[0], "screenshot.png")
+        self.assertEqual(file_attach_args[1], self.ONE_BY_ONE_PNG_BYTES)
+        self.assertEqual(file_attach_args[2], "image/png")
+
+        inline_image = mock_message.attach.call_args_list[1][0][0]
+        self.assertEqual(inline_image["Content-ID"], "<bug-report-screenshot>")
+        self.assertIn("inline", inline_image["Content-Disposition"])
+
+        render_args, _ = mock_render.call_args
+        self.assertEqual(render_args[1]["report_type_label"], "Suggestion")
+        self.assertTrue(render_args[1]["show_screenshot_preview"])
+
+    @patch("cbr_api.email_notifications.EmailMultiAlternatives")
+    @patch("cbr_api.email_notifications._get_bug_report_email_config", return_value=None)
+    def test_send_bug_report_email_returns_error_when_settings_unavailable(
+        self, _mock_cfg, mock_email_cls
+    ):
+        success, error = send_bug_report_email(
+            report_type="bug_report",
+            description="Details",
+            submitted_by_name="Jane",
+            submitted_by_username="jdoe",
+        )
+
+        self.assertFalse(success)
+        self.assertEqual(error, "Unable to load bug report email settings.")
+        mock_email_cls.assert_not_called()
+
+    @patch("cbr_api.email_notifications.EmailMultiAlternatives")
+    @patch(
+        "cbr_api.email_notifications._get_bug_report_email_config",
+        return_value=("from@example.com", "", "to@example.com"),
+    )
+    def test_send_bug_report_email_returns_error_when_settings_incomplete(
+        self, _mock_cfg, mock_email_cls
+    ):
+        success, error = send_bug_report_email(
+            report_type="bug_report",
+            description="Details",
+            submitted_by_name="Jane",
+            submitted_by_username="jdoe",
+        )
+
+        self.assertFalse(success)
+        self.assertEqual(error, "Bug report email settings are incomplete.")
+        mock_email_cls.assert_not_called()
+
+    @patch("cbr_api.email_notifications.EmailMultiAlternatives")
+    @patch("cbr_api.email_notifications.get_connection", return_value="smtp-connection")
+    @patch(
+        "cbr_api.email_notifications._get_bug_report_email_config",
+        return_value=("from@example.com", "secret-password", "to@example.com"),
+    )
+    def test_send_bug_report_email_returns_error_when_send_fails(
+        self, _mock_cfg, _mock_get_connection, mock_email_cls
+    ):
+        mock_email_cls.return_value.send.side_effect = RuntimeError("smtp failed")
+
+        success, error = send_bug_report_email(
+            report_type="bug_report",
+            description="Details",
+            submitted_by_name="Jane",
+            submitted_by_username="jdoe",
+        )
+
+        self.assertFalse(success)
+        self.assertEqual(error, "Failed to send bug report email.")

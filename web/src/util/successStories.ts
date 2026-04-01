@@ -51,7 +51,6 @@ export type ISuccessStoryWritePayload = Pick<
     | "part3_introduction"
     | "part4_action"
     | "part5_impact"
-    | "photo"
     | "publish_permission"
     | "status"
     | "date"

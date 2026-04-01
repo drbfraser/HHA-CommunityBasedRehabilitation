@@ -142,6 +142,12 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
     > **Note:** Current tests don't interact with backend services but syncronization tests likely will.
 
+### Emulator Storage Requirement (IMPORTANT)
+
+⚠️ Required for Detox mobile testing
+
+When running E2E tests with Detox, the Android emulator must have at least 15 GB of internal storage. Detox installs multiple APKs (app + test APKs + module dependencies), which can quickly exceed default emulator storage limits.
+
 ## Running the Tests
 
 Run the full Detox workflow:

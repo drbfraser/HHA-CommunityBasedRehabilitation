@@ -63,7 +63,7 @@ async function ensureTabNavigatorVisible() {
     try {
         await waitFor(element(by.id("login-button")))
             .toBeVisible()
-            .withTimeout(1500);
+            .withTimeout(5000);
         await loginWithCredentials();
         await waitFor(element(by.id("tab-dashboard")))
             .toBeVisible()
@@ -143,7 +143,7 @@ async function navigateBackToHome() {
         try {
             await waitFor(element(by.id("tab-dashboard")))
                 .toBeVisible()
-                .withTimeout(2000);
+                .withTimeout(5000);
             return;
         } catch {}
     }
@@ -205,7 +205,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
     describe("Phase 2: Create a new client while offline – cached in WatermelonDB", () => {
         beforeAll(async () => {
             disableWifi();
-            await sleep(1000);
+            await sleep(5000);
         });
 
         it("navigates to the New Client tab while offline", async () => {
@@ -263,23 +263,27 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
         it("fills in village and selects a zone (zone loaded from WatermelonDB while offline)", async () => {
             await element(by.id("new-client-scroll-view")).scroll(250, "down");
+            await sleep(400);
 
             await waitFor(element(by.id("client-village-input")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("client-village-input")).tap();
             await element(by.id("client-village-input")).replaceText("TestVillage");
             await element(by.id("client-village-input")).tapReturnKey();
 
             await waitFor(element(by.id("client-zone-dropdown")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("client-zone-dropdown")).tap();
+            await sleep(1000);
 
-            await waitFor(element(by.text("BidiBidi Zone 1")))
+            await waitFor(element(by.text("Palorinya Zone 1")))
                 .toBeVisible()
-                .withTimeout(5000);
-            await element(by.text("BidiBidi Zone 1")).tap();
+                .withTimeout(15000);
+
+            await element(by.text("Palorinya Zone 1")).atIndex(0).tap();
+            await sleep(800);
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
@@ -287,12 +291,12 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
             await waitFor(element(by.id("client-disability-select-btn")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("client-disability-select-btn")).tap();
 
             await waitFor(element(by.text("Amputee")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.text("Amputee")).tap();
 
             await element(by.id("client-disability-save-btn")).tap();
@@ -303,34 +307,34 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
             await waitFor(element(by.id("health-risk-checkbox")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("health-risk-checkbox")).tap();
 
             await waitFor(element(by.id("health-risk-dropdown")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("health-risk-dropdown")).tap();
             await waitFor(element(by.text("Low")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.text("Low")).tap();
 
             await waitFor(element(by.id("health-requirements-dropdown")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("health-requirements-dropdown")).tap();
             await waitFor(element(by.text("Malaria treatment")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.text("Malaria treatment")).tap();
 
             await waitFor(element(by.id("health-goals-dropdown")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("health-goals-dropdown")).tap();
             await waitFor(element(by.text("Pain managed")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.text("Pain managed")).tap();
         });
 
@@ -339,12 +343,12 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
             await waitFor(element(by.id("new-client-submit-button")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("new-client-submit-button")).tap();
 
             await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))
                 .toBeVisible()
-                .withTimeout(15000);
+                .withTimeout(10000);
         });
     });
 

@@ -1,4 +1,3 @@
-from base64 import b64decode
 from unittest.mock import patch
 
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -9,8 +8,10 @@ from cbr_api.models import UserCBR, Zone
 
 
 class BugReportEmailViewTests(APITestCase):
-    ONE_BY_ONE_PNG_BYTES = b64decode(
-        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO7+Xg0AAAAASUVORK5CYII="
+    ONE_BY_ONE_GIF_BYTES = (
+        b"\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00"
+        b"\xff\xff\xff\x21\xf9\x04\x01\x00\x00\x00\x00\x2c\x00\x00\x00\x00"
+        b"\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b"
     )
 
     def setUp(self):
@@ -48,9 +49,9 @@ class BugReportEmailViewTests(APITestCase):
     @patch("cbr_api.views.send_bug_report_email", return_value=(True, None))
     def test_submit_suggestion_with_image(self, mock_send_bug_report_email):
         screenshot = SimpleUploadedFile(
-            "suggestion.png",
-            self.ONE_BY_ONE_PNG_BYTES,
-            content_type="image/png",
+            "suggestion.gif",
+            self.ONE_BY_ONE_GIF_BYTES,
+            content_type="image/gif",
         )
         payload = {
             "report_type": "suggestion",
@@ -68,7 +69,7 @@ class BugReportEmailViewTests(APITestCase):
         self.assertEqual(kwargs["submitted_by_name"], "Jane Doe")
         self.assertEqual(kwargs["submitted_by_username"], "bugreportuser")
         self.assertIsNotNone(kwargs["screenshot"])
-        self.assertEqual(kwargs["screenshot"].name, "suggestion.png")
+        self.assertEqual(kwargs["screenshot"].name, "suggestion.gif")
 
     @patch(
         "cbr_api.views.send_bug_report_email",

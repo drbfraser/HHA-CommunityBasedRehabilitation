@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Alert, Image, ScrollView, Text, View } from "react-native";
+import { Alert, Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ActivityIndicator, Button, Divider, TextInput } from "react-native-paper";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as ImagePicker from "expo-image-picker";
@@ -70,6 +71,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string>();
+    const [datePickerVisible, setDatePickerVisible] = useState(false);
 
     const writerName = useMemo(() => {
         if (form.written_by_name) return form.written_by_name;
@@ -161,7 +163,6 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             part3_introduction: form.part3_introduction,
             part4_action: form.part4_action,
             part5_impact: form.part5_impact,
-            photo: "",
             publish_permission: form.publish_permission,
             status: form.status,
             date: form.date,
@@ -290,13 +291,40 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
                 </>
             )}
 
-            <TextInput
-                mode="outlined"
-                label="Date (YYYY-MM-DD)"
-                value={form.date}
-                onChangeText={set("date")}
-                style={styles.formInput}
-            />
+            <TouchableOpacity onPress={() => setDatePickerVisible(true)}>
+                <TextInput
+                    mode="outlined"
+                    label="Date"
+                    value={form.date}
+                    style={styles.formInput}
+                    editable={false}
+                    right={
+                        <TextInput.Icon
+                            icon="calendar"
+                            onPress={() => setDatePickerVisible(true)}
+                        />
+                    }
+                />
+            </TouchableOpacity>
+            {datePickerVisible && (
+                <DateTimePicker
+                    value={new Date(form.date + "T00:00:00")}
+                    mode="date"
+                    display="default"
+                    onChange={(event, date) => {
+                        setDatePickerVisible(Platform.OS === "ios");
+                        if (date && event.type !== "dismissed") {
+                            setForm((prev) => ({
+                                ...prev,
+                                date: date.toISOString().slice(0, 10),
+                            }));
+                        }
+                        if (event.type === "dismissed" || event.type === "set") {
+                            setDatePickerVisible(false);
+                        }
+                    }}
+                />
+            )}
 
             <Divider style={{ marginVertical: 8 }} />
 

@@ -999,6 +999,7 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.EmailSettings
         fields = [
+            "category",
             "from_email",
             "to_email",
             "from_email_password",
@@ -1007,6 +1008,7 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = [
+            "category",
             "updated_at",
             "from_email_password_set",
             "password_updated_at",
@@ -1026,6 +1028,19 @@ class EmailSettingsSerializer(serializers.ModelSerializer):
                 instance.password_updated_at = current_milli_time()
         instance.save()
         return instance
+
+
+class BugReportSubmissionSerializer(serializers.Serializer):
+    REPORT_TYPE_CHOICES = (
+        ("bug_report", "Bug Report"),
+        ("suggestion", "Suggestion"),
+    )
+
+    report_type = serializers.ChoiceField(
+        choices=REPORT_TYPE_CHOICES, default="bug_report"
+    )
+    description = serializers.CharField(max_length=1200, trim_whitespace=True)
+    image = serializers.ImageField(required=False, allow_null=True)
 
 
 class AlertSyncSerializer(serializers.ModelSerializer):
@@ -1267,6 +1282,7 @@ class SuccessStorySerializer(serializers.ModelSerializer):
     beneficiary_age = serializers.SerializerMethodField()
     beneficiary_gender = serializers.SerializerMethodField()
     hcr_status = serializers.SerializerMethodField()
+    client_name = serializers.SerializerMethodField()
 
     class Meta:
         model = models.SuccessStory
@@ -1280,6 +1296,8 @@ class SuccessStorySerializer(serializers.ModelSerializer):
             "beneficiary_age",
             "beneficiary_gender",
             "hcr_status",
+            "client_name",
+            "title",
             "refugee_origin",
             "refugee_duration",
             "diagnosis",
@@ -1303,6 +1321,7 @@ class SuccessStorySerializer(serializers.ModelSerializer):
             "beneficiary_age",
             "beneficiary_gender",
             "hcr_status",
+            "client_name",
         ]
 
     def get_written_by_name(self, success_story):
@@ -1337,6 +1356,10 @@ class SuccessStorySerializer(serializers.ModelSerializer):
             return "Host Community"
         return ""
 
+    def get_client_name(self, success_story):
+        client = success_story.client_id
+        return client.full_name or ""
+
     def create(self, validated_data):
         current_time = current_milli_time()
         return models.SuccessStory.objects.create(
@@ -1360,8 +1383,16 @@ class UpdateSuccessStorySerializer(SuccessStorySerializer):
             "beneficiary_age",
             "beneficiary_gender",
             "hcr_status",
+            "client_name",
         ]
 
     def update(self, instance, validated_data):
         validated_data["updated_at"] = current_milli_time()
+        new_photo: Optional[File] = validated_data.get("photo")
+        if new_photo:
+            file_root, file_ext = os.path.splitext(new_photo.name)
+            actual_image_type: Optional[str] = imghdr.what(new_photo.file)
+            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
+                new_photo.name = f"{file_root}.{actual_image_type}"
+
         return super().update(instance, validated_data)

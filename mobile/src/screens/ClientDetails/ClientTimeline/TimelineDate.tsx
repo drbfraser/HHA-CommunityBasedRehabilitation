@@ -18,24 +18,27 @@ export const TimelineDate = (props: SummaryProps) => {
     const { t } = useTranslation();
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.textGray}>{formatDate(props.date, locale, timezone)}</Text>
-            <View style={styles.activityTypeView}>
-                <View style={styles.verticleLine} />
-                <IconButton
-                    style={styles.logoButton}
-                    icon="account-plus"
-                    mode="outlined"
-                    size={16}
-                    iconColor={themeColors.blueBgDark}
-                />
-                <View style={styles.verticleLine} />
-            </View>
-            <View>
-                <View style={styles.subItem}>
-                    <Text style={styles.subItemText}>{t("clientAttr.clientCreated")}</Text>
+        <View>
+            <View style={styles.container}>
+                <Text style={styles.dateText}>{formatDate(props.date, locale, timezone)}</Text>
+                <View style={styles.activityTypeView}>
+                    <View style={styles.verticleLine} />
+                    <IconButton
+                        style={styles.logoButton}
+                        icon="account-plus"
+                        mode="outlined"
+                        size={16}
+                        iconColor={themeColors.blueBgDark}
+                    />
+                    <View style={styles.verticleLine} />
+                </View>
+                <View>
+                    <View style={styles.subItem}>
+                        <Text style={styles.subItemText}>{t("clientAttr.clientCreated")}</Text>
+                    </View>
                 </View>
             </View>
+            <View style={styles.dividerStyle} />
         </View>
     );
 };

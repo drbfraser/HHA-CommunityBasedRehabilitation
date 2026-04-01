@@ -19,6 +19,10 @@ import SwitchServer from "../screens/SwitchServer/SwitchServer";
 import AlertInbox from "../screens/AlertInbox/AlertInbox";
 import i18n from "i18next";
 import Referrals from "../screens/Referrals/Referrals";
+import BugReport from "../screens/BugReport/BugReport";
+import SuccessStoriesList from "../screens/SuccessStories/SuccessStoriesList";
+import SuccessStoryView from "../screens/SuccessStories/SuccessStoryView";
+import NewSuccessStory from "../screens/SuccessStories/NewSuccessStory";
 
 export const stackScreenProps: Record<
     StackScreenName | NoAuthScreenName,
@@ -27,6 +31,7 @@ export const stackScreenProps: Record<
     [StackScreenName.HOME]: HomeScreen,
     [StackScreenName.CLIENT]: ClientDetails,
     [StackScreenName.REFERRALS]: Referrals,
+    [StackScreenName.BUG_REPORT]: BugReport,
     [StackScreenName.ADMIN_VIEW]: AdminView,
     [StackScreenName.ADMIN_EDIT]: AdminEdit,
     [StackScreenName.ADMIN_NEW]: AdminNew,
@@ -35,6 +40,9 @@ export const stackScreenProps: Record<
     [StackScreenName.BASE_SURVEY]: BaseSurvey,
     [StackScreenName.SYNC]: Sync,
     [StackScreenName.ALERT_INBOX]: AlertInbox,
+    [StackScreenName.SUCCESS_STORIES]: SuccessStoriesList,
+    [StackScreenName.SUCCESS_STORY_VIEW]: SuccessStoryView,
+    [StackScreenName.SUCCESS_STORY_NEW]: NewSuccessStory,
     [NoAuthScreenName.LOGIN]: Login,
     [NoAuthScreenName.SWITCH_SERVER]: SwitchServer,
 };
@@ -73,6 +81,10 @@ const refreshArrays = () => {
                 }`
             ),
         }),
+        [StackScreenName.BUG_REPORT]: {
+            headerShown: true,
+            header: DefaultHeader("Bug/Suggestion"),
+        },
         [StackScreenName.ADMIN_VIEW]: {
             headerShown: true,
             header: DefaultHeader(i18n.t("screenNames.viewUser")),
@@ -123,6 +135,32 @@ const refreshArrays = () => {
             headerShown: true,
             header: DefaultHeader(i18n.t("screenNames.inbox")),
         },
+        [StackScreenName.SUCCESS_STORIES]: ({ route }) => ({
+            headerShown: true,
+            header: DefaultHeader(
+                "Success Stories",
+                `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
+                    (route as TAppRouteProp<StackScreenName.SUCCESS_STORIES>).params.clientName ??
+                    (route as TAppRouteProp<StackScreenName.SUCCESS_STORIES>).params.clientID
+                }`
+            ),
+        }),
+        [StackScreenName.SUCCESS_STORY_VIEW]: {
+            headerShown: true,
+            header: DefaultHeader("View Success Story"),
+        },
+        [StackScreenName.SUCCESS_STORY_NEW]: ({ route }) => ({
+            headerShown: true,
+            header: DefaultHeader(
+                (route as TAppRouteProp<StackScreenName.SUCCESS_STORY_NEW>).params.storyId
+                    ? "Edit Success Story"
+                    : "New Success Story",
+                `${i18n.t("general.client")} ${i18n.t("general.name")}: ${
+                    (route as TAppRouteProp<StackScreenName.SUCCESS_STORY_NEW>).params.clientName ??
+                    (route as TAppRouteProp<StackScreenName.SUCCESS_STORY_NEW>).params.clientID
+                }`
+            ),
+        }),
         [NoAuthScreenName.LOGIN]: {
             headerShown: false,
         },
@@ -143,6 +181,7 @@ export type StackParamList = {
         clientID: string;
         clientName?: string;
     };
+    [StackScreenName.BUG_REPORT]: undefined;
     [StackScreenName.VISIT]: {
         clientID: string;
         clientName?: string;
@@ -168,6 +207,20 @@ export type StackParamList = {
     };
     [StackScreenName.ADMIN_NEW]: undefined;
     [StackScreenName.REFERRALS]: undefined;
+    [StackScreenName.SUCCESS_STORIES]: {
+        clientID: string;
+        clientName?: string;
+    };
+    [StackScreenName.SUCCESS_STORY_VIEW]: {
+        clientID: string;
+        storyId: string;
+        clientName?: string;
+    };
+    [StackScreenName.SUCCESS_STORY_NEW]: {
+        clientID: string;
+        storyId?: string;
+        clientName?: string;
+    };
     [StackScreenName.SYNC]: undefined;
     [StackScreenName.ALERT_INBOX]: undefined;
     [NoAuthScreenName.LOGIN]: undefined;

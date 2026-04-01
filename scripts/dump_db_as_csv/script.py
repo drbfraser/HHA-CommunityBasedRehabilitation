@@ -54,18 +54,25 @@ def generate_csv_files():
             "cbr_api_clientrisk",
             "cbr_api_improvement",
             "cbr_api_outcome",
-            "cbr_api_baselinesurvey"
+            "cbr_api_baselinesurvey",
         ]
         for table_name in TABLES:
             print(f"--- outputting CSV file for: {table_name}")
             command = [
-                "docker", "exec", DB_CONTAINER_NAME,
-                "psql", "-U", POSTGRES_USER, "-d", DB_NAME,
-                "-c", f"\copy {table_name} TO STDOUT WITH (FORMAT csv, HEADER)"
+                "docker",
+                "exec",
+                DB_CONTAINER_NAME,
+                "psql",
+                "-U",
+                POSTGRES_USER,
+                "-d",
+                DB_NAME,
+                "-c",
+                f"\copy {table_name} TO STDOUT WITH (FORMAT csv, HEADER)",
             ]
             output_path = os.path.join(RAW_OUTPUT_DIR, f"raw_{table_name}.csv")
 
-            with open(output_path, 'w') as output_file:
+            with open(output_path, "w") as output_file:
                 subprocess.run(command, stdout=output_file, check=True)
 
     load_environment_vars()
@@ -94,9 +101,7 @@ def cleanup_csv_files():
         df = df[df.columns.intersection(RELEVANT_COLUMNS)]
 
         # lowercase string values for consistency
-        df = df.apply(
-            lambda col: col.str.lower() if col.dtype == "object" else col
-        )
+        df = df.apply(lambda col: col.str.lower() if col.dtype == "object" else col)
         # replace multiple consecutive spaces with a single space
         df = df.replace(regex=r"\s+", value=" ")
         # remove any periods at the end of a string
@@ -119,7 +124,9 @@ def process_files_into_final_format():
     ORGANIZATION = "empowerment_organization"
     COUNT = "count"
 
-    def process_data(df: pd.DataFrame, group_by: list[str], sort_by: list[str] = []) -> pd.DataFrame:
+    def process_data(
+        df: pd.DataFrame, group_by: list[str], sort_by: list[str] = []
+    ) -> pd.DataFrame:
         df = df.groupby(group_by).size().reset_index(name=COUNT)
         df = df.sort_values(by=[*sort_by, COUNT], ascending=False)
         df = df.reset_index(drop=True)
@@ -131,37 +138,43 @@ def process_files_into_final_format():
         print(f"--- processing: {file.name}")
 
         df = pd.read_csv(file)
-        if ("clientrisk" in file.name):
+        if "clientrisk" in file.name:
             requirement_df = process_data(
-                df.copy(), group_by=[RISK_TYPE, REQUIREMENT], sort_by=[RISK_TYPE])
+                df.copy(), group_by=[RISK_TYPE, REQUIREMENT], sort_by=[RISK_TYPE]
+            )
             requirement_df.to_csv(f"{FINAL_OUTPUT_DIR}/risk_requirements.csv")
 
             goal_df = process_data(
-                df.copy(), group_by=[RISK_TYPE, GOAL], sort_by=[RISK_TYPE])
+                df.copy(), group_by=[RISK_TYPE, GOAL], sort_by=[RISK_TYPE]
+            )
             goal_df.to_csv(f"{FINAL_OUTPUT_DIR}/risk_goals.csv")
-        elif ("improvement" in file.name):
+        elif "improvement" in file.name:
             df = process_data(
-                df, group_by=[RISK_TYPE, PROVIDED, DESC], sort_by=[RISK_TYPE, PROVIDED])
+                df, group_by=[RISK_TYPE, PROVIDED, DESC], sort_by=[RISK_TYPE, PROVIDED]
+            )
             df.to_csv(f"{FINAL_OUTPUT_DIR}/improvements.csv")
-        elif ("outcome" in file.name):
+        elif "outcome" in file.name:
             df = process_data(
-                df, group_by=[RISK_TYPE, GOAL_MET, OUTCOME], sort_by=[RISK_TYPE, GOAL_MET])
+                df,
+                group_by=[RISK_TYPE, GOAL_MET, OUTCOME],
+                sort_by=[RISK_TYPE, GOAL_MET],
+            )
             df.to_csv(f"{FINAL_OUTPUT_DIR}/outcomes.csv")
-        elif ("baselinesurvey" in file.name):
+        elif "baselinesurvey" in file.name:
             job_df = process_data(df.copy(), group_by=[JOB], sort_by=[JOB])
             job_df.to_csv(f"{FINAL_OUTPUT_DIR}/baseline_jobs.csv")
 
             organization_df = process_data(
-                df.copy(), group_by=[ORGANIZATION], sort_by=[ORGANIZATION])
-            organization_df.to_csv(
-                f"{FINAL_OUTPUT_DIR}/baseline_organizations.csv")
+                df.copy(), group_by=[ORGANIZATION], sort_by=[ORGANIZATION]
+            )
+            organization_df.to_csv(f"{FINAL_OUTPUT_DIR}/baseline_organizations.csv")
         else:
             print(f"Error: unrecognized file name: {file.name}")
 
     print("finished processing CSV files into final output form.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     generate_csv_files()
     cleanup_csv_files()

@@ -6,6 +6,34 @@ const useStyles = () =>
         container: {
             flex: 1,
             justifyContent: "center",
+            marginHorizontal: 10,
+        },
+        uploadImageContainer: {
+            flex: 1,
+            position: "relative",
+        },
+        centerImageContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: 50,
+        },
+        image: {
+            backgroundColor: themeColors.white,
+            borderRadius: 30,
+            resizeMode: "contain",
+            width: "100%",
+            height: "auto",
+            aspectRatio: 1,
+            marginTop: 10,
+        },
+        uploadButton: {
+            marginBottom: 10,
+            alignSelf: "stretch",
+            alignItems: "center",
+            backgroundColor: "#DDDDDD",
+            padding: 12,
+            borderRadius: 5,
         },
         verticalSpacer: {
             marginTop: 10,
@@ -31,6 +59,19 @@ const useStyles = () =>
         },
         errorAlert: { marginVertical: 10 },
         errorText: { color: themeColors.helperTextRed, paddingLeft: 12 },
+        uploadHintContainer: {
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            backgroundColor: "#F2F2F2",
+            borderRadius: 12,
+            position: "absolute",
+            left: 16,
+            right: 16,
+            top: "40%",
+        },
+        uploadHintText: {
+            textAlign: "center",
+        },
     });
 
 export const progressStepsStyle = {

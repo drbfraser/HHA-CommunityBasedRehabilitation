@@ -8,6 +8,7 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import generics
 from rest_framework import status
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework_condition import condition
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -16,6 +17,7 @@ from rest_framework.exceptions import ValidationError
 
 from cbr.settings import DEBUG
 from cbr_api import models, serializers, filters, permissions
+from cbr_api.email_notifications import send_bug_report_email
 from cbr_api.sql import (
     getDisabilityStats,
     getNumClientsWithDisabilities,
@@ -263,7 +265,52 @@ class EmailSettingsView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.EmailSettingsSerializer
 
     def get_object(self):
-        return models.EmailSettings.get_solo()
+        category = self.request.query_params.get(
+            "category", models.EmailSettings.Category.REFERRAL
+        )
+        valid_categories = {
+            models.EmailSettings.Category.REFERRAL,
+            models.EmailSettings.Category.BUG_REPORT,
+        }
+        if category not in valid_categories:
+            raise ValidationError(
+                {
+                    "category": "Invalid category. Use 'referral' or 'bug_report'.",
+                }
+            )
+        return models.EmailSettings.get_solo(category)
+
+
+class BugReportEmailView(generics.CreateAPIView):
+    parser_classes = [MultiPartParser, FormParser]
+    serializer_class = serializers.BugReportSubmissionSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        user = request.user
+        submitted_by_name = f"{getattr(user, 'first_name', '')} {getattr(user, 'last_name', '')}".strip()
+        submitted_by_username = getattr(user, "username", "")
+
+        success, error_message = send_bug_report_email(
+            report_type=data["report_type"],
+            description=data["description"],
+            submitted_by_name=submitted_by_name,
+            submitted_by_username=submitted_by_username,
+            screenshot=data.get("image"),
+        )
+        if not success:
+            return Response(
+                {"details": error_message or "Failed to send bug report email."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        return Response(
+            {"details": "Bug report email sent successfully."},
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class UserCurrent(generics.RetrieveAPIView):
@@ -570,6 +617,35 @@ class SuccessStoryDetail(generics.RetrieveUpdateAPIView):
         if self.request.method == "PUT":
             return serializers.UpdateSuccessStorySerializer
         return serializers.SuccessStorySerializer
+
+
+@method_decorator(
+    cache_control(max_age=1209600, no_cache=True, private=True), name="dispatch"
+)
+class SuccessStoryImage(AuthenticatedObjectDownloadView):
+    model = models.SuccessStory
+    file_field = "photo"
+
+    @extend_schema(
+        description="Gets the photo of a success story if it exists.",
+        responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
+    )
+    def get(self, request, pk):
+        if DEBUG:
+
+            def super_get(self_new, request_new, pk_new):
+                return super().get(self_new, request_new, pk_new)
+
+            return super_get(self, request, pk)
+
+        success_story = models.SuccessStory.objects.get(pk=pk)
+        if success_story:
+            if not success_story.photo or len(success_story.photo.name) <= 0:
+                return HttpResponseNotFound()
+
+            return super().get(self, request, pk)
+        else:
+            return HttpResponseNotFound()
 
 
 class BaselineSurveyCreate(generics.CreateAPIView):

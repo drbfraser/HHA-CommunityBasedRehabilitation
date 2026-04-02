@@ -45,6 +45,7 @@ export const handleSubmit = async (
                 v.latitude = "0.0";
                 v.zone = values.zone;
                 v.village = values.village;
+                v.picture = values.picture;
             });
         });
 

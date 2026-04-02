@@ -49,6 +49,7 @@ type RootStackParamList = {
     Client: undefined;
     BaselineSurvey: undefined;
     Referrals: undefined;
+    BugReport: undefined;
     AdminView: undefined;
     AdminEdit: undefined;
     AdminNew: undefined;
@@ -60,6 +61,9 @@ type RootStackParamList = {
     SwitchServer: undefined;
     Loading: undefined; // todosd: verify, where is this used?
     ClientDetails: { clientID: string };
+    SuccessStories: { clientID: string; clientName?: string };
+    SuccessStoryView: { clientID: string; storyId: string; clientName?: string };
+    SuccessStoryNew: { clientID: string; storyId?: string; clientName?: string };
 };
 
 // todosd: better place for this?
@@ -211,11 +215,13 @@ export default function App() {
     }, [autoSync]);
 
     useEffect(() => {
-        if (authState.state === "loggedIn" && autoSync) {
-            AutoSyncDB(database, autoSync, cellularSync).then(() => {
-                setScreenRefresh(true);
-                SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
-            });
+        if (authState.state === "loggedIn") {
+            setScreenRefresh(true);
+            if (autoSync) {
+                AutoSyncDB(database, autoSync, cellularSync).then(() => {
+                    SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);
+                });
+            }
         }
     }, [authState]);
 

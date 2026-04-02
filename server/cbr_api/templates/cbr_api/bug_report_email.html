@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Bug Report or Suggestion</title>
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f4f7fb;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f7fb;">
+            <tr>
+                <td align="center" style="padding: 24px 12px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e6edf3; font-family: Arial, Helvetica, sans-serif;">
+                        <tr>
+                            <td style="background: linear-gradient(90deg, {{ primary_color }}, {{ accent_color }}); padding: 18px 24px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="vertical-align: middle; color: #ffffff; font-size: 20px; font-weight: 700;">
+                                            Hope Health Action
+                                        </td>
+                                        <td align="right" style="vertical-align: middle; color: #ffffff; font-size: 16px; font-weight: 700;">
+                                            Bug Report / Suggestion
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 24px 24px 12px;">
+                                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fbfd; border: 1px solid #e6edf3; border-radius: 10px;">
+                                    <tr>
+                                        <td style="padding: 14px 16px; color: #2a3340; font-size: 14px; line-height: 1.6;">
+                                            <div style="margin-bottom: 8px;">
+                                                <span style="color: #6b7280;">Type:</span>
+                                                <strong style="color: #111827;">{{ report_type_label }}</strong>
+                                            </div>
+                                            <div>
+                                                <span style="color: #6b7280;">Submitted by:</span>
+                                                {{ submitter }}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0 24px 24px;">
+                                <p style="margin: 0 0 8px; color: #2a3340; font-size: 14px; font-weight: 600;">Description</p>
+                                <div style="white-space: pre-wrap; color: #111827; font-size: 14px; line-height: 1.55; border: 1px solid #e6edf3; border-radius: 10px; background-color: #ffffff; padding: 14px 16px;">{{ description }}</div>
+                            </td>
+                        </tr>
+                        {% if show_screenshot_preview %}
+                        <tr>
+                            <td style="padding: 0 24px 24px;">
+                                <p style="margin: 0 0 8px; color: #2a3340; font-size: 14px; font-weight: 600;">Screenshot</p>
+                                <div style="border: 1px solid #e6edf3; border-radius: 10px; background-color: #ffffff; padding: 10px;">
+                                    <img
+                                        src="cid:bug-report-screenshot"
+                                        alt="Bug report screenshot"
+                                        style="display: block; width: 100%; max-height: 420px; object-fit: contain; border-radius: 8px;"
+                                    />
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </table>
+                    <div style="padding: 12px 0 0; color: #9aa4b2; font-size: 11px; font-family: Arial, Helvetica, sans-serif;">
+                        Hope Health Action
+                    </div>
+                    <div style="padding: 8px 0 0; color: #555555; font-size: 10px; font-family: Arial, Helvetica, sans-serif; text-align: center;">
+                        Please do not reply to this email; it was sent automatically and is not monitored.
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

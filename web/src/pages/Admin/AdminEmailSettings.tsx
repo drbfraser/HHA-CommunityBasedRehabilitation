@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Formik } from "formik";
 import { TextField } from "formik-mui";
-import { Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
 import * as Yup from "yup";
 
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
@@ -15,6 +15,15 @@ type EmailSettingsFormValues = {
     from_email_password: string;
 };
 
+type EmailSettingsCategory = "referral" | "bug_report";
+
+type EmailSettingsTabConfig = {
+    category: EmailSettingsCategory;
+    label: string;
+    title: string;
+    description: string;
+};
+
 const normalizePassword = (value: string) => value.replace(/\s+/g, "");
 
 const emptyValues: EmailSettingsFormValues = {
@@ -23,15 +32,36 @@ const emptyValues: EmailSettingsFormValues = {
     from_email_password: "",
 };
 
+const emailSettingsTabs: EmailSettingsTabConfig[] = [
+    {
+        category: "referral",
+        label: "Referrals",
+        title: "Referral email settings",
+        description: "Used for new referral notifications.",
+    },
+    {
+        category: "bug_report",
+        label: "Bug report / suggestions",
+        title: "Bug report and suggestion email settings",
+        description: "Used when users submit bug reports or suggestions.",
+    },
+];
+
+const getCategoryUrlParams = (category: EmailSettingsCategory) => `?category=${category}`;
+
 const AdminEmailSettings = () => {
     const { t } = useTranslation();
+    const [tabIndex, setTabIndex] = useState(0);
     const [initialValues, setInitialValues] = useState<EmailSettingsFormValues>(emptyValues);
     const [passwordSet, setPasswordSet] = useState(false);
     const [passwordUpdatedAt, setPasswordUpdatedAt] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const activeTab = emailSettingsTabs[tabIndex];
+
     useEffect(() => {
-        apiFetch(Endpoint.EMAIL_SETTINGS)
+        setLoading(true);
+        apiFetch(Endpoint.EMAIL_SETTINGS, getCategoryUrlParams(activeTab.category))
             .then((res) => res.json())
             .then((data) => {
                 setInitialValues({
@@ -47,12 +77,11 @@ const AdminEmailSettings = () => {
                 );
             })
             .catch((e) => {
-                const errMsg =
-                    e instanceof APIFetchFailError ? e.details ?? e.message : (e as string);
+                const errMsg = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
                 alert(errMsg);
             })
             .finally(() => setLoading(false));
-    }, []);
+    }, [activeTab.category]);
 
     const validationSchema = useMemo(() => {
         const requiredMsg = "Required";
@@ -85,146 +114,220 @@ const AdminEmailSettings = () => {
 
     return (
         <Container>
-            {loading ? (
-                <Typography variant="body2">Loading...</Typography>
-            ) : (
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    enableReinitialize
-                    onSubmit={(values, helpers) => {
-                        const cleanedPassword = normalizePassword(values.from_email_password);
-                        const payload: Record<string, string> = {
-                            from_email: values.from_email.trim(),
-                            to_email: values.to_email.trim(),
-                        };
-                        if (cleanedPassword) {
-                            payload.from_email_password = cleanedPassword;
-                        }
+            <Box
+                sx={{
+                    mb: 2,
+                    p: "4px",
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: "999px",
+                    display: "inline-flex",
+                    gap: "4px",
+                    flexWrap: "wrap",
+                    backgroundColor: "background.paper",
+                }}
+                aria-label="email settings category selector"
+            >
+                {emailSettingsTabs.map((tab, index) => {
+                    const isActive = tabIndex === index;
+                    return (
+                        <Button
+                            key={tab.category}
+                            onClick={() => setTabIndex(index)}
+                            variant={isActive ? "contained" : "text"}
+                            color={isActive ? "primary" : "inherit"}
+                            aria-pressed={isActive}
+                            sx={{
+                                borderRadius: "999px",
+                                px: 2.25,
+                                py: 0.75,
+                                textTransform: "none",
+                                fontWeight: isActive ? 700 : 500,
+                                boxShadow: isActive ? "none" : "none",
+                                color: isActive ? "primary.contrastText" : "text.secondary",
+                                backgroundColor: isActive ? "primary.main" : "transparent",
+                                "&:hover": {
+                                    backgroundColor: isActive ? "primary.dark" : "action.hover",
+                                },
+                                minWidth: { xs: "100%", sm: "auto" },
+                            }}
+                        >
+                            {tab.label}
+                        </Button>
+                    );
+                })}
+            </Box>
 
-                        apiFetch(Endpoint.EMAIL_SETTINGS, "", {
-                            method: "PUT",
-                            body: JSON.stringify(payload),
-                        })
-                            .then((res) => res.json())
-                            .then((data) => {
-                                const nextValues = {
-                                    from_email: data.from_email ?? payload.from_email,
-                                    to_email: data.to_email ?? payload.to_email,
-                                    from_email_password: "",
-                                };
-                                setInitialValues(nextValues);
-                                setPasswordSet(Boolean(data.from_email_password_set));
-                                setPasswordUpdatedAt(
-                                    typeof data.password_updated_at === "number" &&
-                                        data.password_updated_at > 0
-                                        ? data.password_updated_at
-                                        : null
+            <Card variant="outlined">
+                <CardHeader title={activeTab.title} subheader={activeTab.description} />
+                <CardContent>
+                    {loading ? (
+                        <Typography variant="body2">Loading...</Typography>
+                    ) : (
+                        <Formik
+                            key={activeTab.category}
+                            initialValues={initialValues}
+                            validationSchema={validationSchema}
+                            enableReinitialize
+                            onSubmit={(values, helpers) => {
+                                const cleanedPassword = normalizePassword(
+                                    values.from_email_password
                                 );
-                                helpers.resetForm({ values: nextValues });
-                                alert("Email settings updated.");
-                            })
-                            .catch((e) => {
-                                const errMsg =
-                                    e instanceof APIFetchFailError
-                                        ? e.details ?? e.message
-                                        : (e as string);
-                                alert(errMsg);
-                            })
-                            .finally(() => helpers.setSubmitting(false));
-                    }}
-                >
-                    {({ isSubmitting, values }) => (
-                        <StyledForm>
-                            <Grid container spacing={2}>
-                                <Grid item md={6} xs={12}>
-                                    <Field
-                                        component={TextField}
-                                        name="from_email"
-                                        variant="outlined"
-                                        label="From email"
-                                        required
-                                        fullWidth
-                                    />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                    <Field
-                                        component={TextField}
-                                        name="to_email"
-                                        variant="outlined"
-                                        label="Recipient email"
-                                        required
-                                        fullWidth
-                                    />
-                                </Grid>
-                                <Grid item md={6} xs={12}>
-                                    <Field
-                                        component={TextField}
-                                        name="from_email_password"
-                                        variant="outlined"
-                                        label="App password"
-                                        type="password"
-                                        fullWidth
-                                    />
-                                    {passwordSet ? (
-                                        !values.from_email_password && (
-                                            <Typography variant="caption" color="text.secondary">
-                                                App password is already set. Leave blank to keep it.
+                                const payload: Record<string, string> = {
+                                    from_email: values.from_email.trim(),
+                                    to_email: values.to_email.trim(),
+                                };
+                                if (cleanedPassword) {
+                                    payload.from_email_password = cleanedPassword;
+                                }
+
+                                apiFetch(
+                                    Endpoint.EMAIL_SETTINGS,
+                                    getCategoryUrlParams(activeTab.category),
+                                    {
+                                        method: "PUT",
+                                        body: JSON.stringify(payload),
+                                    }
+                                )
+                                    .then((res) => res.json())
+                                    .then((data) => {
+                                        const nextValues = {
+                                            from_email: data.from_email ?? payload.from_email,
+                                            to_email: data.to_email ?? payload.to_email,
+                                            from_email_password: "",
+                                        };
+                                        setInitialValues(nextValues);
+                                        setPasswordSet(Boolean(data.from_email_password_set));
+                                        setPasswordUpdatedAt(
+                                            typeof data.password_updated_at === "number" &&
+                                                data.password_updated_at > 0
+                                                ? data.password_updated_at
+                                                : null
+                                        );
+                                        helpers.resetForm({ values: nextValues });
+                                        alert("Email settings updated.");
+                                    })
+                                    .catch((e) => {
+                                        const errMsg =
+                                            e instanceof APIFetchFailError
+                                                ? e.details ?? e.message
+                                                : `${e}`;
+                                        alert(errMsg);
+                                    })
+                                    .finally(() => helpers.setSubmitting(false));
+                            }}
+                        >
+                            {({ isSubmitting, values }) => (
+                                <StyledForm>
+                                    <Grid container spacing={2}>
+                                        <Grid item md={6} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                name="from_email"
+                                                variant="outlined"
+                                                label="From email"
+                                                required
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item md={6} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                name="to_email"
+                                                variant="outlined"
+                                                label="Recipient email"
+                                                required
+                                                fullWidth
+                                            />
+                                        </Grid>
+                                        <Grid item md={6} xs={12}>
+                                            <Field
+                                                component={TextField}
+                                                name="from_email_password"
+                                                variant="outlined"
+                                                label="App password"
+                                                type="password"
+                                                fullWidth
+                                            />
+                                            {passwordSet ? (
+                                                !values.from_email_password && (
+                                                    <Typography
+                                                        variant="caption"
+                                                        color="text.secondary"
+                                                    >
+                                                        App password is already set. Leave blank to
+                                                        keep it.
+                                                    </Typography>
+                                                )
+                                            ) : (
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                >
+                                                    App password has not been set yet. Enter one to
+                                                    enable email sending.
+                                                </Typography>
+                                            )}
+
+                                            <Typography
+                                                variant="caption"
+                                                color="text.secondary"
+                                                component="div"
+                                                sx={{ mt: 0.5 }}
+                                            >
+                                                To get a Gmail app password:
                                             </Typography>
-                                        )
-                                    ) : (
-                                        <Typography variant="caption" color="text.secondary">
-                                            App password has not been set yet. Enter one to enable
-                                            email sending.
-                                        </Typography>
-                                    )}
+                                            <Typography
+                                                variant="caption"
+                                                color="text.secondary"
+                                                component="ul"
+                                                sx={{ margin: "4px 0 0 16px" }}
+                                            >
+                                                <li>
+                                                    Enable 2-Step Verification on the Gmail account.
+                                                </li>
+                                                <li>
+                                                    Go to Google Account, then Security, then App
+                                                    passwords.
+                                                </li>
+                                                <li>Create a new app password for Mail.</li>
+                                                <li>
+                                                    Copy the 16-character password and paste it
+                                                    here.
+                                                </li>
+                                            </Typography>
 
-                                    {/* Always show Gmail instructions */}
-                                    <Typography
-                                        variant="caption"
-                                        color="text.secondary"
-                                        component="div"
-                                        sx={{ mt: 0.5 }}
-                                    >
-                                        To get a Gmail app password:
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        color="text.secondary"
-                                        component="ul"
-                                        sx={{ margin: "4px 0 0 16px" }}
-                                    >
-                                        <li>Enable 2-Step Verification on the Gmail account.</li>
-                                        <li>Go to Google Account → Security → App passwords.</li>
-                                        <li>Create a new app password for “Mail”.</li>
-                                        <li>Copy the 16-character password and paste it here.</li>
-                                    </Typography>
+                                            {passwordUpdatedAt && (
+                                                <Typography
+                                                    variant="caption"
+                                                    color="text.secondary"
+                                                    component="div"
+                                                >
+                                                    Password last updated:{" "}
+                                                    {new Date(passwordUpdatedAt).toLocaleString()}
+                                                </Typography>
+                                            )}
+                                        </Grid>
+                                    </Grid>
 
-                                    {passwordUpdatedAt && (
-                                        <Typography variant="caption" color="text.secondary">
-                                            Password last updated:{" "}
-                                            {new Date(passwordUpdatedAt).toLocaleString()}
-                                        </Typography>
-                                    )}
-                                </Grid>
-                            </Grid>
-
-                            <Grid container justifyContent="flex-end">
-                                <Grid item>
-                                    <Button
-                                        color="primary"
-                                        variant="contained"
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                    >
-                                        {t("general.save")}
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </StyledForm>
+                                    <Grid container justifyContent="flex-end">
+                                        <Grid item>
+                                            <Button
+                                                color="primary"
+                                                variant="contained"
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                            >
+                                                {t("general.save")}
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                </StyledForm>
+                            )}
+                        </Formik>
                     )}
-                </Formik>
-            )}
+                </CardContent>
+            </Card>
         </Container>
     );
 };

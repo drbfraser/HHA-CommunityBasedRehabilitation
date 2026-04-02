@@ -22,12 +22,12 @@ const useStyles = () =>
             marginBottom: 15,
         },
         errorText: { color: themeColors.errorRed, paddingLeft: 15 },
-        referralCardImageStyle: {
+        cardImageStyle: {
             backgroundColor: themeColors.white,
             width: 128,
             height: 128,
-            marginTop: 10,
-            marginBottom: 10,
+            marginTop: 20,
+            marginBottom: 20,
             shadowColor: "#FFFFFF",
             borderRadius: 30,
             overflow: "hidden",

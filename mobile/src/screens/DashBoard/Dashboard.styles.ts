@@ -65,6 +65,42 @@ const useStyles = () =>
         inbox_info_alert: {
             marginTop: 10,
         },
+        sync_in_progress_container: {
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: themeColors.white,
+        },
+        sync_in_progress_spinner: {
+            marginBottom: 8,
+        },
+        sync_in_progress_text: {
+            color: themeColors.textGray,
+            fontSize: 16,
+            fontWeight: "bold",
+            textAlign: "center",
+        },
+        stale_sync_warning_alert: {
+            marginTop: 10,
+        },
+        sync_overlay: {
+            ...StyleSheet.absoluteFillObject,
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        offline_fallback_alert: {
+            marginTop: 10,
+        },
+        empty_state_row: {
+            paddingHorizontal: 16,
+            paddingVertical: 12,
+        },
+        empty_state_text: {
+            color: themeColors.textGray,
+            fontSize: 14,
+        },
     });
 
 export default useStyles;

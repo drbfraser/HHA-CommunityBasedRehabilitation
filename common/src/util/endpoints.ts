@@ -10,6 +10,9 @@ export enum Endpoint {
     CLIENT = "client/",
     CLIENT_PICTURE = "client/picture/",
     CLIENTS = "clients",
+    SUCCESS_STORIES = "successstories",
+    SUCCESS_STORY = "successstories/",
+    SUCCESS_STORY_PHOTO = "successstories/photo/",
     VISITS = "visits",
     REFERRALS = "referrals",
     REFERRALS_OUTSTANDING = "referrals/outstanding",
@@ -35,6 +38,7 @@ export enum Endpoint {
     ALERT = "alert/",
     VERSION_CHECK = "versioncheck/",
     EMAIL_SETTINGS = "email_settings/",
+    BUG_REPORT = "bug_report/",
     PATIENT_NOTES = "patient-notes/",
 }
 

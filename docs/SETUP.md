@@ -89,6 +89,8 @@ If you are going to be using an IP address, you will need to specify the port (8
 
 ### 4. Install Required NPM Packages
 
+- run from project root directory:
+  `npm install`
 - Navigate to `common/` and run:  
   `npm install`
 - Navigate to `web/` and run:  

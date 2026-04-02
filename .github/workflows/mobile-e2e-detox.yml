@@ -1,0 +1,109 @@
+name: Mobile E2E Detox
+# Run Android Detox tests in CI using a containerized emulator toolchain.
+
+on:
+  workflow_dispatch:
+    inputs:
+      detox_config:
+        description: Detox configuration name
+        required: false
+        default: android.emu.debug
+      test_path:
+        description: Optional test file/path (leave empty to run all e2e tests)
+        required: false
+        default: ""
+      avd_name:
+        description: Android Virtual Device name
+        required: false
+        default: Pixel_6_API_30
+  pull_request:
+    branches: [main]
+    paths:
+      - "mobile/**"
+      - ".github/workflows/mobile-e2e-detox.yml"
+
+env:
+  NPM_VERSION: 10.7.0
+  npm_config_cache: /isolated_build/.npm-cache
+
+jobs:
+  detox-android:
+    name: Run Detox Android E2E
+    runs-on: [self-hosted, docker]
+    timeout-minutes: 120
+    container:
+      image: fabiobhz/detox-android-emulator:latest
+      # KVM/privileged access is commonly required for stable emulator performance.
+      options: --privileged --device /dev/kvm
+    env:
+      HOME: /isolated_build/
+      GRADLE_USER_HOME: /isolated_build/.gradle
+      E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+      E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+      DETOX_CONFIG: ${{ github.event.inputs.detox_config || 'android.emu.debug' }}
+      DETOX_TEST_PATH: ${{ github.event.inputs.test_path || '' }}
+      DETOX_AVD_NAME: ${{ github.event.inputs.avd_name || vars.DETOX_AVD_NAME || 'Pixel_6_API_30' }}
+
+    steps:
+      - name: Checkout code into container
+        uses: bfraser/cicd/actions/checkout@v1
+        with:
+          path: /isolated_build/repo/
+
+      - name: Validate required E2E credentials
+        run: |
+          if [ -z "$E2E_USERNAME" ] || [ -z "$E2E_PASSWORD" ]; then
+            echo "::error::Missing secrets E2E_USERNAME or E2E_PASSWORD"
+            exit 1
+          fi
+
+      - name: Show tooling versions
+        run: |
+          set -x
+          node --version
+          npm --version
+          java -version
+          adb version
+
+      - name: Install NPM version and build common package
+        run: |
+          set -x
+          npm install -g npm@$NPM_VERSION
+          npm ci
+          npx tsc
+        working-directory: /isolated_build/repo/common
+
+      - name: Install mobile dependencies and local common tarball
+        run: |
+          set -x
+          npm uninstall @cbr/common
+          COMMON_PACK_NAME=$(npm pack ../common | awk 'END{print}')
+          npm install "$COMMON_PACK_NAME"
+          npm ci
+        working-directory: /isolated_build/repo/mobile
+
+      - name: Build Android app artifacts for Detox
+        run: |
+          set -x
+          npm run detox:bundle
+          npm run detox:build
+        working-directory: /isolated_build/repo/mobile
+
+      - name: Run Detox tests
+        run: |
+          set -x
+          if [ -n "$DETOX_TEST_PATH" ]; then
+            npx detox test -c "$DETOX_CONFIG" "$DETOX_TEST_PATH" --headless
+          else
+            npx detox test -c "$DETOX_CONFIG" --headless
+          fi
+        working-directory: /isolated_build/repo/mobile
+
+      - name: Upload Detox artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detox-artifacts-${{ github.run_number }}
+          path: /isolated_build/repo/mobile/e2e/artifacts
+          if-no-files-found: warn
+          retention-days: 14

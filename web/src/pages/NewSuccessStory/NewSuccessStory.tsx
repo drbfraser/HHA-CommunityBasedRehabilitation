@@ -208,7 +208,6 @@ const NewSuccessStory = () => {
             part3_introduction: form.part3_introduction,
             part4_action: form.part4_action,
             part5_impact: form.part5_impact,
-            photo: "",
             publish_permission: form.publish_permission,
             status: form.status,
             date: form.date,

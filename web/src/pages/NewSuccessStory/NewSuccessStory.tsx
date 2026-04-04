@@ -433,21 +433,13 @@ const NewSuccessStory = () => {
             </Box>
 
             {/* --- PERMISSION & STATUS --- */}
-            <Grid container spacing={2} sx={{ mt: 2 }}>
-                <Grid item xs={12} md={4}>
-                    <FormControl fullWidth variant="outlined">
-                        <InputLabel>Permission to Publish</InputLabel>
-                        <Select
-                            value={form.publish_permission}
-                            onChange={setSelect("publish_permission")}
-                            label="Permission to Publish"
-                        >
-                            <MenuItem value={PublishPermission.YES}>Yes</MenuItem>
-                            <MenuItem value={PublishPermission.NO}>No</MenuItem>
-                            <MenuItem value={PublishPermission.ANONYMOUS}>Anonymous</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Grid>
+            <Typography variant="h6" sx={storyFormStyles.sectionTitle}>
+                Status & Permission
+            </Typography>
+            <Typography sx={storyFormStyles.helperText}>
+                Set the story status and whether the beneficiary has given permission to publish.
+            </Typography>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
                 <Grid item xs={12} md={4}>
                     <FormControl fullWidth variant="outlined">
                         <InputLabel>Story Status</InputLabel>
@@ -460,6 +452,20 @@ const NewSuccessStory = () => {
                                 Work in Progress
                             </MenuItem>
                             <MenuItem value={StoryStatus.READY}>Ready</MenuItem>
+                        </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <FormControl fullWidth variant="outlined">
+                        <InputLabel>Permission to Publish</InputLabel>
+                        <Select
+                            value={form.publish_permission}
+                            onChange={setSelect("publish_permission")}
+                            label="Permission to Publish"
+                        >
+                            <MenuItem value={PublishPermission.YES}>Yes</MenuItem>
+                            <MenuItem value={PublishPermission.NO}>No</MenuItem>
+                            <MenuItem value={PublishPermission.ANONYMOUS}>Anonymous</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>

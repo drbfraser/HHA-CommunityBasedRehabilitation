@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ActivityIndicator, Button, Divider, TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -8,6 +8,8 @@ import * as ImagePicker from "expo-image-picker";
 import { apiFetch, Endpoint, themeColors, useCurrentUser } from "@cbr/common";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
+import ExposedDropdownMenu from "../../components/ExposedDropdownMenu/ExposedDropdownMenu";
+import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import {
     createStory,
     getStoryById,
@@ -49,16 +51,16 @@ const BLANK_FORM = (clientId: string): FormState => ({
     date: new Date().toISOString().slice(0, 10),
 });
 
-const STATUS_OPTIONS: { label: string; value: StoryStatus }[] = [
-    { label: "Work in Progress", value: StoryStatus.WORK_IN_PROGRESS },
-    { label: "Ready", value: StoryStatus.READY },
-];
+const STATUS_VALUES: Record<string, string> = {
+    [StoryStatus.WORK_IN_PROGRESS]: "Work in Progress",
+    [StoryStatus.READY]: "Ready",
+};
 
-const PERMISSION_OPTIONS: { label: string; value: PublishPermission }[] = [
-    { label: "Yes", value: PublishPermission.YES },
-    { label: "No", value: PublishPermission.NO },
-    { label: "Anonymous", value: PublishPermission.ANONYMOUS },
-];
+const PERMISSION_VALUES: Record<string, string> = {
+    [PublishPermission.YES]: "Yes",
+    [PublishPermission.NO]: "No",
+    [PublishPermission.ANONYMOUS]: "Anonymous",
+};
 
 const NewSuccessStory = ({ route, navigation }: Props) => {
     const { clientID, storyId, clientName } = route.params;
@@ -72,6 +74,8 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string>();
     const [datePickerVisible, setDatePickerVisible] = useState(false);
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+    const initialFormRef = useRef<string>("");
 
     const writerName = useMemo(() => {
         if (form.written_by_name) return form.written_by_name;
@@ -88,6 +92,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             .then((existing) => {
                 const { id, created_at, updated_at, created_by_user_id, ...rest } = existing;
                 setForm(rest);
+                initialFormRef.current = JSON.stringify(rest);
 
                 if (existing.photo) {
                     apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
@@ -107,6 +112,18 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             .catch(() => setError("Could not load the success story."))
             .finally(() => setIsLoading(false));
     }, [storyId]);
+
+    useEffect(() => {
+        if (!storyId && !initialFormRef.current) {
+            initialFormRef.current = JSON.stringify(BLANK_FORM(clientID));
+        }
+    }, []);
+
+    const hasUnsavedChanges = useMemo(() => {
+        if (hasSubmitted) return false;
+        const currentFormJson = JSON.stringify(form);
+        return currentFormJson !== initialFormRef.current || !!photoUri;
+    }, [form, photoUri, hasSubmitted]);
 
     const set = (field: keyof FormState) => (text: string) =>
         setForm((prev) => ({ ...prev, [field]: text }));
@@ -170,6 +187,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
 
         setIsSubmitting(true);
         setError(undefined);
+        setHasSubmitted(true);
 
         const request = storyId
             ? updateStory(storyId, payload, photoUri || undefined)
@@ -177,20 +195,11 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
 
         request
             .then(() => navigation.goBack())
-            .catch(() => setError("Could not save the success story."))
+            .catch(() => {
+                setHasSubmitted(false);
+                setError("Could not save the success story.");
+            })
             .finally(() => setIsSubmitting(false));
-    };
-
-    const cycleStatus = () => {
-        const idx = STATUS_OPTIONS.findIndex((o) => o.value === form.status);
-        const next = STATUS_OPTIONS[(idx + 1) % STATUS_OPTIONS.length];
-        setForm((prev) => ({ ...prev, status: next.value }));
-    };
-
-    const cyclePermission = () => {
-        const idx = PERMISSION_OPTIONS.findIndex((o) => o.value === form.publish_permission);
-        const next = PERMISSION_OPTIONS[(idx + 1) % PERMISSION_OPTIONS.length];
-        setForm((prev) => ({ ...prev, publish_permission: next.value }));
     };
 
     if (isLoading) {
@@ -200,11 +209,6 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             </View>
         );
     }
-
-    const currentStatusLabel =
-        STATUS_OPTIONS.find((o) => o.value === form.status)?.label ?? "Work in Progress";
-    const currentPermissionLabel =
-        PERMISSION_OPTIONS.find((o) => o.value === form.publish_permission)?.label ?? "No";
 
     const renderNarrativeSection = (label: string, field: keyof FormState, helper?: string) => (
         <React.Fragment key={field}>
@@ -222,205 +226,236 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     );
 
     return (
-        <ScrollView contentContainerStyle={styles.formContainer}>
-            <Text style={styles.title}>
-                {isEditing ? "Edit Success Story" : "New Beneficiary Case Study"}
-            </Text>
-
-            {error && (
-                <View style={styles.errorAlert}>
-                    <Text style={styles.errorText}>{error}</Text>
-                </View>
-            )}
-
-            <TextInput
-                mode="outlined"
-                label="Story Title"
-                value={form.title}
-                onChangeText={set("title")}
-                style={styles.formInput}
+        <>
+            <ConfirmDialogWithNavListener
+                bypassDialog={!hasUnsavedChanges}
+                confirmButtonText="Discard"
+                dialogContent="You have unsaved changes. Are you sure you want to leave?"
             />
-            <TextInput
-                mode="outlined"
-                label="Written By"
-                value={writerName}
-                editable={false}
-                style={styles.formInput}
-            />
-            <TextInput
-                mode="outlined"
-                label="Beneficiary Name"
-                value={clientName ?? ""}
-                editable={false}
-                style={styles.formInput}
-            />
+            <ScrollView contentContainerStyle={styles.formContainer}>
+                <Text style={styles.title}>
+                    {isEditing ? "Edit Success Story" : "New Beneficiary Case Study"}
+                </Text>
 
-            <View style={{ flexDirection: "row", gap: 8 }}>
+                {error && (
+                    <View style={styles.errorAlert}>
+                        <Text style={styles.errorText}>{error}</Text>
+                    </View>
+                )}
+
                 <TextInput
                     mode="outlined"
-                    label="Diagnosis"
-                    value={form.diagnosis}
-                    onChangeText={set("diagnosis")}
-                    style={[styles.formInput, { flex: 1 }]}
-                />
-            </View>
-            <TextInput
-                mode="outlined"
-                label="Treatment / Service Given"
-                value={form.treatment_service}
-                onChangeText={set("treatment_service")}
-                style={styles.formInput}
-            />
-
-            {form.hcr_status === "Refugee" && (
-                <>
-                    <TextInput
-                        mode="outlined"
-                        label="Where are they from?"
-                        value={form.refugee_origin}
-                        onChangeText={set("refugee_origin")}
-                        style={styles.formInput}
-                    />
-                    <TextInput
-                        mode="outlined"
-                        label="How long have they been in Uganda?"
-                        value={form.refugee_duration}
-                        onChangeText={set("refugee_duration")}
-                        style={styles.formInput}
-                    />
-                </>
-            )}
-
-            <TouchableOpacity onPress={() => setDatePickerVisible(true)}>
-                <TextInput
-                    mode="outlined"
-                    label="Date"
-                    value={form.date}
+                    label="Story Title"
+                    value={form.title}
+                    onChangeText={set("title")}
                     style={styles.formInput}
+                />
+                <TextInput
+                    mode="outlined"
+                    label="Written By"
+                    value={writerName}
                     editable={false}
-                    right={
-                        <TextInput.Icon
-                            icon="calendar"
-                            onPress={() => setDatePickerVisible(true)}
+                    style={styles.formInput}
+                />
+                <TextInput
+                    mode="outlined"
+                    label="Beneficiary Name"
+                    value={clientName ?? ""}
+                    editable={false}
+                    style={styles.formInput}
+                />
+
+                <View style={{ flexDirection: "row", gap: 8 }}>
+                    <TextInput
+                        mode="outlined"
+                        label="Diagnosis"
+                        value={form.diagnosis}
+                        onChangeText={set("diagnosis")}
+                        style={[styles.formInput, { flex: 1 }]}
+                    />
+                </View>
+                <TextInput
+                    mode="outlined"
+                    label="Treatment / Service Given"
+                    value={form.treatment_service}
+                    onChangeText={set("treatment_service")}
+                    style={styles.formInput}
+                />
+
+                {form.hcr_status === "Refugee" && (
+                    <>
+                        <TextInput
+                            mode="outlined"
+                            label="Where are they from?"
+                            value={form.refugee_origin}
+                            onChangeText={set("refugee_origin")}
+                            style={styles.formInput}
                         />
-                    }
-                />
-            </TouchableOpacity>
-            {datePickerVisible && (
-                <DateTimePicker
-                    value={new Date(form.date + "T00:00:00")}
-                    mode="date"
-                    display="default"
-                    onChange={(event, date) => {
-                        setDatePickerVisible(Platform.OS === "ios");
-                        if (date && event.type !== "dismissed") {
-                            setForm((prev) => ({
-                                ...prev,
-                                date: date.toISOString().slice(0, 10),
-                            }));
+                        <TextInput
+                            mode="outlined"
+                            label="How long have they been in Uganda?"
+                            value={form.refugee_duration}
+                            onChangeText={set("refugee_duration")}
+                            style={styles.formInput}
+                        />
+                    </>
+                )}
+
+                <TouchableOpacity onPress={() => setDatePickerVisible(true)}>
+                    <TextInput
+                        mode="outlined"
+                        label="Date"
+                        value={form.date}
+                        style={styles.formInput}
+                        editable={false}
+                        right={
+                            <TextInput.Icon
+                                icon="calendar"
+                                onPress={() => setDatePickerVisible(true)}
+                            />
                         }
-                        if (event.type === "dismissed" || event.type === "set") {
-                            setDatePickerVisible(false);
-                        }
-                    }}
-                />
-            )}
+                    />
+                </TouchableOpacity>
+                {datePickerVisible && (
+                    <DateTimePicker
+                        value={new Date(form.date + "T00:00:00")}
+                        mode="date"
+                        display="default"
+                        onChange={(event, date) => {
+                            setDatePickerVisible(Platform.OS === "ios");
+                            if (date && event.type !== "dismissed") {
+                                setForm((prev) => ({
+                                    ...prev,
+                                    date: date.toISOString().slice(0, 10),
+                                }));
+                            }
+                            if (event.type === "dismissed" || event.type === "set") {
+                                setDatePickerVisible(false);
+                            }
+                        }}
+                    />
+                )}
 
-            <Divider style={{ marginVertical: 8 }} />
+                <Divider style={{ marginVertical: 8 }} />
 
-            {renderNarrativeSection(
-                "Part 1: Background",
-                "part1_background",
-                "Give some background about the person's life."
-            )}
-            {renderNarrativeSection(
-                "Part 2: Challenge",
-                "part2_challenge",
-                "Explain the challenge the person had before."
-            )}
-            {renderNarrativeSection(
-                "Part 3: Introduction",
-                "part3_introduction",
-                "Briefly explain how they found you."
-            )}
-            {renderNarrativeSection(
-                "Part 4: Action",
-                "part4_action",
-                "What did your team do to help?"
-            )}
-            {renderNarrativeSection(
-                "Part 5: Impact",
-                "part5_impact",
-                "Describe the lasting impact of your support."
-            )}
+                {/* --- NARRATIVE SECTIONS --- */}
+                {renderNarrativeSection(
+                    "Part 1: Background",
+                    "part1_background",
+                    "Give some background about the person's life. Where are they from, where do they live now, who do they live with? If they are a refugee, why did they leave their country?"
+                )}
+                {renderNarrativeSection(
+                    "Part 2: Challenge",
+                    "part2_challenge",
+                    "Explain the challenge the person had before. What was life like for them before HHA EA helped them? (not just clinically but socially, emotionally, etc.)"
+                )}
+                {renderNarrativeSection(
+                    "Part 3: Introduction",
+                    "part3_introduction",
+                    "Briefly explain how they found you. Keep it simple and leave out dates, job titles, etc."
+                )}
+                {renderNarrativeSection(
+                    "Part 4: Action",
+                    "part4_action",
+                    "What did your team do to help make an impact? Describe your role and actions – not just clinically, add emotion."
+                )}
+                {renderNarrativeSection(
+                    "Part 5: Impact",
+                    "part5_impact",
+                    "Describe life now. What's the lasting impact of your support? Consider the beneficiary, their family, and caregivers."
+                )}
 
-            <Divider style={{ marginVertical: 8 }} />
+                <Divider style={{ marginVertical: 8 }} />
 
-            {/* Photo */}
-            <Text style={styles.formSectionTitle}>Photograph</Text>
-            <Text style={styles.formHelperText}>Please take a photograph if possible.</Text>
-            {existingPhotoUri || photoUri ? (
-                <Image
-                    source={{ uri: photoUri || existingPhotoUri }}
-                    style={styles.photoPreview}
-                    resizeMode="contain"
-                />
-            ) : null}
-            <View style={styles.photoButtonRow}>
-                <Button mode="outlined" icon="image" onPress={pickPhoto} compact>
-                    Gallery
-                </Button>
-                <Button mode="outlined" icon="camera" onPress={takePhoto} compact>
-                    Camera
-                </Button>
+                {/* --- PHOTO --- */}
+                <Text style={styles.formSectionTitle}>Photograph</Text>
+                <Text style={styles.formHelperText}>Please take a photograph if possible.</Text>
                 {existingPhotoUri || photoUri ? (
+                    <Image
+                        source={{ uri: photoUri || existingPhotoUri }}
+                        style={styles.photoPreview}
+                        resizeMode="contain"
+                    />
+                ) : null}
+                <View style={styles.photoButtonRow}>
+                    <Button mode="outlined" icon="image" onPress={pickPhoto} compact>
+                        Gallery
+                    </Button>
+                    <Button mode="outlined" icon="camera" onPress={takePhoto} compact>
+                        Camera
+                    </Button>
+                    {existingPhotoUri || photoUri ? (
+                        <Button
+                            mode="outlined"
+                            onPress={() => {
+                                setPhotoUri("");
+                                setExistingPhotoUri("");
+                            }}
+                            compact
+                        >
+                            Remove
+                        </Button>
+                    ) : null}
+                </View>
+
+                <Divider style={{ marginVertical: 12 }} />
+
+                {/* --- STATUS & PERMISSION --- */}
+                <Text style={styles.formSectionTitle}>Status & Permission</Text>
+                <Text style={styles.formHelperText}>
+                    Set the story status and whether the beneficiary has given permission to
+                    publish.
+                </Text>
+                <ExposedDropdownMenu
+                    valuesType="record-string"
+                    values={STATUS_VALUES}
+                    value={STATUS_VALUES[form.status] ?? ""}
+                    onKeyChange={(key) =>
+                        setForm((prev) => ({ ...prev, status: key as StoryStatus }))
+                    }
+                    onDismiss={() => {}}
+                    label="Story Status"
+                    mode="outlined"
+                    style={styles.formInput}
+                />
+                <ExposedDropdownMenu
+                    valuesType="record-string"
+                    values={PERMISSION_VALUES}
+                    value={PERMISSION_VALUES[form.publish_permission] ?? ""}
+                    onKeyChange={(key) =>
+                        setForm((prev) => ({
+                            ...prev,
+                            publish_permission: key as PublishPermission,
+                        }))
+                    }
+                    onDismiss={() => {}}
+                    label="Permission to Publish"
+                    mode="outlined"
+                    style={styles.formInput}
+                />
+
+                {/* --- SUBMIT --- */}
+                <View style={styles.formButtonRow}>
+                    <Button
+                        mode="contained"
+                        onPress={handleSubmit}
+                        style={styles.formSubmitButton}
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                    >
+                        {isEditing ? "Save Changes" : "Submit Story"}
+                    </Button>
                     <Button
                         mode="outlined"
-                        onPress={() => {
-                            setPhotoUri("");
-                            setExistingPhotoUri("");
-                        }}
-                        compact
+                        onPress={() => navigation.goBack()}
+                        style={styles.formCancelButton}
+                        disabled={isSubmitting}
                     >
-                        Remove
+                        Cancel
                     </Button>
-                ) : null}
-            </View>
-
-            <Divider style={{ marginVertical: 12 }} />
-
-            {/* Status & Permission - tap to cycle */}
-            <Text style={styles.formSectionTitle}>Status & Permission</Text>
-            <View style={{ flexDirection: "row", gap: 12, marginTop: 8 }}>
-                <Button mode="outlined" onPress={cycleStatus} style={{ flex: 1 }}>
-                    Status: {currentStatusLabel}
-                </Button>
-                <Button mode="outlined" onPress={cyclePermission} style={{ flex: 1 }}>
-                    Permission: {currentPermissionLabel}
-                </Button>
-            </View>
-
-            {/* Submit */}
-            <View style={styles.formButtonRow}>
-                <Button
-                    mode="contained"
-                    onPress={handleSubmit}
-                    style={styles.formSubmitButton}
-                    disabled={isSubmitting}
-                    loading={isSubmitting}
-                >
-                    {isEditing ? "Save Changes" : "Submit Story"}
-                </Button>
-                <Button
-                    mode="outlined"
-                    onPress={() => navigation.goBack()}
-                    style={styles.formCancelButton}
-                    disabled={isSubmitting}
-                >
-                    Cancel
-                </Button>
-            </View>
-        </ScrollView>
+                </View>
+            </ScrollView>
+        </>
     );
 };
 

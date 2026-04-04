@@ -142,6 +142,25 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
                 </Button>
             </View>
 
+            <Section title="Part 1: Background" body={story.part1_background} />
+            <Section title="Part 2: Challenge" body={story.part2_challenge} />
+            <Section title="Part 3: Introduction" body={story.part3_introduction} />
+            <Section title="Part 4: Action" body={story.part4_action} />
+            <Section title="Part 5: Impact" body={story.part5_impact} />
+
+            {photoBlobUrl ? (
+                <View style={styles.photoContainer}>
+                    <Text style={styles.sectionTitle}>Photograph</Text>
+                    <Image
+                        source={{ uri: photoBlobUrl }}
+                        style={styles.photo}
+                        resizeMode="contain"
+                    />
+                </View>
+            ) : null}
+
+            <Divider style={{ marginTop: 16 }} />
+
             {/* Beneficiary Information */}
             <Card style={styles.card}>
                 <Card.Content>
@@ -187,25 +206,6 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
                     </Text>
                 </Card.Content>
             </Card>
-
-            <Divider style={{ marginTop: 16 }} />
-
-            <Section title="Part 1: Background" body={story.part1_background} />
-            <Section title="Part 2: Challenge" body={story.part2_challenge} />
-            <Section title="Part 3: Introduction" body={story.part3_introduction} />
-            <Section title="Part 4: Action" body={story.part4_action} />
-            <Section title="Part 5: Impact" body={story.part5_impact} />
-
-            {photoBlobUrl ? (
-                <View style={styles.photoContainer}>
-                    <Text style={styles.sectionTitle}>Photograph</Text>
-                    <Image
-                        source={{ uri: photoBlobUrl }}
-                        style={styles.photo}
-                        resizeMode="contain"
-                    />
-                </View>
-            ) : null}
         </ScrollView>
     );
 };

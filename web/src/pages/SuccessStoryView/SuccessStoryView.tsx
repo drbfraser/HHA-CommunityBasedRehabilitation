@@ -118,7 +118,35 @@ const SuccessStoryView = () => {
                 </Button>
             </Box>
 
-            <Card variant="outlined" sx={{ mb: 2 }}>
+            <Section title="Part 1: Background" body={story.part1_background} />
+            <Section title="Part 2: Challenge" body={story.part2_challenge} />
+            <Section title="Part 3: Introduction" body={story.part3_introduction} />
+            <Section title="Part 4: Action" body={story.part4_action} />
+            <Section title="Part 5: Impact" body={story.part5_impact} />
+
+            {photoBlobUrl && (
+                <Box sx={{ mt: 3 }}>
+                    <Typography variant="h6" fontWeight="bold">
+                        Photograph
+                    </Typography>
+                    <Box
+                        component="img"
+                        src={photoBlobUrl}
+                        alt="Beneficiary photograph"
+                        sx={{
+                            maxWidth: 500,
+                            maxHeight: 400,
+                            objectFit: "contain",
+                            mt: 1,
+                            borderRadius: 1,
+                        }}
+                    />
+                </Box>
+            )}
+
+            <Divider sx={{ mt: 3 }} />
+
+            <Card variant="outlined" sx={{ mt: 2, mb: 2 }}>
                 <CardContent>
                     <Typography variant="subtitle1" fontWeight="bold" sx={{ mb: 1 }}>
                         Beneficiary Information
@@ -237,34 +265,6 @@ const SuccessStoryView = () => {
                     </Typography>
                 </CardContent>
             </Card>
-
-            <Divider />
-
-            <Section title="Part 1: Background" body={story.part1_background} />
-            <Section title="Part 2: Challenge" body={story.part2_challenge} />
-            <Section title="Part 3: Introduction" body={story.part3_introduction} />
-            <Section title="Part 4: Action" body={story.part4_action} />
-            <Section title="Part 5: Impact" body={story.part5_impact} />
-
-            {photoBlobUrl && (
-                <Box sx={{ mt: 3 }}>
-                    <Typography variant="h6" fontWeight="bold">
-                        Photograph
-                    </Typography>
-                    <Box
-                        component="img"
-                        src={photoBlobUrl}
-                        alt="Beneficiary photograph"
-                        sx={{
-                            maxWidth: 500,
-                            maxHeight: 400,
-                            objectFit: "contain",
-                            mt: 1,
-                            borderRadius: 1,
-                        }}
-                    />
-                </Box>
-            )}
         </>
     );
 };

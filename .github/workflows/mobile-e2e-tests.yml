@@ -135,9 +135,13 @@ jobs:
           E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
           E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
         run: |
+          if [ -z "$E2E_USERNAME" ] || [ -z "$E2E_PASSWORD" ]; then
+            echo "::error::E2E_USERNAME and E2E_PASSWORD secrets must be set"
+            exit 1
+          fi
           cat > .env.e2e <<EOF
-          E2E_USERNAME=${E2E_USERNAME:-venus}
-          E2E_PASSWORD=${E2E_PASSWORD:-hhaLogin}
+          E2E_USERNAME=${E2E_USERNAME}
+          E2E_PASSWORD=${E2E_PASSWORD}
           DETOX_AVD_NAME=${{ env.AVD_NAME }}
           APP_ENV=local
           LOCAL_URL=http://10.0.2.2:8000

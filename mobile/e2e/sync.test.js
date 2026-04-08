@@ -20,16 +20,45 @@ function getEmulatorSerial() {
 
 function disableWifi() {
     const s = getEmulatorSerial();
-    execSync(`adb ${s ? `-s ${s} ` : ""}shell svc wifi disable`, { timeout: 10000 });
+    const prefix = s ? `-s ${s} ` : "";
+    execSync(`adb ${prefix}shell svc wifi disable`, { timeout: 10000 });
+    execSync(`adb ${prefix}shell svc data disable`, { timeout: 10000 });
 }
 
 function enableWifi() {
     const s = getEmulatorSerial();
-    execSync(`adb ${s ? `-s ${s} ` : ""}shell svc wifi enable`, { timeout: 10000 });
+    const prefix = s ? `-s ${s} ` : "";
+    execSync(`adb ${prefix}shell svc data enable`, { timeout: 10000 });
+    execSync(`adb ${prefix}shell svc wifi enable`, { timeout: 10000 });
 }
 
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        await waitFor(element(by.id(dropdownId)))
+            .toBeVisible()
+            .withTimeout(10000);
+        await element(by.id(dropdownId)).tap();
+        await sleep(1000);
+
+        try {
+            await waitFor(element(by.text(itemText)))
+                .toBeVisible()
+                .withTimeout(attempt < maxAttempts ? 5000 : 10000);
+            await element(by.text(itemText)).tap();
+            await sleep(500);
+            return;
+        } catch (e) {
+            if (attempt === maxAttempts) throw e;
+            try {
+                await device.pressBack();
+            } catch {}
+            await sleep(500);
+        }
+    }
 }
 
 async function loginWithCredentials() {
@@ -63,7 +92,7 @@ async function ensureTabNavigatorVisible() {
     try {
         await waitFor(element(by.id("login-button")))
             .toBeVisible()
-            .withTimeout(1500);
+            .withTimeout(5000);
         await loginWithCredentials();
         await waitFor(element(by.id("tab-dashboard")))
             .toBeVisible()
@@ -143,7 +172,7 @@ async function navigateBackToHome() {
         try {
             await waitFor(element(by.id("tab-dashboard")))
                 .toBeVisible()
-                .withTimeout(2000);
+                .withTimeout(5000);
             return;
         } catch {}
     }
@@ -205,7 +234,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
     describe("Phase 2: Create a new client while offline – cached in WatermelonDB", () => {
         beforeAll(async () => {
             disableWifi();
-            await sleep(1000);
+            await sleep(5000);
         });
 
         it("navigates to the New Client tab while offline", async () => {
@@ -249,37 +278,25 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
         it("selects gender from the dropdown (below birthday section)", async () => {
             await element(by.id("new-client-scroll-view")).scroll(200, "down");
-
-            await waitFor(element(by.id("client-gender-dropdown")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.id("client-gender-dropdown")).tap();
-
-            await waitFor(element(by.text("Male")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.text("Male")).tap();
+            await selectFromDropdown("client-gender-dropdown", "Male");
         });
 
         it("fills in village and selects a zone (zone loaded from WatermelonDB while offline)", async () => {
             await element(by.id("new-client-scroll-view")).scroll(250, "down");
+            await sleep(400);
 
             await waitFor(element(by.id("client-village-input")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("client-village-input")).tap();
             await element(by.id("client-village-input")).replaceText("TestVillage");
             await element(by.id("client-village-input")).tapReturnKey();
+            await sleep(1500);
 
             await waitFor(element(by.id("client-zone-dropdown")))
                 .toBeVisible()
-                .withTimeout(5000);
-            await element(by.id("client-zone-dropdown")).tap();
-
-            await waitFor(element(by.text("BidiBidi Zone 1")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.text("BidiBidi Zone 1")).tap();
+                .withTimeout(10000);
+            await selectFromDropdown("client-zone-dropdown", "BidiBidi Zone 1");
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
@@ -287,12 +304,12 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
             await waitFor(element(by.id("client-disability-select-btn")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("client-disability-select-btn")).tap();
 
             await waitFor(element(by.text("Amputee")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.text("Amputee")).tap();
 
             await element(by.id("client-disability-save-btn")).tap();
@@ -303,35 +320,12 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
             await waitFor(element(by.id("health-risk-checkbox")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("health-risk-checkbox")).tap();
 
-            await waitFor(element(by.id("health-risk-dropdown")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.id("health-risk-dropdown")).tap();
-            await waitFor(element(by.text("Low")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.text("Low")).tap();
-
-            await waitFor(element(by.id("health-requirements-dropdown")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.id("health-requirements-dropdown")).tap();
-            await waitFor(element(by.text("Malaria treatment")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.text("Malaria treatment")).tap();
-
-            await waitFor(element(by.id("health-goals-dropdown")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.id("health-goals-dropdown")).tap();
-            await waitFor(element(by.text("Pain managed")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.text("Pain managed")).tap();
+            await selectFromDropdown("health-risk-dropdown", "Low");
+            await selectFromDropdown("health-requirements-dropdown", "Malaria treatment");
+            await selectFromDropdown("health-goals-dropdown", "Pain managed");
         });
 
         it("submits the form – client is persisted locally in WatermelonDB as unsynced", async () => {
@@ -339,12 +333,12 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
             await waitFor(element(by.id("new-client-submit-button")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .withTimeout(10000);
             await element(by.id("new-client-submit-button")).tap();
 
             await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))
                 .toBeVisible()
-                .withTimeout(15000);
+                .withTimeout(10000);
         });
     });
 

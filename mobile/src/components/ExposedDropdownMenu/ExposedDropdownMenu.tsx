@@ -112,6 +112,7 @@ const convertMapToMenuItems = (
 
         menuItems[index] = (
             <Menu.Item
+                testID={props.testID ? `${props.testID}-option-${key}` : undefined}
                 style={
                     props.value === label
                         ? menuItemStyle.selectedItemStyle
@@ -206,6 +207,11 @@ const MenuItems = ({ hideMenu, existingProps }: TMenuItemsProps) => {
             existingProps.valuesType === "record-string"
                 ? Object.entries(existingProps.values).map(([key, label]: [string, string]) => (
                       <Menu.Item
+                          testID={
+                              existingProps.testID
+                                  ? `${existingProps.testID}-option-${key}`
+                                  : undefined
+                          }
                           style={
                               existingProps.value === label
                                   ? menuItemStyle.selectedItemStyle
@@ -229,6 +235,11 @@ const MenuItems = ({ hideMenu, existingProps }: TMenuItemsProps) => {
                 : existingProps.valuesType === "array"
                 ? existingProps.values.map((label, index) => (
                       <Menu.Item
+                          testID={
+                              existingProps.testID
+                                  ? `${existingProps.testID}-option-${index}`
+                                  : undefined
+                          }
                           style={
                               existingProps.value === label
                                   ? menuItemStyle.selectedItemStyle

@@ -7,3 +7,4 @@ node_modules
 .idea/
 web_build.tar.gz
 scripts/dump_db_as_csv/output/
+!.env.e2e.example

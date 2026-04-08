@@ -20,12 +20,16 @@ function getEmulatorSerial() {
 
 function disableWifi() {
     const s = getEmulatorSerial();
-    execSync(`adb ${s ? `-s ${s} ` : ""}shell svc wifi disable`, { timeout: 10000 });
+    const prefix = s ? `-s ${s} ` : "";
+    execSync(`adb ${prefix}shell svc wifi disable`, { timeout: 10000 });
+    execSync(`adb ${prefix}shell svc data disable`, { timeout: 10000 });
 }
 
 function enableWifi() {
     const s = getEmulatorSerial();
-    execSync(`adb ${s ? `-s ${s} ` : ""}shell svc wifi enable`, { timeout: 10000 });
+    const prefix = s ? `-s ${s} ` : "";
+    execSync(`adb ${prefix}shell svc data enable`, { timeout: 10000 });
+    execSync(`adb ${prefix}shell svc wifi enable`, { timeout: 10000 });
 }
 
 function sleep(ms) {

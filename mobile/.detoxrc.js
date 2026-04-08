@@ -67,6 +67,7 @@ module.exports = {
                 // allow override via environment variable (DETOX_AVD_NAME) — fall back to the repo default
                 avdName: process.env.DETOX_AVD_NAME || "Pixel_6_API_30",
             },
+            headless: true,
         },
     },
     configurations: {

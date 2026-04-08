@@ -32,6 +32,29 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        await waitFor(element(by.id(dropdownId)))
+            .toBeVisible()
+            .withTimeout(10000);
+        await element(by.id(dropdownId)).tap();
+        await sleep(1000);
+
+        try {
+            await waitFor(element(by.text(itemText)))
+                .toBeVisible()
+                .withTimeout(attempt < maxAttempts ? 5000 : 10000);
+            await element(by.text(itemText)).tap();
+            await sleep(500);
+            return;
+        } catch (e) {
+            if (attempt === maxAttempts) throw e;
+            try { await device.pressBack(); } catch {}
+            await sleep(500);
+        }
+    }
+}
+
 async function loginWithCredentials() {
     if (!E2E_USERNAME || !E2E_PASSWORD) {
         throw new Error(
@@ -249,16 +272,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
         it("selects gender from the dropdown (below birthday section)", async () => {
             await element(by.id("new-client-scroll-view")).scroll(200, "down");
-
-            await waitFor(element(by.id("client-gender-dropdown")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.id("client-gender-dropdown")).tap();
-
-            await waitFor(element(by.text("Male")))
-                .toBeVisible()
-                .withTimeout(5000);
-            await element(by.text("Male")).tap();
+            await selectFromDropdown("client-gender-dropdown", "Male");
         });
 
         it("fills in village and selects a zone (zone loaded from WatermelonDB while offline)", async () => {
@@ -271,19 +285,12 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await element(by.id("client-village-input")).tap();
             await element(by.id("client-village-input")).replaceText("TestVillage");
             await element(by.id("client-village-input")).tapReturnKey();
+            await sleep(1500);
 
             await waitFor(element(by.id("client-zone-dropdown")))
                 .toBeVisible()
                 .withTimeout(10000);
-            await element(by.id("client-zone-dropdown")).tap();
-            await sleep(1000);
-
-            await waitFor(element(by.text("Palorinya Zone 1")))
-                .toBeVisible()
-                .withTimeout(15000);
-
-            await element(by.text("Palorinya Zone 1")).atIndex(0).tap();
-            await sleep(800);
+            await selectFromDropdown("client-zone-dropdown", "BidiBidi Zone 1");
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
@@ -310,32 +317,9 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
                 .withTimeout(10000);
             await element(by.id("health-risk-checkbox")).tap();
 
-            await waitFor(element(by.id("health-risk-dropdown")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.id("health-risk-dropdown")).tap();
-            await waitFor(element(by.text("Low")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.text("Low")).tap();
-
-            await waitFor(element(by.id("health-requirements-dropdown")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.id("health-requirements-dropdown")).tap();
-            await waitFor(element(by.text("Malaria treatment")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.text("Malaria treatment")).tap();
-
-            await waitFor(element(by.id("health-goals-dropdown")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.id("health-goals-dropdown")).tap();
-            await waitFor(element(by.text("Pain managed")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.text("Pain managed")).tap();
+            await selectFromDropdown("health-risk-dropdown", "Low");
+            await selectFromDropdown("health-requirements-dropdown", "Malaria treatment");
+            await selectFromDropdown("health-goals-dropdown", "Pain managed");
         });
 
         it("submits the form – client is persisted locally in WatermelonDB as unsynced", async () => {

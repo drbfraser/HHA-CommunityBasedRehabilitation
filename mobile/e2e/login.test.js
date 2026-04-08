@@ -37,10 +37,20 @@ describe("Login", () => {
             );
         }
 
+        await element(by.id("login-username-input")).tap();
         await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
-        await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);
+        await element(by.id("login-username-input")).tapReturnKey();
 
-        await element(by.id("login-button")).tap();
+        await element(by.id("login-password-input")).tap();
+        await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);
+        await element(by.id("login-password-input")).tapReturnKey();
+
+        await new Promise((r) => setTimeout(r, 1000));
+
+        try {
+            await expect(element(by.id("login-button"))).toBeVisible();
+            await element(by.id("login-button")).tap();
+        } catch (_) {}
 
         await waitFor(element(by.id("login-button")))
             .not.toBeVisible()

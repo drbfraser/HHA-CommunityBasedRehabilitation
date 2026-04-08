@@ -1,0 +1,16 @@
+name: Check KVM Support
+on: workflow_dispatch
+jobs:
+  check:
+    runs-on: [self-hosted, docker]
+    steps:
+      - name: Check KVM device
+        run: |
+          echo "=== /dev/kvm ==="
+          ls -la /dev/kvm 2>&1 || echo "/dev/kvm not found"
+          echo ""
+          echo "=== CPU virtualization flags ==="
+          grep -c -E 'vmx|svm' /proc/cpuinfo || echo "No hardware virtualization flags found"
+          echo ""
+          echo "=== kvm-ok ==="
+          (apt-get update -qq && apt-get install -y -qq cpu-checker && kvm-ok) 2>&1 || echo "kvm-ok not available or KVM not supported"

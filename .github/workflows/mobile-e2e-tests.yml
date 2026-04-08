@@ -1,0 +1,180 @@
+name: Mobile E2E Tests (Detox)
+
+on:
+  workflow_dispatch:
+
+env:
+  JAVA_VERSION: "17"
+  NODE_VERSION: "18"
+  NPM_VERSION: "10.7.0"
+  ANDROID_API_LEVEL: 31
+  ANDROID_BUILD_TOOLS: "34.0.0"
+  ANDROID_EMULATOR_ARCH: x86_64
+  AVD_NAME: Pixel_6_API_31
+  POSTGRES_HOST: localhost
+  POSTGRES_DB: cbr
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  SECRET_KEY: ci-ephemeral-secret-key
+  DOMAIN: localhost
+
+jobs:
+  detox-e2e:
+    runs-on: [self-hosted, docker]
+    timeout-minutes: 60
+
+    services:
+      postgres:
+        image: postgres:13.1-alpine
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Set up Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            common/package-lock.json
+            mobile/package-lock.json
+
+      - name: Install global npm version
+        run: npm install -g npm@$NPM_VERSION
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK components
+        run: |
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-${{ env.ANDROID_API_LEVEL }}" \
+            "build-tools;${{ env.ANDROID_BUILD_TOOLS }}" \
+            "emulator" \
+            "system-images;android-${{ env.ANDROID_API_LEVEL }};google_apis;${{ env.ANDROID_EMULATOR_ARCH }}"
+
+      - name: Create AVD
+        run: |
+          echo no | avdmanager create avd \
+            --force \
+            --name "${{ env.AVD_NAME }}" \
+            --package "system-images;android-${{ env.ANDROID_API_LEVEL }};google_apis;${{ env.ANDROID_EMULATOR_ARCH }}" \
+            --device "pixel_6"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+        working-directory: server
+
+      - name: Run Django migrations & seed data
+        env:
+          DEBUG: "yes"
+        run: |
+          python manage.py migrate --no-input
+          python manage.py seeddatabase
+        working-directory: server
+
+      - name: Start Django server
+        env:
+          DEBUG: "yes"
+        run: |
+          nohup python manage.py runserver 0.0.0.0:8000 &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8000/api/login/ > /dev/null 2>&1 && break
+            sleep 2
+          done
+        working-directory: server
+
+      - name: Install & build common
+        run: |
+          npm ci
+          npx tsc
+        working-directory: common
+
+      - name: Install mobile dependencies
+        run: npm ci
+        working-directory: mobile
+
+      - name: Expo prebuild (generate android/)
+        run: npx expo prebuild --platform android --clean
+        working-directory: mobile
+
+      - name: Write local.properties
+        run: echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+        working-directory: mobile
+
+      - name: Create mobile .env
+        run: |
+          cat > .env <<EOF
+          APP_ENV=local
+          LOCAL_URL=http://10.0.2.2:8000
+          REACT_NATIVE_PACKAGER_HOSTNAME=localhost
+          EOF
+        working-directory: mobile
+
+      - name: Create .env.e2e
+        env:
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+        run: |
+          cat > .env.e2e <<EOF
+          E2E_USERNAME=${E2E_USERNAME:-venus}
+          E2E_PASSWORD=${E2E_PASSWORD:-hhaLogin}
+          DETOX_AVD_NAME=${{ env.AVD_NAME }}
+          APP_ENV=local
+          LOCAL_URL=http://10.0.2.2:8000
+          REACT_NATIVE_PACKAGER_HOSTNAME=localhost
+          EOF
+        working-directory: mobile
+
+      - name: Detox build
+        run: npx detox build -c android.emu.debug
+        working-directory: mobile
+
+      - name: Start emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.ANDROID_API_LEVEL }}
+          target: google_apis
+          arch: ${{ env.ANDROID_EMULATOR_ARCH }}
+          avd-name: ${{ env.AVD_NAME }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          working-directory: mobile
+          script: |
+            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+            npx detox test -c android.emu.debug --headless
+
+      - name: Kill background processes
+        if: always()
+        run: |
+          pkill -f "manage.py runserver" || true
+          pkill -f "emulator" || true
+          adb emu kill 2>/dev/null || true
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: detox-artifacts
+          path: mobile/e2e/artifacts/
+          retention-days: 14

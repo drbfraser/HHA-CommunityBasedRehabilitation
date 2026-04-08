@@ -53,7 +53,9 @@ async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
             return;
         } catch (e) {
             if (attempt === maxAttempts) throw e;
-            try { await device.pressBack(); } catch {}
+            try {
+                await device.pressBack();
+            } catch {}
             await sleep(500);
         }
     }

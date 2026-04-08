@@ -20,14 +20,14 @@ env:
 
 jobs:
   detox-e2e:
-    runs-on: [self-hosted, docker]
+    runs-on: [self-hosted, cbr-sandbox]
     timeout-minutes: 60
 
     services:
       postgres:
         image: postgres:13.1-alpine
         env:
-          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_DB: cbr
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
         ports:
@@ -80,28 +80,38 @@ jobs:
             --package "system-images;android-${{ env.ANDROID_API_LEVEL }};google_apis;${{ env.ANDROID_EMULATOR_ARCH }}" \
             --device "pixel_6"
 
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
-        working-directory: server
+      - name: Build Django image
+        run: docker build -t cbr-e2e-django ./server
 
       - name: Run Django migrations & seed data
-        env:
-          DEBUG: "yes"
         run: |
-          python manage.py migrate --no-input
-          python manage.py seeddatabase
-        working-directory: server
+          docker run --rm --network host \
+            -e DEBUG=yes \
+            -e POSTGRES_HOST=localhost \
+            -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
+            -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
+            -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
+            -e SECRET_KEY=${{ env.SECRET_KEY }} \
+            -e DOMAIN=${{ env.DOMAIN }} \
+            cbr-e2e-django \
+            sh -c "python manage.py migrate --no-input && python manage.py seeddatabase"
 
       - name: Start Django server
-        env:
-          DEBUG: "yes"
         run: |
-          nohup python manage.py runserver 0.0.0.0:8000 &
+          docker run -d --name cbr-e2e-django --network host \
+            -e DEBUG=yes \
+            -e POSTGRES_HOST=localhost \
+            -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
+            -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
+            -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
+            -e SECRET_KEY=${{ env.SECRET_KEY }} \
+            -e DOMAIN=${{ env.DOMAIN }} \
+            cbr-e2e-django \
+            python manage.py runserver 0.0.0.0:8000
           for i in $(seq 1 30); do
             curl -sf http://localhost:8000/api/login/ > /dev/null 2>&1 && break
             sleep 2
           done
-        working-directory: server
 
       - name: Install & build common
         run: |
@@ -149,11 +159,7 @@ jobs:
           EOF
         working-directory: mobile
 
-      - name: Detox build
-        run: npx detox build -c android.emu.debug
-        working-directory: mobile
-
-      - name: Start emulator
+      - name: Start emulator and run Detox
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.ANDROID_API_LEVEL }}
@@ -166,12 +172,13 @@ jobs:
           working-directory: mobile
           script: |
             adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-            npx detox test -c android.emu.debug --headless
+            npm run detox:run
 
       - name: Kill background processes
         if: always()
         run: |
-          pkill -f "manage.py runserver" || true
+          docker rm -f cbr-e2e-django 2>/dev/null || true
+          docker rmi cbr-e2e-django 2>/dev/null || true
           pkill -f "emulator" || true
           adb emu kill 2>/dev/null || true
 

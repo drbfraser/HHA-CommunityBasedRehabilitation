@@ -14,7 +14,7 @@ env:
   ANDROID_EMULATOR_ARCH: x86_64
   AVD_NAME: Pixel_6_API_31
   POSTGRES_HOST: localhost
-  POSTGRES_DB: cbr
+  POSTGRES_DB: cbr_e2e_${{ github.run_id }}
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   SECRET_KEY: ci-ephemeral-secret-key
@@ -33,7 +33,7 @@ jobs:
       postgres:
         image: postgres:13.1-alpine
         env:
-          POSTGRES_DB: cbr
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
           POSTGRES_USER: ${{ env.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
         ports:
@@ -118,7 +118,7 @@ jobs:
             -e SECRET_KEY=${{ env.SECRET_KEY }} \
             -e DOMAIN=${{ env.DOMAIN }} \
             cbr-e2e-django \
-            sh -c "python manage.py migrate --no-input && python manage.py seeddatabase"
+            sh -c "python manage.py migrate --no-input && python manage.py flush --no-input && python manage.py seeddatabase"
 
       - name: Start Django server
         run: |

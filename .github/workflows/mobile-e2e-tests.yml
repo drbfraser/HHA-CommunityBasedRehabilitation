@@ -1,7 +1,9 @@
 name: Mobile E2E Tests (Detox)
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [831-add-e2e-mobile-tests-to-ci]
+  # workflow_dispatch:
 
 env:
   JAVA_VERSION: "17"
@@ -17,6 +19,10 @@ env:
   POSTGRES_PASSWORD: postgres
   SECRET_KEY: ci-ephemeral-secret-key
   DOMAIN: localhost
+
+concurrency:
+  group: mobile-e2e-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   detox-e2e:
@@ -39,6 +45,25 @@ jobs:
           --health-retries 5
 
     steps:
+      - name: Clean up stale resources from previous runs
+        run: |
+          docker rm -f cbr-e2e-django 2>/dev/null || true
+          docker rmi cbr-e2e-django 2>/dev/null || true
+          pkill -f "emulator" 2>/dev/null || true
+          adb emu kill 2>/dev/null || true
+          sleep 2
+
+      - name: Verify required ports are free
+        run: |
+          for port in 5432 8000; do
+            if ss -tlnp | grep -q ":${port} "; then
+              echo "::error::Port ${port} is already in use"
+              ss -tlnp | grep ":${port} "
+              exit 1
+            fi
+          done
+          echo "Ports 5432 and 8000 are available"
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -174,13 +199,17 @@ jobs:
             adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
             npm run detox:run
 
-      - name: Kill background processes
+      - name: Clean up containers and processes
         if: always()
         run: |
           docker rm -f cbr-e2e-django 2>/dev/null || true
           docker rmi cbr-e2e-django 2>/dev/null || true
-          pkill -f "emulator" || true
+          pkill -f "emulator" 2>/dev/null || true
           adb emu kill 2>/dev/null || true
+
+      - name: Clean up AVD
+        if: always()
+        run: avdmanager delete avd --name "${{ env.AVD_NAME }}" 2>/dev/null || true
 
       - name: Upload test artifacts
         if: always()

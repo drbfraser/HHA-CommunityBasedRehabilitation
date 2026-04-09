@@ -1,5 +1,8 @@
 name: Check KVM Support
-on: workflow_dispatch
+on:
+  push:
+    branches: [831-add-e2e-mobile-tests-to-ci]
+  # workflow_dispatch:
 jobs:
   check:
     runs-on: [self-hosted, cbr-sandbox]
@@ -22,7 +25,10 @@ jobs:
           fi
           echo ""
           echo "=== kvm-ok ==="
-          (apt-get update -qq && apt-get install -y -qq cpu-checker && kvm-ok) 2>&1 || {
+          if ! command -v kvm-ok &>/dev/null; then
+            apt-get update -qq && apt-get install -y -qq cpu-checker
+          fi
+          kvm-ok 2>&1 || {
             echo "::error::kvm-ok reports KVM is not usable"
             exit 1
           }

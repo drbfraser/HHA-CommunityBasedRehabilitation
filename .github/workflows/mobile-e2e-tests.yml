@@ -158,14 +158,13 @@ jobs:
       - name: Install & build common
         run: |
           npm ci
-          npx tsc
+          npm run build
         working-directory: common
 
       - name: Install mobile dependencies
         run: |
-          rm -f cbr-common-1.0.0.tgz
-          npm pack ../common
-          ls -l cbr-common-1.0.0.tgz
+          # refresh-common updates the lockfile hash for the locally packed @cbr/common tarball
+          npm run refresh-common
           npm ci
         working-directory: mobile
 

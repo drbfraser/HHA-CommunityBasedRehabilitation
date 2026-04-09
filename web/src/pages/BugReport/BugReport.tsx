@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
     Alert,
     Box,
@@ -23,6 +24,7 @@ const MAX_DESCRIPTION_LENGTH = 1200;
 type ReportType = "bug_report" | "suggestion";
 
 const BugReport = () => {
+    const history = useHistory();
     const [reportType, setReportType] = useState<ReportType>("bug_report");
     const [description, setDescription] = useState("");
     const [attachedImage, setAttachedImage] = useState<File | null>(null);
@@ -85,6 +87,7 @@ const BugReport = () => {
                 setIsSubmitted(true);
                 setDescription("");
                 setAttachedImage(null);
+                history.push("/user");
             })
             .catch((e) => {
                 const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;

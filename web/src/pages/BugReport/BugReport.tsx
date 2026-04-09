@@ -150,7 +150,7 @@ const BugReport = () => {
                         {descriptionLength}/{MAX_DESCRIPTION_LENGTH}
                     </Typography>
 
-                    <Divider sx={{ margin: "18px 0" }} />
+                    <Divider sx={{ margin: "17px 0" }} />
 
                     <Typography variant="h6" sx={bugReportStyles.subheading}>
                         Add screenshot or image

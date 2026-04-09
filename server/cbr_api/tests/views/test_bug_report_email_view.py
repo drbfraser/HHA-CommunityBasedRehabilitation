@@ -36,7 +36,9 @@ class BugReportEmailViewTests(APITestCase):
         response = self.api_client.post(self.url, payload, format="multipart")
 
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data["details"], "Bug report email sent successfully.")
+        self.assertEqual(
+            response.data["details"], "Bug report email sent successfully."
+        )
         mock_send_bug_report_email.assert_called_once()
 
         kwargs = mock_send_bug_report_email.call_args.kwargs

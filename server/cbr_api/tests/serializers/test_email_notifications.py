@@ -168,7 +168,8 @@ class BugReportEmailNotificationTests(TestCase):
         self.assertFalse(render_args[1]["show_screenshot_preview"])
 
     @patch(
-        "cbr_api.email_notifications.render_to_string", return_value="<html>suggest</html>"
+        "cbr_api.email_notifications.render_to_string",
+        return_value="<html>suggest</html>",
     )
     @patch("cbr_api.email_notifications.EmailMultiAlternatives")
     @patch("cbr_api.email_notifications.get_connection", return_value="smtp-connection")
@@ -218,7 +219,9 @@ class BugReportEmailNotificationTests(TestCase):
         self.assertTrue(render_args[1]["show_screenshot_preview"])
 
     @patch("cbr_api.email_notifications.EmailMultiAlternatives")
-    @patch("cbr_api.email_notifications._get_bug_report_email_config", return_value=None)
+    @patch(
+        "cbr_api.email_notifications._get_bug_report_email_config", return_value=None
+    )
     def test_send_bug_report_email_returns_error_when_settings_unavailable(
         self, _mock_cfg, mock_email_cls
     ):

@@ -45,6 +45,14 @@ jobs:
           --health-retries 5
 
     steps:
+      - name: Repair workspace ownership
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE"
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            alpine:3.20 \
+            sh -c "chown -R $(id -u):$(id -g) /workspace || true"
+
       - name: Clean up stale resources from previous runs
         run: |
           docker rm -f cbr-e2e-django 2>/dev/null || true
@@ -109,8 +117,10 @@ jobs:
       - name: Run Django migrations & seed data
         run: |
           docker run --rm --network host \
+            --user "$(id -u):$(id -g)" \
             -v "$GITHUB_WORKSPACE/server:/code" \
             -e DEBUG=yes \
+            -e PYTHONDONTWRITEBYTECODE=1 \
             -e POSTGRES_HOST=localhost \
             -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
             -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
@@ -123,8 +133,10 @@ jobs:
       - name: Start Django server
         run: |
           docker run -d --name cbr-e2e-django --network host \
+            --user "$(id -u):$(id -g)" \
             -v "$GITHUB_WORKSPACE/server:/code" \
             -e DEBUG=yes \
+            -e PYTHONDONTWRITEBYTECODE=1 \
             -e POSTGRES_HOST=localhost \
             -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
             -e POSTGRES_USER=${{ env.POSTGRES_USER }} \

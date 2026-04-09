@@ -217,12 +217,11 @@ jobs:
           arch: ${{ env.ANDROID_EMULATOR_ARCH }}
           avd-name: ${{ env.AVD_NAME }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           disable-animations: true
+          emulator-boot-timeout: 300
           working-directory: mobile
-          script: |
-            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-            npm run detox:run
+          script: npm run detox:run
 
       - name: Clean up containers and processes
         if: always()

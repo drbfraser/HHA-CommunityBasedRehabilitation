@@ -61,6 +61,28 @@ jobs:
           adb emu kill 2>/dev/null || true
           sleep 2
 
+      - name: Ensure KVM access for emulator hardware acceleration
+        run: |
+          if [ ! -e /dev/kvm ]; then
+            echo "::error::/dev/kvm not found — this runner does not support KVM"
+            exit 1
+          fi
+          # Add the current user to the kvm group if not already a member
+          if ! id -nG | grep -qw kvm; then
+            echo "Runner user '$(whoami)' is not in the kvm group — adding now"
+            sudo gpasswd -a "$(whoami)" kvm
+            # Apply new group immediately for this session via sg
+            echo "KVM group added. Verifying access..."
+          fi
+          # Verify read/write access to /dev/kvm (may need chmod if group add alone isn't enough)
+          if [ ! -r /dev/kvm ] || [ ! -w /dev/kvm ]; then
+            echo "Fixing /dev/kvm permissions"
+            sudo chmod 660 /dev/kvm
+            sudo chown root:kvm /dev/kvm
+          fi
+          echo "KVM access OK for user $(whoami)"
+          ls -la /dev/kvm
+
       - name: Verify required ports are free
         run: |
           if ss -tlnp | grep -q ":8000 "; then

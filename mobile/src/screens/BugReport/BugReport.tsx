@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { APIFetchFailError, apiFetch, themeColors } from "@cbr/common";
 import * as ImagePicker from "expo-image-picker";
+import { useNavigation } from "@react-navigation/native";
 import {
     Button,
     Card,
@@ -13,6 +14,8 @@ import {
     Title,
 } from "react-native-paper";
 import Alert from "../../components/Alert/Alert";
+import { StackScreenName } from "../../util/StackScreenName";
+import { AppStackNavProp } from "../../util/stackScreens";
 import useStyles from "./BugReport.styles";
 
 const MAX_DESCRIPTION_LENGTH = 1200;
@@ -21,6 +24,7 @@ const BUG_REPORT_ENDPOINT = "bug_report/";
 
 const BugReport = () => {
     const styles = useStyles();
+    const navigation = useNavigation<AppStackNavProp>();
     const [reportType, setReportType] = useState<ReportType>("bug_report");
     const [description, setDescription] = useState("");
     const [attachedImage, setAttachedImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
@@ -90,6 +94,11 @@ const BugReport = () => {
             setIsSubmitted(true);
             setDescription("");
             setAttachedImage(null);
+            if (navigation.canGoBack()) {
+                navigation.goBack();
+            } else {
+                navigation.navigate(StackScreenName.HOME);
+            }
         } catch (e) {
             const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
             setSubmitError(message);

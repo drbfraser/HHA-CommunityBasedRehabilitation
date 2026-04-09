@@ -73,6 +73,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Prepare Django log directory
+        run: mkdir -p "$GITHUB_WORKSPACE/server/.ci-logs"
+
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
@@ -119,6 +122,7 @@ jobs:
           docker run --rm --network host \
             --user "$(id -u):$(id -g)" \
             -v "$GITHUB_WORKSPACE/server:/code" \
+            -v "$GITHUB_WORKSPACE/server/.ci-logs:/var/log" \
             -e DEBUG=yes \
             -e PYTHONDONTWRITEBYTECODE=1 \
             -e POSTGRES_HOST=localhost \
@@ -135,6 +139,7 @@ jobs:
           docker run -d --name cbr-e2e-django --network host \
             --user "$(id -u):$(id -g)" \
             -v "$GITHUB_WORKSPACE/server:/code" \
+            -v "$GITHUB_WORKSPACE/server/.ci-logs:/var/log" \
             -e DEBUG=yes \
             -e PYTHONDONTWRITEBYTECODE=1 \
             -e POSTGRES_HOST=localhost \

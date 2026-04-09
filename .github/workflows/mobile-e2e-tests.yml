@@ -162,7 +162,11 @@ jobs:
         working-directory: common
 
       - name: Install mobile dependencies
-        run: npm ci
+        run: |
+          rm -f cbr-common-1.0.0.tgz
+          npm pack ../common
+          ls -l cbr-common-1.0.0.tgz
+          npm ci
         working-directory: mobile
 
       - name: Expo prebuild (generate android/)

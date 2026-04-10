@@ -57,18 +57,22 @@ jobs:
         run: |
           docker rm -f cbr-e2e-django 2>/dev/null || true
           docker rmi cbr-e2e-django 2>/dev/null || true
-          # Kill ALL qemu/emulator processes first (before adb commands)
+          # Kill ALL emulator/qemu processes (many process names to be thorough)
           pkill -9 -f "qemu-system" 2>/dev/null || true
-          pkill -9 -f "[/]emulator" 2>/dev/null || true
-          sleep 1
-          # Reset adb daemon state (may cache stale emulator references)
+          pkill -9 -f "emulator" 2>/dev/null || true
+          pkill -9 -f "qemu" 2>/dev/null || true
+          # Also kill by full path if any are running
+          killall -9 "emulator" 2>/dev/null || true
+          killall -9 "qemu-system-x86_64" 2>/dev/null || true
+          sleep 2
+          # Reset adb daemon state completely (clears cached emulator references)
           adb kill-server 2>/dev/null || true
           sleep 1
           adb start-server 2>/dev/null || true
-          sleep 1
+          sleep 2
           # Verify no emulators in adb list
-          echo "Remaining devices:"
-          adb devices 2>/dev/null | grep -v "^$" || echo "(none)"
+          echo "=== Cleaned up. Current adb devices: ==="
+          adb devices 2>/dev/null || echo "(adb unavailable)"
 
       - name: Ensure KVM access for emulator hardware acceleration
         run: |
@@ -183,9 +187,9 @@ jobs:
         run: |
           npm ci
           npm run build
-        working-directory: common
 
       - name: Install mobile dependencies
+        working-directory: mobile
         run: |
           # refresh-common updates the lockfile hash for the locally packed @cbr/common tarball
           npm run refresh-common
@@ -250,8 +254,8 @@ jobs:
             # the emulator already started by android-emulator-runner
             # instead of launching a second one.
             npm run detox:bundle
-            detox build -c android.att.debug
-            detox test -c android.att.debug
+            npx detox build -c android.att.debug
+            npx detox test -c android.att.debug
 
       - name: Clean up containers and processes
         if: always()

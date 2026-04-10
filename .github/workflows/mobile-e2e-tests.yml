@@ -251,10 +251,16 @@ jobs:
           emulator-boot-timeout: 300
           working-directory: mobile
           script: |
-            # Verify Django backend is still running
+            # Verify Django backend is still running (use -o /dev/null to ignore body;
+            # check for any HTTP response — the endpoint may return 405 for GET)
             echo "=== Checking Django server ==="
             docker ps --filter name=cbr-e2e-django --format '{{.Status}}'
-            curl -sf http://localhost:8000/api/login/ > /dev/null || { echo "::error::Django server is not responding on port 8000"; exit 1; }
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/api/login/ || true)
+            echo "Django responded with HTTP $HTTP_CODE"
+            if [ "$HTTP_CODE" = "000" ]; then
+              echo "::error::Django server is not responding on port 8000"
+              exit 1
+            fi
 
             # Explicitly set up adb reverse port forwarding targeting THIS emulator
             # (reversePorts in .detoxrc.js may fail with 'more than one emulator')

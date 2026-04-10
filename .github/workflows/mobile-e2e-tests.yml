@@ -251,12 +251,22 @@ jobs:
           emulator-boot-timeout: 300
           working-directory: mobile
           script: |
-            echo "=== Checking Django server ==="
+            echo "=== .env file contents ==="
+            cat .env
+            echo "=== .env.e2e file contents ==="
+            cat .env.e2e
+            echo "=== Checking Django server from host ==="
             docker ps --filter name=cbr-e2e-django --format '{{.Status}}'
-            curl -s -o /dev/null -w 'Django HTTP status: %{http_code}\n' http://localhost:8000/api/login/ || echo "::warning::Django server may not be reachable from host"
+            curl -s -o /dev/null -w 'Django HTTP status: %{http_code}\n' http://localhost:8000/api/login/ || echo "::warning::Django not reachable from host"
+            echo "=== Setting up adb reverse ==="
             adb -s emulator-5554 reverse tcp:8000 tcp:8000
             adb -s emulator-5554 reverse tcp:8081 tcp:8081
             adb -s emulator-5554 reverse --list
+            echo "=== Testing connectivity from inside emulator ==="
+            adb -s emulator-5554 shell "ping -c 2 10.0.2.2" || echo "::warning::ping to 10.0.2.2 failed"
+            adb -s emulator-5554 shell "wget -qO- http://10.0.2.2:8000/api/login/ 2>&1 | head -5" || echo "::warning::wget to 10.0.2.2:8000 failed"
+            adb -s emulator-5554 shell "wget -qO- http://localhost:8000/api/login/ 2>&1 | head -5" || echo "::warning::wget to localhost:8000 failed"
+            echo "=== Bundling and building ==="
             npm run detox:bundle
             npx detox build -c android.att.debug
             npx detox test -c android.att.debug

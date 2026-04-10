@@ -57,15 +57,18 @@ jobs:
         run: |
           docker rm -f cbr-e2e-django 2>/dev/null || true
           docker rmi cbr-e2e-django 2>/dev/null || true
-          # Kill ALL emulator instances (adb emu kill only handles one)
-          adb devices | grep emulator | cut -f1 | while read -r dev; do
-            adb -s "$dev" emu kill 2>/dev/null || true
-          done
+          # Kill ALL qemu/emulator processes first (before adb commands)
           pkill -9 -f "qemu-system" 2>/dev/null || true
-          pkill -9 -f "emulator" 2>/dev/null || true
-          sleep 2
-          # Confirm no emulators remain
-          adb devices 2>/dev/null || true
+          pkill -9 -f "[/]emulator" 2>/dev/null || true
+          sleep 1
+          # Reset adb daemon state (may cache stale emulator references)
+          adb kill-server 2>/dev/null || true
+          sleep 1
+          adb start-server 2>/dev/null || true
+          sleep 1
+          # Verify no emulators in adb list
+          echo "Remaining devices:"
+          adb devices 2>/dev/null | grep -v "^$" || echo "(none)"
 
       - name: Ensure KVM access for emulator hardware acceleration
         run: |
@@ -255,11 +258,12 @@ jobs:
         run: |
           docker rm -f cbr-e2e-django 2>/dev/null || true
           docker rmi cbr-e2e-django 2>/dev/null || true
-          adb devices | grep emulator | cut -f1 | while read -r dev; do
-            adb -s "$dev" emu kill 2>/dev/null || true
-          done
+          # Kill qemu/emulator processes hard(-9)
           pkill -9 -f "qemu-system" 2>/dev/null || true
-          pkill -9 -f "emulator" 2>/dev/null || true
+          pkill -9 -f "[/]emulator" 2>/dev/null || true
+          sleep 1
+          # Reset adb daemon to clear stale references
+          adb kill-server 2>/dev/null || true
 
       - name: Clean up AVD
         if: always()

@@ -58,7 +58,8 @@ module.exports = {
         attached: {
             type: "android.attached",
             device: {
-                adbName: ".*",
+                // allow override via environment variable so CI can target a specific emulator
+                adbName: process.env.DETOX_ADB_NAME || ".*",
             },
         },
         emulator: {

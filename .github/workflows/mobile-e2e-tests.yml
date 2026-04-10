@@ -184,6 +184,7 @@ jobs:
           done
 
       - name: Install & build common
+        working-directory: common
         run: |
           npm ci
           npm run build

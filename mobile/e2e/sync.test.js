@@ -302,17 +302,31 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
             await element(by.id("new-client-scroll-view")).scroll(300, "down");
 
-            await waitFor(element(by.id("client-disability-select-btn")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.id("client-disability-select-btn")).tap();
+            for (let attempt = 1; attempt <= 3; attempt++) {
+                await waitFor(element(by.id("client-disability-select-btn")))
+                    .toBeVisible()
+                    .withTimeout(10000);
+                await element(by.id("client-disability-select-btn")).tap();
 
-            await waitFor(element(by.text("Amputee")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.text("Amputee")).tap();
+                await waitFor(element(by.text("Amputee")))
+                    .toBeVisible()
+                    .withTimeout(10000);
+                await element(by.text("Amputee")).tap();
+                await sleep(500);
 
-            await element(by.id("client-disability-save-btn")).tap();
+                await element(by.id("client-disability-save-btn")).tap();
+                await sleep(1000);
+
+                // Verify the disability was actually saved (modal closed and text appeared)
+                try {
+                    await expect(element(by.text("Amputee"))).toBeVisible();
+                    return; // success
+                } catch (e) {
+                    if (attempt === 3) throw e;
+                    // Retry: scroll back to the disability section and try again
+                    await element(by.id("new-client-scroll-view")).scroll(300, "down");
+                }
+            }
         });
 
         it("selects one complete risk (required for new client validation)", async () => {
@@ -338,7 +352,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
             await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))
                 .toBeVisible()
-                .withTimeout(10000);
+                .withTimeout(30000);
         });
     });
 

@@ -194,7 +194,6 @@ jobs:
           # refresh-common updates the lockfile hash for the locally packed @cbr/common tarball
           npm run refresh-common
           npm ci
-        working-directory: mobile
 
       - name: Expo prebuild (generate android/)
         run: npx expo prebuild --platform android --clean

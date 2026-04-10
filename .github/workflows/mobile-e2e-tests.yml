@@ -251,6 +251,18 @@ jobs:
           emulator-boot-timeout: 300
           working-directory: mobile
           script: |
+            # Verify Django backend is still running
+            echo "=== Checking Django server ==="
+            docker ps --filter name=cbr-e2e-django --format '{{.Status}}'
+            curl -sf http://localhost:8000/api/login/ > /dev/null || { echo "::error::Django server is not responding on port 8000"; exit 1; }
+
+            # Explicitly set up adb reverse port forwarding targeting THIS emulator
+            # (reversePorts in .detoxrc.js may fail with 'more than one emulator')
+            adb -s emulator-5554 reverse tcp:8000 tcp:8000
+            adb -s emulator-5554 reverse tcp:8081 tcp:8081
+            echo "=== adb reverse list ==="
+            adb -s emulator-5554 reverse --list
+
             # Use android.att.debug (attached device) so Detox connects to
             # the emulator already started by android-emulator-runner
             # instead of launching a second one.

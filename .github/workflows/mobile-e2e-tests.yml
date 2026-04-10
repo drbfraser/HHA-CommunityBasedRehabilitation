@@ -57,9 +57,15 @@ jobs:
         run: |
           docker rm -f cbr-e2e-django 2>/dev/null || true
           docker rmi cbr-e2e-django 2>/dev/null || true
-          pkill -f "emulator" 2>/dev/null || true
-          adb emu kill 2>/dev/null || true
+          # Kill ALL emulator instances (adb emu kill only handles one)
+          adb devices | grep emulator | cut -f1 | while read -r dev; do
+            adb -s "$dev" emu kill 2>/dev/null || true
+          done
+          pkill -9 -f "qemu-system" 2>/dev/null || true
+          pkill -9 -f "emulator" 2>/dev/null || true
           sleep 2
+          # Confirm no emulators remain
+          adb devices 2>/dev/null || true
 
       - name: Ensure KVM access for emulator hardware acceleration
         run: |
@@ -236,15 +242,24 @@ jobs:
           disable-animations: true
           emulator-boot-timeout: 300
           working-directory: mobile
-          script: npm run detox:run
+          script: |
+            # Use android.att.debug (attached device) so Detox connects to
+            # the emulator already started by android-emulator-runner
+            # instead of launching a second one.
+            npm run detox:bundle
+            detox build -c android.att.debug
+            detox test -c android.att.debug
 
       - name: Clean up containers and processes
         if: always()
         run: |
           docker rm -f cbr-e2e-django 2>/dev/null || true
           docker rmi cbr-e2e-django 2>/dev/null || true
-          pkill -f "emulator" 2>/dev/null || true
-          adb emu kill 2>/dev/null || true
+          adb devices | grep emulator | cut -f1 | while read -r dev; do
+            adb -s "$dev" emu kill 2>/dev/null || true
+          done
+          pkill -9 -f "qemu-system" 2>/dev/null || true
+          pkill -9 -f "emulator" 2>/dev/null || true
 
       - name: Clean up AVD
         if: always()

@@ -178,10 +178,28 @@ jobs:
             -e DOMAIN=${{ env.DOMAIN }} \
             cbr-e2e-django \
             python manage.py runserver 0.0.0.0:8000
+
+          echo "Waiting for Django to start..."
+          DJANGO_UP=false
           for i in $(seq 1 30); do
-            curl -sf http://localhost:8000/api/login/ > /dev/null 2>&1 && break
+            # Use HEAD or just check for any HTTP response (GET /api/login/ returns 405, so don't use -f)
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/api/login/ 2>/dev/null || echo "000")
+            if [ "$HTTP_CODE" != "000" ]; then
+              echo "Django is up (HTTP $HTTP_CODE after $i attempts)"
+              DJANGO_UP=true
+              break
+            fi
             sleep 2
           done
+
+          if [ "$DJANGO_UP" != "true" ]; then
+            echo "::error::Django failed to start within 60 seconds"
+            echo "=== Docker container status ==="
+            docker ps -a --filter name=cbr-e2e-django
+            echo "=== Docker logs ==="
+            docker logs cbr-e2e-django 2>&1 | tail -50
+            exit 1
+          fi
 
       - name: Install & build common
         working-directory: common
@@ -258,14 +276,12 @@ jobs:
             echo "=== Checking Django server from host ==="
             docker ps --filter name=cbr-e2e-django --format '{{.Status}}'
             curl -s -o /dev/null -w 'Django HTTP status: %{http_code}\n' http://localhost:8000/api/login/ || echo "::warning::Django not reachable from host"
+            echo "=== Django container logs (last 30 lines) ==="
+            docker logs cbr-e2e-django 2>&1 | tail -30
             echo "=== Setting up adb reverse ==="
             adb -s emulator-5554 reverse tcp:8000 tcp:8000
             adb -s emulator-5554 reverse tcp:8081 tcp:8081
             adb -s emulator-5554 reverse --list
-            echo "=== Testing connectivity from inside emulator ==="
-            adb -s emulator-5554 shell "ping -c 2 10.0.2.2" || echo "::warning::ping to 10.0.2.2 failed"
-            adb -s emulator-5554 shell "wget -qO- http://10.0.2.2:8000/api/login/ 2>&1 | head -5" || echo "::warning::wget to 10.0.2.2:8000 failed"
-            adb -s emulator-5554 shell "wget -qO- http://localhost:8000/api/login/ 2>&1 | head -5" || echo "::warning::wget to localhost:8000 failed"
             echo "=== Bundling and building ==="
             npm run detox:bundle
             npx detox build -c android.att.debug

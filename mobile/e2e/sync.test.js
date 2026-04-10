@@ -380,7 +380,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await waitFor(element(by.id("client-list-scroll-view")))
                 .toBeVisible()
                 .withTimeout(10000);
-            await scrollUntilTextVisible(TEST_CLIENT_FULL_NAME, "client-list-scroll-view");
+            await scrollUntilTextVisible(TEST_CLIENT_FIRST_NAME, "client-list-scroll-view");
         });
     });
 });

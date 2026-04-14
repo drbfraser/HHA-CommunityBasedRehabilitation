@@ -293,9 +293,9 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await element(by.id("client-village-input")).tapReturnKey();
             await sleep(1500);
 
-            await waitFor(element(by.id("client-zone-dropdown")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await element(by.id("new-client-scroll-view")).scroll(300, "down");
+            await sleep(400);
+
             await selectFromDropdown("client-zone-dropdown", "BidiBidi Zone 1");
         });
 

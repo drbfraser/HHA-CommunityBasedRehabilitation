@@ -266,9 +266,9 @@ jobs:
           arch: ${{ env.ANDROID_EMULATOR_ARCH }}
           avd-name: ${{ env.AVD_NAME }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -no-snapshot-save
           disable-animations: true
-          emulator-boot-timeout: 300
+          emulator-boot-timeout: 600
           working-directory: mobile
           script: |
             echo "=== .env file contents ==="
@@ -280,6 +280,13 @@ jobs:
             curl -s -o /dev/null -w 'Django HTTP status: %{http_code}\n' http://localhost:8000/api/login/ || echo "::warning::Django not reachable from host"
             echo "=== Django container logs (last 30 lines) ==="
             docker logs cbr-e2e-django 2>&1 | tail -30
+            echo "=== Stabilising emulator ==="
+            adb -s emulator-5554 shell settings put global hidden_api_policy 1
+            adb -s emulator-5554 shell settings put secure anr_show_background 0
+            adb -s emulator-5554 shell settings put global always_finish_activities 0
+            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
+            sleep 5
+            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
             echo "=== Setting up adb reverse ==="
             adb -s emulator-5554 reverse tcp:8000 tcp:8000
             adb -s emulator-5554 reverse tcp:8081 tcp:8081

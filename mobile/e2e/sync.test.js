@@ -331,9 +331,13 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         it("selects one complete risk (required for new client validation)", async () => {
             await scrollDownTo("health-risk-checkbox");
             await element(by.id("health-risk-checkbox")).tap();
+            await sleep(500);
 
+            await scrollDownTo("health-risk-dropdown");
             await selectFromDropdown("health-risk-dropdown", "Low");
+            await scrollDownTo("health-requirements-dropdown");
             await selectFromDropdown("health-requirements-dropdown", "Malaria treatment");
+            await scrollDownTo("health-goals-dropdown");
             await selectFromDropdown("health-goals-dropdown", "Pain managed");
         });
 

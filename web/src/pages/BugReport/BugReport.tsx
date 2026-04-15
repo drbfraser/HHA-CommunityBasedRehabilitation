@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
     Alert,
@@ -18,10 +18,14 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
+import UnsavedChanges from "components/Dialogs/UnsavedChanges";
 import { bugReportStyles } from "./BugReport.styles";
 
 const MAX_DESCRIPTION_LENGTH = 1200;
 type ReportType = "bug_report" | "suggestion";
+type UserViewLocationState = {
+    bugReportSuccessMessage?: string;
+};
 
 const BugReport = () => {
     const history = useHistory();
@@ -32,6 +36,16 @@ const BugReport = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
+    const [pendingNavigation, setPendingNavigation] =
+        useState<{
+            pathname: string;
+            search: string;
+            hash: string;
+            state: unknown;
+            action: "POP" | "PUSH" | "REPLACE";
+        } | null>(null);
+    const allowNavigationRef = useRef(false);
 
     useEffect(() => {
         if (!attachedImage) {
@@ -63,6 +77,94 @@ const BugReport = () => {
     };
 
     const descriptionLength = useMemo(() => description.trim().length, [description]);
+    const isDirty = descriptionLength > 0 || attachedImage !== null;
+
+    useEffect(() => {
+        if (!isDirty) {
+            return;
+        }
+
+        const unblock = history.block((nextLocation, action) => {
+            if (allowNavigationRef.current) {
+                return;
+            }
+
+            if (
+                history.location.pathname === nextLocation.pathname &&
+                history.location.search === nextLocation.search &&
+                history.location.hash === nextLocation.hash
+            ) {
+                return;
+            }
+
+            setPendingNavigation({
+                pathname: nextLocation.pathname,
+                search: nextLocation.search,
+                hash: nextLocation.hash,
+                state: nextLocation.state,
+                action,
+            });
+            setConfirmLeaveOpen(true);
+
+            return false;
+        });
+
+        return unblock;
+    }, [history, isDirty]);
+
+    useEffect(() => {
+        if (!isDirty) {
+            return;
+        }
+
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = "";
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [isDirty]);
+
+    const handleLeaveCancel = () => {
+        setConfirmLeaveOpen(false);
+        setPendingNavigation(null);
+    };
+
+    const handleLeaveConfirm = () => {
+        if (!pendingNavigation) {
+            setConfirmLeaveOpen(false);
+            return;
+        }
+
+        allowNavigationRef.current = true;
+        setConfirmLeaveOpen(false);
+
+        if (pendingNavigation.action === "REPLACE") {
+            history.replace({
+                pathname: pendingNavigation.pathname,
+                search: pendingNavigation.search,
+                hash: pendingNavigation.hash,
+                state: pendingNavigation.state,
+            });
+            return;
+        }
+
+        if (pendingNavigation.action === "POP") {
+            history.goBack();
+            return;
+        }
+
+        history.push({
+            pathname: pendingNavigation.pathname,
+            search: pendingNavigation.search,
+            hash: pendingNavigation.hash,
+            state: pendingNavigation.state,
+        });
+    };
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -84,10 +186,18 @@ const BugReport = () => {
             body: payload,
         })
             .then(() => {
+                const successMessage =
+                    reportType === "suggestion"
+                        ? "Your suggestion was created successfully."
+                        : "Your bug report was created successfully.";
+
+                allowNavigationRef.current = true;
                 setIsSubmitted(true);
                 setDescription("");
                 setAttachedImage(null);
-                history.push("/user");
+                history.push("/user", {
+                    bugReportSuccessMessage: successMessage,
+                } as UserViewLocationState);
             })
             .catch((e) => {
                 const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
@@ -223,6 +333,17 @@ const BugReport = () => {
                     Your {reportTypeLabel} email has been submitted with your description and image.
                 </Alert>
             )}
+
+            <UnsavedChanges
+                open={confirmLeaveOpen}
+                setOpen={setConfirmLeaveOpen}
+                title="Discard this draft?"
+                description={`Your ${reportTypeLabel} has unsaved changes. Leaving now will discard the draft.`}
+                saveBtnMsg="Leave page"
+                cancelBtnMsg="Stay here"
+                onSave={handleLeaveConfirm}
+                onCancel={handleLeaveCancel}
+            />
         </Box>
     );
 };

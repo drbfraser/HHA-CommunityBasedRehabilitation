@@ -8,6 +8,7 @@ type CustomTheme = ThemeProp &
         colors: typeof DefaultTheme.colors & {
             info: string;
             onPrimary: string;
+            success: string;
         };
     };
 
@@ -18,6 +19,7 @@ const theme: CustomTheme = {
         primary: themeColors.blueBgDark,
         onPrimary: themeColors.white, // Color for text and icons displayed on top of the primary color.
         info: themeColors.infoBlue, // Used to present information to the user that is neutral and not necessarily important.
+        success: themeColors.hhaGreen,
         accent: themeColors.yellow,
         border: DefaultTheme.colors.text,
         card: DefaultTheme.colors.surface,

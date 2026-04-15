@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { AuthContext, IAuthContext } from "../../context/AuthContext/AuthContext";
 import { ScrollView, View } from "react-native";
 import Alert from "../Alert/Alert";
@@ -12,6 +12,7 @@ import {
     Text,
     Title,
 } from "react-native-paper";
+import { useFocusEffect } from "@react-navigation/native";
 import { IUser, userRoles, useZones } from "@cbr/common";
 import useStyles from "./UserProfileContents.styles";
 import ChangePasswordDialog from "./ChangePasswordDialog";
@@ -23,6 +24,7 @@ import { dbType } from "../../util/watermelonDatabase";
 import { logger, SyncDB } from "../../util/syncHandler";
 import { useTranslation } from "react-i18next";
 import LanguagePicker from "../LanguagePicker/LanguagePicker";
+import { consumeBugReportFlashMessage } from "../../util/bugReportFlashMessage";
 
 export interface Props {
     user: IUser | null;
@@ -46,8 +48,18 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
 
     const [isPassChangeDialogVisible, setPassChangeDialogVisibility] = useState(false);
     const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
+    const [bugReportSuccessMessage, setBugReportSuccessMessage] = useState<string | null>(null);
 
     const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
+
+    useFocusEffect(
+        useCallback(() => {
+            const nextMessage = consumeBugReportFlashMessage();
+            if (nextMessage) {
+                setBugReportSuccessMessage(nextMessage);
+            }
+        }, [])
+    );
 
     const resetDatabase = async () => {
         await database.write(async () => {
@@ -121,6 +133,15 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                         </Portal>
 
                         <View style={styles.profileInfoContainer}>
+                            {bugReportSuccessMessage && (
+                                <Alert
+                                    severity="success"
+                                    text={bugReportSuccessMessage}
+                                    onClose={() => setBugReportSuccessMessage(null)}
+                                    style={styles.successAlert}
+                                />
+                            )}
+
                             <LanguagePicker />
                             <Title style={styles.userFirstLastNameTitle}>
                                 {user.first_name} {user.last_name}

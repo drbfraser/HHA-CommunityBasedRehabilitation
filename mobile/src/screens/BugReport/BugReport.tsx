@@ -14,8 +14,10 @@ import {
     Title,
 } from "react-native-paper";
 import Alert from "../../components/Alert/Alert";
+import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
+import { setBugReportFlashMessage } from "../../util/bugReportFlashMessage";
 import useStyles from "./BugReport.styles";
 
 const MAX_DESCRIPTION_LENGTH = 1200;
@@ -28,11 +30,12 @@ const BugReport = () => {
     const [reportType, setReportType] = useState<ReportType>("bug_report");
     const [description, setDescription] = useState("");
     const [attachedImage, setAttachedImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
+    const [skipDiscardDialog, setSkipDiscardDialog] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
 
     const descriptionLength = useMemo(() => description.trim().length, [description]);
+    const isDirty = descriptionLength > 0 || attachedImage !== null;
     const submitLabel = reportType === "suggestion" ? "Submit Suggestion" : "Submit Bug Report";
     const reportTypeLabel = reportType === "suggestion" ? "suggestion" : "bug report";
 
@@ -54,14 +57,14 @@ const BugReport = () => {
         }
 
         setAttachedImage(imagePickerResult.assets?.[0] ?? null);
-        setIsSubmitted(false);
+        setSkipDiscardDialog(false);
         setSubmitError(null);
     };
 
     const onClear = () => {
         setDescription("");
         setAttachedImage(null);
-        setIsSubmitted(false);
+        setSkipDiscardDialog(false);
         setSubmitError(null);
     };
 
@@ -91,14 +94,22 @@ const BugReport = () => {
                 method: "POST",
                 body: payload,
             });
-            setIsSubmitted(true);
+            const successMessage =
+                reportType === "suggestion"
+                    ? "Your suggestion was created successfully."
+                    : "Your bug report was created successfully.";
+
+            setBugReportFlashMessage(successMessage);
+            setSkipDiscardDialog(true);
             setDescription("");
             setAttachedImage(null);
-            if (navigation.canGoBack()) {
-                navigation.goBack();
-            } else {
-                navigation.navigate(StackScreenName.HOME);
-            }
+            setTimeout(() => {
+                if (navigation.canGoBack()) {
+                    navigation.goBack();
+                } else {
+                    navigation.navigate(StackScreenName.HOME);
+                }
+            }, 0);
         } catch (e) {
             const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
             setSubmitError(message);
@@ -137,7 +148,7 @@ const BugReport = () => {
                                         return;
                                     }
                                     setReportType(selectedType as ReportType);
-                                    setIsSubmitted(false);
+                                    setSkipDiscardDialog(false);
                                     setSubmitError(null);
                                 }}
                                 style={styles.reportTypeToggle}
@@ -160,7 +171,7 @@ const BugReport = () => {
                                 value={description}
                                 onChangeText={(value) => {
                                     setDescription(value);
-                                    setIsSubmitted(false);
+                                    setSkipDiscardDialog(false);
                                     setSubmitError(null);
                                 }}
                                 placeholder="What happened, where it happened, and what you expected instead."
@@ -242,17 +253,14 @@ const BugReport = () => {
                     </Card>
 
                     {submitError && <Alert severity="error" text={submitError} />}
-
-                    {isSubmitted && (
-                        <View style={styles.successAlert}>
-                            <Text style={styles.successAlertText}>
-                                Your {reportTypeLabel} email has been submitted with your
-                                description and image.
-                            </Text>
-                        </View>
-                    )}
                 </View>
             </ScrollView>
+            <ConfirmDialogWithNavListener
+                bypassDialog={skipDiscardDialog || !isDirty}
+                dialogTitle="Discard this draft?"
+                dialogContent={`Your ${reportTypeLabel} has unsaved changes. Leaving now will discard the draft.`}
+                confirmButtonText="Leave page"
+            />
         </View>
     );
 };

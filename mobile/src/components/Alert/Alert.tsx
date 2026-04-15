@@ -5,7 +5,7 @@ import React, { ComponentPropsWithRef } from "react";
 import useStyles from "./Alert.styles";
 import { useAppTheme } from "@/src/util/theme.styles";
 
-export type AlertSeverity = "info" | "error";
+export type AlertSeverity = "info" | "error" | "success";
 
 export type AlertProps = ComponentPropsWithRef<typeof View> & {
     severity: AlertSeverity;
@@ -30,8 +30,14 @@ export type AlertProps = ComponentPropsWithRef<typeof View> & {
  */
 const Alert = ({ severity, text, onClose, ...other }: AlertProps) => {
     const theme = useAppTheme();
-    const iconName = severity == "error" ? "error" : "info";
-    const color = severity == "error" ? theme.colors.error : theme.colors.info;
+    const iconName =
+        severity === "error" ? "error" : severity === "success" ? "check-circle" : "info";
+    const color =
+        severity === "error"
+            ? theme.colors.error
+            : severity === "success"
+            ? theme.colors.success
+            : theme.colors.info;
     const styles = useStyles(color);
     return (
         <View {...other}>

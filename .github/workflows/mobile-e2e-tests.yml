@@ -266,11 +266,20 @@ jobs:
           arch: ${{ env.ANDROID_EMULATOR_ARCH }}
           avd-name: ${{ env.AVD_NAME }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -no-snapshot-save
           disable-animations: true
-          emulator-boot-timeout: 300
+          emulator-boot-timeout: 600
           working-directory: mobile
           script: |
+            echo "=== Stabilising emulator ==="
+            adb -s emulator-5554 shell settings put global window_animation_scale 0
+            adb -s emulator-5554 shell settings put global transition_animation_scale 0
+            adb -s emulator-5554 shell settings put global animator_duration_scale 0
+            adb -s emulator-5554 shell settings put secure anr_show_background 0
+            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
+            adb -s emulator-5554 shell svc wifi enable
+            adb -s emulator-5554 shell svc data enable
+            sleep 5
             echo "=== .env file contents ==="
             cat .env
             echo "=== .env.e2e file contents ==="

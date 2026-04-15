@@ -263,11 +263,10 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects a birth date via the native Android DatePickerDialog", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(200, "down");
-
             await waitFor(element(by.id("client-birthday-select-btn")))
                 .toBeVisible()
-                .withTimeout(5000);
+                .whileElement(by.id("new-client-scroll-view"))
+                .scroll(100, "down");
             await element(by.id("client-birthday-select-btn")).tap();
 
             await waitFor(element(by.text("OK")))
@@ -277,35 +276,40 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects gender from the dropdown (below birthday section)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(200, "down");
+            await waitFor(element(by.id("client-gender-dropdown")))
+                .toBeVisible()
+                .whileElement(by.id("new-client-scroll-view"))
+                .scroll(100, "down");
             await selectFromDropdown("client-gender-dropdown", "Male");
         });
 
         it("fills in village and selects a zone (zone loaded from WatermelonDB while offline)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(250, "down");
-            await sleep(400);
-
             await waitFor(element(by.id("client-village-input")))
                 .toBeVisible()
-                .withTimeout(10000);
+                .whileElement(by.id("new-client-scroll-view"))
+                .scroll(100, "down");
+
             await element(by.id("client-village-input")).tap();
             await element(by.id("client-village-input")).replaceText("TestVillage");
             await element(by.id("client-village-input")).tapReturnKey();
-            await sleep(1500);
+            await sleep(500);
+            // Dismiss keyboard so it doesn't obscure the zone dropdown
+            await device.pressBack();
+            await sleep(1000);
 
-            await element(by.id("new-client-scroll-view")).scroll(300, "down");
-            await sleep(400);
-
+            await waitFor(element(by.id("client-zone-dropdown")))
+                .toBeVisible()
+                .whileElement(by.id("new-client-scroll-view"))
+                .scroll(100, "down");
             await selectFromDropdown("client-zone-dropdown", "BidiBidi Zone 1");
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(300, "down");
-
             for (let attempt = 1; attempt <= 3; attempt++) {
                 await waitFor(element(by.id("client-disability-select-btn")))
                     .toBeVisible()
-                    .withTimeout(10000);
+                    .whileElement(by.id("new-client-scroll-view"))
+                    .scroll(100, "down");
                 await element(by.id("client-disability-select-btn")).tap();
 
                 await waitFor(element(by.text("Amputee")))
@@ -323,18 +327,15 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
                     return; // success
                 } catch (e) {
                     if (attempt === 3) throw e;
-                    // Retry: scroll back to the disability section and try again
-                    await element(by.id("new-client-scroll-view")).scroll(300, "down");
                 }
             }
         });
 
         it("selects one complete risk (required for new client validation)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(450, "down");
-
             await waitFor(element(by.id("health-risk-checkbox")))
                 .toBeVisible()
-                .withTimeout(10000);
+                .whileElement(by.id("new-client-scroll-view"))
+                .scroll(100, "down");
             await element(by.id("health-risk-checkbox")).tap();
 
             await selectFromDropdown("health-risk-dropdown", "Low");
@@ -343,11 +344,10 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("submits the form – client is persisted locally in WatermelonDB as unsynced", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(500, "down");
-
             await waitFor(element(by.id("new-client-submit-button")))
                 .toBeVisible()
-                .withTimeout(10000);
+                .whileElement(by.id("new-client-scroll-view"))
+                .scroll(100, "down");
             await element(by.id("new-client-submit-button")).tap();
 
             await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))

@@ -33,6 +33,9 @@ const BugReport = () => {
     const [description, setDescription] = useState("");
     const [attachedImage, setAttachedImage] = useState<File | null>(null);
     const [previewURL, setPreviewURL] = useState<string | null>(null);
+    const [isOffline, setIsOffline] = useState(
+        typeof navigator !== "undefined" ? !navigator.onLine : false
+    );
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
@@ -59,6 +62,19 @@ const BugReport = () => {
             URL.revokeObjectURL(localURL);
         };
     }, [attachedImage]);
+
+    useEffect(() => {
+        const handleOnline = () => setIsOffline(false);
+        const handleOffline = () => setIsOffline(true);
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+
+        return () => {
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+        };
+    }, []);
 
     const onImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedImage = event.target.files?.[0] ?? null;
@@ -159,7 +175,7 @@ const BugReport = () => {
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (descriptionLength === 0) {
+        if (descriptionLength === 0 || isOffline) {
             return;
         }
 
@@ -202,6 +218,12 @@ const BugReport = () => {
 
     return (
         <Box component="form" onSubmit={onSubmit} sx={bugReportStyles.form}>
+            {isOffline && (
+                <Alert severity="error">
+                    No internet connection. Connect to Wi-Fi or mobile data before submitting.
+                </Alert>
+            )}
+
             <Alert severity="info">
                 Submitting this form sends an email with your description and attached image. You
                 can choose either Bug report or Suggestion.
@@ -299,7 +321,7 @@ const BugReport = () => {
                         variant="contained"
                         color="primary"
                         startIcon={<SendIcon />}
-                        disabled={isSubmitting || descriptionLength === 0}
+                        disabled={isSubmitting || descriptionLength === 0 || isOffline}
                     >
                         {isSubmitting ? "Submitting..." : submitLabel}
                     </Button>

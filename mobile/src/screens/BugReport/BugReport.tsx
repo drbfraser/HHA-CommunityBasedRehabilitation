@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { APIFetchFailError, apiFetch, themeColors } from "@cbr/common";
+import { useNetInfo } from "@react-native-community/netinfo";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -27,6 +28,7 @@ const BUG_REPORT_ENDPOINT = "bug_report/";
 const BugReport = () => {
     const styles = useStyles();
     const navigation = useNavigation<AppStackNavProp>();
+    const netInfo = useNetInfo();
     const [reportType, setReportType] = useState<ReportType>("bug_report");
     const [description, setDescription] = useState("");
     const [attachedImage, setAttachedImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
@@ -36,6 +38,7 @@ const BugReport = () => {
 
     const descriptionLength = useMemo(() => description.trim().length, [description]);
     const isDirty = descriptionLength > 0 || attachedImage !== null;
+    const isOffline = netInfo.isConnected === false || netInfo.isInternetReachable === false;
     const submitLabel = reportType === "suggestion" ? "Submit Suggestion" : "Submit Bug Report";
     const reportTypeLabel = reportType === "suggestion" ? "suggestion" : "bug report";
 
@@ -62,7 +65,7 @@ const BugReport = () => {
     };
 
     const onSubmit = async () => {
-        if (descriptionLength === 0 || isSubmitting) {
+        if (descriptionLength === 0 || isSubmitting || isOffline) {
             return;
         }
 
@@ -126,6 +129,13 @@ const BugReport = () => {
                 nestedScrollEnabled
             >
                 <View style={styles.form}>
+                    {isOffline && (
+                        <Alert
+                            severity="error"
+                            text="No internet connection. Connect to Wi-Fi or mobile data before submitting."
+                        />
+                    )}
+
                     <Alert
                         severity="info"
                         text="Submitting this form sends an email with your description and attached image. You can choose either Bug report or Suggestion."
@@ -230,7 +240,7 @@ const BugReport = () => {
                                 mode="contained"
                                 icon="send"
                                 onPress={onSubmit}
-                                disabled={isSubmitting || descriptionLength === 0}
+                                disabled={isSubmitting || descriptionLength === 0 || isOffline}
                             >
                                 {isSubmitting ? "Submitting..." : submitLabel}
                             </Button>

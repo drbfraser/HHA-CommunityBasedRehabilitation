@@ -34,7 +34,6 @@ const BugReport = () => {
     const [attachedImage, setAttachedImage] = useState<File | null>(null);
     const [previewURL, setPreviewURL] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
     const [pendingNavigation, setPendingNavigation] =
@@ -64,7 +63,6 @@ const BugReport = () => {
     const onImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedImage = event.target.files?.[0] ?? null;
         setAttachedImage(selectedImage);
-        setIsSubmitted(false);
         setSubmitError(null);
         event.target.value = "";
     };
@@ -72,7 +70,6 @@ const BugReport = () => {
     const onClear = () => {
         setDescription("");
         setAttachedImage(null);
-        setIsSubmitted(false);
         setSubmitError(null);
     };
 
@@ -192,7 +189,6 @@ const BugReport = () => {
                         : "Your bug report was created successfully.";
 
                 allowNavigationRef.current = true;
-                setIsSubmitted(true);
                 setDescription("");
                 setAttachedImage(null);
                 history.push("/user", {
@@ -230,7 +226,6 @@ const BugReport = () => {
                                 return;
                             }
                             setReportType(selectedType);
-                            setIsSubmitted(false);
                             setSubmitError(null);
                         }}
                         sx={bugReportStyles.reportTypeToggle}
@@ -248,7 +243,6 @@ const BugReport = () => {
                         value={description}
                         onChange={(event) => {
                             setDescription(event.target.value);
-                            setIsSubmitted(false);
                             setSubmitError(null);
                         }}
                         placeholder="What happened, where it happened, and what you expected instead."
@@ -327,12 +321,6 @@ const BugReport = () => {
             </Card>
 
             {submitError && <Alert severity="error">{submitError}</Alert>}
-
-            {isSubmitted && (
-                <Alert severity="success">
-                    Your {reportTypeLabel} email has been submitted with your description and image.
-                </Alert>
-            )}
 
             <UnsavedChanges
                 open={confirmLeaveOpen}

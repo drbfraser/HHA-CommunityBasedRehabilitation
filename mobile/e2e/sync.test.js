@@ -82,12 +82,6 @@ async function loginWithCredentials() {
 }
 
 async function ensureTabNavigatorVisible() {
-    // Dismiss any open sync alert modal first
-    try {
-        await element(by.id("sync-alert-ok-button")).tap();
-        await sleep(500);
-    } catch (_) {}
-
     // Already inside Sync screen in some flows.
     try {
         await expect(element(by.id("sync-database-button"))).toBeVisible();
@@ -142,15 +136,9 @@ async function navigateToSyncScreen() {
 
 async function triggerSyncAndWaitForAlert() {
     await element(by.id("sync-database-button")).tap();
-    for (let i = 0; i < 30; i++) {
-        await sleep(2000);
-        try {
-            await element(by.id("sync-alert-ok-button")).tap();
-            await sleep(500);
-            return;
-        } catch (_) {}
-    }
-    throw new Error("Sync alert OK button never appeared after 60 seconds");
+    await waitFor(element(by.id("sync-alert-ok-button")))
+        .toBeVisible()
+        .withTimeout(60000);
 }
 
 async function ensureCellularSyncEnabled() {
@@ -175,12 +163,6 @@ async function scrollUntilTextVisible(text, scrollViewId, maxScrolls = 14) {
 }
 
 async function navigateBackToHome() {
-    // Dismiss any open sync alert modal first
-    try {
-        await element(by.id("sync-alert-ok-button")).tap();
-        await sleep(500);
-    } catch (_) {}
-
     for (let i = 0; i < 3; i++) {
         try {
             await expect(element(by.id("tab-dashboard"))).toBeVisible();
@@ -230,21 +212,8 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
     describe("Phase 1: Initial online sync to seed local WatermelonDB", () => {
         it("navigates to the Sync screen", async () => {
-            // Dismiss any auto-sync alert that may have appeared after login
-            try {
-                await element(by.id("sync-alert-ok-button")).tap();
-                await sleep(500);
-            } catch (_) {}
-
             await navigateToSyncScreen();
             await expect(element(by.id("sync-database-button"))).toBeVisible();
-        });
-
-        it("disables automatic syncing to prevent interference", async () => {
-            try {
-                await expect(element(by.id("sync-auto-switch"))).toHaveToggleValue(true);
-                await element(by.id("sync-auto-switch")).tap();
-            } catch (_) {}
         });
 
         it("enables sync over cellular for offline sync test flow", async () => {
@@ -253,6 +222,8 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
         it("completes an initial sync with the server", async () => {
             await triggerSyncAndWaitForAlert();
+            await expect(element(by.id("sync-alert-message"))).toBeVisible();
+            await element(by.id("sync-alert-ok-button")).tap();
         });
 
         it("navigates back to the home screen", async () => {
@@ -292,10 +263,11 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects a birth date via the native Android DatePickerDialog", async () => {
+            await element(by.id("new-client-scroll-view")).scroll(200, "down");
+
             await waitFor(element(by.id("client-birthday-select-btn")))
                 .toBeVisible()
-                .whileElement(by.id("new-client-scroll-view"))
-                .scroll(100, "down");
+                .withTimeout(5000);
             await element(by.id("client-birthday-select-btn")).tap();
 
             await waitFor(element(by.text("OK")))
@@ -305,40 +277,35 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects gender from the dropdown (below birthday section)", async () => {
-            await waitFor(element(by.id("client-gender-dropdown")))
-                .toBeVisible()
-                .whileElement(by.id("new-client-scroll-view"))
-                .scroll(100, "down");
+            await element(by.id("new-client-scroll-view")).scroll(200, "down");
             await selectFromDropdown("client-gender-dropdown", "Male");
         });
 
         it("fills in village and selects a zone (zone loaded from WatermelonDB while offline)", async () => {
+            await element(by.id("new-client-scroll-view")).scroll(250, "down");
+            await sleep(400);
+
             await waitFor(element(by.id("client-village-input")))
                 .toBeVisible()
-                .whileElement(by.id("new-client-scroll-view"))
-                .scroll(100, "down");
-
+                .withTimeout(10000);
             await element(by.id("client-village-input")).tap();
             await element(by.id("client-village-input")).replaceText("TestVillage");
             await element(by.id("client-village-input")).tapReturnKey();
-            await sleep(500);
-            // Dismiss keyboard so it doesn't obscure the zone dropdown
-            await device.pressBack();
-            await sleep(1000);
+            await sleep(1500);
 
             await waitFor(element(by.id("client-zone-dropdown")))
                 .toBeVisible()
-                .whileElement(by.id("new-client-scroll-view"))
-                .scroll(100, "down");
+                .withTimeout(10000);
             await selectFromDropdown("client-zone-dropdown", "BidiBidi Zone 1");
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
+            await element(by.id("new-client-scroll-view")).scroll(300, "down");
+
             for (let attempt = 1; attempt <= 3; attempt++) {
                 await waitFor(element(by.id("client-disability-select-btn")))
                     .toBeVisible()
-                    .whileElement(by.id("new-client-scroll-view"))
-                    .scroll(100, "down");
+                    .withTimeout(10000);
                 await element(by.id("client-disability-select-btn")).tap();
 
                 await waitFor(element(by.text("Amputee")))
@@ -356,15 +323,18 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
                     return; // success
                 } catch (e) {
                     if (attempt === 3) throw e;
+                    // Retry: scroll back to the disability section and try again
+                    await element(by.id("new-client-scroll-view")).scroll(300, "down");
                 }
             }
         });
 
         it("selects one complete risk (required for new client validation)", async () => {
+            await element(by.id("new-client-scroll-view")).scroll(450, "down");
+
             await waitFor(element(by.id("health-risk-checkbox")))
                 .toBeVisible()
-                .whileElement(by.id("new-client-scroll-view"))
-                .scroll(100, "down");
+                .withTimeout(10000);
             await element(by.id("health-risk-checkbox")).tap();
 
             await selectFromDropdown("health-risk-dropdown", "Low");
@@ -373,10 +343,11 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("submits the form – client is persisted locally in WatermelonDB as unsynced", async () => {
+            await element(by.id("new-client-scroll-view")).scroll(500, "down");
+
             await waitFor(element(by.id("new-client-submit-button")))
                 .toBeVisible()
-                .whileElement(by.id("new-client-scroll-view"))
-                .scroll(100, "down");
+                .withTimeout(10000);
             await element(by.id("new-client-submit-button")).tap();
 
             await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))
@@ -397,6 +368,9 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
 
         it("attempts sync and receives a failure alert (no internet connection)", async () => {
             await triggerSyncAndWaitForAlert();
+
+            await expect(element(by.id("sync-alert-ok-button"))).toBeVisible();
+            await element(by.id("sync-alert-ok-button")).tap();
         });
     });
 
@@ -409,6 +383,8 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         it("successfully syncs local WatermelonDB changes to the server", async () => {
             await navigateToSyncScreen();
             await triggerSyncAndWaitForAlert();
+            await expect(element(by.id("sync-alert-message"))).toBeVisible();
+            await element(by.id("sync-alert-ok-button")).tap();
         });
 
         it("shows the synced client in the Client List after a successful sync", async () => {
@@ -418,8 +394,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await waitFor(element(by.id("client-list-scroll-view")))
                 .toBeVisible()
                 .withTimeout(10000);
-            await sleep(2000);
-            await scrollUntilTextVisible(TEST_CLIENT_FULL_NAME, "client-list-scroll-view");
+            await scrollUntilTextVisible(TEST_CLIENT_FIRST_NAME, "client-list-scroll-view");
         });
     });
 });

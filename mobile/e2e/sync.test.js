@@ -36,6 +36,21 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function scrollDownTo(targetId, scrollViewId = "new-client-scroll-view", maxScrolls = 20) {
+    for (let i = 0; i < maxScrolls; i++) {
+        try {
+            await expect(element(by.id(targetId))).toBeVisible();
+            return;
+        } catch {}
+        try {
+            await element(by.id(scrollViewId)).scroll(100, "down");
+        } catch {
+            await sleep(500);
+        }
+    }
+    await expect(element(by.id(targetId))).toBeVisible();
+}
+
 async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         await waitFor(element(by.id(dropdownId)))
@@ -54,7 +69,9 @@ async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
         } catch (e) {
             if (attempt === maxAttempts) throw e;
             try {
-                await device.pressBack();
+                await element(by.id(dropdownId)).tap();
+                await sleep(300);
+                await element(by.id(dropdownId)).tap();
             } catch {}
             await sleep(500);
         }
@@ -263,11 +280,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects a birth date via the native Android DatePickerDialog", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(200, "down");
-
-            await waitFor(element(by.id("client-birthday-select-btn")))
-                .toBeVisible()
-                .withTimeout(5000);
+            await scrollDownTo("client-birthday-select-btn");
             await element(by.id("client-birthday-select-btn")).tap();
 
             await waitFor(element(by.text("OK")))
@@ -277,35 +290,24 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects gender from the dropdown (below birthday section)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(200, "down");
+            await scrollDownTo("client-gender-dropdown");
             await selectFromDropdown("client-gender-dropdown", "Male");
         });
 
         it("fills in village and selects a zone (zone loaded from WatermelonDB while offline)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(250, "down");
-            await sleep(400);
-
-            await waitFor(element(by.id("client-village-input")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("client-village-input");
             await element(by.id("client-village-input")).tap();
             await element(by.id("client-village-input")).replaceText("TestVillage");
             await element(by.id("client-village-input")).tapReturnKey();
-            await sleep(1500);
+            await sleep(1000);
 
-            await waitFor(element(by.id("client-zone-dropdown")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("client-zone-dropdown");
             await selectFromDropdown("client-zone-dropdown", "BidiBidi Zone 1");
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(300, "down");
-
             for (let attempt = 1; attempt <= 3; attempt++) {
-                await waitFor(element(by.id("client-disability-select-btn")))
-                    .toBeVisible()
-                    .withTimeout(10000);
+                await scrollDownTo("client-disability-select-btn");
                 await element(by.id("client-disability-select-btn")).tap();
 
                 await waitFor(element(by.text("Amputee")))
@@ -317,24 +319,17 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
                 await element(by.id("client-disability-save-btn")).tap();
                 await sleep(1000);
 
-                // Verify the disability was actually saved (modal closed and text appeared)
                 try {
                     await expect(element(by.text("Amputee"))).toBeVisible();
-                    return; // success
+                    return;
                 } catch (e) {
                     if (attempt === 3) throw e;
-                    // Retry: scroll back to the disability section and try again
-                    await element(by.id("new-client-scroll-view")).scroll(300, "down");
                 }
             }
         });
 
         it("selects one complete risk (required for new client validation)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(450, "down");
-
-            await waitFor(element(by.id("health-risk-checkbox")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("health-risk-checkbox");
             await element(by.id("health-risk-checkbox")).tap();
 
             await selectFromDropdown("health-risk-dropdown", "Low");
@@ -343,11 +338,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("submits the form – client is persisted locally in WatermelonDB as unsynced", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(500, "down");
-
-            await waitFor(element(by.id("new-client-submit-button")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("new-client-submit-button");
             await element(by.id("new-client-submit-button")).tap();
 
             await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))
@@ -394,7 +385,13 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await waitFor(element(by.id("client-list-scroll-view")))
                 .toBeVisible()
                 .withTimeout(10000);
-            await scrollUntilTextVisible(TEST_CLIENT_FIRST_NAME, "client-list-scroll-view");
+            await sleep(2000);
+            await element(by.id("search-bar")).tap();
+            await element(by.id("search-bar")).replaceText(TEST_CLIENT_FIRST_NAME);
+            await sleep(3000);
+            await waitFor(element(by.text(TEST_CLIENT_FULL_NAME)))
+                .toExist()
+                .withTimeout(15000);
         });
     });
 });

@@ -61,13 +61,6 @@ const BugReport = () => {
         setSubmitError(null);
     };
 
-    const onClear = () => {
-        setDescription("");
-        setAttachedImage(null);
-        setSkipDiscardDialog(false);
-        setSubmitError(null);
-    };
-
     const onSubmit = async () => {
         if (descriptionLength === 0 || isSubmitting) {
             return;
@@ -233,14 +226,6 @@ const BugReport = () => {
                             )}
                         </Card.Content>
                         <Card.Actions style={styles.cardActions}>
-                            <Button
-                                mode="outlined"
-                                style={[styles.outlinedActionButton, styles.clearButton]}
-                                textColor={themeColors.errorRed}
-                                onPress={onClear}
-                            >
-                                Clear
-                            </Button>
                             <Button
                                 mode="contained"
                                 icon="send"

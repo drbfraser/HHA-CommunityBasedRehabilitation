@@ -67,12 +67,6 @@ const BugReport = () => {
         event.target.value = "";
     };
 
-    const onClear = () => {
-        setDescription("");
-        setAttachedImage(null);
-        setSubmitError(null);
-    };
-
     const descriptionLength = useMemo(() => description.trim().length, [description]);
     const isDirty = descriptionLength > 0 || attachedImage !== null;
 
@@ -300,14 +294,6 @@ const BugReport = () => {
                 </CardContent>
 
                 <CardActions sx={bugReportStyles.cardActions}>
-                    <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={onClear}
-                        disabled={isSubmitting}
-                    >
-                        Clear
-                    </Button>
                     <Button
                         type="submit"
                         variant="contained"

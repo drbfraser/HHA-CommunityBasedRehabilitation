@@ -271,15 +271,13 @@ jobs:
           emulator-boot-timeout: 600
           working-directory: mobile
           script: |
-            echo "=== Stabilising emulator ==="
+            echo "=== Initial emulator setup ==="
             adb -s emulator-5554 shell settings put global window_animation_scale 0
             adb -s emulator-5554 shell settings put global transition_animation_scale 0
             adb -s emulator-5554 shell settings put global animator_duration_scale 0
             adb -s emulator-5554 shell settings put secure anr_show_background 0
-            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
             adb -s emulator-5554 shell svc wifi enable
             adb -s emulator-5554 shell svc data enable
-            sleep 5
             echo "=== .env file contents ==="
             cat .env
             echo "=== .env.e2e file contents ==="
@@ -296,6 +294,12 @@ jobs:
             echo "=== Bundling and building ==="
             npm run detox:bundle
             npx detox build -c android.att.debug
+            echo "=== Stabilising emulator right before tests ==="
+            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
+            adb -s emulator-5554 shell input keyevent KEYCODE_HOME
+            adb -s emulator-5554 shell input keyevent KEYCODE_ESCAPE
+            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
+            sleep 3
             npx detox test -c android.att.debug
 
       - name: Clean up containers and processes

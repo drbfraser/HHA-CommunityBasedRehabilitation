@@ -60,19 +60,18 @@ async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
         await sleep(1000);
 
         try {
-            await waitFor(element(by.text(itemText)))
+            await waitFor(element(by.text(itemText)).atIndex(0))
                 .toBeVisible()
                 .withTimeout(attempt < maxAttempts ? 5000 : 10000);
-            await element(by.text(itemText)).tap();
+            await element(by.text(itemText)).atIndex(0).tap();
             await sleep(500);
             return;
         } catch (e) {
-            if (attempt === maxAttempts) throw e;
             try {
-                await element(by.id(dropdownId)).tap();
-                await sleep(300);
-                await element(by.id(dropdownId)).tap();
+                await element(by.id("new-client-scroll-view")).tap({ x: 10, y: 10 });
             } catch {}
+            await sleep(300);
+            if (attempt === maxAttempts) throw e;
             await sleep(500);
         }
     }
@@ -330,6 +329,10 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
+            try {
+                await element(by.id("new-client-scroll-view")).tap({ x: 10, y: 10 });
+            } catch {}
+            await sleep(1000);
             for (let attempt = 1; attempt <= 3; attempt++) {
                 await scrollDownTo("client-disability-select-btn");
                 await element(by.id("client-disability-select-btn")).tap();

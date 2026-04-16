@@ -151,8 +151,32 @@ async function navigateToSyncScreen() {
         .withTimeout(10000);
 }
 
+async function dismissSyncUpdateModalIfPresent() {
+    try {
+        await waitFor(element(by.text("HHA CBR is Updating!")))
+            .toBeVisible()
+            .withTimeout(3000);
+    } catch {
+        return false;
+    }
+    await element(by.type("android.widget.EditText")).typeText("clear local data");
+    await sleep(500);
+    await element(by.text("Confirm")).tap();
+    await sleep(2000);
+    return true;
+}
+
 async function triggerSyncAndWaitForAlert() {
     await element(by.id("sync-database-button")).tap();
+
+    const dismissed = await dismissSyncUpdateModalIfPresent();
+    if (dismissed) {
+        await waitFor(element(by.id("sync-alert-ok-button")))
+            .toBeVisible()
+            .withTimeout(120000);
+        return;
+    }
+
     await waitFor(element(by.id("sync-alert-ok-button")))
         .toBeVisible()
         .withTimeout(60000);

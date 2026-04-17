@@ -292,6 +292,8 @@ async function getImage(changes) {
     await getImageData(changes[modelName.clients]["updated"], Endpoint.CLIENT_PICTURE);
     await getImageData(changes[modelName.referrals]["created"], Endpoint.REFERRAL_PICTURE);
     await getImageData(changes[modelName.referrals]["updated"], Endpoint.REFERRAL_PICTURE);
+    await getImageData(changes[modelName.visits]["created"], Endpoint.VISIT_PICTURE);
+    await getImageData(changes[modelName.visits]["updated"], Endpoint.VISIT_PICTURE);
 }
 
 async function getImageData(changes, endpoint) {

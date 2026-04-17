@@ -12,8 +12,10 @@ npm-debug.*
 web-build/
 .env
 .env.e2e
+!.env.e2e.example
 Pixel_*
 *.log
+e2e/artifacts/
 
 # macOS
 .DS_Store

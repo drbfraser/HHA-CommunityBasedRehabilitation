@@ -7,6 +7,23 @@ try {
 }
 
 module.exports = {
+    artifacts: {
+        rootDir: "e2e/artifacts",
+        pathBuilder: "./e2e/artifactPathBuilder.js",
+        plugins: {
+            log: { enabled: true },
+            screenshot: {
+                enabled: true,
+                shouldTakeAutomaticSnapshots: true,
+                keepOnlyFailedTestsArtifacts: false,
+                takeWhen: { testStart: false, testDone: true },
+            },
+            video: {
+                enabled: true,
+                keepOnlyFailedTestsArtifacts: false,
+            },
+        },
+    },
     testRunner: {
         args: {
             $0: "jest",
@@ -22,13 +39,19 @@ module.exports = {
             binaryPath: "android/app/build/outputs/apk/debug/app-debug.apk",
             testBinaryPath:
                 "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
-            build: "cd android && gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
-            reversePorts: [8081],
+            build:
+                process.platform === "win32"
+                    ? "cd android && gradlew.bat assembleDebug assembleAndroidTest -DtestBuildType=debug"
+                    : "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
+            reversePorts: [8081, 8000],
         },
         "android.release": {
             type: "android.apk",
             binaryPath: "android/app/build/outputs/apk/release/app-release.apk",
-            build: "cd android && gradlew assembleRelease",
+            build:
+                process.platform === "win32"
+                    ? "cd android && gradlew.bat assembleRelease"
+                    : "cd android && ./gradlew assembleRelease",
         },
     },
     devices: {
@@ -42,8 +65,9 @@ module.exports = {
             type: "android.emulator",
             device: {
                 // allow override via environment variable (DETOX_AVD_NAME) — fall back to the repo default
-                avdName: process.env.DETOX_AVD_NAME || "Medium_Phone_API_36.1",
+                avdName: process.env.DETOX_AVD_NAME || "Pixel_6_API_30",
             },
+            headless: true,
         },
     },
     configurations: {

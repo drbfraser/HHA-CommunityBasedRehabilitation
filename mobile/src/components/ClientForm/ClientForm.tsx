@@ -201,6 +201,7 @@ export const ClientForm = (props: IClientFormProps) => {
             />
             <FormikTextInput
                 style={styles.field}
+                testID="client-first-name-input"
                 field={ClientField.firstName}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
@@ -210,6 +211,7 @@ export const ClientForm = (props: IClientFormProps) => {
             />
             <FormikTextInput
                 style={styles.field}
+                testID="client-last-name-input"
                 field={ClientField.lastName}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
@@ -235,6 +237,7 @@ export const ClientForm = (props: IClientFormProps) => {
                     <View>
                         {!fieldsDisabled ? (
                             <Button
+                                testID="client-birthday-select-btn"
                                 disabled={isFieldDisabled()}
                                 mode="contained"
                                 onPress={showDatepicker}
@@ -292,6 +295,7 @@ export const ClientForm = (props: IClientFormProps) => {
             <FieldError formikProps={props.formikProps} field={ClientField.birthDate} />
             <FormikExposedDropdownMenu
                 style={styles.field}
+                testID="client-gender-dropdown"
                 field={ClientField.gender}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
@@ -312,6 +316,7 @@ export const ClientForm = (props: IClientFormProps) => {
             />
             <FormikTextInput
                 style={styles.field}
+                testID="client-village-input"
                 field={ClientField.village}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
@@ -321,6 +326,7 @@ export const ClientForm = (props: IClientFormProps) => {
             />
             <FormikExposedDropdownMenu
                 style={styles.field}
+                testID="client-zone-dropdown"
                 field={ClientField.zone}
                 fieldLabels={clientFieldLabels}
                 formikProps={props.formikProps}
@@ -382,6 +388,7 @@ export const ClientForm = (props: IClientFormProps) => {
                                 />
                             </KeyboardAwareScrollView>
                             <Button
+                                testID="client-disability-save-btn"
                                 mode="contained"
                                 style={styles.modalSelectorButton}
                                 disabled={isFieldDisabled()}
@@ -424,6 +431,7 @@ export const ClientForm = (props: IClientFormProps) => {
                     <View>
                         {!fieldsDisabled ? (
                             <Button
+                                testID="client-disability-select-btn"
                                 mode="contained"
                                 disabled={isFieldDisabled()}
                                 onPress={openDisabilityMenu}

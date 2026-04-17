@@ -13,6 +13,17 @@ module.exports = function (api) {
                 },
             ],
             ["@babel/plugin-proposal-decorators", { legacy: true }],
+            [
+                "module-resolver",
+                {
+                    root: ["./"],
+                    alias: {
+                        "@/src": "./src",
+                        "@": "./",
+                    },
+                    extensions: [".ios.ts", ".android.ts", ".ts", ".tsx", ".js", ".jsx", ".json"],
+                },
+            ],
             "react-native-reanimated/plugin",
         ],
     };

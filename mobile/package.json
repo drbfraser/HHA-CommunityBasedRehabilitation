@@ -116,8 +116,6 @@
         "concurrently": "^9.2.1",
         "detox": "^20.47.0",
         "dotenv": "^17.2.3",
-        "eslint": "^9.0.0",
-        "eslint-config-expo": "~9.2.0",
         "expo-modules-autolinking": "~2.0.0",
         "jest": "^29.7.0",
         "jest-expo": "~53.0.0",

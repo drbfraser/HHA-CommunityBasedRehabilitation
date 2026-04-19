@@ -14,11 +14,11 @@
         "lint": "expo lint",
         "android": "expo run:android",
         "ios": "expo run:ios",
-        "detox:build": "cd android && .\\gradlew assembleDebug assembleAndroidTest",
-        "detox:metro": "npx react-native start --port 8081",
+        "detox:bundle": "node -e \"require('fs').mkdirSync('android/app/src/main/assets',{recursive:true})\" && npx expo export:embed --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res --unstable-transform-profile hermes-stable",
+        "detox:build": "cd android && node -e \"require('child_process').execSync((process.platform==='win32'?'gradlew.bat':'./gradlew')+' :app:assembleDebug :app:assembleDebugAndroidTest -DtestBuildType=debug',{stdio:'inherit'})\"",
         "detox:test": "npx detox test -c android.emu.debug",
-        "detox:install": "cd android && .\\gradlew installDebug installDebugAndroidTest -DtestBuildType=debug",
-        "detox:run": "detox build -c android.emu.debug && npx concurrently -k -s command-1 --names metro,test \"npx react-native start\" \"npx wait-on http-get://localhost:8081/status && detox test -c android.emu.debug\""
+        "detox:install": "cd android && node -e \"require('child_process').execSync((process.platform==='win32'?'gradlew.bat':'./gradlew')+' installDebug installDebugAndroidTest -DtestBuildType=debug',{stdio:'inherit'})\"",
+        "detox:run": "npm run detox:bundle && detox build -c android.emu.debug && detox test -c android.emu.debug"
     },
     "jest": {
         "preset": "jest-expo"

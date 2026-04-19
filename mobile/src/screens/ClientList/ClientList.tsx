@@ -272,7 +272,7 @@ const ClientList = () => {
                     />
                 </View>
             </View>
-            <ScrollView>
+            <ScrollView testID="client-list-scroll-view">
                 <DataTable>
                     <DataTable.Header style={styles.item}>
                         <ShowTitle

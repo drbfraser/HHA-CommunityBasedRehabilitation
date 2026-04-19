@@ -36,7 +36,7 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
-import { AppState, AppStateStatus, StatusBar } from "react-native";
+import { AppState, AppStateStatus, Platform, StatusBar } from "react-native";
 import { PinContext, IPinContext } from "./context/PinContext/PinContext";
 import { PinState } from "./context/PinContext/PinState";
 import {
@@ -401,7 +401,15 @@ export default function App() {
                                         }}
                                     >
                                         <DatabaseProvider database={database}>
-                                            <Stack.Navigator>
+                                            <Stack.Navigator
+                                                screenOptions={{
+                                                    // Disable stack transition animations on Android to prevent
+                                                    // "connectAnimatedNodes: Animated node with tag (parent) does not exist"
+                                                    // crash caused by a native animation race condition.
+                                                    // See: https://github.com/facebook/react-native/issues/33375
+                                                    animationEnabled: Platform.OS !== "android",
+                                                }}
+                                            >
                                                 {authState.state === "loggedIn" &&
                                                 pinState.state === "unlocked" ? (
                                                     Object.values(StackScreenName).map((name) => (

@@ -238,14 +238,9 @@ jobs:
           E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
           E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
         run: |
-          # TODO: Replace fallback values by setting E2E_USERNAME and E2E_PASSWORD repo secrets.
-          if [ -z "$E2E_USERNAME" ]; then
-            E2E_USERNAME="venus"
-            echo "::warning::E2E_USERNAME secret is missing, using temporary fallback"
-          fi
-          if [ -z "$E2E_PASSWORD" ]; then
-            E2E_PASSWORD="hhaLogin"
-            echo "::warning::E2E_PASSWORD secret is missing, using temporary fallback"
+          if [ -z "$E2E_USERNAME" ] || [ -z "$E2E_PASSWORD" ]; then
+            echo "::error::Missing required secrets: E2E_USERNAME and/or E2E_PASSWORD"
+            exit 1
           fi
           cat > .env.e2e <<EOF
           E2E_USERNAME=${E2E_USERNAME}

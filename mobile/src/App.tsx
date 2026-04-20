@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Provider as PaperProvider } from "react-native-paper";
 import { enableScreens } from "react-native-screens";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -36,7 +36,16 @@ import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
-import { Platform, StatusBar } from "react-native";
+import { AppState, AppStateStatus, Platform, StatusBar } from "react-native";
+import { PinContext, IPinContext } from "./context/PinContext/PinContext";
+import { PinState } from "./context/PinContext/PinState";
+import {
+    hasPin as hasStoredPin,
+    setPin as storePin,
+    verifyPin as verifyStoredPin,
+} from "./util/pinStorage";
+import PinSetup from "./screens/PinSetup/PinSetup";
+import PinEntry from "./screens/PinEntry/PinEntry";
 
 // Ensure we use FragmentActivity on Android
 // https://reactnavigation.org/docs/react-native-screens
@@ -60,6 +69,8 @@ type RootStackParamList = {
     Login: undefined;
     SwitchServer: undefined;
     Loading: undefined; // todosd: verify, where is this used?
+    PinSetup: undefined;
+    PinEntry: undefined;
     ClientDetails: { clientID: string };
     SuccessStories: { clientID: string; clientName?: string };
     SuccessStoryView: { clientID: string; storyId: string; clientName?: string };
@@ -145,6 +156,8 @@ const updateAuthStateIfNeeded = async (
 
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
+    const [pinState, setPinState] = useState<PinState>({ state: "unknown" });
+    const passwordSessionActiveRef = useRef<boolean>(false);
     const [syncAlert, setSyncAlert] = useState<boolean>(false);
     const [autoSync, setAutoSync] = useState<boolean>(true);
     const [cellularSync, setCellularSync] = useState<boolean>(false);
@@ -225,6 +238,57 @@ export default function App() {
         }
     }, [authState]);
 
+    // resolve pin state whenever the auth state changes.  pin state is meaningful only while
+    // logged in; on logout we reset it
+    useEffect(() => {
+        let cancelled = false;
+        const resolvePinState = async () => {
+            if (authState.state !== "loggedIn") {
+                setPinState({ state: "unknown" });
+                return;
+            }
+            const username = authState.currentUser.username;
+            const exists = await hasStoredPin(username);
+            if (cancelled) {
+                return;
+            }
+            if (!exists) {
+                setPinState({ state: "noPin" });
+                return;
+            }
+            if (passwordSessionActiveRef.current) {
+                setPinState({ state: "unlocked" });
+            } else {
+                passwordSessionActiveRef.current = false;
+                setPinState({ state: "unknown" });
+                await doLogout();
+                setAuthState({ state: "previouslyLoggedIn", currentUser: authState.currentUser });
+            }
+        };
+        resolvePinState().catch((e) => console.error(`PIN state resolve failed: ${e}`));
+        return () => {
+            cancelled = true;
+        };
+    }, [authState]);
+
+    // Lock the app when it leaves the foreground. We only lock when the user is actually
+    // unlocked; "noPin" users are mid-setup and shouldn't be bumped to the lock screen.
+    useEffect(() => {
+        const handleChange = (next: AppStateStatus) => {
+            if (next === "active") {
+                return;
+            }
+            setPinState((prev) => {
+                if (prev.state === "unlocked") {
+                    return { state: "locked", failedAttempts: 0 };
+                }
+                return prev;
+            });
+        };
+        const sub = AppState.addEventListener("change", handleChange);
+        return () => sub.remove();
+    }, []);
+
     // design inspired by https://reactnavigation.org/docs/auth-flow/
     const authContext = useMemo<IAuthContext>(
         () => ({
@@ -238,11 +302,16 @@ export default function App() {
                     invalidateAllCachedAPI("login"),
                 ]);
 
+                // Mark this session as password-authenticated so the PIN gate knows it can go
+                // straight to unlocked / setup once auth state resolves.
+                passwordSessionActiveRef.current = true;
                 return await updateAuthStateIfNeeded(authState, setAuthState, false);
             },
             logout: async () => {
                 // BackgroundFetch is unregistered & Sync is unscheduled in the logout callback
                 await doLogout();
+                passwordSessionActiveRef.current = false;
+                setPinState({ state: "unknown" });
                 setAuthState({ state: "loggedOut" });
             },
             requireLoggedIn(tryUpdateUserFromServer: boolean): Promise<void> {
@@ -251,6 +320,49 @@ export default function App() {
             authState: authState,
         }),
         [authState]
+    );
+
+    const pinContext = useMemo<IPinContext>(
+        () => ({
+            pinState,
+            setPin: async (pin: string) => {
+                if (authState.state !== "loggedIn") {
+                    throw new Error("Cannot set PIN when not logged in");
+                }
+                await storePin(authState.currentUser.username, pin);
+                setPinState({ state: "unlocked" });
+            },
+            verifyPin: async (pin: string) => {
+                if (authState.state !== "loggedIn") {
+                    return false;
+                }
+                const ok = await verifyStoredPin(authState.currentUser.username, pin);
+                if (ok) {
+                    setPinState({ state: "unlocked" });
+                    return true;
+                }
+                setPinState((prev) => {
+                    if (prev.state !== "locked") {
+                        return prev;
+                    }
+                    return { state: "locked", failedAttempts: prev.failedAttempts + 1 };
+                });
+                return false;
+            },
+            fallbackToPassword: async () => {
+                const previousUser =
+                    authState.state === "loggedIn" ? authState.currentUser : undefined;
+                await doLogout();
+                passwordSessionActiveRef.current = false;
+                setPinState({ state: "unknown" });
+                setAuthState(
+                    previousUser
+                        ? { state: "previouslyLoggedIn", currentUser: previousUser }
+                        : { state: "loggedOut" }
+                );
+            },
+        }),
+        [authState, pinState]
     );
 
     return (
@@ -265,59 +377,76 @@ export default function App() {
                             />
 
                             <AuthContext.Provider value={authContext}>
-                                <SyncContext.Provider
-                                    value={{
-                                        unSyncedChanges: syncAlert,
-                                        setUnSyncedChanges: setSyncAlert,
-                                        autoSync: autoSync,
-                                        setAutoSync: setAutoSync,
-                                        cellularSync: cellularSync,
-                                        setCellularSync: setCellularSync,
-                                        screenRefresh: screenRefresh,
-                                        setScreenRefresh: setScreenRefresh,
-                                    }}
-                                >
-                                    <DatabaseProvider database={database}>
-                                        <Stack.Navigator
-                                            screenOptions={{
-                                                // Disable stack transition animations on Android to prevent
-                                                // "connectAnimatedNodes: Animated node with tag (parent) does not exist"
-                                                // crash caused by a native animation race condition.
-                                                // See: https://github.com/facebook/react-native/issues/33375
-                                                animationEnabled: Platform.OS !== "android",
-                                            }}
-                                        >
-                                            {authState.state === "loggedIn" ? (
-                                                Object.values(StackScreenName).map((name) => (
+                                <PinContext.Provider value={pinContext}>
+                                    <SyncContext.Provider
+                                        value={{
+                                            unSyncedChanges: syncAlert,
+                                            setUnSyncedChanges: setSyncAlert,
+                                            autoSync: autoSync,
+                                            setAutoSync: setAutoSync,
+                                            cellularSync: cellularSync,
+                                            setCellularSync: setCellularSync,
+                                            screenRefresh: screenRefresh,
+                                            setScreenRefresh: setScreenRefresh,
+                                        }}
+                                    >
+                                        <DatabaseProvider database={database}>
+                                            <Stack.Navigator
+                                                screenOptions={{
+                                                    // Disable stack transition animations on Android to prevent
+                                                    // "connectAnimatedNodes: Animated node with tag (parent) does not exist"
+                                                    // crash caused by a native animation race condition.
+                                                    // See: https://github.com/facebook/react-native/issues/33375
+                                                    animationEnabled: Platform.OS !== "android",
+                                                }}
+                                            >
+                                                {authState.state === "loggedIn" &&
+                                                pinState.state === "unlocked" ? (
+                                                    Object.values(StackScreenName).map((name) => (
+                                                        <Stack.Screen
+                                                            key={name}
+                                                            name={name}
+                                                            component={stackScreenProps[name]}
+                                                            // @ts-ignore
+                                                            options={stackScreenOptions[name]}
+                                                        />
+                                                    ))
+                                                ) : authState.state === "loggedIn" &&
+                                                  pinState.state === "noPin" ? (
                                                     <Stack.Screen
-                                                        key={name}
-                                                        name={name}
-                                                        component={stackScreenProps[name]}
-                                                        // @ts-ignore
-                                                        options={stackScreenOptions[name]}
+                                                        name="PinSetup"
+                                                        component={PinSetup}
+                                                        options={{ headerShown: false }}
                                                     />
-                                                ))
-                                            ) : authState.state === "loggedOut" ||
-                                              authState.state === "previouslyLoggedIn" ? (
-                                                Object.values(NoAuthScreenName).map((name) => (
+                                                ) : authState.state === "loggedIn" &&
+                                                  pinState.state === "locked" ? (
                                                     <Stack.Screen
-                                                        key={name}
-                                                        name={name}
-                                                        component={stackScreenProps[name]}
-                                                        // @ts-ignore
-                                                        options={stackScreenOptions[name]}
+                                                        name="PinEntry"
+                                                        component={PinEntry}
+                                                        options={{ headerShown: false }}
                                                     />
-                                                ))
-                                            ) : (
-                                                <Stack.Screen
-                                                    name="Loading"
-                                                    component={Loading}
-                                                    options={{ headerShown: false }}
-                                                />
-                                            )}
-                                        </Stack.Navigator>
-                                    </DatabaseProvider>
-                                </SyncContext.Provider>
+                                                ) : authState.state === "loggedOut" ||
+                                                  authState.state === "previouslyLoggedIn" ? (
+                                                    Object.values(NoAuthScreenName).map((name) => (
+                                                        <Stack.Screen
+                                                            key={name}
+                                                            name={name}
+                                                            component={stackScreenProps[name]}
+                                                            // @ts-ignore
+                                                            options={stackScreenOptions[name]}
+                                                        />
+                                                    ))
+                                                ) : (
+                                                    <Stack.Screen
+                                                        name="Loading"
+                                                        component={Loading}
+                                                        options={{ headerShown: false }}
+                                                    />
+                                                )}
+                                            </Stack.Navigator>
+                                        </DatabaseProvider>
+                                    </SyncContext.Provider>
+                                </PinContext.Provider>
                             </AuthContext.Provider>
                         </NavigationContainer>
                     </PaperProvider>

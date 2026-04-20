@@ -19,7 +19,6 @@ const PinEntry = () => {
     const [status, setStatus] = useState<Status>({ status: "idle" });
 
     const failedAttempts = pinState.state === "locked" ? pinState.failedAttempts : 0;
-    const remaining = Math.max(PIN_MAX_ATTEMPTS - failedAttempts, 0);
 
     useEffect(() => {
         if (pinState.state !== "locked") {
@@ -46,15 +45,12 @@ const PinEntry = () => {
                 return;
             }
             setPin("");
-            const nextRemaining = Math.max(remaining - 1, 0);
+            const willLockOut = failedAttempts + 1 >= PIN_MAX_ATTEMPTS;
             setStatus({
                 status: "error",
-                message:
-                    nextRemaining > 0
-                        ? `Incorrect PIN. ${nextRemaining} attempt${
-                              nextRemaining === 1 ? "" : "s"
-                          } remaining.`
-                        : "Too many failed attempts. Please sign in with your password.",
+                message: willLockOut
+                    ? "Too many failed attempts. Please sign in with your password."
+                    : "Incorrect PIN.",
             });
         } catch (e: any) {
             setStatus({ status: "error", message: e?.message ?? `${e}` });

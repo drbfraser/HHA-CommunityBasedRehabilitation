@@ -16,7 +16,6 @@ export type Props = {
     user: IUser;
     visible: boolean;
     onDismiss: (changed: boolean) => void;
-    // Passed in because the enclosing Portal re-mounts this tree outside of PinContext.Provider.
     setPin: (pin: string) => Promise<void>;
 };
 

@@ -157,8 +157,6 @@ const updateAuthStateIfNeeded = async (
 export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
     const [pinState, setPinState] = useState<PinState>({ state: "unknown" });
-    // Tracks whether the current in-memory session began with a password login. Reset on every
-    // fresh app launch so a killed-then-reopened app forces password re-auth per spec.
     const passwordSessionActiveRef = useRef<boolean>(false);
     const [syncAlert, setSyncAlert] = useState<boolean>(false);
     const [autoSync, setAutoSync] = useState<boolean>(true);
@@ -240,8 +238,8 @@ export default function App() {
         }
     }, [authState]);
 
-    // Resolve PIN state whenever the auth state changes. PIN state is meaningful only while
-    // logged in; on logout we reset it so the next login re-evaluates from scratch.
+    // resolve pin state whenever the auth state changes.  pin state is meaningful only while
+    // logged in; on logout we reset it
     useEffect(() => {
         let cancelled = false;
         const resolvePinState = async () => {
@@ -258,9 +256,6 @@ export default function App() {
                 setPinState({ state: "noPin" });
                 return;
             }
-            // A PIN exists. If this session started with a password login (fresh login), we
-            // keep the app unlocked. Otherwise (refresh-token auto-resume after a kill), we
-            // require password re-auth per spec.
             if (passwordSessionActiveRef.current) {
                 setPinState({ state: "unlocked" });
             } else {

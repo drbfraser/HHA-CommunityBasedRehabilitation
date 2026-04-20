@@ -349,11 +349,6 @@ export default function App() {
                 });
                 return false;
             },
-            lock: () => {
-                setPinState((prev) =>
-                    prev.state === "unlocked" ? { state: "locked", failedAttempts: 0 } : prev
-                );
-            },
             fallbackToPassword: async () => {
                 const previousUser =
                     authState.state === "loggedIn" ? authState.currentUser : undefined;

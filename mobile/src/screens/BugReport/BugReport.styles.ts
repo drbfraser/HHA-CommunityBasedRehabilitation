@@ -87,9 +87,6 @@ const useStyles = () =>
         chooseImageButton: {
             borderColor: themeColors.blueBgDark,
         },
-        clearButton: {
-            borderColor: themeColors.errorRed,
-        },
         cardActions: {
             justifyContent: "space-between",
             marginTop: 10,

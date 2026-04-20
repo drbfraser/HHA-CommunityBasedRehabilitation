@@ -14,6 +14,9 @@ const useStyles = () => {
         profileInfoContainer: {
             flex: 1,
         },
+        successAlert: {
+            marginBottom: 12,
+        },
         userFirstLastNameTitle: {
             marginVertical: 15,
             fontSize: 24,

@@ -1,5 +1,5 @@
-import React from "react";
-import { useHistory } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
     Alert,
@@ -18,11 +18,32 @@ import { APILoadError } from "@cbr/common/util/endpoints";
 import { useZones } from "@cbr/common/util/hooks/zones";
 import { userStyles } from "./User.styles";
 
+type UserViewLocationState = {
+    bugReportSuccessMessage?: string;
+};
+
 const UserView = () => {
     const { t } = useTranslation();
     const history = useHistory();
+    const location = useLocation<UserViewLocationState | undefined>();
     const user = useCurrentUser();
     const zones = useZones();
+    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+    useEffect(() => {
+        const nextMessage = location.state?.bugReportSuccessMessage;
+        if (!nextMessage) {
+            return;
+        }
+
+        setSuccessMessage(nextMessage);
+        history.replace({
+            pathname: location.pathname,
+            search: location.search,
+            hash: location.hash,
+            state: undefined,
+        });
+    }, [history, location]);
 
     const handleChangePassword = () => {
         return history.push("/user/password");
@@ -38,6 +59,12 @@ const UserView = () => {
                 <Alert severity="error">{t("alert.generalFailureTryAgain")}</Alert>
             ) : user ? (
                 <>
+                    {successMessage && (
+                        <Alert severity="success" onClose={() => setSuccessMessage(null)}>
+                            {successMessage}
+                        </Alert>
+                    )}
+
                     <Box sx={userStyles.header}>
                         <h1>
                             {user.first_name} {user.last_name}

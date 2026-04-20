@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
     Alert,
     Box,
@@ -17,19 +18,37 @@ import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
+import UnsavedChanges from "components/Dialogs/UnsavedChanges";
 import { bugReportStyles } from "./BugReport.styles";
 
 const MAX_DESCRIPTION_LENGTH = 1200;
 type ReportType = "bug_report" | "suggestion";
+type UserViewLocationState = {
+    bugReportSuccessMessage?: string;
+};
+const INTERNET_CHECK_URL = "https://clients3.google.com/generate_204";
 
 const BugReport = () => {
+    const history = useHistory();
     const [reportType, setReportType] = useState<ReportType>("bug_report");
     const [description, setDescription] = useState("");
     const [attachedImage, setAttachedImage] = useState<File | null>(null);
     const [previewURL, setPreviewURL] = useState<string | null>(null);
+    const [isOffline, setIsOffline] = useState(
+        typeof navigator !== "undefined" ? !navigator.onLine : false
+    );
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubmitted, setIsSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [confirmLeaveOpen, setConfirmLeaveOpen] = useState(false);
+    const [pendingNavigation, setPendingNavigation] =
+        useState<{
+            pathname: string;
+            search: string;
+            hash: string;
+            state: unknown;
+            action: "POP" | "PUSH" | "REPLACE";
+        } | null>(null);
+    const allowNavigationRef = useRef(false);
 
     useEffect(() => {
         if (!attachedImage) {
@@ -45,26 +64,171 @@ const BugReport = () => {
         };
     }, [attachedImage]);
 
+    const checkConnectivity = useCallback(async () => {
+        if (!navigator.onLine) {
+            setIsOffline(true);
+            return false;
+        }
+
+        try {
+            await fetch(INTERNET_CHECK_URL, {
+                method: "GET",
+                mode: "no-cors",
+                cache: "no-store",
+            });
+            setIsOffline(false);
+            return true;
+        } catch {
+            setIsOffline(true);
+            return false;
+        }
+    }, []);
+
+    useEffect(() => {
+        let isActive = true;
+
+        const handleOnline = () => {
+            void checkConnectivity();
+        };
+        const handleOffline = () => {
+            setIsOffline(true);
+        };
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === "visible") {
+                void checkConnectivity();
+            }
+        };
+
+        void checkConnectivity().then((hasInternet) => {
+            if (!isActive) {
+                return;
+            }
+            setIsOffline(!hasInternet);
+        });
+        const intervalId = window.setInterval(() => {
+            void checkConnectivity();
+        }, 10000);
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            isActive = false;
+            window.clearInterval(intervalId);
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [checkConnectivity]);
+
     const onImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedImage = event.target.files?.[0] ?? null;
         setAttachedImage(selectedImage);
-        setIsSubmitted(false);
         setSubmitError(null);
         event.target.value = "";
     };
 
-    const onClear = () => {
-        setDescription("");
-        setAttachedImage(null);
-        setIsSubmitted(false);
-        setSubmitError(null);
+    const descriptionLength = useMemo(() => description.trim().length, [description]);
+    const isDirty = descriptionLength > 0 || attachedImage !== null;
+
+    useEffect(() => {
+        if (!isDirty) {
+            return;
+        }
+
+        const unblock = history.block((nextLocation, action) => {
+            if (allowNavigationRef.current) {
+                return;
+            }
+
+            if (
+                history.location.pathname === nextLocation.pathname &&
+                history.location.search === nextLocation.search &&
+                history.location.hash === nextLocation.hash
+            ) {
+                return;
+            }
+
+            setPendingNavigation({
+                pathname: nextLocation.pathname,
+                search: nextLocation.search,
+                hash: nextLocation.hash,
+                state: nextLocation.state,
+                action,
+            });
+            setConfirmLeaveOpen(true);
+
+            return false;
+        });
+
+        return unblock;
+    }, [history, isDirty]);
+
+    useEffect(() => {
+        if (!isDirty) {
+            return;
+        }
+
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = "";
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [isDirty]);
+
+    const handleLeaveCancel = () => {
+        setConfirmLeaveOpen(false);
+        setPendingNavigation(null);
     };
 
-    const descriptionLength = useMemo(() => description.trim().length, [description]);
+    const handleLeaveConfirm = () => {
+        if (!pendingNavigation) {
+            setConfirmLeaveOpen(false);
+            return;
+        }
 
-    const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        allowNavigationRef.current = true;
+        setConfirmLeaveOpen(false);
+
+        if (pendingNavigation.action === "REPLACE") {
+            history.replace({
+                pathname: pendingNavigation.pathname,
+                search: pendingNavigation.search,
+                hash: pendingNavigation.hash,
+                state: pendingNavigation.state,
+            });
+            return;
+        }
+
+        if (pendingNavigation.action === "POP") {
+            history.goBack();
+            return;
+        }
+
+        history.push({
+            pathname: pendingNavigation.pathname,
+            search: pendingNavigation.search,
+            hash: pendingNavigation.hash,
+            state: pendingNavigation.state,
+        });
+    };
+
+    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (descriptionLength === 0) {
+            return;
+        }
+
+        setSubmitError(null);
+
+        const hasInternet = await checkConnectivity();
+        if (!hasInternet) {
             return;
         }
 
@@ -76,21 +240,34 @@ const BugReport = () => {
         }
 
         setIsSubmitting(true);
-        setSubmitError(null);
-        apiFetch(Endpoint.BUG_REPORT, "", {
-            method: "POST",
-            body: payload,
-        })
-            .then(() => {
-                setIsSubmitted(true);
-                setDescription("");
-                setAttachedImage(null);
-            })
-            .catch((e) => {
-                const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
-                setSubmitError(message);
-            })
-            .finally(() => setIsSubmitting(false));
+        try {
+            await apiFetch(Endpoint.BUG_REPORT, "", {
+                method: "POST",
+                body: payload,
+            });
+            const successMessage =
+                reportType === "suggestion"
+                    ? "Your suggestion was created successfully."
+                    : "Your bug report was created successfully.";
+
+            allowNavigationRef.current = true;
+            setDescription("");
+            setAttachedImage(null);
+            history.push("/user", {
+                bugReportSuccessMessage: successMessage,
+            } as UserViewLocationState);
+        } catch (e) {
+            const stillOnline = await checkConnectivity();
+            if (!stillOnline) {
+                setSubmitError(null);
+                return;
+            }
+
+            const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
+            setSubmitError(message);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const imageSizeInKB = attachedImage ? Math.max(1, Math.round(attachedImage.size / 1024)) : 0;
@@ -99,6 +276,12 @@ const BugReport = () => {
 
     return (
         <Box component="form" onSubmit={onSubmit} sx={bugReportStyles.form}>
+            {isOffline && (
+                <Alert severity="error">
+                    No internet connection. Connect to Wi-Fi or mobile data before submitting.
+                </Alert>
+            )}
+
             <Alert severity="info">
                 Submitting this form sends an email with your description and attached image. You
                 can choose either Bug report or Suggestion.
@@ -117,7 +300,6 @@ const BugReport = () => {
                                 return;
                             }
                             setReportType(selectedType);
-                            setIsSubmitted(false);
                             setSubmitError(null);
                         }}
                         sx={bugReportStyles.reportTypeToggle}
@@ -135,7 +317,6 @@ const BugReport = () => {
                         value={description}
                         onChange={(event) => {
                             setDescription(event.target.value);
-                            setIsSubmitted(false);
                             setSubmitError(null);
                         }}
                         placeholder="What happened, where it happened, and what you expected instead."
@@ -150,7 +331,7 @@ const BugReport = () => {
                         {descriptionLength}/{MAX_DESCRIPTION_LENGTH}
                     </Typography>
 
-                    <Divider sx={{ margin: "18px 0" }} />
+                    <Divider sx={{ margin: "17px 0" }} />
 
                     <Typography variant="h6" sx={bugReportStyles.subheading}>
                         Add screenshot or image
@@ -194,19 +375,11 @@ const BugReport = () => {
 
                 <CardActions sx={bugReportStyles.cardActions}>
                     <Button
-                        variant="outlined"
-                        color="error"
-                        onClick={onClear}
-                        disabled={isSubmitting}
-                    >
-                        Clear
-                    </Button>
-                    <Button
                         type="submit"
                         variant="contained"
                         color="primary"
                         startIcon={<SendIcon />}
-                        disabled={isSubmitting || descriptionLength === 0}
+                        disabled={isSubmitting || descriptionLength === 0 || isOffline}
                     >
                         {isSubmitting ? "Submitting..." : submitLabel}
                     </Button>
@@ -215,11 +388,16 @@ const BugReport = () => {
 
             {submitError && <Alert severity="error">{submitError}</Alert>}
 
-            {isSubmitted && (
-                <Alert severity="success">
-                    Your {reportTypeLabel} email has been submitted with your description and image.
-                </Alert>
-            )}
+            <UnsavedChanges
+                open={confirmLeaveOpen}
+                setOpen={setConfirmLeaveOpen}
+                title="Discard this draft?"
+                description={`Your ${reportTypeLabel} has unsaved changes. Leaving now will discard the draft.`}
+                saveBtnMsg="Leave page"
+                cancelBtnMsg="Stay here"
+                onSave={handleLeaveConfirm}
+                onCancel={handleLeaveCancel}
+            />
         </Box>
     );
 };

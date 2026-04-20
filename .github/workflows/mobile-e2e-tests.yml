@@ -19,6 +19,8 @@ env:
   POSTGRES_PASSWORD: postgres
   SECRET_KEY: ci-ephemeral-secret-key
   DOMAIN: localhost
+  E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+  E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
 
 concurrency:
   group: mobile-e2e-${{ github.ref }}
@@ -234,9 +236,6 @@ jobs:
         working-directory: mobile
 
       - name: Create .env.e2e
-        env:
-          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
-          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
         run: |
           if [ -z "$E2E_USERNAME" ] || [ -z "$E2E_PASSWORD" ]; then
             echo "::error::Missing required secrets: E2E_USERNAME and/or E2E_PASSWORD"

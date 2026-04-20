@@ -8,6 +8,11 @@ https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/
 """
 
 import os
+
+# Eventlet's greendns resolver can fail to resolve external SMTP hosts in Docker.
+# Disable it so email sending uses the normal system DNS resolver instead.
+os.environ.setdefault("EVENTLET_NO_GREENDNS", "yes")
+
 import socketio
 import eventlet  # concurrent networking library
 import eventlet.wsgi

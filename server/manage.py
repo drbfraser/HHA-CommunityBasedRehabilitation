@@ -4,6 +4,10 @@
 import os
 import sys
 
+# Eventlet's greendns resolver can fail to resolve external SMTP hosts in Docker.
+# Disable it so email sending uses the normal system DNS resolver instead.
+os.environ.setdefault("EVENTLET_NO_GREENDNS", "yes")
+
 
 def main():
     import eventlet  # concurrent networking library

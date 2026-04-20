@@ -92,10 +92,6 @@ const PinEntry = () => {
                 />
             </View>
 
-            <Text style={styles.attempts}>
-                {remaining} of {PIN_MAX_ATTEMPTS} attempts remaining
-            </Text>
-
             <Button
                 mode="contained"
                 buttonColor={theme.colors.accent}

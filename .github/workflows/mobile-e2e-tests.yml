@@ -26,7 +26,7 @@ concurrency:
 
 jobs:
   detox-e2e:
-    runs-on: [self-hosted, cbr-sandbox]
+    runs-on: [self-hosted, docker]
     timeout-minutes: 60
 
     services:

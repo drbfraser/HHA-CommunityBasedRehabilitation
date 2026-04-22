@@ -116,6 +116,18 @@ class BugReportEmailViewTests(APITestCase):
         mock_send_bug_report_email.assert_not_called()
 
     @patch("cbr_api.views.send_bug_report_email")
+    def test_submit_bug_report_invalid_report_type(self, mock_send_bug_report_email):
+        payload = {
+            "report_type": "feature_request",
+            "description": "Please add this workflow.",
+        }
+        response = self.api_client.post(self.url, payload, format="multipart")
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("report_type", response.data)
+        mock_send_bug_report_email.assert_not_called()
+
+    @patch("cbr_api.views.send_bug_report_email")
     def test_submit_bug_report_unauthenticated(self, mock_send_bug_report_email):
         self.api_client.force_authenticate(user=None)
         payload = {

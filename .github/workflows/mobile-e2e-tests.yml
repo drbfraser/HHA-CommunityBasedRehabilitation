@@ -104,7 +104,7 @@ jobs:
       - name: Prepare Django log directory
         run: |
           mkdir -p "$GITHUB_WORKSPACE/server/.ci-logs"
-          chown "$(id -u):$(id -g)" "$GITHUB_WORKSPACE/server/.ci-logs"
+          chmod 777 "$GITHUB_WORKSPACE/server/.ci-logs"
 
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4

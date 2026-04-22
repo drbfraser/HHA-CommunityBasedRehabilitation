@@ -255,6 +255,19 @@ jobs:
             > .env.e2e
         working-directory: mobile
 
+      - name: Debug emulator setup
+        run: |
+          echo "=== AVD list ==="
+          avdmanager list avd
+          echo "=== Emulator binary ==="
+          which emulator && emulator -version
+          echo "=== ADB devices ==="
+          adb devices
+          echo "=== Try launching emulator directly ==="
+          nohup emulator -avd "${{ env.AVD_NAME }}" -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -verbose 2>&1 | head -50 &
+          sleep 10
+          adb devices
+
       - name: Start emulator and run Detox
         uses: reactivecircus/android-emulator-runner@v2.36.0
         with:

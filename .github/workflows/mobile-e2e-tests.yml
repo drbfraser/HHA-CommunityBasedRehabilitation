@@ -147,14 +147,14 @@ jobs:
 
       - name: Run Django migrations & seed data
         run: |
-          docker run --rm --network host \
+          docker run --rm --add-host=host.docker.internal:host-gateway \
             --user "$(id -u):$(id -g)" \
             -v "$GITHUB_WORKSPACE/server:/code" \
             -v "$GITHUB_WORKSPACE/server/.ci-logs:/var/log" \
             -e DEBUG=yes \
             -e PYTHONDONTWRITEBYTECODE=1 \
             -e LISTEN_PORT=8000 \
-            -e POSTGRES_HOST=localhost \
+            -e POSTGRES_HOST=host.docker.internal \
             -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
             -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
             -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
@@ -165,14 +165,14 @@ jobs:
 
       - name: Start Django server
         run: |
-          docker run -d --name cbr-e2e-django --network host \
+          docker run -d --name cbr-e2e-django -p 8000:8000 --add-host=host.docker.internal:host-gateway \
             --user "$(id -u):$(id -g)" \
             -v "$GITHUB_WORKSPACE/server:/code" \
             -v "$GITHUB_WORKSPACE/server/.ci-logs:/var/log" \
             -e DEBUG=yes \
             -e PYTHONDONTWRITEBYTECODE=1 \
             -e LISTEN_PORT=8000 \
-            -e POSTGRES_HOST=localhost \
+            -e POSTGRES_HOST=host.docker.internal \
             -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
             -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
             -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \

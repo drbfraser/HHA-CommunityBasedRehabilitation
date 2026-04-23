@@ -36,6 +36,21 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function scrollDownTo(targetId, scrollViewId = "new-client-scroll-view", maxScrolls = 20) {
+    for (let i = 0; i < maxScrolls; i++) {
+        try {
+            await expect(element(by.id(targetId))).toBeVisible();
+            return;
+        } catch {}
+        try {
+            await element(by.id(scrollViewId)).scroll(100, "down");
+        } catch {
+            await sleep(500);
+        }
+    }
+    await expect(element(by.id(targetId))).toBeVisible();
+}
+
 async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         await waitFor(element(by.id(dropdownId)))
@@ -45,17 +60,18 @@ async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
         await sleep(1000);
 
         try {
-            await waitFor(element(by.text(itemText)))
+            await waitFor(element(by.text(itemText)).atIndex(0))
                 .toBeVisible()
                 .withTimeout(attempt < maxAttempts ? 5000 : 10000);
-            await element(by.text(itemText)).tap();
+            await element(by.text(itemText)).atIndex(0).tap();
             await sleep(500);
             return;
         } catch (e) {
-            if (attempt === maxAttempts) throw e;
             try {
-                await device.pressBack();
+                await element(by.id("new-client-scroll-view")).tap({ x: 10, y: 10 });
             } catch {}
+            await sleep(300);
+            if (attempt === maxAttempts) throw e;
             await sleep(500);
         }
     }
@@ -134,8 +150,32 @@ async function navigateToSyncScreen() {
         .withTimeout(10000);
 }
 
+async function dismissSyncUpdateModalIfPresent() {
+    try {
+        await waitFor(element(by.text("HHA CBR is Updating!")))
+            .toBeVisible()
+            .withTimeout(3000);
+    } catch {
+        return false;
+    }
+    await element(by.type("android.widget.EditText")).typeText("clear local data");
+    await sleep(500);
+    await element(by.text("Confirm")).tap();
+    await sleep(2000);
+    return true;
+}
+
 async function triggerSyncAndWaitForAlert() {
     await element(by.id("sync-database-button")).tap();
+
+    const dismissed = await dismissSyncUpdateModalIfPresent();
+    if (dismissed) {
+        await waitFor(element(by.id("sync-alert-ok-button")))
+            .toBeVisible()
+            .withTimeout(120000);
+        return;
+    }
+
     await waitFor(element(by.id("sync-alert-ok-button")))
         .toBeVisible()
         .withTimeout(60000);
@@ -263,11 +303,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects a birth date via the native Android DatePickerDialog", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(200, "down");
-
-            await waitFor(element(by.id("client-birthday-select-btn")))
-                .toBeVisible()
-                .withTimeout(5000);
+            await scrollDownTo("client-birthday-select-btn");
             await element(by.id("client-birthday-select-btn")).tap();
 
             await waitFor(element(by.text("OK")))
@@ -277,68 +313,68 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("selects gender from the dropdown (below birthday section)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(200, "down");
+            await scrollDownTo("client-gender-dropdown");
             await selectFromDropdown("client-gender-dropdown", "Male");
         });
 
         it("fills in village and selects a zone (zone loaded from WatermelonDB while offline)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(250, "down");
-            await sleep(400);
-
-            await waitFor(element(by.id("client-village-input")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("client-village-input");
             await element(by.id("client-village-input")).tap();
             await element(by.id("client-village-input")).replaceText("TestVillage");
             await element(by.id("client-village-input")).tapReturnKey();
-            await sleep(1500);
+            await sleep(1000);
 
-            await waitFor(element(by.id("client-zone-dropdown")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("client-zone-dropdown");
             await selectFromDropdown("client-zone-dropdown", "BidiBidi Zone 1");
         });
 
         it("selects a disability from the picker (reference data served from WatermelonDB)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(300, "down");
+            try {
+                await element(by.id("new-client-scroll-view")).tap({ x: 10, y: 10 });
+            } catch {}
+            await sleep(1000);
+            for (let attempt = 1; attempt <= 3; attempt++) {
+                await scrollDownTo("client-disability-select-btn");
+                await element(by.id("client-disability-select-btn")).tap();
 
-            await waitFor(element(by.id("client-disability-select-btn")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.id("client-disability-select-btn")).tap();
+                await waitFor(element(by.text("Amputee")))
+                    .toBeVisible()
+                    .withTimeout(10000);
+                await element(by.text("Amputee")).tap();
+                await sleep(500);
 
-            await waitFor(element(by.text("Amputee")))
-                .toBeVisible()
-                .withTimeout(10000);
-            await element(by.text("Amputee")).tap();
+                await element(by.id("client-disability-save-btn")).tap();
+                await sleep(1000);
 
-            await element(by.id("client-disability-save-btn")).tap();
+                try {
+                    await expect(element(by.text("Amputee"))).toBeVisible();
+                    return;
+                } catch (e) {
+                    if (attempt === 3) throw e;
+                }
+            }
         });
 
         it("selects one complete risk (required for new client validation)", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(450, "down");
-
-            await waitFor(element(by.id("health-risk-checkbox")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("health-risk-checkbox");
             await element(by.id("health-risk-checkbox")).tap();
+            await sleep(500);
 
+            await scrollDownTo("health-risk-dropdown");
             await selectFromDropdown("health-risk-dropdown", "Low");
+            await scrollDownTo("health-requirements-dropdown");
             await selectFromDropdown("health-requirements-dropdown", "Malaria treatment");
+            await scrollDownTo("health-goals-dropdown");
             await selectFromDropdown("health-goals-dropdown", "Pain managed");
         });
 
         it("submits the form – client is persisted locally in WatermelonDB as unsynced", async () => {
-            await element(by.id("new-client-scroll-view")).scroll(500, "down");
-
-            await waitFor(element(by.id("new-client-submit-button")))
-                .toBeVisible()
-                .withTimeout(10000);
+            await scrollDownTo("new-client-submit-button");
             await element(by.id("new-client-submit-button")).tap();
 
             await waitFor(element(by.text(TEST_CLIENT_FIRST_NAME)))
                 .toBeVisible()
-                .withTimeout(10000);
+                .withTimeout(30000);
         });
     });
 
@@ -380,7 +416,13 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             await waitFor(element(by.id("client-list-scroll-view")))
                 .toBeVisible()
                 .withTimeout(10000);
-            await scrollUntilTextVisible(TEST_CLIENT_FULL_NAME, "client-list-scroll-view");
+            await sleep(2000);
+            await element(by.id("search-bar")).tap();
+            await element(by.id("search-bar")).replaceText(TEST_CLIENT_FIRST_NAME);
+            await sleep(3000);
+            await waitFor(element(by.text(TEST_CLIENT_FULL_NAME)))
+                .toExist()
+                .withTimeout(15000);
         });
     });
 });

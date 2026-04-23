@@ -41,8 +41,8 @@ module.exports = {
                 "android/app/build/outputs/apk/androidTest/debug/app-debug-androidTest.apk",
             build:
                 process.platform === "win32"
-                    ? "cd android && gradlew.bat assembleDebug assembleAndroidTest -DtestBuildType=debug"
-                    : "cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug",
+                    ? "cd android && gradlew.bat :app:assembleDebug :app:assembleAndroidTest -DtestBuildType=debug"
+                    : "cd android && ./gradlew :app:assembleDebug :app:assembleAndroidTest -DtestBuildType=debug",
             reversePorts: [8081, 8000],
         },
         "android.release": {
@@ -58,7 +58,8 @@ module.exports = {
         attached: {
             type: "android.attached",
             device: {
-                adbName: ".*",
+                // allow override via environment variable so CI can target a specific emulator
+                adbName: process.env.DETOX_ADB_NAME || ".*",
             },
         },
         emulator: {

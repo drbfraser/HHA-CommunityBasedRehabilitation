@@ -1,0 +1,337 @@
+name: Mobile E2E Tests (Detox)
+
+on:
+  push:
+    branches: [831-add-e2e-mobile-tests-to-ci]
+  # workflow_dispatch:
+
+env:
+  JAVA_VERSION: "17"
+  NODE_VERSION: "18"
+  NPM_VERSION: "10.7.0"
+  ANDROID_API_LEVEL: 31
+  ANDROID_BUILD_TOOLS: "34.0.0"
+  ANDROID_EMULATOR_ARCH: x86_64
+  AVD_NAME: Pixel_6_API_31
+  POSTGRES_HOST: localhost
+  POSTGRES_DB: cbr_e2e_${{ github.run_id }}
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  SECRET_KEY: ci-ephemeral-secret-key
+  DOMAIN: localhost
+
+concurrency:
+  group: mobile-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detox-e2e:
+    runs-on: [self-hosted, docker]
+    timeout-minutes: 60
+
+    services:
+      postgres:
+        image: postgres:13.1-alpine
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Repair workspace ownership
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE"
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            alpine:3.20 \
+            sh -c "chown -R $(id -u):$(id -g) /workspace || true"
+
+      - name: Clean up stale resources from previous runs
+        run: |
+          docker rm -f cbr-e2e-django 2>/dev/null || true
+          docker rmi cbr-e2e-django 2>/dev/null || true
+          # Kill ALL emulator/qemu processes (many process names to be thorough)
+          pkill -9 -f "qemu-system" 2>/dev/null || true
+          pkill -9 -f "emulator" 2>/dev/null || true
+          pkill -9 -f "qemu" 2>/dev/null || true
+          # Also kill by full path if any are running
+          killall -9 "emulator" 2>/dev/null || true
+          killall -9 "qemu-system-x86_64" 2>/dev/null || true
+          sleep 2
+          # Reset adb daemon state completely (clears cached emulator references)
+          adb kill-server 2>/dev/null || true
+          sleep 1
+          adb start-server 2>/dev/null || true
+          sleep 2
+          # Verify no emulators in adb list
+          echo "=== Cleaned up. Current adb devices: ==="
+          adb devices 2>/dev/null || echo "(adb unavailable)"
+
+      - name: Ensure KVM access for emulator hardware acceleration
+        run: |
+          if [ ! -e /dev/kvm ]; then
+            echo "::error::/dev/kvm not found — this runner does not support hardware acceleration"
+            exit 1
+          fi
+          if [ ! -r /dev/kvm ] || [ ! -w /dev/kvm ]; then
+            echo "::error::Runner user '$(whoami)' cannot access /dev/kvm. Run: sudo gpasswd -a $(whoami) kvm && sudo chmod 660 /dev/kvm"
+            ls -la /dev/kvm
+            id
+            exit 1
+          fi
+          echo "KVM access OK for user $(whoami)"
+          ls -la /dev/kvm
+
+      - name: Verify required ports are free
+        run: |
+          if ss -tlnp | grep -q ":8000 "; then
+            echo "::error::Port 8000 is already in use"
+            ss -tlnp | grep ":8000 "
+            exit 1
+          fi
+          echo "Port 8000 is available"
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Prepare Django log directory
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/server/.ci-logs"
+          chmod 777 "$GITHUB_WORKSPACE/server/.ci-logs"
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Set up Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            common/package-lock.json
+            mobile/package-lock.json
+
+      - name: Install global npm version
+        run: npm install -g npm@$NPM_VERSION
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK components
+        run: |
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-${{ env.ANDROID_API_LEVEL }}" \
+            "build-tools;${{ env.ANDROID_BUILD_TOOLS }}" \
+            "emulator" \
+            "system-images;android-${{ env.ANDROID_API_LEVEL }};google_apis;${{ env.ANDROID_EMULATOR_ARCH }}"
+
+      - name: Create AVD
+        run: |
+          echo no | avdmanager create avd \
+            --force \
+            --name "${{ env.AVD_NAME }}" \
+            --package "system-images;android-${{ env.ANDROID_API_LEVEL }};google_apis;${{ env.ANDROID_EMULATOR_ARCH }}" \
+            --device "pixel_6"
+
+      - name: Build Django image
+        run: docker build -t cbr-e2e-django ./server
+
+      - name: Run Django migrations & seed data
+        run: |
+          docker run --rm --add-host=host.docker.internal:host-gateway \
+            --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE/server:/code" \
+            -v "$GITHUB_WORKSPACE/server/.ci-logs:/var/log" \
+            -e DEBUG=yes \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -e LISTEN_PORT=8000 \
+            -e POSTGRES_HOST=host.docker.internal \
+            -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
+            -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
+            -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
+            -e SECRET_KEY=${{ env.SECRET_KEY }} \
+            -e DOMAIN=${{ env.DOMAIN }} \
+            cbr-e2e-django \
+            sh -c "python manage.py migrate --no-input && python manage.py flush --no-input && python manage.py seeddatabase"
+
+      - name: Start Django server
+        run: |
+          docker run -d --name cbr-e2e-django -p 8000:8000 --add-host=host.docker.internal:host-gateway \
+            --user "$(id -u):$(id -g)" \
+            -v "$GITHUB_WORKSPACE/server:/code" \
+            -v "$GITHUB_WORKSPACE/server/.ci-logs:/var/log" \
+            -e DEBUG=yes \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -e LISTEN_PORT=8000 \
+            -e POSTGRES_HOST=host.docker.internal \
+            -e POSTGRES_DB=${{ env.POSTGRES_DB }} \
+            -e POSTGRES_USER=${{ env.POSTGRES_USER }} \
+            -e POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }} \
+            -e SECRET_KEY=${{ env.SECRET_KEY }} \
+            -e DOMAIN=${{ env.DOMAIN }} \
+            cbr-e2e-django \
+            python manage.py runserver 0.0.0.0:8000
+
+          echo "Waiting for Django to start..."
+          DJANGO_UP=false
+          for i in $(seq 1 30); do
+            # Use HEAD or just check for any HTTP response (GET /api/login/ returns 405, so don't use -f)
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/api/login/ 2>/dev/null || true)
+            if [ -n "$HTTP_CODE" ] && [ "$HTTP_CODE" != "000" ]; then
+              echo "Django is up (HTTP $HTTP_CODE after $i attempts)"
+              DJANGO_UP=true
+              break
+            fi
+            sleep 2
+          done
+
+          if [ "$DJANGO_UP" != "true" ]; then
+            echo "::error::Django failed to start within 60 seconds"
+            echo "=== Docker container status ==="
+            docker ps -a --filter name=cbr-e2e-django
+            echo "=== Docker logs ==="
+            docker logs cbr-e2e-django 2>&1 | tail -50
+            exit 1
+          fi
+
+      - name: Install & build common
+        working-directory: common
+        run: |
+          npm ci
+          npm run build
+
+      - name: Install mobile dependencies
+        working-directory: mobile
+        run: |
+          # refresh-common updates the lockfile hash for the locally packed @cbr/common tarball
+          npm run refresh-common
+          npm ci
+
+      - name: Expo prebuild (generate android/)
+        run: npx expo prebuild --platform android --clean
+        working-directory: mobile
+
+      - name: Write local.properties
+        run: echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+        working-directory: mobile
+
+      - name: Create mobile .env
+        run: |
+          cat > .env <<'EOF'
+          APP_ENV=local
+          LOCAL_URL=http://10.0.2.2:8000
+          REACT_NATIVE_PACKAGER_HOSTNAME=localhost
+          EOF
+        working-directory: mobile
+
+      - name: Create .env.e2e
+        env:
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+        run: |
+          if [ -z "$E2E_USERNAME" ] || [ -z "$E2E_PASSWORD" ]; then
+            echo "::error::Missing required secrets: E2E_USERNAME and/or E2E_PASSWORD"
+            exit 1
+          fi
+          printf '%s\n' \
+            "E2E_USERNAME=${E2E_USERNAME}" \
+            "E2E_PASSWORD=${E2E_PASSWORD}" \
+            "DETOX_AVD_NAME=${{ env.AVD_NAME }}" \
+            "DETOX_ADB_NAME=emulator-5554" \
+            "APP_ENV=local" \
+            "LOCAL_URL=http://10.0.2.2:8000" \
+            "REACT_NATIVE_PACKAGER_HOSTNAME=localhost" \
+            > .env.e2e
+        working-directory: mobile
+
+      - name: Debug emulator setup
+        run: |
+          echo "=== AVD list ==="
+          avdmanager list avd
+          echo "=== Emulator binary ==="
+          which emulator && emulator -version
+          echo "=== ADB devices ==="
+          adb devices
+          echo "=== Try launching emulator directly ==="
+          nohup emulator -avd "${{ env.AVD_NAME }}" -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -verbose 2>&1 | head -50 &
+          sleep 10
+          adb devices
+
+      - name: Start emulator and run Detox
+        uses: reactivecircus/android-emulator-runner@v2.36.0
+        with:
+          api-level: ${{ env.ANDROID_API_LEVEL }}
+          target: google_apis
+          arch: ${{ env.ANDROID_EMULATOR_ARCH }}
+          avd-name: ${{ env.AVD_NAME }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -no-snapshot-save
+          disable-animations: true
+          emulator-boot-timeout: 600
+          working-directory: mobile
+          script: |
+            echo "=== Initial emulator setup ==="
+            adb -s emulator-5554 shell settings put global window_animation_scale 0
+            adb -s emulator-5554 shell settings put global transition_animation_scale 0
+            adb -s emulator-5554 shell settings put global animator_duration_scale 0
+            adb -s emulator-5554 shell settings put secure anr_show_background 0
+            adb -s emulator-5554 shell svc wifi enable
+            adb -s emulator-5554 shell svc data enable
+            echo "=== .env file contents ==="
+            cat .env
+            echo "=== .env.e2e file contents ==="
+            cat .env.e2e
+            echo "=== Checking Django server from host ==="
+            docker ps --filter name=cbr-e2e-django --format '{{.Status}}'
+            curl -s -o /dev/null -w 'Django HTTP status: %{http_code}\n' http://localhost:8000/api/login/ || echo "::warning::Django not reachable from host"
+            echo "=== Django container logs (last 30 lines) ==="
+            docker logs cbr-e2e-django 2>&1 | tail -30
+            echo "=== Setting up adb reverse ==="
+            adb -s emulator-5554 reverse tcp:8000 tcp:8000
+            adb -s emulator-5554 reverse tcp:8081 tcp:8081
+            adb -s emulator-5554 reverse --list
+            echo "=== Bundling and building ==="
+            npm run detox:bundle
+            npx detox build -c android.att.debug
+            echo "=== Stabilising emulator right before tests ==="
+            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
+            adb -s emulator-5554 shell input keyevent KEYCODE_HOME
+            adb -s emulator-5554 shell input keyevent KEYCODE_ESCAPE
+            adb -s emulator-5554 shell am broadcast -a android.intent.action.CLOSE_SYSTEM_DIALOGS
+            sleep 3
+            npx detox test -c android.att.debug
+
+      - name: Clean up containers and processes
+        if: always()
+        run: |
+          docker rm -f cbr-e2e-django 2>/dev/null || true
+          docker rmi cbr-e2e-django 2>/dev/null || true
+          # Kill qemu/emulator processes hard(-9)
+          pkill -9 -f "qemu-system" 2>/dev/null || true
+          pkill -9 -f "[/]emulator" 2>/dev/null || true
+          sleep 1
+          # Reset adb daemon to clear stale references
+          adb kill-server 2>/dev/null || true
+
+      - name: Clean up AVD
+        if: always()
+        run: avdmanager delete avd --name "${{ env.AVD_NAME }}" 2>/dev/null || true
+
+      - name: Upload test artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: detox-artifacts
+          path: mobile/e2e/artifacts/
+          retention-days: 14

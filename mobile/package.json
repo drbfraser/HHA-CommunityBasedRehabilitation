@@ -10,6 +10,7 @@
         "build-aab": "node build.js --bundle",
         "reset-project": "node ./scripts/reset-project.js",
         "refresh-common": "npm uninstall @cbr/common && npm pack ../common && npm install cbr-common-1.0.0.tgz",
+        "prepare-common-tarball": "rm -f cbr-common-1.0.0.tgz && npm pack ../common",
         "test": "jest --watchAll",
         "lint": "expo lint",
         "android": "expo run:android",

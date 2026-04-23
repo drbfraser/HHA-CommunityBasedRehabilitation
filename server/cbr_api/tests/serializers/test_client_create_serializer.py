@@ -428,6 +428,16 @@ class ClientCreateSerializerTests(TestCase):
         self.assertEqual(float(client.longitude), -123.123456)
         self.assertEqual(float(client.latitude), 49.123456)
 
+    def test_coordinate_decimal_places_are_validated(self):
+        data = get_valid_client_data(self.zone, self.d1, self.d2)
+        data["longitude"] = "-123.1234567"
+
+        serializer = ClientCreateSerializer(data=data)
+
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("longitude", serializer.errors)
+        self.assertEqual(Client.objects.count(), 0)
+
     def test_caregiver_present_default_false(self):
         data = get_valid_client_data(self.zone, self.d1, self.d2)
         # Don't include caregiver_present in data

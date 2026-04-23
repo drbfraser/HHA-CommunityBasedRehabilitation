@@ -353,3 +353,17 @@ class AdminStatsViewTests(AdminStatsSetUp):
         # Zone 2: two on male refugee child, one on female host child
         assert cat["BidiBidi Zone 2"].get("Male refugee Age 11-17", 0) == 2
         assert cat["BidiBidi Zone 2"].get("Female host Age 6-10", 0) == 1
+
+    def test_unsupported_grouping_params_are_ignored(self):
+        resp = self.client.get(
+            self.url,
+            {
+                "categorize_by": "unsupported",
+                "group_by": "gender,unsupported,resolved",
+            },
+        )
+
+        assert resp.status_code == status.HTTP_200_OK
+        visits = self._series_to_map(resp.json()["visits"])
+        assert visits.get("Male", 0) == 5
+        assert visits.get("Female", 0) == 2

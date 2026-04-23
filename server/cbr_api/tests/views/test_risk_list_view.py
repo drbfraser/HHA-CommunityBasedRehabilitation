@@ -139,3 +139,19 @@ class RiskListViewTests(RiskViewsTestCase):
         response = self.client_api.post(url, {}, format="json")
 
         self.assertEqual(response.status_code, 400)
+
+    def test_create_risk_without_goal_status_uses_previous_goal_for_client_level(self):
+        url = reverse("risk-list")
+        data = {
+            "client_id": str(self.client.id),
+            "risk_type": RiskType.HEALTH,
+            "risk_level": RiskLevel.MEDIUM,
+        }
+
+        response = self.client_api.post(url, data, format="json")
+
+        self.assertEqual(response.status_code, 201)
+        created_risk = ClientRisk.objects.get(id=response.data["id"])
+        self.client.refresh_from_db()
+        self.assertEqual(created_risk.change_type, RiskChangeType.RISK_LEVEL)
+        self.assertEqual(self.client.health_risk_level, RiskLevel.MEDIUM)

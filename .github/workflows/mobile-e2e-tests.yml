@@ -2,7 +2,7 @@ name: Mobile E2E Tests (Detox)
 
 on:
   push:
-    branches: [831-add-e2e-mobile-tests-to-ci]
+    branches: [ main ]
   # workflow_dispatch:
 
 env:
@@ -26,7 +26,7 @@ concurrency:
 
 jobs:
   detox-e2e:
-    runs-on: [self-hosted, docker]
+    runs-on: [ self-hosted, docker ]
     timeout-minutes: 60
 
     services:
@@ -39,10 +39,8 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+          --health-cmd "pg_isready -U postgres" --health-interval 10s
+          --health-timeout 5s --health-retries 5
 
     steps:
       - name: Repair workspace ownership
@@ -276,7 +274,8 @@ jobs:
           arch: ${{ env.ANDROID_EMULATOR_ARCH }}
           avd-name: ${{ env.AVD_NAME }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -no-snapshot-save
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+            -no-snapshot -no-snapshot-save
           disable-animations: true
           emulator-boot-timeout: 600
           working-directory: mobile

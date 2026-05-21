@@ -303,6 +303,16 @@ def create_referral_data(validated_data, user, sync_time):
         models.Referral.objects.filter(pk=data["id"]).update(**data)
 
 
+def create_patient_note_data(validated_data, user, sync_time):
+    table_data = validated_data.get("patient_notes")
+    created_data = table_data.pop("created")
+    for data in created_data:
+        data["created_by"] = models.UserCBR.objects.get(username=user)
+        record = models.PatientNote.objects.create(**data)
+        record.server_created_at = sync_time
+        record.save()
+
+
 def api_versions_compatible(mobile_version):
     mobile_major_version = mobile_version.split(".")[0]
     server_major_version = API_VERSION.split(".")[0]

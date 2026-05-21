@@ -19,6 +19,7 @@ from cbr_api.util import (
     create_survey_data,
     create_generic_data,
     create_update_delete_alert_data,
+    create_patient_note_data,
 )
 import logging
 
@@ -1153,6 +1154,21 @@ class multiAlertSerializer(serializers.Serializer):
     deleted = deleteAlertSyncSerializer(many=True)
 
 
+class PatientNoteSyncSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(validators=[])
+    client_id = serializers.CharField()
+
+    class Meta:
+        model = models.PatientNote
+        fields = ["id", "client_id", "note", "created_at"]
+
+
+class multiPatientNoteSerializer(serializers.Serializer):
+    created = PatientNoteSyncSerializer(many=True)
+    updated = PatientNoteSyncSerializer(many=True)
+    deleted = PatientNoteSyncSerializer(many=True)
+
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
@@ -1163,6 +1179,7 @@ class tableSerializer(serializers.Serializer):
     visits = multiVisitSerializer()
     improvements = multiImprovementSerializer()
     alert = multiAlertSerializer()
+    patient_notes = multiPatientNoteSerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):
@@ -1231,6 +1248,16 @@ class pushAlertSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         create_update_delete_alert_data(validated_data, self.context.get("sync_time"))
+        return self
+
+
+class pushPatientNoteSerializer(serializers.Serializer):
+    patient_notes = multiPatientNoteSerializer()
+
+    def create(self, validated_data):
+        create_patient_note_data(
+            validated_data, self.context["user"], self.context.get("sync_time")
+        )
         return self
 
 

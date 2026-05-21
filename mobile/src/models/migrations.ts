@@ -139,5 +139,18 @@ export default schemaMigrations({
                 }),
             ],
         },
+        {
+            toVersion: 9,
+            steps: [
+                createTable({
+                    name: modelName.patient_notes,
+                    columns: [
+                        { name: "client_id", type: "string", isIndexed: true },
+                        { name: "note", type: "string" },
+                        { name: "created_at", type: "number" },
+                    ],
+                }),
+            ],
+        },
     ],
 });

@@ -719,6 +719,7 @@ def sync(request):
         reply.changes["visits"] = get_model_changes(request, models.Visit)
         reply.changes["improvements"] = get_model_changes(request, models.Improvement)
         reply.changes["alert"] = get_model_changes(request, models.Alert)
+        reply.changes["patient_notes"] = get_model_changes(request, models.PatientNote)
         serialized = serializers.pullResponseSerializer(reply)
         stringify_disability(serialized.data)
         stringify_unread_users(serialized.data)
@@ -803,6 +804,15 @@ def sync(request):
             alert_serializer.save()
         else:
             validation_fail(alert_serializer)
+
+        patient_note_serializer = serializers.pushPatientNoteSerializer(
+            data=request.data,
+            context={"sync_time": sync_time, "user": request.user},
+        )
+        if patient_note_serializer.is_valid():
+            patient_note_serializer.save()
+        else:
+            validation_fail(patient_note_serializer)
 
         return Response(status=status.HTTP_201_CREATED)
 

@@ -11,8 +11,6 @@ import {
     mobileClientDetailsValidationSchema,
     ISurvey,
     IRisk,
-    apiFetch,
-    Endpoint,
 } from "@cbr/common";
 import clientStyle from "./ClientDetails.styles";
 import { Alert, Text, View } from "react-native";
@@ -29,6 +27,7 @@ import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
+import { Q } from "@nozbe/watermelondb";
 import { modelName } from "../../models/constant";
 import ConflictDialog from "../../components/ConflictDialog/ConflictDialog";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
@@ -103,21 +102,25 @@ const ClientDetails = (props: ClientProps) => {
         }
     };
 
-    const loadPatientNote = useCallback(() => {
+    const loadPatientNote = useCallback(async () => {
         if (!props.route.params.clientID) return;
         setNoteLoading(true);
-        apiFetch(Endpoint.PATIENT_NOTES, `latest/${props.route.params.clientID}/`)
-            .then(async (resp) => {
-                if (resp.status === 200) {
-                    const data = await resp.json();
-                    setPatientNote(data.note || "");
-                } else {
-                    setPatientNote("");
-                }
-            })
-            .catch(() => setPatientNote(""))
-            .finally(() => setNoteLoading(false));
-    }, [props.route.params.clientID]);
+        try {
+            const notes = await database
+                .get(modelName.patient_notes)
+                .query(
+                    Q.where("client_id", props.route.params.clientID),
+                    Q.sortBy("created_at", Q.desc),
+                    Q.take(1)
+                )
+                .fetch();
+            setPatientNote(notes.length > 0 ? (notes[0] as any).note ?? "" : "");
+        } catch {
+            setPatientNote("");
+        } finally {
+            setNoteLoading(false);
+        }
+    }, [props.route.params.clientID, database]);
 
     useEffect(() => {
         loadPatientNote();

@@ -1,4 +1,3 @@
-import uuid
 from django.test import TestCase
 from django.db import IntegrityError
 from cbr_api.models import Client, PatientNote, UserCBR, Zone
@@ -30,7 +29,7 @@ class PatientNoteModelTests(TestCase):
             note="Patient is doing well.",
         )
         self.assertIsNotNone(note.id)
-        self.assertIsInstance(note.id, uuid.UUID)
+        self.assertTrue(len(note.id) > 0)
         self.assertEqual(note.client, self.client_obj)
         self.assertEqual(note.created_by, self.user)
         self.assertEqual(note.note, "Patient is doing well.")

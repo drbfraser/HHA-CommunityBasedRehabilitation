@@ -1,5 +1,7 @@
 from django.db import migrations, models
 
+import cbr_api.models
+
 
 class Migration(migrations.Migration):
 
@@ -11,6 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="patientnote",
             name="id",
-            field=models.CharField(max_length=100, primary_key=True, serialize=False),
+            field=models.CharField(
+                default=cbr_api.models.generate_id,
+                max_length=100,
+                primary_key=True,
+                serialize=False,
+            ),
         ),
     ]

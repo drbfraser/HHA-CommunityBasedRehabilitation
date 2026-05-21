@@ -597,7 +597,7 @@ def generate_id():
 
 
 class PatientNote(models.Model):
-    id = models.CharField(primary_key=True, max_length=100)
+    id = models.CharField(primary_key=True, max_length=100, default=generate_id)
 
     client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
 

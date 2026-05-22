@@ -121,7 +121,7 @@ The project uses [Detox](https://wix.github.io/Detox/) for end-to-end testing on
 
     ```bash
     cp .env.e2e.example .env.e2e
-    # then edit .env.e2e with valid test credentials
+    # then edit .env.e2e with valid test credentials and E2E_PIN (4-6 digits, default 1234)
     ```
 
 4.  **Set your AVD name** — add the name of your Android emulator to `.env.e2e`:
@@ -230,6 +230,7 @@ describe("Feature", () => {
 
 -   Add `testID` props to React Native components to make them targetable in tests.
 -   Prefer `replaceText()` over `typeText()` for text input. `typeText` can double-type characters due to Detox synchronization issues with React Native's JS bridge.
+-   After login, the app requires PIN setup (first launch) or PIN entry (when locked). Use `loginAndUnlockApp()` from `e2e/authHelpers.js` in `beforeAll` hooks, and `ensureAppUnlocked()` when recovering mid-test. Set `E2E_PIN` in `.env.e2e` (4–6 digits; defaults to `1234`).
 
 ## Debugging E2E Tests
 

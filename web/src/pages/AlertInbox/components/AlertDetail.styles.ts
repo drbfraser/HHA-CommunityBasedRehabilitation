@@ -4,12 +4,17 @@ export const alertDetailStyles: Record<string, SxProps<Theme>> = {
     dividerStyle: {
         backgroundColor: "grey",
     },
+    alertBodyStyle: {
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 250,
+    },
     deleteButtonStyle: {
-        bottom: 0,
-        position: "absolute",
+        marginTop: 2,
+        alignSelf: "flex-start",
     },
     detailContainerStyle: {
-        position: "relative",
-        minHeight: "300px",
+        display: "flex",
+        flexDirection: "column",
     },
 };

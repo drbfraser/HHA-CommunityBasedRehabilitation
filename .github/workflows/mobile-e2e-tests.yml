@@ -237,14 +237,20 @@ jobs:
         env:
           E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
           E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_PIN: ${{ secrets.E2E_PIN || '1234' }}
         run: |
           if [ -z "$E2E_USERNAME" ] || [ -z "$E2E_PASSWORD" ]; then
             echo "::error::Missing required secrets: E2E_USERNAME and/or E2E_PASSWORD"
             exit 1
           fi
+          if ! echo "$E2E_PIN" | grep -Eq '^[0-9]{4,6}$'; then
+            echo "::error::E2E_PIN must be 4-6 digits (set secrets.E2E_PIN or use default 1234)"
+            exit 1
+          fi
           printf '%s\n' \
             "E2E_USERNAME=${E2E_USERNAME}" \
             "E2E_PASSWORD=${E2E_PASSWORD}" \
+            "E2E_PIN=${E2E_PIN}" \
             "DETOX_AVD_NAME=${{ env.AVD_NAME }}" \
             "DETOX_ADB_NAME=emulator-5554" \
             "APP_ENV=local" \

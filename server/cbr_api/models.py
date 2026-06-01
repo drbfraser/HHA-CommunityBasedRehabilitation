@@ -597,7 +597,7 @@ def generate_id():
 
 
 class PatientNote(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, max_length=100, default=generate_id)
 
     client = models.ForeignKey(Client, related_name="notes", on_delete=models.CASCADE)
 
@@ -608,6 +608,8 @@ class PatientNote(models.Model):
     note = models.TextField()
 
     created_at = models.BigIntegerField(default=current_milli_time)
+
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
     class Meta:
         ordering = ["-created_at"]

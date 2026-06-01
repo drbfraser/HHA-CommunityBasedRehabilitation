@@ -7,6 +7,7 @@ import Referral from "./Referral";
 import BaselineSurvey from "./BaselineSurvey";
 import Visit from "./Visit";
 import Alert from "./Alert";
+import PatientNote from "./PatientNote";
 
 export const dbModels = [
     User,
@@ -18,4 +19,5 @@ export const dbModels = [
     Outcome,
     Improvement,
     Alert,
+    PatientNote,
 ];

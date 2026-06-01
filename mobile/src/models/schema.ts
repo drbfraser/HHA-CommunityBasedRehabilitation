@@ -12,7 +12,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 8,
+    version: 9,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -214,6 +214,14 @@ export default appSchema({
                 { name: alertField.created_by_user, type: "string" },
                 { name: "created_date", type: "number" },
                 { name: mobileGenericField.updated_at, type: "number" },
+            ],
+        }),
+        tableSchema({
+            name: modelName.patient_notes,
+            columns: [
+                { name: tableKey.client_id, type: "string", isIndexed: true },
+                { name: "note", type: "string" },
+                { name: mobileGenericField.created_at, type: "number" },
             ],
         }),
     ],

@@ -8,6 +8,7 @@ export enum modelName {
     outcomes = "outcomes",
     improvements = "improvements",
     alert = "alert",
+    patient_notes = "patient_notes",
 }
 
 export enum tableKey {

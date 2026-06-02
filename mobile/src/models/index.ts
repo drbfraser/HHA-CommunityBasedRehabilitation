@@ -8,6 +8,7 @@ import BaselineSurvey from "./BaselineSurvey";
 import Visit from "./Visit";
 import Alert from "./Alert";
 import PatientNote from "./PatientNote";
+import SuccessStory from "./SuccessStory";
 
 export const dbModels = [
     User,
@@ -20,4 +21,5 @@ export const dbModels = [
     Improvement,
     Alert,
     PatientNote,
+    SuccessStory,
 ];

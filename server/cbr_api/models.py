@@ -628,7 +628,7 @@ class SuccessStory(models.Model):
         NO = "NO", _("No")
         ANONYMOUS = "ANON", _("Anonymous")
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, max_length=100, default=generate_id)
 
     client_id = models.ForeignKey(
         Client, related_name="success_stories", on_delete=models.CASCADE
@@ -641,6 +641,8 @@ class SuccessStory(models.Model):
 
     created_at = models.BigIntegerField(default=current_milli_time)
     updated_at = models.BigIntegerField(default=current_milli_time)
+
+    server_created_at = models.BigIntegerField(default=current_milli_time)
 
     title = models.CharField(max_length=300, blank=True, default="")
     refugee_origin = models.CharField(max_length=200, blank=True, default="")

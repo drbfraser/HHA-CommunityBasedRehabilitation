@@ -128,9 +128,8 @@ const ClientDetails = (props: ClientProps) => {
 
     const loadStories = useCallback(() => {
         if (!props.route.params.clientID) return;
-        getStoriesForClient(props.route.params.clientID)
+        getStoriesForClient(database, props.route.params.clientID)
             .then((data) => {
-                data.sort((a, b) => b.created_at - a.created_at);
                 setStories(data);
                 setStoriesError(false);
             })
@@ -138,7 +137,7 @@ const ClientDetails = (props: ClientProps) => {
                 setStories([]);
                 setStoriesError(true);
             });
-    }, [props.route.params.clientID]);
+    }, [database, props.route.params.clientID]);
 
     useEffect(() => {
         if (isFocused) {

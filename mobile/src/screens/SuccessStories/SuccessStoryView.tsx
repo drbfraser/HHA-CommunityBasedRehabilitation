@@ -4,6 +4,7 @@ import { ActivityIndicator, Button, Card, Divider } from "react-native-paper";
 import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { apiFetch, Endpoint, themeColors } from "@cbr/common";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { getStoryById, ISuccessStory, StoryStatus, PublishPermission } from "./successStoryApi";
@@ -54,6 +55,7 @@ const Section = ({ title, body }: { title: string; body: string }) =>
 const SuccessStoryView = ({ route, navigation }: Props) => {
     const { clientID, storyId, clientName } = route.params;
     const isFocused = useIsFocused();
+    const database = useDatabase();
     const [story, setStory] = useState<ISuccessStory>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -61,12 +63,16 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
 
     const loadStory = useCallback(() => {
         setLoading(true);
-        getStoryById(storyId)
+        getStoryById(database, storyId)
             .then((data) => {
                 setStory(data);
                 setError(false);
 
+                // Prefer the locally-stored photo URI; otherwise fall back to the
+                // online image endpoint (only available for synced stories).
                 if (data.photo) {
+                    setPhotoBlobUrl(data.photo);
+                } else {
                     apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
                         .then((resp) => resp.blob())
                         .then((blob) => {
@@ -83,7 +89,7 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
-    }, [storyId]);
+    }, [database, storyId]);
 
     useEffect(() => {
         if (isFocused) {

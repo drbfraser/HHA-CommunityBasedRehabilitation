@@ -178,6 +178,7 @@ def get_model_changes(request, model):
             model == models.Client
             or model == models.UserCBR
             or model == models.Referral
+            or model == models.SuccessStory
         ):
             create_set = queryset.filter(server_created_at__gt=pulledTime)
             updated_set = queryset.filter(
@@ -311,6 +312,27 @@ def create_patient_note_data(validated_data, user, sync_time):
         record = models.PatientNote.objects.create(**data)
         record.server_created_at = sync_time
         record.save()
+
+
+def create_success_story_data(validated_data, user, sync_time):
+    table_data = validated_data.get("success_stories")
+
+    created_data = table_data.pop("created")
+    for data in created_data:
+        # The author is stamped server-side from the request user; the photo is
+        # never synced (it stays on the dedicated REST image endpoints).
+        data["created_by_user_id"] = models.UserCBR.objects.get(username=user)
+        record = models.SuccessStory.objects.create(**data)
+        record.server_created_at = sync_time
+        record.save()
+
+    updated_data = table_data.pop("updated")
+    for data in updated_data:
+        data["updated_at"] = sync_time
+        # client and author are immutable after creation, so drop them from edits
+        data.pop("client_id", None)
+        data.pop("created_by_user_id", None)
+        models.SuccessStory.objects.filter(pk=data["id"]).update(**data)
 
 
 def api_versions_compatible(mobile_version):

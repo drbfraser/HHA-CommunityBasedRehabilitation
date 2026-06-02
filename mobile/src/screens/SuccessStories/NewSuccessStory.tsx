@@ -6,6 +6,7 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as ImagePicker from "expo-image-picker";
 import { apiFetch, Endpoint, themeColors, useCurrentUser } from "@cbr/common";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import ExposedDropdownMenu from "../../components/ExposedDropdownMenu/ExposedDropdownMenu";
@@ -67,6 +68,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const isEditing = Boolean(storyId);
 
     const currentUser = useCurrentUser();
+    const database = useDatabase();
     const [form, setForm] = useState<FormState>(BLANK_FORM(clientID));
     const [photoUri, setPhotoUri] = useState<string>("");
     const [existingPhotoUri, setExistingPhotoUri] = useState<string>("");
@@ -88,13 +90,17 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     useEffect(() => {
         if (!storyId) return;
         setIsLoading(true);
-        getStoryById(storyId)
+        getStoryById(database, storyId)
             .then((existing) => {
                 const { id, created_at, updated_at, created_by_user_id, ...rest } = existing;
                 setForm(rest);
                 initialFormRef.current = JSON.stringify(rest);
 
+                // Prefer the locally-stored photo URI; otherwise fall back to the
+                // online image endpoint (only available for already-synced stories).
                 if (existing.photo) {
+                    setExistingPhotoUri(existing.photo);
+                } else {
                     apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
                         .then((resp) => resp.blob())
                         .then((blob) => {
@@ -111,7 +117,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             })
             .catch(() => setError("Could not load the success story."))
             .finally(() => setIsLoading(false));
-    }, [storyId]);
+    }, [database, storyId]);
 
     useEffect(() => {
         if (!storyId && !initialFormRef.current) {
@@ -168,6 +174,12 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             return;
         }
 
+        const userId = currentUser && currentUser !== "APILoadError" ? currentUser.id : "";
+        if (!storyId && !userId) {
+            setError("Could not determine the current user. Please sync and try again.");
+            return;
+        }
+
         const payload: ISuccessStoryPayload = {
             client_id: clientID,
             title: form.title,
@@ -185,13 +197,24 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             date: form.date,
         };
 
+        // Resolve the local-only photo URI to persist: a newly-picked image wins;
+        // if the photo was removed, clear it; if it is unchanged, leave it as is.
+        let photoArg: string | undefined;
+        if (photoUri) {
+            photoArg = photoUri;
+        } else if (!existingPhotoUri) {
+            photoArg = "";
+        } else {
+            photoArg = undefined;
+        }
+
         setIsSubmitting(true);
         setError(undefined);
         setHasSubmitted(true);
 
         const request = storyId
-            ? updateStory(storyId, payload, photoUri || undefined)
-            : createStory(payload, photoUri || undefined);
+            ? updateStory(database, storyId, payload, photoArg)
+            : createStory(database, clientID, userId, payload, photoArg);
 
         request
             .then(() => navigation.goBack())

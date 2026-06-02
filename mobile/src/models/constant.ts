@@ -9,12 +9,14 @@ export enum modelName {
     improvements = "improvements",
     alert = "alert",
     patient_notes = "patient_notes",
+    success_stories = "success_stories",
 }
 
 export enum tableKey {
     user_id = "user_id",
     client_id = "client_id",
     visit_id = "visit_id",
+    created_by_user_id = "created_by_user_id",
 }
 
 export enum mobileGenericField {

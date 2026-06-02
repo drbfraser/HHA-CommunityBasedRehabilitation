@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Alert, Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ActivityIndicator, Button, Divider, TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -20,6 +20,7 @@ import {
     updateStory,
 } from "./successStoryApi";
 import { styles } from "./SuccessStories.styles";
+import { PinContext } from "../../context/PinContext/PinContext";
 
 interface Props {
     route: RouteProp<StackParamList, StackScreenName.SUCCESS_STORY_NEW>;
@@ -67,6 +68,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const isEditing = Boolean(storyId);
 
     const currentUser = useCurrentUser();
+    const { runWithoutAutoLock } = useContext(PinContext);
     const [form, setForm] = useState<FormState>(BLANK_FORM(clientID));
     const [photoUri, setPhotoUri] = useState<string>("");
     const [existingPhotoUri, setExistingPhotoUri] = useState<string>("");
@@ -129,34 +131,42 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
         setForm((prev) => ({ ...prev, [field]: text }));
 
     const pickPhoto = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert("Permission required", "Photo library permission is needed.");
-            return;
-        }
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 0.7,
+        // Suppress the PIN auto-lock while the permission dialog and picker
+        // background the app, so the in-progress story form is not discarded.
+        const result = await runWithoutAutoLock(async () => {
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== "granted") {
+                Alert.alert("Permission required", "Photo library permission is needed.");
+                return undefined;
+            }
+            return ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                quality: 0.7,
+            });
         });
-        if (!result.canceled) {
+        if (result && !result.canceled) {
             setPhotoUri(result.assets[0].uri);
             setExistingPhotoUri("");
         }
     };
 
     const takePhoto = async () => {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert("Permission required", "Camera permission is needed.");
-            return;
-        }
-        const result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            quality: 0.7,
+        // Suppress the PIN auto-lock while the permission dialog and camera
+        // background the app, so the in-progress story form is not discarded.
+        const result = await runWithoutAutoLock(async () => {
+            const { status } = await ImagePicker.requestCameraPermissionsAsync();
+            if (status !== "granted") {
+                Alert.alert("Permission required", "Camera permission is needed.");
+                return undefined;
+            }
+            return ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                quality: 0.7,
+            });
         });
-        if (!result.canceled) {
+        if (result && !result.canceled) {
             setPhotoUri(result.assets[0].uri);
             setExistingPhotoUri("");
         }

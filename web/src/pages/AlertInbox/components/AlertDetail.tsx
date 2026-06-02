@@ -51,12 +51,14 @@ const AlertDetail = ({ selectAlert, alertData, refreshAlert }: IProps) => {
             <h1>{t("general.details")}</h1>
             <Divider variant="fullWidth" sx={alertDetailStyles.dividerStyle} />
 
-            <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
-            <Typography>
-                {selectedItem.length === 0 || selectedItem[0].alert_message === ""
-                    ? t("alerts.selectAnAlert")
-                    : selectedItem[0].alert_message}
-            </Typography>
+            <Box sx={alertDetailStyles.alertBodyStyle}>
+                <h2>{selectedItem.length === 0 ? "" : selectedItem[0].subject}</h2>
+                <Typography>
+                    {selectedItem.length === 0 || selectedItem[0].alert_message === ""
+                        ? t("alerts.selectAnAlert")
+                        : selectedItem[0].alert_message}
+                </Typography>
+            </Box>
 
             {selectedItem.length !== 0 && (
                 <Box sx={alertDetailStyles.deleteButtonStyle}>

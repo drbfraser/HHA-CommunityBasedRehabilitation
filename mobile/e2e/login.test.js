@@ -1,8 +1,10 @@
 const { device, element, by, expect } = require("detox");
 const { execSync } = require("child_process");
-
-const E2E_USERNAME = process.env.E2E_USERNAME;
-const E2E_PASSWORD = process.env.E2E_PASSWORD;
+const {
+    loginAndUnlockApp,
+    loginWithCredentials,
+    completePinSetupIfNeeded,
+} = require("./authHelpers");
 
 describe("Login", () => {
     beforeAll(async () => {
@@ -31,29 +33,38 @@ describe("Login", () => {
     });
 
     it("should login successfully with valid credentials", async () => {
-        if (!E2E_USERNAME || !E2E_PASSWORD) {
-            throw new Error(
-                "E2E credentials not set. Please set E2E_USERNAME and E2E_PASSWORD environment variables in .env.e2e"
-            );
-        }
+        await loginWithCredentials();
 
-        await element(by.id("login-username-input")).tap();
-        await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
-        await element(by.id("login-username-input")).tapReturnKey();
+        await waitFor(element(by.id("pin-setup-new")))
+            .toBeVisible()
+            .withTimeout(30000);
+    });
 
-        await element(by.id("login-password-input")).tap();
-        await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);
-        await element(by.id("login-password-input")).tapReturnKey();
+    it("should complete PIN setup and reach the dashboard", async () => {
+        await completePinSetupIfNeeded(5000);
 
-        await new Promise((r) => setTimeout(r, 1000));
+        await waitFor(element(by.id("tab-dashboard")))
+            .toBeVisible()
+            .withTimeout(30000);
+    });
+});
 
-        try {
-            await expect(element(by.id("login-button"))).toBeVisible();
-            await element(by.id("login-button")).tap();
-        } catch (_) {}
+describe("Login (fresh session)", () => {
+    it("should login, set PIN, and reach the dashboard in one flow", async () => {
+        await device.launchApp({
+            newInstance: true,
+            delete: true,
+            launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },
+        });
 
         await waitFor(element(by.id("login-button")))
-            .not.toBeVisible()
+            .toBeVisible()
             .withTimeout(60000);
+
+        await loginAndUnlockApp();
+
+        await waitFor(element(by.id("tab-dashboard")))
+            .toBeVisible()
+            .withTimeout(30000);
     });
 });

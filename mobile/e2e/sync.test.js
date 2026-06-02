@@ -1,8 +1,6 @@
 const { device, element, by, expect, waitFor } = require("detox");
 const { execSync } = require("child_process");
-
-const E2E_USERNAME = process.env.E2E_USERNAME;
-const E2E_PASSWORD = process.env.E2E_PASSWORD;
+const { loginAndUnlockApp, ensureAppUnlocked } = require("./authHelpers");
 
 const TEST_CLIENT_FIRST_NAME = "SyncE2E";
 const TEST_CLIENT_LAST_NAME = `Offline${Date.now()}`;
@@ -77,44 +75,47 @@ async function selectFromDropdown(dropdownId, itemText, maxAttempts = 3) {
     }
 }
 
-async function loginWithCredentials() {
-    if (!E2E_USERNAME || !E2E_PASSWORD) {
-        throw new Error(
-            "E2E credentials not configured.  Add E2E_USERNAME and E2E_PASSWORD to mobile/.env.e2e"
-        );
+async function dismissSyncAlertIfPresent() {
+    try {
+        await waitFor(element(by.id("sync-alert-ok-button")))
+            .toBeVisible()
+            .withTimeout(3000);
+        await element(by.id("sync-alert-ok-button")).tap();
+        await sleep(500);
+        return true;
+    } catch {
+        return false;
     }
+}
 
-    await element(by.id("login-username-input")).tap();
-    await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
-    await element(by.id("login-username-input")).tapReturnKey();
-
-    await element(by.id("login-password-input")).tap();
-    await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);
-    await element(by.id("login-password-input")).tapReturnKey();
-
-    await waitFor(element(by.id("login-button")))
-        .not.toBeVisible()
-        .withTimeout(30000);
+async function isOnSyncScreen() {
+    try {
+        await expect(element(by.id("sync-database-button"))).toExist();
+        return true;
+    } catch {}
+    try {
+        await expect(element(by.text("Synchronization"))).toBeVisible();
+        return true;
+    } catch {}
+    return false;
 }
 
 async function ensureTabNavigatorVisible() {
-    // Already inside Sync screen in some flows.
-    try {
-        await expect(element(by.id("sync-database-button"))).toBeVisible();
-        return;
-    } catch {}
+    await dismissSyncAlertIfPresent();
 
-    // If app got bounced to login (e.g., token/network transitions), recover.
-    try {
-        await waitFor(element(by.id("login-button")))
-            .toBeVisible()
-            .withTimeout(5000);
-        await loginWithCredentials();
-        await waitFor(element(by.id("tab-dashboard")))
-            .toBeVisible()
-            .withTimeout(30000);
+    // Already on the Sync stack screen (tabs are hidden here).
+    if (await isOnSyncScreen()) {
+        await dismissSyncAlertIfPresent();
         return;
-    } catch {}
+    }
+
+    // Recover from PIN lock, PIN setup, or login screens.
+    await ensureAppUnlocked();
+    await dismissSyncAlertIfPresent();
+
+    if (await isOnSyncScreen()) {
+        return;
+    }
 
     // Try to unwind stacked screens until tabs reappear.
     for (let i = 0; i < 4; i++) {
@@ -123,6 +124,7 @@ async function ensureTabNavigatorVisible() {
             return;
         } catch {}
         await device.pressBack();
+        await dismissSyncAlertIfPresent();
     }
 
     await waitFor(element(by.id("tab-sync")))
@@ -131,12 +133,18 @@ async function ensureTabNavigatorVisible() {
 }
 
 async function navigateToSyncScreen() {
+    await dismissSyncAlertIfPresent();
     await ensureTabNavigatorVisible();
 
     try {
         await expect(element(by.id("sync-database-button"))).toBeVisible();
         return;
     } catch {}
+
+    if (await isOnSyncScreen()) {
+        await dismissSyncAlertIfPresent();
+        return;
+    }
 
     await element(by.id("tab-sync")).tap();
 
@@ -166,6 +174,7 @@ async function dismissSyncUpdateModalIfPresent() {
 }
 
 async function triggerSyncAndWaitForAlert() {
+    await dismissSyncAlertIfPresent();
     await element(by.id("sync-database-button")).tap();
 
     const dismissed = await dismissSyncUpdateModalIfPresent();
@@ -203,11 +212,14 @@ async function scrollUntilTextVisible(text, scrollViewId, maxScrolls = 14) {
 }
 
 async function navigateBackToHome() {
+    await dismissSyncAlertIfPresent();
+
     for (let i = 0; i < 3; i++) {
         try {
             await expect(element(by.id("tab-dashboard"))).toBeVisible();
             return;
         } catch {}
+        await dismissSyncAlertIfPresent();
         await device.pressBack();
         try {
             await waitFor(element(by.id("tab-dashboard")))
@@ -237,11 +249,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             .toBeVisible()
             .withTimeout(120000);
 
-        await loginWithCredentials();
-
-        await waitFor(element(by.id("tab-dashboard")))
-            .toBeVisible()
-            .withTimeout(30000);
+        await loginAndUnlockApp();
     }, 600000);
 
     afterAll(async () => {
@@ -400,6 +408,8 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         beforeAll(async () => {
             enableWifi();
             await sleep(5000);
+            // Phase 3 may leave a sync error dialog open; dismiss before Phase 4 navigation.
+            await dismissSyncAlertIfPresent();
         });
 
         it("successfully syncs local WatermelonDB changes to the server", async () => {

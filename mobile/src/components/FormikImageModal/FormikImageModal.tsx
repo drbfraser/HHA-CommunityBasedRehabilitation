@@ -1,7 +1,8 @@
 import { themeColors } from "@cbr/common";
 import * as ImagePicker from "expo-image-picker";
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { useEffect } from "react";
+import { PinContext } from "../../context/PinContext/PinContext";
 import { Platform, View, Text, Animated, Dimensions } from "react-native";
 import { ActivityIndicator, Button, Modal, Portal, Title } from "react-native-paper";
 import { TFormikComponentProps } from "../../util/formikUtil";
@@ -30,6 +31,7 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(props.visible);
     const { t } = useTranslation();
+    const { runWithoutAutoLock } = useContext(PinContext);
 
     const modalY = useRef(new Animated.Value(Dimensions.get("screen").height));
 
@@ -63,46 +65,50 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
     const pickImage = async (imageSource: ImageSource) => {
         setIsLoading(true);
         if (Platform.OS !== "web") {
-            const { status } =
-                imageSource === ImageSource.CAMERA
-                    ? await ImagePicker.requestCameraPermissionsAsync()
-                    : await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== "granted") {
-                alert(`Permissions are required to access the ${imageSource}.`);
-            } else {
+            // Suppress the PIN auto-lock while the permission dialog and picker
+            // background the app, so the user keeps their place and form state.
+            const image = await runWithoutAutoLock(async () => {
+                const { status } =
+                    imageSource === ImageSource.CAMERA
+                        ? await ImagePicker.requestCameraPermissionsAsync()
+                        : await ImagePicker.requestMediaLibraryPermissionsAsync();
+                if (status !== "granted") {
+                    alert(`Permissions are required to access the ${imageSource}.`);
+                    return undefined;
+                }
                 const imagePicker =
                     imageSource === ImageSource.CAMERA
                         ? ImagePicker.launchCameraAsync
                         : ImagePicker.launchImageLibraryAsync;
-                const image = await imagePicker({
+                return imagePicker({
                     mediaTypes: "images",
                     base64: true,
                     allowsEditing: true,
                     aspect: [1, 1],
                     quality: 0.7,
                 });
+            });
 
-                if (!image.canceled) {
-                    const fileInfo = await getFileInfo(image.assets[0].uri);
-                    let uri;
-                    if (fileInfo.exists && fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {
-                        const resizedUri = await manipulateAsync(
-                            `data:image/jpeg;base64,${image.assets[0].base64}`,
-                            [{ resize: { width: 300 } }],
-                            {
-                                compress: 0.7,
-                                base64: true,
-                            }
-                        );
-                        uri = `data:image/jpeg;base64,${resizedUri.base64}`;
-                    } else {
-                        uri = `data:image/jpeg;base64,${image.assets[0].base64}`;
-                    }
-
-                    props.onPictureChange(uri);
-                    props.formikProps.setFieldTouched(props.field, true);
-                    props.formikProps.setFieldValue(props.field, uri);
+            if (image && !image.canceled) {
+                const fileInfo = await getFileInfo(image.assets[0].uri);
+                let uri;
+                if (fileInfo.exists && fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {
+                    const resizedUri = await manipulateAsync(
+                        `data:image/jpeg;base64,${image.assets[0].base64}`,
+                        [{ resize: { width: 300 } }],
+                        {
+                            compress: 0.7,
+                            base64: true,
+                        }
+                    );
+                    uri = `data:image/jpeg;base64,${resizedUri.base64}`;
+                } else {
+                    uri = `data:image/jpeg;base64,${image.assets[0].base64}`;
                 }
+
+                props.onPictureChange(uri);
+                props.formikProps.setFieldTouched(props.field, true);
+                props.formikProps.setFieldValue(props.field, uri);
             }
             props.onDismiss();
         }

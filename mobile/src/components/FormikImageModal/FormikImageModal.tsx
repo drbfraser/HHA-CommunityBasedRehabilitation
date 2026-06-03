@@ -68,13 +68,14 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
             // Suppress the PIN auto-lock while the permission dialog and picker
             // background the app, so the user keeps their place and form state.
             const image = await runWithoutAutoLock(async () => {
-                const { status } =
-                    imageSource === ImageSource.CAMERA
-                        ? await ImagePicker.requestCameraPermissionsAsync()
-                        : await ImagePicker.requestMediaLibraryPermissionsAsync();
-                if (status !== "granted") {
-                    alert(`Permissions are required to access the ${imageSource}.`);
-                    return undefined;
+                // The gallery uses the Android Photo Picker / iOS limited picker, which need
+                // no media-library permission. Only the camera path requires a permission.
+                if (imageSource === ImageSource.CAMERA) {
+                    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+                    if (status !== "granted") {
+                        alert(`Permissions are required to access the ${imageSource}.`);
+                        return undefined;
+                    }
                 }
                 const imagePicker =
                     imageSource === ImageSource.CAMERA

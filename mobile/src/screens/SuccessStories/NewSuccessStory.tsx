@@ -161,11 +161,8 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
         // Suppress the PIN auto-lock while the permission dialog and picker
         // background the app, so the in-progress story form is not discarded.
         const result = await runWithoutAutoLock(async () => {
-            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (status !== "granted") {
-                Alert.alert("Permission required", "Photo library permission is needed.");
-                return undefined;
-            }
+            // The gallery uses the Android Photo Picker / iOS limited picker, which need no
+            // media-library permission, so we go straight to the picker.
             return ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,

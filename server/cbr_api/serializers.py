@@ -1180,7 +1180,9 @@ class SuccessStorySyncSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.SuccessStory
-        # NOTE: photo is intentionally excluded — binary images are not synced.
+        # photo is synced as base64 on push (decoded to a file server-side) and
+        # surfaced as a URL on pull (the mobile client then fetches the binary
+        # from the dedicated image endpoint).
         fields = [
             "id",
             "client_id",
@@ -1198,6 +1200,7 @@ class SuccessStorySyncSerializer(serializers.ModelSerializer):
             "publish_permission",
             "status",
             "date",
+            "photo",
             "created_at",
             "updated_at",
         ]

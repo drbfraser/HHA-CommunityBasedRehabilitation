@@ -148,20 +148,20 @@ def base64_to_data(data):
     return ContentFile(base64.b64decode(imgstr), name="temp." + ext)
 
 
-def decode_image(data):
+def decode_image(data, field="picture"):
     create_data = data.get("created")
-    for client in create_data:
-        if client["picture"]:
-            client["picture"] = base64_to_data(client["picture"])
+    for record in create_data:
+        if record.get(field):
+            record[field] = base64_to_data(record[field])
         else:
-            client.pop("picture")
+            record.pop(field, None)
     # for updated, only convert base64 and convert to raw data if image was locally change, else pop out of data
     updated_data = data.get("updated")
-    for client in updated_data:
-        if "picture" in client["_changed"]:
-            client["picture"] = base64_to_data(client["picture"])
+    for record in updated_data:
+        if field in record.get("_changed", ""):
+            record[field] = base64_to_data(record[field])
         else:
-            client.pop("picture")
+            record.pop(field, None)
 
 
 def get_model_changes(request, model):
@@ -319,8 +319,9 @@ def create_success_story_data(validated_data, user, sync_time):
 
     created_data = table_data.pop("created")
     for data in created_data:
-        # The author is stamped server-side from the request user; the photo is
-        # never synced (it stays on the dedicated REST image endpoints).
+        # The author is stamped server-side from the request user. The photo (if
+        # present) has already been decoded from base64 into a ContentFile and is
+        # persisted by create(), which saves the file to storage.
         data["created_by_user_id"] = models.UserCBR.objects.get(username=user)
         record = models.SuccessStory.objects.create(**data)
         record.server_created_at = sync_time
@@ -332,7 +333,13 @@ def create_success_story_data(validated_data, user, sync_time):
         # client and author are immutable after creation, so drop them from edits
         data.pop("client_id", None)
         data.pop("created_by_user_id", None)
+        # .update() can't persist a file field, so apply the photo via save()
+        new_photo = data.pop("photo", None)
         models.SuccessStory.objects.filter(pk=data["id"]).update(**data)
+        if new_photo:
+            story = models.SuccessStory.objects.get(pk=data["id"])
+            story.photo = new_photo
+            story.save()
 
 
 def api_versions_compatible(mobile_version):

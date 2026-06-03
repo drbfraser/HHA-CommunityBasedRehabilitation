@@ -5,6 +5,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import { manipulateAsync } from "expo-image-manipulator";
 import { apiFetch, Endpoint, themeColors, useCurrentUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
@@ -52,6 +54,25 @@ const BLANK_FORM = (clientId: string): FormState => ({
     status: StoryStatus.WORK_IN_PROGRESS,
     date: new Date().toISOString().slice(0, 10),
 });
+
+// Images at or above this size are downscaled before being base64-encoded so
+// the sync payload stays reasonable (mirrors FormikImageModal).
+const MAX_FILE_SIZE = 500000;
+
+// Convert a picked image into a base64 data URL so the photo can travel through
+// the sync payload (the binary is decoded server-side).
+const assetToDataUrl = async (asset: ImagePicker.ImagePickerAsset): Promise<string> => {
+    const fileInfo = await FileSystem.getInfoAsync(asset.uri);
+    if (fileInfo.exists && fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {
+        const resized = await manipulateAsync(
+            `data:image/jpeg;base64,${asset.base64}`,
+            [{ resize: { width: 300 } }],
+            { compress: 0.7, base64: true }
+        );
+        return `data:image/jpeg;base64,${resized.base64}`;
+    }
+    return `data:image/jpeg;base64,${asset.base64}`;
+};
 
 const STATUS_VALUES: Record<string, string> = {
     [StoryStatus.WORK_IN_PROGRESS]: "Work in Progress",
@@ -148,11 +169,12 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             return ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
+                base64: true,
                 quality: 0.7,
             });
         });
         if (result && !result.canceled) {
-            setPhotoUri(result.assets[0].uri);
+            setPhotoUri(await assetToDataUrl(result.assets[0]));
             setExistingPhotoUri("");
         }
     };
@@ -169,11 +191,12 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             return ImagePicker.launchCameraAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
+                base64: true,
                 quality: 0.7,
             });
         });
         if (result && !result.canceled) {
-            setPhotoUri(result.assets[0].uri);
+            setPhotoUri(await assetToDataUrl(result.assets[0]));
             setExistingPhotoUri("");
         }
     };

@@ -817,6 +817,7 @@ def sync(request):
         else:
             validation_fail(patient_note_serializer)
 
+        decode_image(request.data["success_stories"], "photo")
         success_story_serializer = serializers.pushSuccessStorySerializer(
             data=request.data,
             context={"sync_time": sync_time, "user": request.user},

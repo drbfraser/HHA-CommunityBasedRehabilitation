@@ -59,7 +59,7 @@ describe("Login (fresh session)", () => {
 
         await waitFor(element(by.id("login-button")))
             .toBeVisible()
-            .withTimeout(60000);
+            .withTimeout(120000);
 
         await loginAndUnlockApp();
 

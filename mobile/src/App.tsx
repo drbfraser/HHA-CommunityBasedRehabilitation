@@ -158,6 +158,10 @@ export default function App() {
     const [authState, setAuthState] = useState<AuthState>({ state: "unknown" });
     const [pinState, setPinState] = useState<PinState>({ state: "unknown" });
     const passwordSessionActiveRef = useRef<boolean>(false);
+    // When true, the AppState listener will not auto-lock the app on backgrounding.
+    // Used to keep the app unlocked while the OS image picker / camera (and its
+    // permission dialogs) temporarily background us. See runWithoutAutoLock below.
+    const suppressAutoLockRef = useRef<boolean>(false);
     const [syncAlert, setSyncAlert] = useState<boolean>(false);
     const [autoSync, setAutoSync] = useState<boolean>(true);
     const [cellularSync, setCellularSync] = useState<boolean>(false);
@@ -278,6 +282,12 @@ export default function App() {
             if (next === "active") {
                 return;
             }
+            // Skip locking when the backgrounding was caused by our own image
+            // picker / camera flow (see runWithoutAutoLock); the ref is cleared
+            // once that flow finishes, so real backgrounding still locks.
+            if (suppressAutoLockRef.current) {
+                return;
+            }
             setPinState((prev) => {
                 if (prev.state === "unlocked") {
                     return { state: "locked", failedAttempts: 0 };
@@ -360,6 +370,14 @@ export default function App() {
                         ? { state: "previouslyLoggedIn", currentUser: previousUser }
                         : { state: "loggedOut" }
                 );
+            },
+            runWithoutAutoLock: async <T,>(fn: () => Promise<T>): Promise<T> => {
+                suppressAutoLockRef.current = true;
+                try {
+                    return await fn();
+                } finally {
+                    suppressAutoLockRef.current = false;
+                }
             },
         }),
         [authState, pinState]

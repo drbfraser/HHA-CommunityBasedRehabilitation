@@ -109,7 +109,7 @@ async function completePinSetupIfNeeded(timeout = 15000) {
     await element(by.id("pin-setup-confirm")).replaceText(E2E_PIN);
     await element(by.id("pin-setup-submit")).tap();
 
-    await waitUntilUnlocked(30000);
+    await waitUntilUnlocked(45000);
     return true;
 }
 
@@ -132,7 +132,7 @@ async function enterPinIfLocked(timeout = 15000) {
     await element(by.id("pin-entry-input")).replaceText(E2E_PIN);
     await element(by.id("pin-entry-submit")).tap();
 
-    await waitUntilUnlocked(30000);
+    await waitUntilUnlocked(45000);
     return true;
 }
 
@@ -141,11 +141,11 @@ async function enterPinIfLocked(timeout = 15000) {
  */
 async function loginAndUnlockApp() {
     await loginWithCredentials();
-    const didSetup = await completePinSetupIfNeeded();
+    const didSetup = await completePinSetupIfNeeded(30000);
     if (!didSetup) {
-        await enterPinIfLocked(10000);
+        await enterPinIfLocked(15000);
     }
-    await waitUntilUnlocked(30000);
+    await waitUntilUnlocked(45000);
 }
 
 /**

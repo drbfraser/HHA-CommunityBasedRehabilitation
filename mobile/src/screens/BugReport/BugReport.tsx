@@ -48,11 +48,8 @@ const BugReport = () => {
         // Suppress the PIN auto-lock while the permission dialog and picker
         // background the app, so the in-progress report is not discarded.
         const imagePickerResult = await runWithoutAutoLock(async () => {
-            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (permissionResult.status !== "granted") {
-                setSubmitError("Permission to access your photos is required.");
-                return undefined;
-            }
+            // The gallery uses the Android Photo Picker / iOS limited picker, which need no
+            // media-library permission, so we go straight to the picker.
             return ImagePicker.launchImageLibraryAsync({
                 mediaTypes: "images",
                 allowsEditing: false,

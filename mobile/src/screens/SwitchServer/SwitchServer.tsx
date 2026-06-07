@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import useStyles from "./SwitchServer.styles";
 import { Text, Card, Chip, Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -9,7 +9,7 @@ import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { SyncDB } from "../../util/syncHandler";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import { showGenericAlert } from "../../util/genericAlert";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 import { buildApiUrl, getBaseUrls, persistServerSelection } from "../../util/serverConfig";
@@ -30,6 +30,19 @@ if (appEnv === "local" && !BASE_URLS.local) {
 }
 const BASE_URL = BASE_URLS[appEnv];
 
+const testServerConnection = async (baseUrl: string) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    try {
+        await fetch(baseUrl, { method: "GET", signal: controller.signal });
+        return true;
+    } catch (error) {
+        return false;
+    } finally {
+        clearTimeout(timeoutId);
+    }
+};
+
 const SwitchServer = () => {
     enum ServerOption {
         LIVE = "Live",
@@ -43,6 +56,7 @@ const SwitchServer = () => {
     const navigator = useNavigation();
     const [selectedServer, setSelectedServer] = useState(ServerOption.NONE);
     const [testServerURL, setTestServerURL] = useState("");
+    const [isServerReachable, setIsServerReachable] = useState(false);
     const { t } = useTranslation();
 
     const validateTestServerUrl = (inputUrl: string) => {
@@ -55,18 +69,30 @@ const SwitchServer = () => {
         return "";
     };
 
-    const testServerConnection = async (baseUrl: string) => {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        try {
-            await fetch(baseUrl, { method: "GET", signal: controller.signal });
-            return true;
-        } catch (error) {
-            return false;
-        } finally {
-            clearTimeout(timeoutId);
+    const checkServerReachability = useCallback(() => {
+        if (!socket.ioUrl) {
+            setIsServerReachable(false);
+            return;
         }
-    };
+        testServerConnection(socket.ioUrl).then(setIsServerReachable);
+    }, [socket.ioUrl]);
+
+    useFocusEffect(
+        useCallback(() => {
+            checkServerReachability();
+        }, [checkServerReachability])
+    );
+
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener((state) => {
+            if (state.isConnected) {
+                checkServerReachability();
+            } else {
+                setIsServerReachable(false);
+            }
+        });
+        return unsubscribe;
+    }, [checkServerReachability]);
 
     const switchServer = async (server: ServerOption) => {
         if (server !== ServerOption.NONE) {
@@ -144,7 +170,7 @@ const SwitchServer = () => {
 
     const renderCurrentServer = () => {
         const isPointingAtLive = socket.ioUrl === BASE_URL;
-        const isConnected = socket.connected;
+        const isConnected = isServerReachable;
         const chipStyle = isConnected
             ? isPointingAtLive
                 ? styles.chipLive

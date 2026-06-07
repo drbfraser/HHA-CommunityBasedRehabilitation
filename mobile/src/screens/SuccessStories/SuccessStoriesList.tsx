@@ -4,6 +4,7 @@ import { ActivityIndicator, Button } from "react-native-paper";
 import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { themeColors } from "@cbr/common";
+import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { getStoriesForClient, ISuccessStory, StoryStatus } from "./successStoryApi";
@@ -17,21 +18,21 @@ interface Props {
 const SuccessStoriesList = ({ route, navigation }: Props) => {
     const { clientID, clientName } = route.params;
     const isFocused = useIsFocused();
+    const database = useDatabase();
     const [stories, setStories] = useState<ISuccessStory[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
     const loadStories = useCallback(() => {
         setLoading(true);
-        getStoriesForClient(clientID)
+        getStoriesForClient(database, clientID)
             .then((data) => {
-                data.sort((a, b) => b.created_at - a.created_at);
                 setStories(data);
                 setError(false);
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
-    }, [clientID]);
+    }, [database, clientID]);
 
     useEffect(() => {
         if (isFocused) {

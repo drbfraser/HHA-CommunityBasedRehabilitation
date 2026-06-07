@@ -12,7 +12,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 9,
+    version: 10,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -222,6 +222,29 @@ export default appSchema({
                 { name: tableKey.client_id, type: "string", isIndexed: true },
                 { name: "note", type: "string" },
                 { name: mobileGenericField.created_at, type: "number" },
+            ],
+        }),
+        tableSchema({
+            name: modelName.success_stories,
+            columns: [
+                { name: tableKey.client_id, type: "string", isIndexed: true },
+                { name: tableKey.created_by_user_id, type: "string", isIndexed: true },
+                { name: "title", type: "string" },
+                { name: "refugee_origin", type: "string" },
+                { name: "refugee_duration", type: "string" },
+                { name: "diagnosis", type: "string" },
+                { name: "treatment_service", type: "string" },
+                { name: "part1_background", type: "string" },
+                { name: "part2_challenge", type: "string" },
+                { name: "part3_introduction", type: "string" },
+                { name: "part4_action", type: "string" },
+                { name: "part5_impact", type: "string" },
+                { name: "publish_permission", type: "string" },
+                { name: "status", type: "string" },
+                { name: "date", type: "string" },
+                { name: "photo", type: "string", isOptional: true },
+                { name: mobileGenericField.created_at, type: "number" },
+                { name: mobileGenericField.updated_at, type: "number" },
             ],
         }),
     ],

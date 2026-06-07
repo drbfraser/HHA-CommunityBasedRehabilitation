@@ -1,4 +1,3 @@
-import uuid
 from datetime import date
 from django.test import TestCase
 from django.db import IntegrityError
@@ -32,7 +31,7 @@ class SuccessStoryModelTests(TestCase):
             date=date(2024, 1, 15),
         )
         self.assertIsNotNone(story.id)
-        self.assertIsInstance(story.id, uuid.UUID)
+        self.assertTrue(len(story.id) > 0)
         self.assertEqual(story.client_id, self.client_obj)
         self.assertEqual(story.created_by_user_id, self.user)
         self.assertEqual(story.title, "A Great Recovery")

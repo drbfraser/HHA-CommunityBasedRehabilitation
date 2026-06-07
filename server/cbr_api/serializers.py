@@ -20,6 +20,7 @@ from cbr_api.util import (
     create_generic_data,
     create_update_delete_alert_data,
     create_patient_note_data,
+    create_success_story_data,
 )
 import logging
 
@@ -1169,6 +1170,48 @@ class multiPatientNoteSerializer(serializers.Serializer):
     deleted = PatientNoteSyncSerializer(many=True)
 
 
+class SuccessStorySyncSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(validators=[])
+    # The mobile client owns these foreign keys; created_by_user_id is set
+    # server-side from the request user during push, so it is optional here.
+    created_by_user_id = serializers.PrimaryKeyRelatedField(
+        queryset=models.UserCBR.objects.all(), required=False
+    )
+
+    class Meta:
+        model = models.SuccessStory
+        # photo is synced as base64 on push (decoded to a file server-side) and
+        # surfaced as a URL on pull (the mobile client then fetches the binary
+        # from the dedicated image endpoint).
+        fields = [
+            "id",
+            "client_id",
+            "created_by_user_id",
+            "title",
+            "refugee_origin",
+            "refugee_duration",
+            "diagnosis",
+            "treatment_service",
+            "part1_background",
+            "part2_challenge",
+            "part3_introduction",
+            "part4_action",
+            "part5_impact",
+            "publish_permission",
+            "status",
+            "date",
+            "photo",
+            "created_at",
+            "updated_at",
+        ]
+
+
+class multiSuccessStorySerializer(serializers.Serializer):
+    created = SuccessStorySyncSerializer(many=True)
+    updated = SuccessStorySyncSerializer(many=True)
+    deleted = SuccessStorySyncSerializer(many=True)
+
+
 # for each table being sync, add corresponding multi serializer under here
 class tableSerializer(serializers.Serializer):
     users = multiUserSerializer()
@@ -1180,6 +1223,7 @@ class tableSerializer(serializers.Serializer):
     improvements = multiImprovementSerializer()
     alert = multiAlertSerializer()
     patient_notes = multiPatientNoteSerializer()
+    success_stories = multiSuccessStorySerializer()
 
 
 class pullResponseSerializer(serializers.Serializer):
@@ -1256,6 +1300,16 @@ class pushPatientNoteSerializer(serializers.Serializer):
 
     def create(self, validated_data):
         create_patient_note_data(
+            validated_data, self.context["user"], self.context.get("sync_time")
+        )
+        return self
+
+
+class pushSuccessStorySerializer(serializers.Serializer):
+    success_stories = multiSuccessStorySerializer()
+
+    def create(self, validated_data):
+        create_success_story_data(
             validated_data, self.context["user"], self.context.get("sync_time")
         )
         return self

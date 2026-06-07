@@ -294,21 +294,40 @@ async function getImage(changes) {
     await getImageData(changes[modelName.referrals]["updated"], Endpoint.REFERRAL_PICTURE);
     await getImageData(changes[modelName.visits]["created"], Endpoint.VISIT_PICTURE);
     await getImageData(changes[modelName.visits]["updated"], Endpoint.VISIT_PICTURE);
+    await getImageData(
+        changes[modelName.success_stories]["created"],
+        Endpoint.SUCCESS_STORY_PHOTO,
+        "photo"
+    );
+    await getImageData(
+        changes[modelName.success_stories]["updated"],
+        Endpoint.SUCCESS_STORY_PHOTO,
+        "photo"
+    );
 }
 
-async function getImageData(changes, endpoint) {
+function blobToDataURL(blob: Blob): Promise<string | null> {
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(typeof reader.result === "string" ? reader.result : null);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(blob);
+    });
+}
+
+async function getImageData(changes, endpoint, field = "picture") {
     await Promise.all(
         changes.map(async (element) => {
-            if (element.picture != null) {
-                await apiFetch(endpoint, `${element.id}`)
-                    .then((resp) => resp.blob())
-                    .then((blob) => {
-                        let reader = new FileReader();
-                        reader.onload = () => {
-                            element.picture = reader.result as string;
-                        };
-                        reader.readAsDataURL(blob);
-                    });
+            if (element[field] != null) {
+                try {
+                    const resp = await apiFetch(endpoint, `${element.id}`);
+                    const dataUrl = await blobToDataURL(await resp.blob());
+                    if (dataUrl != null) {
+                        element[field] = dataUrl;
+                    }
+                } catch {
+                    // A missing image on the server must not abort the whole sync.
+                }
             }
         })
     );

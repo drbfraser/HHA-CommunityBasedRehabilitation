@@ -1,12 +1,12 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import useStyles from "./SwitchServer.styles";
 import { Text, Card, Chip, Button, TextInput } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
 import { View, Alert } from "react-native";
-import { baseServicesTypes, SocketContext, updateCommonApiUrl } from "@cbr/common";
+import { commonConfiguration, SocketContext, updateCommonApiUrl } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
-import { SyncDB } from "../../util/syncHandler";
+import { mobileApiVersion } from "../../util/syncHandler";
 import NetInfo, { NetInfoState } from "@react-native-community/netinfo";
 import { showGenericAlert } from "../../util/genericAlert";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -14,8 +14,6 @@ import i18n from "i18next";
 import { useTranslation } from "react-i18next";
 import { buildApiUrl, getBaseUrls, persistServerSelection } from "../../util/serverConfig";
 
-// Avoid importing from the project root (index.js) to prevent a require cycle with App/index.
-// Compute BASE_URL locally, mirroring mobile/index.js logic.
 const baseUrls = getBaseUrls();
 const BASE_URLS = {
     local: baseUrls.local,
@@ -23,6 +21,7 @@ const BASE_URLS = {
     staging: baseUrls.staging,
     prod: baseUrls.prod,
 };
+
 const DEFAULT_APP_ENV = baseUrls.defaultAppEnv ?? "dev";
 let appEnv = process.env.APP_ENV ?? DEFAULT_APP_ENV;
 if (appEnv === "local" && !BASE_URLS.local) {
@@ -30,17 +29,30 @@ if (appEnv === "local" && !BASE_URLS.local) {
 }
 const BASE_URL = BASE_URLS[appEnv];
 
-const testServerConnection = async (baseUrl: string) => {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
-    try {
-        await fetch(baseUrl, { method: "GET", signal: controller.signal });
-        return true;
-    } catch (error) {
-        return false;
-    } finally {
-        clearTimeout(timeoutId);
-    }
+const CHECK_INTERVAL_MS = 5000;
+const FETCH_TIMEOUT_MS = 3000;
+
+const testServerConnection = async (baseUrl: string): Promise<boolean> => {
+    return new Promise((resolve) => {
+        const timer = setTimeout(() => {
+            resolve(false);
+        }, FETCH_TIMEOUT_MS);
+
+        fetch(`${buildApiUrl(baseUrl)}versioncheck/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ api_version: mobileApiVersion }),
+        })
+            .then((response) => {
+                clearTimeout(timer);
+                const result = response.ok || response.status === 401 || response.status === 403;
+                resolve(result);
+            })
+            .catch(() => {
+                clearTimeout(timer);
+                resolve(false);
+            });
+    });
 };
 
 const SwitchServer = () => {
@@ -59,6 +71,48 @@ const SwitchServer = () => {
     const [isServerReachable, setIsServerReachable] = useState(false);
     const { t } = useTranslation();
 
+    const socketUrlRef = useRef<string>("");
+    socketUrlRef.current = commonConfiguration?.socketIOUrl ?? socket.ioUrl ?? "";
+
+    const currentServerUrl = socketUrlRef.current;
+
+    const probeServer = useCallback(async () => {
+        const url = socketUrlRef.current;
+        if (!url) {
+            setIsServerReachable(false);
+            return;
+        }
+        try {
+            const reachable = await testServerConnection(url);
+            setIsServerReachable(reachable);
+        } catch {
+            setIsServerReachable(false);
+        }
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            probeServer();
+            const intervalId = setInterval(() => {
+                probeServer();
+            }, CHECK_INTERVAL_MS);
+            return () => {
+                clearInterval(intervalId);
+            };
+        }, [probeServer])
+    );
+
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
+            if (!state.isConnected) {
+                setIsServerReachable(false);
+            } else {
+                probeServer();
+            }
+        });
+        return unsubscribe;
+    }, [probeServer]);
+
     const validateTestServerUrl = (inputUrl: string) => {
         if (!inputUrl.startsWith("https://")) {
             return 'Server URL must start with "https://".';
@@ -69,75 +123,47 @@ const SwitchServer = () => {
         return "";
     };
 
-    const checkServerReachability = useCallback(() => {
-        if (!socket.ioUrl) {
-            setIsServerReachable(false);
-            return;
-        }
-        testServerConnection(socket.ioUrl).then(setIsServerReachable);
-    }, [socket.ioUrl]);
-
-    useFocusEffect(
-        useCallback(() => {
-            checkServerReachability();
-        }, [checkServerReachability])
-    );
-
-    useEffect(() => {
-        const unsubscribe = NetInfo.addEventListener((state) => {
-            if (state.isConnected) {
-                checkServerReachability();
-            } else {
-                setIsServerReachable(false);
-            }
-        });
-        return unsubscribe;
-    }, [checkServerReachability]);
-
     const switchServer = async (server: ServerOption) => {
-        if (server !== ServerOption.NONE) {
-            if (server === ServerOption.TEST) {
-                const validationError = validateTestServerUrl(testServerURL);
-                if (validationError) {
-                    showGenericAlert(i18n.t("general.alert"), validationError);
-                    return;
-                }
-            }
+        if (server === ServerOption.NONE) return;
 
-            const baseUrl = server === ServerOption.LIVE ? BASE_URL : testServerURL;
-            const apiUrl = buildApiUrl(baseUrl);
-
-            if (baseUrl === socket.ioUrl) {
-                Alert.alert(
-                    i18n.t("general.alert"),
-                    i18n.t("login.alreadyConnectedToServer") + baseUrl,
-                    [{ text: i18n.t("general.ok"), style: "cancel" }]
-                );
+        if (server === ServerOption.TEST) {
+            const validationError = validateTestServerUrl(testServerURL);
+            if (validationError) {
+                showGenericAlert(i18n.t("general.alert"), validationError);
                 return;
             }
-
-            await NetInfo.fetch().then(async (connectionInfo: NetInfoState) => {
-                if (connectionInfo?.isConnected && connectionInfo.isWifiEnabled) {
-                    if (server === ServerOption.TEST) {
-                        const canConnect = await testServerConnection(baseUrl);
-                        if (!canConnect) {
-                            showGenericAlert(
-                                i18n.t("general.alert"),
-                                `Unable to connect to server ${baseUrl}`
-                            );
-                            return;
-                        }
-                    }
-
-                    confirmSwitchServer(server, apiUrl, baseUrl);
-                } else {
-                    showGenericAlert(
-                        i18n.t("login.notConnectedToInternet"),
-                        i18n.t("login.mustHaveInternet")
-                    );
-                }
-            });
         }
+
+        const baseUrl = server === ServerOption.LIVE ? BASE_URL : testServerURL;
+        const apiUrl = buildApiUrl(baseUrl);
+
+        if (baseUrl === currentServerUrl) {
+            Alert.alert(
+                i18n.t("general.alert"),
+                i18n.t("login.alreadyConnectedToServer") + baseUrl,
+                [{ text: i18n.t("general.ok"), style: "cancel" }]
+            );
+            return;
+        }
+
+        const connectionInfo = await NetInfo.fetch();
+        if (!connectionInfo?.isConnected || !connectionInfo.isWifiEnabled) {
+            showGenericAlert(
+                i18n.t("login.notConnectedToInternet"),
+                i18n.t("login.mustHaveInternet")
+            );
+            return;
+        }
+
+        if (server === ServerOption.TEST) {
+            const canConnect = await testServerConnection(baseUrl);
+            if (!canConnect) {
+                showGenericAlert(i18n.t("general.alert"), `Unable to connect to server ${baseUrl}`);
+                return;
+            }
+        }
+
+        confirmSwitchServer(server, apiUrl, baseUrl);
     };
 
     const confirmSwitchServer = (server: ServerOption, apiUrl: string, baseUrl: string) => {
@@ -149,7 +175,6 @@ const SwitchServer = () => {
                     await database.write(async () => {
                         await database.unsafeResetDatabase();
                     });
-
                     terminateCurrentConnection();
                     await persistServerSelection(
                         baseUrl,
@@ -169,21 +194,22 @@ const SwitchServer = () => {
     };
 
     const renderCurrentServer = () => {
-        const isPointingAtLive = socket.ioUrl === BASE_URL;
-        const isConnected = isServerReachable;
-        const chipStyle = isConnected
+        const isPointingAtLive = currentServerUrl === BASE_URL;
+
+        const chipStyle = isServerReachable
             ? isPointingAtLive
                 ? styles.chipLive
                 : styles.chipTest
             : styles.chipDisconnected;
-        const chipText = isConnected
+
+        const chipText = isServerReachable
             ? isPointingAtLive
                 ? i18n.t("login.live")
                 : i18n.t("login.test")
             : i18n.t("login.noConnection");
 
         return (
-            <Chip textStyle={styles.chipText} style={chipStyle}>
+            <Chip key={chipText} textStyle={styles.chipText} style={chipStyle}>
                 {chipText}
             </Chip>
         );
@@ -215,7 +241,7 @@ const SwitchServer = () => {
                     </View>
                     <View style={styles.row}>
                         <Text>{t("login.serverURL")} </Text>
-                        <Text>{socket.ioUrl}</Text>
+                        <Text>{currentServerUrl}</Text>
                     </View>
                 </Card>
 
@@ -224,6 +250,7 @@ const SwitchServer = () => {
                     {radioButton(ServerOption.LIVE)}
                     {radioButton(ServerOption.TEST)}
                 </View>
+
                 {selectedServer === ServerOption.TEST ? (
                     <View>
                         <TextInput
@@ -246,7 +273,7 @@ const SwitchServer = () => {
                         </Text>
                     </View>
                 ) : (
-                    <View></View>
+                    <View />
                 )}
 
                 <Button

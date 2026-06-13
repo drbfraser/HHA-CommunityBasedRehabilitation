@@ -241,16 +241,27 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },
         });
 
-        try {
-            execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
-        } catch (e) {}
+        for (let i = 0; i < 5; i++) {
+            await sleep(2000);
+            try {
+                execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
+            } catch (e) {}
+        }
 
         await waitFor(element(by.id("login-button")))
             .toBeVisible()
             .withTimeout(120000);
 
         await loginAndUnlockApp();
+
+        await waitFor(element(by.id("tab-dashboard")))
+            .toBeVisible()
+            .withTimeout(30000);
     }, 600000);
+
+    beforeEach(async () => {
+        await ensureAppUnlocked();
+    });
 
     afterAll(async () => {
         try {
@@ -286,6 +297,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("navigates to the New Client tab while offline", async () => {
+            await ensureAppUnlocked();
             await element(by.id("tab-new-client")).tap();
             await waitFor(element(by.id("new-client-consent-checkbox")))
                 .toBeVisible()

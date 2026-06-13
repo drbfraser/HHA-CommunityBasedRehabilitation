@@ -46,12 +46,20 @@ async function isOnBlockingAuthScreen() {
 }
 
 /**
- * Wait until no auth/PIN gate is blocking the app. Does not require the tab bar
- * (e.g. Sync is a stack screen where tabs are hidden).
+ * Wait until no auth/PIN gate is blocking the app. Prefers seeing the dashboard
+ * tab after login/PIN; on stack screens (e.g. Sync) tabs may be hidden, so we
+ * also accept "no blocking auth screen visible".
  */
 async function waitUntilUnlocked(timeout = 30000) {
     const deadline = Date.now() + timeout;
     while (Date.now() < deadline) {
+        try {
+            await waitFor(element(by.id("tab-dashboard")))
+                .toBeVisible()
+                .withTimeout(1000);
+            return;
+        } catch {}
+
         if (!(await isOnBlockingAuthScreen())) {
             return;
         }
@@ -66,9 +74,12 @@ async function waitUntilUnlocked(timeout = 30000) {
 async function loginWithCredentials() {
     assertE2eCredentials();
 
-    await element(by.id("login-username-input")).tap();
-    await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
-    await element(by.id("login-username-input")).tapReturnKey();
+    // "Log in again" screen hides the username field; only password is required.
+    if (await isElementVisible("login-username-input", 2000)) {
+        await element(by.id("login-username-input")).tap();
+        await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
+        await element(by.id("login-username-input")).tapReturnKey();
+    }
 
     await element(by.id("login-password-input")).tap();
     await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);

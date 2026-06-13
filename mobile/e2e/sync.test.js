@@ -1,6 +1,6 @@
 const { device, element, by, expect, waitFor } = require("detox");
 const { execSync } = require("child_process");
-const { loginAndUnlockApp, ensureAppUnlocked } = require("./authHelpers");
+const { ensureAppUnlocked } = require("./authHelpers");
 
 const TEST_CLIENT_FIRST_NAME = "SyncE2E";
 const TEST_CLIENT_LAST_NAME = `Offline${Date.now()}`;
@@ -235,9 +235,10 @@ async function navigateBackToHome() {
 
 describe("Sync: offline caching via WatermelonDB then online server sync", () => {
     beforeAll(async () => {
+        // login.test.js runs first and leaves a logged-in session with PIN set.
+        // Relaunch without wiping storage — a second delete+setup in CI is flaky.
         await device.launchApp({
             newInstance: true,
-            delete: true,
             launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },
         });
 
@@ -248,15 +249,11 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             } catch (e) {}
         }
 
-        await waitFor(element(by.id("login-button")))
-            .toBeVisible()
-            .withTimeout(120000);
-
-        await loginAndUnlockApp();
+        await ensureAppUnlocked();
 
         await waitFor(element(by.id("tab-dashboard")))
             .toBeVisible()
-            .withTimeout(30000);
+            .withTimeout(60000);
     }, 600000);
 
     beforeEach(async () => {

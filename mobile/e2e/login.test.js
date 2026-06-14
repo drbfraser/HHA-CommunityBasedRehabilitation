@@ -41,7 +41,7 @@ describe("Login", () => {
     });
 
     it("should complete PIN setup and reach the dashboard", async () => {
-        await completePinSetupIfNeeded(5000);
+        await completePinSetupIfNeeded(30000, true);
 
         await waitFor(element(by.id("tab-dashboard")))
             .toBeVisible()

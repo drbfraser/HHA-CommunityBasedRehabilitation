@@ -103,7 +103,7 @@ async function loginWithCredentials() {
  * Complete first-time PIN setup when the PinSetup screen is shown.
  * @returns {Promise<boolean>} true if setup was performed
  */
-async function completePinSetupIfNeeded(timeout = 15000, waitForUnlock = false) {
+async function completePinSetupIfNeeded(timeout = 15000) {
     try {
         await waitFor(element(by.id("pin-setup-new")))
             .toBeVisible()
@@ -120,19 +120,21 @@ async function completePinSetupIfNeeded(timeout = 15000, waitForUnlock = false) 
     await element(by.id("pin-setup-confirm")).replaceText(E2E_PIN);
     await element(by.id("pin-setup-submit")).tap();
 
-    if (waitForUnlock) {
-        await waitUntilUnlocked(45000);
-    } else {
-        await new Promise((r) => setTimeout(r, 1500));
+    try {
+        await waitFor(element(by.id("pin-setup-new")))
+            .not.toBeVisible()
+            .withTimeout(30000);
+        return true;
+    } catch {
+        return false;
     }
-    return true;
 }
 
 /**
  * Enter PIN when the app is locked (PinEntry screen).
  * @returns {Promise<boolean>} true if PIN entry was performed
  */
-async function enterPinIfLocked(timeout = 15000, waitForUnlock = false) {
+async function enterPinIfLocked(timeout = 15000) {
     try {
         await waitFor(element(by.id("pin-entry-input")))
             .toBeVisible()
@@ -147,12 +149,14 @@ async function enterPinIfLocked(timeout = 15000, waitForUnlock = false) {
     await element(by.id("pin-entry-input")).replaceText(E2E_PIN);
     await element(by.id("pin-entry-submit")).tap();
 
-    if (waitForUnlock) {
-        await waitUntilUnlocked(45000);
-    } else {
-        await new Promise((r) => setTimeout(r, 1500));
+    try {
+        await waitFor(element(by.id("pin-entry-input")))
+            .not.toBeVisible()
+            .withTimeout(30000);
+        return true;
+    } catch {
+        return false;
     }
-    return true;
 }
 
 /**

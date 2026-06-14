@@ -1,10 +1,6 @@
 const { device, element, by, expect } = require("detox");
 const { execSync } = require("child_process");
-const {
-    loginAndUnlockApp,
-    loginWithCredentials,
-    completePinSetupIfNeeded,
-} = require("./authHelpers");
+const { loginAndUnlockApp, loginWithCredentials } = require("./authHelpers");
 
 describe("Login", () => {
     beforeAll(async () => {
@@ -41,7 +37,7 @@ describe("Login", () => {
     });
 
     it("should complete PIN setup and reach the dashboard", async () => {
-        await completePinSetupIfNeeded(30000, true);
+        await loginAndUnlockApp();
 
         await waitFor(element(by.id("tab-dashboard")))
             .toBeVisible()

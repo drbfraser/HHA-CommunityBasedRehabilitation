@@ -2,7 +2,7 @@ name: Mobile E2E Tests (Detox)
 
 on:
   push:
-    branches: [fix-mobile-e2e-test-error]
+    branches: [ main ]
   # workflow_dispatch:
 
 env:

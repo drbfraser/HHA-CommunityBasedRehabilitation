@@ -256,6 +256,74 @@ def create_generic_data(table_name, model, validated_data, sync_time):
         record.server_created_at = sync_time
         record.save()
 
+3
+# maps a risk type to its denormalized (cached) columns on the Client row.
+# keyed by the RiskType choice *values* (not the enum members) because models.py
+# imports this module, so the models.* enums aren't available at import time here.
+CLIENT_RISK_FIELDS = {
+    "HEALTH": ("health_risk_level", "health_timestamp"),  # RiskType.HEALTH
+    "SOCIAL": ("social_risk_level", "social_timestamp"),  # RiskType.SOCIAL
+    "EDUCAT": ("educat_risk_level", "educat_timestamp"),  # RiskType.EDUCAT
+    "NUTRIT": ("nutrit_risk_level", "nutrit_timestamp"),  # RiskType.NUTRIT
+    "MENTAL": ("mental_risk_level", "mental_timestamp"),  # RiskType.MENTAL
+}
+
+# goal statuses that mean there is no active goal, so the cached risk level is
+# shown as "Not Active" rather than the raw risk level of the latest record.
+# values of GoalOutcomes.CONCLUDED / NOT_SET / CANCELLED (see note above on keys).
+NO_ACTIVE_GOAL_STATUSES = ["CON", "NS", "CAN"]
+
+
+def recalculate_client_risk_level(client, risk_type):
+    """Refresh a client's denormalized risk summary column for one risk type from
+    the latest ClientRisk record. The Client List and Dashboard read these cached
+    columns, so they must be kept in sync with the risk history whenever a risk is
+    created, updated or deleted. Recomputing from the latest record (rather than
+    copying the value being written) keeps it correct even if risks arrive out of
+    order. Sets the fields on `client` in place; the caller is responsible for
+    saving the client."""
+    fields = CLIENT_RISK_FIELDS.get(risk_type)
+    if fields is None:
+        return
+    level_field, timestamp_field = fields
+
+    latest = (
+        models.ClientRisk.objects.filter(client_id=client, risk_type=risk_type)
+        .order_by("-timestamp")
+        .first()
+    )
+    if latest is None:
+        return
+
+    if latest.goal_status in NO_ACTIVE_GOAL_STATUSES:
+        level = models.RiskLevel.NOT_ACTIVE
+    else:
+        level = latest.risk_level
+
+    setattr(client, level_field, level)
+    setattr(client, timestamp_field, latest.timestamp)
+
+
+def create_risk_data(validated_data, sync_time):
+    """Create synced ClientRisk records and refresh the affected clients' cached
+    risk summary columns so the Client List/Dashboard stay in sync with the risk
+    history (see recalculate_client_risk_level)."""
+    table_data = validated_data.get("risks")
+    created_data = table_data.pop("created")
+
+    affected = {}  # client -> set of risk types touched
+    for data in created_data:
+        record = models.ClientRisk.objects.create(**data)
+        record.server_created_at = sync_time
+        record.save()
+        affected.setdefault(record.client_id, set()).add(record.risk_type)
+
+    for client, risk_types in affected.items():
+        for risk_type in risk_types:
+            recalculate_client_risk_level(client, risk_type)
+        client.updated_at = sync_time
+        client.save()
+
 
 def create_update_delete_alert_data(validated_data, sync_time):
     table_data = validated_data.get("alert")

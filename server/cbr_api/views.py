@@ -40,6 +40,8 @@ from cbr_api.util import (
     stringify_unread_users,
     destringify_unread_users,
     string_of_id_to_dictionary,
+    recalculate_client_risk_level,
+    current_milli_time,
 )
 from cbr import settings
 import logging
@@ -479,6 +481,16 @@ class RiskList(generics.ListCreateAPIView):
 class RiskDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.ClientRisk.objects.all()
     serializer_class = serializers.NormalRiskSerializer
+
+    def perform_destroy(self, instance):
+        # deleting a risk can change which record is latest, so refresh the
+        # client's denormalized risk summary columns afterwards
+        client = instance.client_id
+        risk_type = instance.risk_type
+        super().perform_destroy(instance)
+        recalculate_client_risk_level(client, risk_type)
+        client.updated_at = current_milli_time()
+        client.save()
 
 
 class VisitList(generics.CreateAPIView):

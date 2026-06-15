@@ -18,6 +18,9 @@ from cbr_api.util import (
     create_referral_data,
     create_survey_data,
     create_generic_data,
+    create_risk_data,
+    recalculate_client_risk_level,
+    NO_ACTIVE_GOAL_STATUSES,
     create_update_delete_alert_data,
     create_patient_note_data,
     create_success_story_data,
@@ -182,11 +185,8 @@ class ClientCreationRiskSerializer(serializers.ModelSerializer):
 
 
 class NormalRiskSerializer(serializers.ModelSerializer):
-    NO_ACTIVE_GOAL_STATUSES = [
-        models.GoalOutcomes.CONCLUDED,
-        models.GoalOutcomes.NOT_SET,
-        models.GoalOutcomes.CANCELLED,
-    ]
+    # shared with the sync/update paths so the "no active goal" rule has one source
+    NO_ACTIVE_GOAL_STATUSES = NO_ACTIVE_GOAL_STATUSES
 
     class Meta:
         model = models.ClientRisk
@@ -326,6 +326,17 @@ class NormalRiskSerializer(serializers.ModelSerializer):
         client.updated_at = current_time
         client.save()
 
+        return risk
+
+    def update(self, instance, validated_data):
+        # editing an existing risk (PUT/PATCH) must also refresh the client's
+        # denormalized risk summary columns, otherwise the Client List/Dashboard
+        # show a stale risk level/colour
+        risk = super().update(instance, validated_data)
+        client = risk.client_id
+        recalculate_client_risk_level(client, risk.risk_type)
+        client.updated_at = current_milli_time()
+        client.save()
         return risk
 
 
@@ -1251,9 +1262,7 @@ class pushRiskSerializer(serializers.Serializer):
     risks = multiRiskSerializer()
 
     def create(self, validated_data):
-        create_generic_data(
-            "risks", models.ClientRisk, validated_data, self.context.get("sync_time")
-        )
+        create_risk_data(validated_data, self.context.get("sync_time"))
         return self
 
 

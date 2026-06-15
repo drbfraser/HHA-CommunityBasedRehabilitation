@@ -46,12 +46,20 @@ async function isOnBlockingAuthScreen() {
 }
 
 /**
- * Wait until no auth/PIN gate is blocking the app. Does not require the tab bar
- * (e.g. Sync is a stack screen where tabs are hidden).
+ * Wait until no auth/PIN gate is blocking the app. Prefers seeing the dashboard
+ * tab after login/PIN; on stack screens (e.g. Sync) tabs may be hidden, so we
+ * also accept "no blocking auth screen visible".
  */
 async function waitUntilUnlocked(timeout = 30000) {
     const deadline = Date.now() + timeout;
     while (Date.now() < deadline) {
+        try {
+            await waitFor(element(by.id("tab-dashboard")))
+                .toBeVisible()
+                .withTimeout(1000);
+            return;
+        } catch {}
+
         if (!(await isOnBlockingAuthScreen())) {
             return;
         }
@@ -66,9 +74,12 @@ async function waitUntilUnlocked(timeout = 30000) {
 async function loginWithCredentials() {
     assertE2eCredentials();
 
-    await element(by.id("login-username-input")).tap();
-    await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
-    await element(by.id("login-username-input")).tapReturnKey();
+    // "Log in again" screen hides the username field; only password is required.
+    if (await isElementVisible("login-username-input", 2000)) {
+        await element(by.id("login-username-input")).tap();
+        await element(by.id("login-username-input")).replaceText(E2E_USERNAME);
+        await element(by.id("login-username-input")).tapReturnKey();
+    }
 
     await element(by.id("login-password-input")).tap();
     await element(by.id("login-password-input")).replaceText(E2E_PASSWORD);
@@ -109,8 +120,14 @@ async function completePinSetupIfNeeded(timeout = 15000) {
     await element(by.id("pin-setup-confirm")).replaceText(E2E_PIN);
     await element(by.id("pin-setup-submit")).tap();
 
-    await waitUntilUnlocked(45000);
-    return true;
+    try {
+        await waitFor(element(by.id("pin-setup-new")))
+            .not.toBeVisible()
+            .withTimeout(30000);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 /**
@@ -132,20 +149,46 @@ async function enterPinIfLocked(timeout = 15000) {
     await element(by.id("pin-entry-input")).replaceText(E2E_PIN);
     await element(by.id("pin-entry-submit")).tap();
 
-    await waitUntilUnlocked(45000);
-    return true;
+    try {
+        await waitFor(element(by.id("pin-entry-input")))
+            .not.toBeVisible()
+            .withTimeout(30000);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 /**
  * Log in with credentials, then complete PIN setup or PIN entry as needed.
  */
 async function loginAndUnlockApp() {
-    await loginWithCredentials();
-    const didSetup = await completePinSetupIfNeeded(30000);
-    if (!didSetup) {
-        await enterPinIfLocked(15000);
+    if (!(await isOnBlockingAuthScreen())) {
+        return;
     }
-    await waitUntilUnlocked(45000);
+
+    if (await isElementVisible("login-button", 2000)) {
+        await loginWithCredentials();
+    }
+
+    const deadline = Date.now() + 120000;
+    while (Date.now() < deadline) {
+        if (await completePinSetupIfNeeded(5000)) {
+            continue;
+        }
+        if (await enterPinIfLocked(5000)) {
+            continue;
+        }
+        if (!(await isOnBlockingAuthScreen())) {
+            return;
+        }
+        if (await isElementVisible("login-button", 1000)) {
+            await loginWithCredentials();
+        }
+        await new Promise((r) => setTimeout(r, 500));
+    }
+
+    await waitUntilUnlocked(10000);
 }
 
 /**
@@ -153,25 +196,25 @@ async function loginAndUnlockApp() {
  * stack screens (e.g. Sync) where the tab bar is not visible.
  */
 async function ensureAppUnlocked() {
-    if (await enterPinIfLocked(15000)) {
-        return;
-    }
-    if (await completePinSetupIfNeeded(10000)) {
+    if (!(await isOnBlockingAuthScreen())) {
         return;
     }
 
-    try {
-        await waitFor(element(by.id("login-button")))
-            .toBeVisible()
-            .withTimeout(3000);
+    if (await enterPinIfLocked(2000)) {
+        await waitUntilUnlocked(30000);
+        return;
+    }
+    if (await completePinSetupIfNeeded(2000)) {
+        await waitUntilUnlocked(30000);
+        return;
+    }
+
+    if (await isElementVisible("login-button", 2000)) {
         await loginAndUnlockApp();
         return;
-    } catch {}
+    }
 
     if (await isOnBlockingAuthScreen()) {
-        if (await enterPinIfLocked(15000)) {
-            return;
-        }
         throw new Error("App is still on a login/PIN screen after recovery attempts");
     }
 }

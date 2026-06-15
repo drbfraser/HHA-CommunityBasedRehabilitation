@@ -1,6 +1,6 @@
 const { device, element, by, expect, waitFor } = require("detox");
 const { execSync } = require("child_process");
-const { loginAndUnlockApp, ensureAppUnlocked } = require("./authHelpers");
+const { ensureAppUnlocked } = require("./authHelpers");
 
 const TEST_CLIENT_FIRST_NAME = "SyncE2E";
 const TEST_CLIENT_LAST_NAME = `Offline${Date.now()}`;
@@ -235,22 +235,30 @@ async function navigateBackToHome() {
 
 describe("Sync: offline caching via WatermelonDB then online server sync", () => {
     beforeAll(async () => {
+        // login.test.js runs first and leaves a logged-in session with PIN set.
+        // Relaunch without wiping storage — a second delete+setup in CI is flaky.
         await device.launchApp({
             newInstance: true,
-            delete: true,
             launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },
         });
 
-        try {
-            execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
-        } catch (e) {}
+        for (let i = 0; i < 5; i++) {
+            await sleep(2000);
+            try {
+                execSync("adb shell input keyevent KEYCODE_ESCAPE", { timeout: 5000 });
+            } catch (e) {}
+        }
 
-        await waitFor(element(by.id("login-button")))
+        await ensureAppUnlocked();
+
+        await waitFor(element(by.id("tab-dashboard")))
             .toBeVisible()
-            .withTimeout(120000);
-
-        await loginAndUnlockApp();
+            .withTimeout(60000);
     }, 600000);
+
+    beforeEach(async () => {
+        await ensureAppUnlocked();
+    });
 
     afterAll(async () => {
         try {
@@ -286,6 +294,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("navigates to the New Client tab while offline", async () => {
+            await ensureAppUnlocked();
             await element(by.id("tab-new-client")).tap();
             await waitFor(element(by.id("new-client-consent-checkbox")))
                 .toBeVisible()

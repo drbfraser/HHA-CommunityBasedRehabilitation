@@ -26,7 +26,7 @@ concurrency:
 
 jobs:
   detox-e2e:
-    runs-on: [ self-hosted, docker ]
+    runs-on: [self-hosted, docker]
     timeout-minutes: 60
 
     services:
@@ -280,7 +280,8 @@ jobs:
           arch: ${{ env.ANDROID_EMULATOR_ARCH }}
           avd-name: ${{ env.AVD_NAME }}
           force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          emulator-options:
+            -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
             -no-snapshot -no-snapshot-save
           disable-animations: true
           emulator-boot-timeout: 600

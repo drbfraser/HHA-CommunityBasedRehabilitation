@@ -109,7 +109,7 @@ async function ensureTabNavigatorVisible() {
         return;
     }
 
-    // Recover from PIN lock, PIN setup, or login screens.
+    // Recover from the login screen.
     await ensureAppUnlocked();
     await dismissSyncAlertIfPresent();
 
@@ -235,8 +235,8 @@ async function navigateBackToHome() {
 
 describe("Sync: offline caching via WatermelonDB then online server sync", () => {
     beforeAll(async () => {
-        // login.test.js runs first and leaves a logged-in session with PIN set.
-        // Relaunch without wiping storage — a second delete+setup in CI is flaky.
+        // login.test.js runs first and leaves a logged-in session.
+        // Relaunch without wiping storage — a second delete+login in CI is flaky.
         await device.launchApp({
             newInstance: true,
             launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },

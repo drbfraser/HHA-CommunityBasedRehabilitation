@@ -16,7 +16,6 @@ import { useFocusEffect } from "@react-navigation/native";
 import { IUser, userRoles, useZones } from "@cbr/common";
 import useStyles from "./UserProfileContents.styles";
 import ChangePasswordDialog from "./ChangePasswordDialog";
-import ChangePinDialog from "./ChangePinDialog";
 import { useNavigation } from "@react-navigation/core";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -25,7 +24,6 @@ import { dbType } from "../../util/watermelonDatabase";
 import { logger, SyncDB } from "../../util/syncHandler";
 import { useTranslation } from "react-i18next";
 import LanguagePicker from "../LanguagePicker/LanguagePicker";
-import { PinContext } from "../../context/PinContext/PinContext";
 import { consumeBugReportFlashMessage } from "../../util/bugReportFlashMessage";
 
 export interface Props {
@@ -43,7 +41,6 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
     const navigation = useNavigation<AppStackNavProp>();
 
     const authContext = useContext<IAuthContext>(AuthContext);
-    const { setPin } = useContext(PinContext);
 
     const { t } = useTranslation();
 
@@ -51,8 +48,6 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
 
     const [isPassChangeDialogVisible, setPassChangeDialogVisibility] = useState(false);
     const [isPassChangedSnackbarVisible, setPassChangeSnackbarVisibility] = useState(false);
-    const [isPinChangeDialogVisible, setPinChangeDialogVisibility] = useState(false);
-    const [isPinChangedSnackbarVisible, setPinChangedSnackbarVisibility] = useState(false);
     const [bugReportSuccessMessage, setBugReportSuccessMessage] = useState<string | null>(null);
     const [isLogoutConfirmDialogVisible, setLogoutConfirmDialogVisibility] = useState(false);
 
@@ -134,19 +129,6 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                     }
                                 }}
                             />
-                            {isSelf ? (
-                                <ChangePinDialog
-                                    user={user}
-                                    setPin={setPin}
-                                    visible={isPinChangeDialogVisible}
-                                    onDismiss={(changed) => {
-                                        setPinChangeDialogVisibility(false);
-                                        if (changed) {
-                                            setPinChangedSnackbarVisibility(true);
-                                        }
-                                    }}
-                                />
-                            ) : null}
                         </Portal>
 
                         <View style={styles.profileInfoContainer}>
@@ -229,19 +211,6 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                                 {t("login.changePassword")}
                             </Button>
 
-                            {isSelf ? (
-                                <Button
-                                    style={styles.button}
-                                    icon="dialpad"
-                                    mode="text"
-                                    onPress={() => {
-                                        setPinChangeDialogVisibility(true);
-                                    }}
-                                >
-                                    Change PIN
-                                </Button>
-                            ) : null}
-
                             <Card style={styles.bugReportCard}>
                                 <Card.Content style={styles.bugReportCardContent}>
                                     <Text style={styles.bugReportTitle}>
@@ -286,14 +255,6 @@ const UserProfileContents = ({ user, isSelf, database }: Props) => {
                 onDismiss={() => setPassChangeSnackbarVisibility(false)}
             >
                 {t("login.passwordChangeConfirmation")}
-            </Snackbar>
-
-            <Snackbar
-                visible={isPinChangedSnackbarVisible}
-                duration={4000}
-                onDismiss={() => setPinChangedSnackbarVisibility(false)}
-            >
-                PIN updated successfully.
             </Snackbar>
         </View>
     );

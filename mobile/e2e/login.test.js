@@ -1,6 +1,6 @@
 const { device, element, by, expect } = require("detox");
 const { execSync } = require("child_process");
-const { loginAndUnlockApp, loginWithCredentials } = require("./authHelpers");
+const { loginAndUnlockApp } = require("./authHelpers");
 
 describe("Login", () => {
     beforeAll(async () => {
@@ -28,15 +28,7 @@ describe("Login", () => {
         await expect(element(by.id("login-button"))).toBeVisible();
     });
 
-    it("should login successfully with valid credentials", async () => {
-        await loginWithCredentials();
-
-        await waitFor(element(by.id("pin-setup-new")))
-            .toBeVisible()
-            .withTimeout(30000);
-    });
-
-    it("should complete PIN setup and reach the dashboard", async () => {
+    it("should login successfully and reach the dashboard", async () => {
         await loginAndUnlockApp();
 
         await waitFor(element(by.id("tab-dashboard")))
@@ -46,7 +38,7 @@ describe("Login", () => {
 });
 
 describe("Login (fresh session)", () => {
-    it("should login, set PIN, and reach the dashboard in one flow", async () => {
+    it("should login and reach the dashboard in one flow", async () => {
         await device.launchApp({
             newInstance: true,
             delete: true,

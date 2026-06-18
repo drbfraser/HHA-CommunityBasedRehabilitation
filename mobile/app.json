@@ -42,8 +42,7 @@
             ],
             "expo-localization",
             "./plugins/withAndroidSigningConfig.ts",
-            "./plugins/withDetoxTest.ts",
-            "expo-secure-store"
+            "./plugins/withDetoxTest.ts"
         ],
         "experiments": {
             "typedRoutes": true

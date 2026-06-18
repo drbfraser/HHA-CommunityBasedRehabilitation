@@ -18,11 +18,12 @@ interface PreviousGoalsModalProps {
     open: boolean;
     close: () => void;
     clientRisks: IRisk[];
+    onRefresh?: () => void | Promise<void>;
 }
 
 const ROWS_PER_PAGE = 5;
 
-const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProps) => {
+const PreviousGoalsModal = ({ open, close, clientRisks, onRefresh }: PreviousGoalsModalProps) => {
     const { t } = useTranslation();
     const [page, setPage] = useState(0);
     const [selectedGoal, setSelectedGoal] = useState<IRisk | null>(null);
@@ -66,7 +67,9 @@ const PreviousGoalsModal = ({ open, close, clientRisks }: PreviousGoalsModalProp
     const numberOfPages = Math.max(1, Math.ceil(previousGoals.length / ROWS_PER_PAGE));
 
     useEffect(() => {
-        if (!open) {
+        if (open) {
+            onRefresh?.();
+        } else {
             setPage(0);
             setSelectedGoal(null);
             setOpenGoalCard(false);

@@ -449,7 +449,6 @@ const ClientDetails = (props: ClientProps) => {
                                 clientRisks={risks || []}
                                 presentRiskType={riskType}
                                 clientArchived={client.is_active}
-                                onRiskUpdated={getClientDetails}
                             />
                         </React.Fragment>
                     ))}
@@ -575,6 +574,7 @@ const ClientDetails = (props: ClientProps) => {
                         open={previousGoalsModalOpen}
                         close={() => setPreviousGoalsModalOpen(false)}
                         clientRisks={risks || []}
+                        onRefresh={getClientDetails}
                     />
                 </View>
             )}

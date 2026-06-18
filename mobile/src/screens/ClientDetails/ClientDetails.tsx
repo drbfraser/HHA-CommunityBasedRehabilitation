@@ -436,35 +436,23 @@ const ClientDetails = (props: ClientProps) => {
                             {t("goals.previousGoals")}
                         </Button>
                     </View>
-                    <ClientRisk
-                        clientRisks={risks || []}
-                        presentRiskType={RiskType.HEALTH}
-                        clientArchived={client.is_active}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={risks || []}
-                        presentRiskType={RiskType.EDUCATION}
-                        clientArchived={client.is_active}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={risks || []}
-                        presentRiskType={RiskType.SOCIAL}
-                        clientArchived={client.is_active}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={risks || []}
-                        presentRiskType={RiskType.NUTRITION}
-                        clientArchived={client.is_active}
-                    />
-                    <Divider />
-                    <ClientRisk
-                        clientRisks={risks || []}
-                        presentRiskType={RiskType.MENTAL}
-                        clientArchived={client.is_active}
-                    />
+                    {[
+                        RiskType.HEALTH,
+                        RiskType.EDUCATION,
+                        RiskType.SOCIAL,
+                        RiskType.NUTRITION,
+                        RiskType.MENTAL,
+                    ].map((riskType, index) => (
+                        <React.Fragment key={riskType}>
+                            {index > 0 && <Divider />}
+                            <ClientRisk
+                                clientRisks={risks || []}
+                                presentRiskType={riskType}
+                                clientArchived={client.is_active}
+                                onRiskUpdated={getClientDetails}
+                            />
+                        </React.Fragment>
+                    ))}
                     <Card style={styles.riskCardStyle}>
                         <View style={styles.activityCardContentStyle}>
                             <Text style={styles.riskTitleStyle}>

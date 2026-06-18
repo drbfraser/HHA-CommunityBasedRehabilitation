@@ -12,6 +12,7 @@ export interface ClientRiskFormProps {
     riskData: any;
     setRisk: (risk: any) => void;
     clientArchived: boolean;
+    onRiskUpdated?: () => void | Promise<void>;
 }
 
 export const ClientRiskForm = (props: ClientRiskFormProps) => {
@@ -38,6 +39,7 @@ export const ClientRiskForm = (props: ClientRiskFormProps) => {
                 showModal={showModal}
                 setShowModal={setShowModal}
                 riskType={props.riskData.risk_type}
+                onRiskUpdated={props.onRiskUpdated}
             />
         </View>
     );

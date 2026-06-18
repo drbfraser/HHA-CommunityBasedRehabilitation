@@ -43,6 +43,7 @@ interface ClientRiskFormModalProps {
     riskType: RiskType;
     riskData: any; // ideally typed better
     setRisk: (risk: any) => void;
+    onRiskUpdated?: () => void | Promise<void>;
 }
 
 // reusable text input component for risk form
@@ -213,7 +214,8 @@ export const ClientRiskFormModal = (props: ClientRiskFormModalProps) => {
                     props.setRisk,
                     database,
                     autoSync,
-                    cellularSync
+                    cellularSync,
+                    props.onRiskUpdated
                 );
             }}
             validationSchema={validationSchema}

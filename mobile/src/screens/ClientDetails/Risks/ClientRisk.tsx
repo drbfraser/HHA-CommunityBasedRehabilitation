@@ -26,6 +26,7 @@ interface riskProps {
     clientRisks: IRisk[];
     presentRiskType: RiskType;
     clientArchived: boolean;
+    onRiskUpdated?: () => void | Promise<void>;
 }
 
 export const ClientRisk = (props: riskProps) => {
@@ -102,6 +103,7 @@ export const ClientRisk = (props: riskProps) => {
                             riskData={risk}
                             setRisk={setRisk}
                             clientArchived={props.clientArchived}
+                            onRiskUpdated={props.onRiskUpdated}
                         />
                     </View>
                 </View>

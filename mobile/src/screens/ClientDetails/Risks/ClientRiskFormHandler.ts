@@ -29,7 +29,8 @@ export const handleRiskSubmit = async (
     setRisk: (risk: IRisk) => void,
     database: dbType,
     autoSync: boolean,
-    cellularSync: boolean
+    cellularSync: boolean,
+    onRiskUpdated?: () => void | Promise<void>
 ) => {
     if (!wasChangeMade(values, initialValues)) return;
 
@@ -69,6 +70,7 @@ export const handleRiskSubmit = async (
         await client.updateRisk(values.risk_type, finalRiskLevelForClient, currentTime);
         setRisk(risk);
         AutoSyncDB(database, autoSync, cellularSync);
+        await onRiskUpdated?.();
     } catch (e) {
         console.error("Risk submission failed:", e);
         alert(i18n.t("riskAttr.updateFailureAlert"));

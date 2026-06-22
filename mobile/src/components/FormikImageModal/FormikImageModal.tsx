@@ -1,8 +1,7 @@
 import { themeColors } from "@cbr/common";
 import * as ImagePicker from "expo-image-picker";
-import React, { useContext, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useEffect } from "react";
-import { PinContext } from "../../context/PinContext/PinContext";
 import { Platform, View, Text, Animated, Dimensions } from "react-native";
 import { ActivityIndicator, Button, Modal, Portal, Title } from "react-native-paper";
 import { TFormikComponentProps } from "../../util/formikUtil";
@@ -31,7 +30,6 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(props.visible);
     const { t } = useTranslation();
-    const { runWithoutAutoLock } = useContext(PinContext);
 
     const modalY = useRef(new Animated.Value(Dimensions.get("screen").height));
 
@@ -65,29 +63,27 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
     const pickImage = async (imageSource: ImageSource) => {
         setIsLoading(true);
         if (Platform.OS !== "web") {
-            // Suppress the PIN auto-lock while the permission dialog and picker
-            // background the app, so the user keeps their place and form state.
-            const image = await runWithoutAutoLock(async () => {
-                // The gallery uses the Android Photo Picker / iOS limited picker, which need
-                // no media-library permission. Only the camera path requires a permission.
-                if (imageSource === ImageSource.CAMERA) {
-                    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-                    if (status !== "granted") {
-                        alert(`Permissions are required to access the ${imageSource}.`);
-                        return undefined;
-                    }
+            // The gallery uses the Android Photo Picker / iOS limited picker, which need
+            // no media-library permission. Only the camera path requires a permission.
+            if (imageSource === ImageSource.CAMERA) {
+                const { status } = await ImagePicker.requestCameraPermissionsAsync();
+                if (status !== "granted") {
+                    alert(`Permissions are required to access the ${imageSource}.`);
+                    props.onDismiss();
+                    setIsLoading(false);
+                    return;
                 }
-                const imagePicker =
-                    imageSource === ImageSource.CAMERA
-                        ? ImagePicker.launchCameraAsync
-                        : ImagePicker.launchImageLibraryAsync;
-                return imagePicker({
-                    mediaTypes: "images",
-                    base64: true,
-                    allowsEditing: true,
-                    aspect: [1, 1],
-                    quality: 0.7,
-                });
+            }
+            const imagePicker =
+                imageSource === ImageSource.CAMERA
+                    ? ImagePicker.launchCameraAsync
+                    : ImagePicker.launchImageLibraryAsync;
+            const image = await imagePicker({
+                mediaTypes: "images",
+                base64: true,
+                allowsEditing: true,
+                aspect: [1, 1],
+                quality: 0.7,
             });
 
             if (image && !image.canceled) {

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
 import { APIFetchFailError, apiFetch, themeColors } from "@cbr/common";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -19,7 +19,6 @@ import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/Confir
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { setBugReportFlashMessage } from "../../util/bugReportFlashMessage";
-import { PinContext } from "../../context/PinContext/PinContext";
 import useStyles from "./BugReport.styles";
 
 const MAX_DESCRIPTION_LENGTH = 1200;
@@ -28,7 +27,6 @@ const BUG_REPORT_ENDPOINT = "bug_report/";
 
 const BugReport = () => {
     const styles = useStyles();
-    const { runWithoutAutoLock } = useContext(PinContext);
     const navigation = useNavigation<AppStackNavProp>();
     const netInfo = useNetInfo();
     const [reportType, setReportType] = useState<ReportType>("bug_report");
@@ -45,16 +43,12 @@ const BugReport = () => {
     const reportTypeLabel = reportType === "suggestion" ? "suggestion" : "bug report";
 
     const onImageSelect = async () => {
-        // Suppress the PIN auto-lock while the permission dialog and picker
-        // background the app, so the in-progress report is not discarded.
-        const imagePickerResult = await runWithoutAutoLock(async () => {
-            // The gallery uses the Android Photo Picker / iOS limited picker, which need no
-            // media-library permission, so we go straight to the picker.
-            return ImagePicker.launchImageLibraryAsync({
-                mediaTypes: "images",
-                allowsEditing: false,
-                quality: 1,
-            });
+        // The gallery uses the Android Photo Picker / iOS limited picker, which need no
+        // media-library permission, so we go straight to the picker.
+        const imagePickerResult = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: "images",
+            allowsEditing: false,
+            quality: 1,
         });
 
         if (!imagePickerResult || imagePickerResult.canceled) {

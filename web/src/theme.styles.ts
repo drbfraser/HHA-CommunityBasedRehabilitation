@@ -40,6 +40,27 @@ export const themeMui = createTheme({
                 },
             },
         },
+        MuiTableCell: {
+            styleOverrides: {
+                root: {
+                    verticalAlign: "middle",
+                },
+            },
+        },
+        MuiListItem: {
+            defaultProps: {
+                alignItems: "center",
+            },
+        },
+        MuiListItemText: {
+            styleOverrides: {
+                root: {
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                },
+            },
+        },
     },
     palette: {
         background: {

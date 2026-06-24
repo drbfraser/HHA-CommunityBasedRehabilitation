@@ -18,19 +18,31 @@ export const dataGridStyles: Record<string, SxProps<Theme>> = {
         "& .MuiDataGrid-colCell, & .MuiDataGrid-cell, & .MuiDataGrid-columnHeader": {
             padding: "1px 1px 1px 1px",
         },
+        "& .MuiDataGrid-columnHeader": {
+            display: "flex",
+            alignItems: "center",
+        },
+        "& .MuiDataGrid-columnHeaderTitleContainer": {
+            alignItems: "center",
+        },
         "& .MuiDataGrid-cell": {
+            display: "flex",
+            alignItems: "center",
             whiteSpace: "normal",
             wordBreak: "break-word",
             hyphens: "auto",
             WebkitHyphens: "auto",
             msHyphens: "auto",
         },
+        "& .MuiDataGrid-cellContent": {
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+        },
         "& .MuiDataGrid-colCellTitle, & .MuiDataGrid-columnHeaderTitle": {
             userSelect: "none",
             textOverflow: "clip",
             lineHeight: "normal",
-            paddingTop: "36px",
-            paddingBottom: "36px",
         },
         "& .MuiSvgIcon-root": {
             verticalAlign: "middle",

@@ -15,15 +15,20 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import history from "@cbr/common/util/history";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { getStoryById, ISuccessStory, StoryStatus, PublishPermission } from "util/successStories";
+import {
+    getStoryById,
+    ISuccessStory,
+    PublishPermission,
+    PHOTO_FIELDS,
+    fetchStoryPhotoUrl,
+    storyStatusLabel,
+    storyStatusChipColor,
+} from "util/successStories";
 
 interface IUrlParam {
     clientId: string;
     storyId: string;
 }
-
-const statusLabel = (s: StoryStatus) => (s === StoryStatus.READY ? "Ready" : "Work in Progress");
 
 const permissionLabel = (p: PublishPermission) => {
     switch (p) {
@@ -52,7 +57,7 @@ const SuccessStoryView = () => {
     const [story, setStory] = useState<ISuccessStory>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [photoBlobUrl, setPhotoBlobUrl] = useState<string>("");
+    const [photoBlobUrls, setPhotoBlobUrls] = useState<string[]>([]);
 
     useEffect(() => {
         setLoading(true);
@@ -61,12 +66,17 @@ const SuccessStoryView = () => {
                 setStory(loadedStory);
                 setError(false);
 
-                if (loadedStory.photo) {
-                    apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
-                        .then((resp) => resp.blob())
-                        .then((blob) => setPhotoBlobUrl(URL.createObjectURL(blob)))
-                        .catch(() => setPhotoBlobUrl(""));
-                }
+                PHOTO_FIELDS.forEach((field, index) => {
+                    if (!loadedStory[field]) return;
+                    fetchStoryPhotoUrl(storyId, index + 1).then((url) => {
+                        if (!url) return;
+                        setPhotoBlobUrls((prev) => {
+                            const next = [...prev];
+                            next[index] = url;
+                            return next;
+                        });
+                    });
+                });
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
@@ -124,23 +134,27 @@ const SuccessStoryView = () => {
             <Section title="Part 4: Action" body={story.part4_action} />
             <Section title="Part 5: Impact" body={story.part5_impact} />
 
-            {photoBlobUrl && (
+            {photoBlobUrls.some(Boolean) && (
                 <Box sx={{ mt: 3 }}>
                     <Typography variant="h6" fontWeight="bold">
-                        Photograph
+                        Photographs
                     </Typography>
-                    <Box
-                        component="img"
-                        src={photoBlobUrl}
-                        alt="Beneficiary photograph"
-                        sx={{
-                            maxWidth: 500,
-                            maxHeight: 400,
-                            objectFit: "contain",
-                            mt: 1,
-                            borderRadius: 1,
-                        }}
-                    />
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
+                        {photoBlobUrls.filter(Boolean).map((url, index) => (
+                            <Box
+                                key={index}
+                                component="img"
+                                src={url}
+                                alt={`Beneficiary photograph ${index + 1}`}
+                                sx={{
+                                    maxWidth: 500,
+                                    maxHeight: 400,
+                                    objectFit: "contain",
+                                    borderRadius: 1,
+                                }}
+                            />
+                        ))}
+                    </Box>
                 </Box>
             )}
 
@@ -231,8 +245,8 @@ const SuccessStoryView = () => {
                                 Status
                             </Typography>
                             <Chip
-                                label={statusLabel(story.status)}
-                                color={story.status === StoryStatus.READY ? "success" : "warning"}
+                                label={storyStatusLabel(story.status)}
+                                color={storyStatusChipColor(story.status)}
                                 size="small"
                             />
                         </Grid>

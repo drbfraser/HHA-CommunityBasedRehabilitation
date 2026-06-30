@@ -1201,6 +1201,10 @@ class SuccessStorySyncSerializer(serializers.ModelSerializer):
             "status",
             "date",
             "photo",
+            "photo_2",
+            "photo_3",
+            "photo_4",
+            "photo_5",
             "created_at",
             "updated_at",
         ]
@@ -1389,6 +1393,10 @@ class SuccessStorySerializer(serializers.ModelSerializer):
             "part4_action",
             "part5_impact",
             "photo",
+            "photo_2",
+            "photo_3",
+            "photo_4",
+            "photo_5",
             "publish_permission",
             "status",
             "date",
@@ -1453,7 +1461,15 @@ class SuccessStorySerializer(serializers.ModelSerializer):
 
 
 class UpdateSuccessStorySerializer(SuccessStorySerializer):
+    # Comma-separated list of photo slot field names the user removed during an
+    # edit (e.g. "photo_2,photo_3"). A removed slot sends no file, so without this
+    # signal the existing image would be left untouched and "come back".
+    cleared_photos = serializers.CharField(
+        write_only=True, required=False, allow_blank=True
+    )
+
     class Meta(SuccessStorySerializer.Meta):
+        fields = SuccessStorySerializer.Meta.fields + ["cleared_photos"]
         read_only_fields = [
             "id",
             "client_id",
@@ -1469,11 +1485,28 @@ class UpdateSuccessStorySerializer(SuccessStorySerializer):
 
     def update(self, instance, validated_data):
         validated_data["updated_at"] = current_milli_time()
-        new_photo: Optional[File] = validated_data.get("photo")
-        if new_photo:
-            file_root, file_ext = os.path.splitext(new_photo.name)
-            actual_image_type: Optional[str] = imghdr.what(new_photo.file)
-            if actual_image_type and actual_image_type != file_ext.removeprefix("."):
-                new_photo.name = f"{file_root}.{actual_image_type}"
+        cleared_raw = validated_data.pop("cleared_photos", "")
+        for field_name in models.SuccessStory.PHOTO_FIELDS:
+            new_photo: Optional[File] = validated_data.get(field_name)
+            if new_photo:
+                file_root, file_ext = os.path.splitext(new_photo.name)
+                actual_image_type: Optional[str] = imghdr.what(new_photo.file)
+                if actual_image_type and actual_image_type != file_ext.removeprefix(
+                    "."
+                ):
+                    new_photo.name = f"{file_root}.{actual_image_type}"
 
-        return super().update(instance, validated_data)
+        instance = super().update(instance, validated_data)
+
+        cleared_fields = [
+            name.strip()
+            for name in cleared_raw.split(",")
+            if name.strip() in models.SuccessStory.PHOTO_FIELDS
+            and not validated_data.get(name.strip())
+        ]
+        if cleared_fields:
+            for field_name in cleared_fields:
+                setattr(instance, field_name, None)
+            instance.save()
+
+        return instance

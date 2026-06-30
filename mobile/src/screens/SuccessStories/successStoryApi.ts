@@ -9,6 +9,8 @@ import User from "../../models/UserCBR";
 export enum StoryStatus {
     WORK_IN_PROGRESS = "WIP",
     READY = "READY",
+    PUBLISHED = "PUB",
+    ARCHIVED = "ARCH",
 }
 
 export enum PublishPermission {
@@ -16,6 +18,22 @@ export enum PublishPermission {
     NO = "NO",
     ANONYMOUS = "ANON",
 }
+export const MAX_STORY_PHOTOS = 5;
+export const PHOTO_FIELDS = ["photo", "photo_2", "photo_3", "photo_4", "photo_5"] as const;
+export type PhotoField = typeof PHOTO_FIELDS[number];
+
+export const storyStatusLabel = (status: StoryStatus | string): string => {
+    switch (status) {
+        case StoryStatus.READY:
+            return "Ready";
+        case StoryStatus.PUBLISHED:
+            return "Published";
+        case StoryStatus.ARCHIVED:
+            return "Archived";
+        default:
+            return "Work in Progress";
+    }
+};
 
 export interface ISuccessStory {
     id: string;
@@ -39,6 +57,10 @@ export interface ISuccessStory {
     part4_action: string;
     part5_impact: string;
     photo: string;
+    photo_2: string;
+    photo_3: string;
+    photo_4: string;
+    photo_5: string;
     publish_permission: PublishPermission;
     status: StoryStatus;
     date: string;
@@ -118,6 +140,10 @@ const toISuccessStory = async (record: SuccessStory): Promise<ISuccessStory> => 
         part4_action: record.part4_action ?? "",
         part5_impact: record.part5_impact ?? "",
         photo: record.photo ?? "",
+        photo_2: record.photo_2 ?? "",
+        photo_3: record.photo_3 ?? "",
+        photo_4: record.photo_4 ?? "",
+        photo_5: record.photo_5 ?? "",
         publish_permission:
             (record.publish_permission as PublishPermission) ?? PublishPermission.NO,
         status: (record.status as StoryStatus) ?? StoryStatus.WORK_IN_PROGRESS,
@@ -162,12 +188,21 @@ export const getStoryById = async (database: Database, id: string): Promise<ISuc
     return toISuccessStory(record);
 };
 
+export const resolveStoryPhotos = (story: ISuccessStory): string[] =>
+    PHOTO_FIELDS.map((field) => story[field]).filter(Boolean);
+
+const writePhotoSlots = (story: SuccessStory, photos: string[]) => {
+    PHOTO_FIELDS.forEach((field, index) => {
+        (story as any)[field] = photos[index] ?? "";
+    });
+};
+
 export const createStory = async (
     database: Database,
     clientId: string,
     createdByUserId: string,
     payload: ISuccessStoryPayload,
-    photoUri?: string
+    photos: string[] = []
 ): Promise<void> => {
     await database.write(async () => {
         const client = await database.get<Client>(modelName.clients).find(clientId);
@@ -175,7 +210,7 @@ export const createStory = async (
 
         await database.get<SuccessStory>(modelName.success_stories).create((story) => {
             applyPayload(story, payload);
-            story.photo = photoUri ?? "";
+            writePhotoSlots(story, photos);
             story.client.set(client);
             story.createdByUser.set(user);
         });
@@ -186,15 +221,13 @@ export const updateStory = async (
     database: Database,
     id: string,
     payload: ISuccessStoryPayload,
-    photoUri?: string
+    photos: string[] = []
 ): Promise<void> => {
     await database.write(async () => {
         const record = await database.get<SuccessStory>(modelName.success_stories).find(id);
         await record.update((story) => {
             applyPayload(story, payload);
-            if (photoUri !== undefined) {
-                story.photo = photoUri;
-            }
+            writePhotoSlots(story, photos);
         });
     });
 };

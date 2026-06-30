@@ -180,5 +180,19 @@ export default schemaMigrations({
                 }),
             ],
         },
+        {
+            toVersion: 11,
+            steps: [
+                addColumns({
+                    table: modelName.success_stories,
+                    columns: [
+                        { name: "photo_2", type: "string", isOptional: true },
+                        { name: "photo_3", type: "string", isOptional: true },
+                        { name: "photo_4", type: "string", isOptional: true },
+                        { name: "photo_5", type: "string", isOptional: true },
+                    ],
+                }),
+            ],
+        },
     ],
 });

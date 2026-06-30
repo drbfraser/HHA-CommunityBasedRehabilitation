@@ -12,7 +12,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 10,
+    version: 11,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -243,6 +243,10 @@ export default appSchema({
                 { name: "status", type: "string" },
                 { name: "date", type: "string" },
                 { name: "photo", type: "string", isOptional: true },
+                { name: "photo_2", type: "string", isOptional: true },
+                { name: "photo_3", type: "string", isOptional: true },
+                { name: "photo_4", type: "string", isOptional: true },
+                { name: "photo_5", type: "string", isOptional: true },
                 { name: mobileGenericField.created_at, type: "number" },
                 { name: mobileGenericField.updated_at, type: "number" },
             ],

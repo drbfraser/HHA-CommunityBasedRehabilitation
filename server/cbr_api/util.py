@@ -1,5 +1,6 @@
 import os
 import base64
+import imghdr
 from datetime import datetime
 from hashlib import blake2b
 import time
@@ -144,8 +145,15 @@ def string_of_id_to_dictionary(data, modelName):
 
 def base64_to_data(data):
     format, imgstr = data.split(";base64,")
-    ext = format.split("/")[-1]
-    return ContentFile(base64.b64decode(imgstr), name="temp." + ext)
+    raw = base64.b64decode(imgstr)
+    # The data URL's declared type is unreliable: a generically-served image comes
+    # through as "application/octet-stream", whose "octet-stream" extension is
+    # rejected by ImageField. Sniff the real type from the bytes, falling back to
+    # the declared type and finally jpg, so the file always gets a valid extension.
+    ext = imghdr.what(None, h=raw) or format.split("/")[-1]
+    if ext in ("octet-stream", "", None):
+        ext = "jpg"
+    return ContentFile(raw, name="temp." + ext)
 
 
 def decode_image(data, field="picture"):
@@ -159,7 +167,8 @@ def decode_image(data, field="picture"):
     updated_data = data.get("updated")
     for record in updated_data:
         if field in record.get("_changed", ""):
-            record[field] = base64_to_data(record[field])
+            value = record.get(field)
+            record[field] = base64_to_data(value) if value else None
         else:
             record.pop(field, None)
 
@@ -334,11 +343,16 @@ def create_success_story_data(validated_data, user, sync_time):
         data.pop("client_id", None)
         data.pop("created_by_user_id", None)
         # .update() can't persist a file field, so apply the photo via save()
-        new_photo = data.pop("photo", None)
+        new_photos = {
+            field_name: data.pop(field_name)
+            for field_name in models.SuccessStory.PHOTO_FIELDS
+            if field_name in data
+        }
         models.SuccessStory.objects.filter(pk=data["id"]).update(**data)
-        if new_photo:
+        if new_photos:
             story = models.SuccessStory.objects.get(pk=data["id"])
-            story.photo = new_photo
+            for field_name, value in new_photos.items():
+                setattr(story, field_name, value)
             story.save()
 
 

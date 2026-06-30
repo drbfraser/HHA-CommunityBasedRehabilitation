@@ -21,12 +21,16 @@ import {
     StoryStatus,
     PublishPermission,
     ISuccessStoryWritePayload,
+    MAX_STORY_PHOTOS,
+    PHOTO_FIELDS,
     createStory,
     getStoryById,
     updateStory,
+    fetchStoryPhotoUrl,
 } from "../../util/successStories";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { IUser } from "@cbr/common/util/users";
+import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
+import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
+import { IUser, UserRole } from "@cbr/common/util/users";
 import history from "@cbr/common/util/history";
 import { storyFormStyles } from "./NewSuccessStory.styles";
 
@@ -80,6 +84,8 @@ const NewSuccessStory = () => {
     const [isLoadingStory, setIsLoadingStory] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const isAdmin = currentUser?.role === UserRole.ADMIN;
+
     const blank: Omit<ISuccessStory, "id" | "created_at" | "updated_at" | "created_by_user_id"> = {
         client_id: clientId,
         written_by_name: "",
@@ -98,19 +104,26 @@ const NewSuccessStory = () => {
         part4_action: "",
         part5_impact: "",
         photo: "",
-        publish_permission: PublishPermission.NO,
-        status: StoryStatus.WORK_IN_PROGRESS,
+        photo_2: "",
+        photo_3: "",
+        photo_4: "",
+        photo_5: "",
+        // Default status and permission to nothing; the user must choose before submitting.
+        publish_permission: "" as PublishPermission,
+        status: "" as StoryStatus,
         date: new Date().toISOString().slice(0, 10),
     };
 
     const [form, setForm] = useState(blank);
-    const [photoUrl, setPhotoUrl] = useState<string>("");
-    const [existingPhotoUrl, setExistingPhotoUrl] = useState<string>("");
+    // A compact, ordered list of photo URLs (no gaps). Each entry is a blob:/object
+    // URL that can be re-uploaded; removing one shifts the rest up.
+    const [photos, setPhotos] = useState<string[]>([]);
 
     useEffect(() => {
-        apiFetch(Endpoint.USER_CURRENT)
-            .then((r) => r.json())
-            .then((u: IUser) => setCurrentUser(u))
+        getCurrentUser()
+            .then((u) => {
+                if (u !== APILoadError) setCurrentUser(u);
+            })
             .catch(() => {});
     }, []);
 
@@ -127,21 +140,20 @@ const NewSuccessStory = () => {
         if (storyId) {
             setIsLoadingStory(true);
             getStoryById(storyId)
-                .then((existing: ISuccessStory) => {
+                .then(async (existing: ISuccessStory) => {
                     const { id, created_at, updated_at, created_by_user_id, ...rest } = existing;
                     setForm(rest);
 
-                    // If the story has a photo, fetch it via the photo endpoint and create a blob URL
-                    if (existing.photo) {
-                        apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
-                            .then((resp) => resp.blob())
-                            .then((blob) => {
-                                const url = URL.createObjectURL(blob);
-                                setPhotoUrl(url);
-                                setExistingPhotoUrl(url);
-                            })
-                            .catch(() => setPhotoUrl(""));
-                    }
+                    // Fetch every populated slot in order, then compact (drop gaps)
+                    // so the previews and positions are always contiguous.
+                    const urls = await Promise.all(
+                        PHOTO_FIELDS.map((field, index) =>
+                            existing[field]
+                                ? fetchStoryPhotoUrl(storyId, index + 1)
+                                : Promise.resolve("")
+                        )
+                    );
+                    setPhotos(urls.filter(Boolean));
                 })
                 .catch(() => setSubmissionError("Could not load the success story."))
                 .finally(() => setIsLoadingStory(false));
@@ -185,9 +197,19 @@ const NewSuccessStory = () => {
     const setSelect = (field: string) => (e: SelectChangeEvent) =>
         setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
+    const addPhoto = (url: string) =>
+        setPhotos((prev) => (prev.length >= MAX_STORY_PHOTOS ? prev : [...prev, url]));
+
+    const removePhoto = (index: number) => setPhotos((prev) => prev.filter((_, i) => i !== index));
+
     const handleSubmit = () => {
         if (!derivedWrittenByName || !form.part1_background) {
             setSubmissionError("Please fill in at least the writer name and Part 1 (Background).");
+            return;
+        }
+
+        if (!form.status || !form.publish_permission) {
+            setSubmissionError("Please select a story status and a permission to publish.");
             return;
         }
 
@@ -217,8 +239,8 @@ const NewSuccessStory = () => {
         setSubmissionError(undefined);
 
         const request = storyId
-            ? updateStory(storyId, storyPayload, photoUrl)
-            : createStory(storyPayload, photoUrl);
+            ? updateStory(storyId, storyPayload, photos)
+            : createStory(storyPayload, photos);
         request
             .then(() => history.goBack())
             .catch(() => setSubmissionError("Could not save the success story."))
@@ -408,29 +430,38 @@ const NewSuccessStory = () => {
                 "Describe life now. What's the lasting impact of your support? Consider the beneficiary, their family, and caregivers."
             )}
 
-            {/* --- PHOTO --- */}
+            {/* --- PHOTOS --- */}
             <Typography variant="h6" sx={storyFormStyles.sectionTitle}>
-                Photograph
+                Photographs
             </Typography>
             <Typography sx={storyFormStyles.helperText}>
-                Please take a photograph if possible.
+                You can add up to {MAX_STORY_PHOTOS} photographs.
             </Typography>
-            <Box sx={{ mt: 2, mb: 2 }}>
-                {existingPhotoUrl && (
-                    <Box
-                        component="img"
-                        src={existingPhotoUrl}
-                        alt="Story photo"
-                        sx={{ maxWidth: 200, display: "block", mb: 1 }}
-                    />
+            <Grid container spacing={2} sx={{ mt: 1, mb: 2 }}>
+                {photos.map((url, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Box
+                            component="img"
+                            src={url}
+                            alt={`Story photo ${index + 1}`}
+                            sx={{ maxWidth: 200, display: "block", mb: 1 }}
+                        />
+                        <Button size="small" onClick={() => removePhoto(index)}>
+                            Remove
+                        </Button>
+                    </Grid>
+                ))}
+                {photos.length < MAX_STORY_PHOTOS && (
+                    <Grid item xs={12} sm={6} md={4} key="add">
+                        <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                            {photos.length === 0 ? "Add a photo" : "Add another photo"}
+                        </Typography>
+                        {/* Remount on each add so PhotoView's own thumbnail preview
+                            resets and doesn't duplicate the just-added image. */}
+                        <PhotoView key={photos.length} onPictureChange={addPhoto} />
+                    </Grid>
                 )}
-                <PhotoView
-                    onPictureChange={(url) => {
-                        setPhotoUrl(url);
-                        setExistingPhotoUrl("");
-                    }}
-                />
-            </Box>
+            </Grid>
 
             {/* --- PERMISSION & STATUS --- */}
             <Typography variant="h6" sx={storyFormStyles.sectionTitle}>
@@ -441,7 +472,7 @@ const NewSuccessStory = () => {
             </Typography>
             <Grid container spacing={2} sx={{ mt: 1 }}>
                 <Grid item xs={12} md={4}>
-                    <FormControl fullWidth variant="outlined">
+                    <FormControl fullWidth variant="outlined" required>
                         <InputLabel>Story Status</InputLabel>
                         <Select
                             value={form.status}
@@ -452,11 +483,16 @@ const NewSuccessStory = () => {
                                 Work in Progress
                             </MenuItem>
                             <MenuItem value={StoryStatus.READY}>Ready</MenuItem>
+                            {/* Published/Archived are admin-only options. */}
+                            {isAdmin && (
+                                <MenuItem value={StoryStatus.PUBLISHED}>Published</MenuItem>
+                            )}
+                            {isAdmin && <MenuItem value={StoryStatus.ARCHIVED}>Archived</MenuItem>}
                         </Select>
                     </FormControl>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                    <FormControl fullWidth variant="outlined">
+                    <FormControl fullWidth variant="outlined" required>
                         <InputLabel>Permission to Publish</InputLabel>
                         <Select
                             value={form.publish_permission}
@@ -480,7 +516,7 @@ const NewSuccessStory = () => {
                     sx={{ mr: 2 }}
                     disabled={isSubmitting || isLoadingStory}
                 >
-                    {isEditing ? "Save Changes" : "Submit Story"}
+                    {isEditing ? "Save Changes" : "Submit Success Story"}
                 </Button>
                 <Button variant="outlined" onClick={() => history.goBack()}>
                     Cancel

@@ -622,6 +622,8 @@ class SuccessStory(models.Model):
     class StoryStatus(models.TextChoices):
         WORK_IN_PROGRESS = "WIP", _("Work in Progress")
         READY = "READY", _("Ready")
+        PUBLISHED = "PUB", _("Published")
+        ARCHIVED = "ARCH", _("Archived")
 
     class PublishPermission(models.TextChoices):
         YES = "YES", _("Yes")
@@ -655,18 +657,57 @@ class SuccessStory(models.Model):
     part4_action = models.TextField(blank=True, default="")
     part5_impact = models.TextField(blank=True, default="")
 
-    def rename_file(self, original_filename):
-        # file_ext includes the "."
+    def _rename_photo(self, original_filename, suffix=""):
+        # file_ext includes the "."; suffix distinguishes the photo slot (e.g. "-2")
         file_root, file_ext = os.path.splitext(original_filename)
         new_filename = (
-            f"success-story-{self.pk}{file_ext}"
+            f"success-story-{self.pk}{suffix}{file_ext}"
             if self.pk
             else f"temp-{get_random_string(10)}-{file_root}{file_ext}"
         )
         return os.path.join(success_story_picture_upload_dir, new_filename)
 
+    def rename_file(self, original_filename):
+        return self._rename_photo(original_filename)
+
+    def rename_file_2(self, original_filename):
+        return self._rename_photo(original_filename, "-2")
+
+    def rename_file_3(self, original_filename):
+        return self._rename_photo(original_filename, "-3")
+
+    def rename_file_4(self, original_filename):
+        return self._rename_photo(original_filename, "-4")
+
+    def rename_file_5(self, original_filename):
+        return self._rename_photo(original_filename, "-5")
+
     photo = models.ImageField(
         upload_to=rename_file,
+        storage=OverwriteStorage(),
+        blank=True,
+        null=True,
+    )
+    photo_2 = models.ImageField(
+        upload_to=rename_file_2,
+        storage=OverwriteStorage(),
+        blank=True,
+        null=True,
+    )
+    photo_3 = models.ImageField(
+        upload_to=rename_file_3,
+        storage=OverwriteStorage(),
+        blank=True,
+        null=True,
+    )
+    photo_4 = models.ImageField(
+        upload_to=rename_file_4,
+        storage=OverwriteStorage(),
+        blank=True,
+        null=True,
+    )
+    photo_5 = models.ImageField(
+        upload_to=rename_file_5,
         storage=OverwriteStorage(),
         blank=True,
         null=True,
@@ -684,17 +725,22 @@ class SuccessStory(models.Model):
     )
     date = models.DateField()
 
+    PHOTO_FIELDS = ("photo", "photo_2", "photo_3", "photo_4", "photo_5")
+
     def save(self, *args, **kwargs):
         # The image might need to be renamed if this is a new story, since a new story would be missing the
         # UUID primary key (id).
-        needs_image_rename = (
-            self.pk is None and self.photo.name is not None and len(self.photo.name) > 0
-        )
+        photos_to_rename = []
+        if self.pk is None:
+            for field_name in self.PHOTO_FIELDS:
+                photo = getattr(self, field_name)
+                if photo.name is not None and len(photo.name) > 0:
+                    photos_to_rename.append(photo)
 
         super().save(*args, **kwargs)
 
-        if needs_image_rename:
-            self.photo.save(self.photo.name, self.photo.file, save=True)
+        for photo in photos_to_rename:
+            photo.save(photo.name, photo.file, save=True)
 
     class Meta:
         ordering = ["-created_at"]

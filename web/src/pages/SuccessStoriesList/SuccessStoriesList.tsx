@@ -15,7 +15,13 @@ import {
 import PhotoIcon from "@mui/icons-material/Photo";
 import history from "@cbr/common/util/history";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
-import { getAllStories, ISuccessStory, StoryStatus } from "util/successStories";
+import {
+    getAllStories,
+    ISuccessStory,
+    StoryStatus,
+    storyStatusLabel,
+    storyStatusChipColor,
+} from "util/successStories";
 
 type TSortOption = "newest" | "oldest" | "updated" | "author";
 
@@ -163,8 +169,10 @@ const SuccessStoriesList = () => {
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
                         <MenuItem value="ALL">All statuses</MenuItem>
-                        <MenuItem value={StoryStatus.READY}>Ready</MenuItem>
                         <MenuItem value={StoryStatus.WORK_IN_PROGRESS}>Work in Progress</MenuItem>
+                        <MenuItem value={StoryStatus.READY}>Ready</MenuItem>
+                        <MenuItem value={StoryStatus.PUBLISHED}>Published</MenuItem>
+                        <MenuItem value={StoryStatus.ARCHIVED}>Archived</MenuItem>
                     </TextField>
                 </Grid>
                 <Grid item xs={12} sm={6} md={2.5}>
@@ -233,16 +241,8 @@ const SuccessStoriesList = () => {
                                                 {story.title || "Untitled Story"}
                                             </Typography>
                                             <Chip
-                                                label={
-                                                    story.status === StoryStatus.READY
-                                                        ? "Ready"
-                                                        : "Work in Progress"
-                                                }
-                                                color={
-                                                    story.status === StoryStatus.READY
-                                                        ? "success"
-                                                        : "warning"
-                                                }
+                                                label={storyStatusLabel(story.status)}
+                                                color={storyStatusChipColor(story.status)}
                                                 size="small"
                                             />
                                         </Box>

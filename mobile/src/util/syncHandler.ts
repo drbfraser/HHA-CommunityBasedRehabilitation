@@ -294,33 +294,45 @@ async function getImage(changes) {
     await getImageData(changes[modelName.referrals]["updated"], Endpoint.REFERRAL_PICTURE);
     await getImageData(changes[modelName.visits]["created"], Endpoint.VISIT_PICTURE);
     await getImageData(changes[modelName.visits]["updated"], Endpoint.VISIT_PICTURE);
-    await getImageData(
-        changes[modelName.success_stories]["created"],
-        Endpoint.SUCCESS_STORY_PHOTO,
-        "photo"
-    );
-    await getImageData(
-        changes[modelName.success_stories]["updated"],
-        Endpoint.SUCCESS_STORY_PHOTO,
-        "photo"
-    );
+    const photoFields = ["photo", "photo_2", "photo_3", "photo_4", "photo_5"];
+    for (const change of ["created", "updated"]) {
+        for (let slot = 1; slot <= photoFields.length; slot++) {
+            await getImageData(
+                changes[modelName.success_stories][change],
+                Endpoint.SUCCESS_STORY_PHOTO,
+                photoFields[slot - 1],
+                slot
+            );
+        }
+    }
+}
+
+function normalizeImageDataUrl(dataUrl: string): string {
+    if (!dataUrl || dataUrl.startsWith("data:image/")) return dataUrl;
+    const marker = ";base64,";
+    const idx = dataUrl.indexOf(marker);
+    return idx === -1 ? dataUrl : `data:image/jpeg;base64,${dataUrl.slice(idx + marker.length)}`;
 }
 
 function blobToDataURL(blob: Blob): Promise<string | null> {
     return new Promise((resolve) => {
         const reader = new FileReader();
-        reader.onloadend = () => resolve(typeof reader.result === "string" ? reader.result : null);
+        reader.onloadend = () =>
+            resolve(
+                typeof reader.result === "string" ? normalizeImageDataUrl(reader.result) : null
+            );
         reader.onerror = () => resolve(null);
         reader.readAsDataURL(blob);
     });
 }
 
-async function getImageData(changes, endpoint, field = "picture") {
+async function getImageData(changes, endpoint, field = "picture", slot = 1) {
     await Promise.all(
         changes.map(async (element) => {
             if (element[field] != null) {
                 try {
-                    const resp = await apiFetch(endpoint, `${element.id}`);
+                    const path = slot > 1 ? `${element.id}/${slot}` : `${element.id}`;
+                    const resp = await apiFetch(endpoint, path);
                     const dataUrl = await blobToDataURL(await resp.blob());
                     if (dataUrl != null) {
                         element[field] = dataUrl;

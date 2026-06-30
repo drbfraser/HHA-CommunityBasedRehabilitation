@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
-import { APIFetchFailError, apiFetch, themeColors } from "@cbr/common";
+import { apiFetch, themeColors } from "@cbr/common";
 import { useNetInfo } from "@react-native-community/netinfo";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
@@ -103,8 +103,7 @@ const BugReport = () => {
                 }
             }, 0);
         } catch (e) {
-            const message = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
-            setSubmitError(message);
+            setSubmitError("Unable to submit. Please contact your administrator.");
         } finally {
             setIsSubmitting(false);
         }

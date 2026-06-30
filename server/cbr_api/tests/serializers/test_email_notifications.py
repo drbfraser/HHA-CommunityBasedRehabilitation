@@ -277,7 +277,8 @@ class BugReportEmailNotificationTests(TestCase):
 
         self.assertFalse(success)
         self.assertEqual(
-            error, "Failed to send the email. Please verify the email settings and try again."
+            error,
+            "Failed to send the email. Please verify the email settings and try again.",
         )
 
     @patch("cbr_api.email_notifications.EmailMultiAlternatives")
@@ -307,9 +308,7 @@ class BugReportEmailNotificationTests(TestCase):
 
 class VerifyEmailCredentialsTests(TestCase):
     def _set_settings(self, *, from_email, from_password, to_email):
-        EmailSettings.objects.filter(
-            category=EmailSettings.Category.REFERRAL
-        ).delete()
+        EmailSettings.objects.filter(category=EmailSettings.Category.REFERRAL).delete()
         return EmailSettings.objects.create(
             category=EmailSettings.Category.REFERRAL,
             from_email=from_email,

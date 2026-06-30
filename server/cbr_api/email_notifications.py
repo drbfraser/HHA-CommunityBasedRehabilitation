@@ -24,9 +24,7 @@ def describe_error_cause(exc):
             "The email server rejected the request. Please verify the email "
             "settings and try again."
         )
-    return (
-        "Failed to send the email. Please verify the email settings and try again."
-    )
+    return "Failed to send the email. Please verify the email settings and try again."
 
 
 EMAIL_SUBJECT = "New CBR Referral Created"

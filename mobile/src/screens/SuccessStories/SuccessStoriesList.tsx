@@ -7,7 +7,12 @@ import { themeColors } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { getStoriesForClient, ISuccessStory, StoryStatus } from "./successStoryApi";
+import {
+    getStoriesForClient,
+    ISuccessStory,
+    StoryStatus,
+    storyStatusLabel,
+} from "./successStoryApi";
 import { styles } from "./SuccessStories.styles";
 
 interface Props {
@@ -106,15 +111,14 @@ const SuccessStoriesList = ({ route, navigation }: Props) => {
                                     </Text>
                                     <View
                                         style={
-                                            story.status === StoryStatus.READY
+                                            story.status === StoryStatus.READY ||
+                                            story.status === StoryStatus.PUBLISHED
                                                 ? styles.chipReady
                                                 : styles.chipWIP
                                         }
                                     >
                                         <Text style={styles.chipText}>
-                                            {story.status === StoryStatus.READY
-                                                ? "Ready"
-                                                : "Work in Progress"}
+                                            {storyStatusLabel(story.status)}
                                         </Text>
                                     </View>
                                 </View>

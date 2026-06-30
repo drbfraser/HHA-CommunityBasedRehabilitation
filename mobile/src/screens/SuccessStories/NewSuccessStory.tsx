@@ -7,7 +7,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { manipulateAsync } from "expo-image-manipulator";
-import { apiFetch, Endpoint, themeColors, useCurrentUser } from "@cbr/common";
+import { themeColors, useCurrentUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -18,7 +18,11 @@ import {
     getStoryById,
     ISuccessStory,
     ISuccessStoryPayload,
+    MAX_STORY_PHOTOS,
+    PhotoField,
     PublishPermission,
+    resolveStoryPhotos,
+    storyStatusLabel,
     StoryStatus,
     updateStory,
 } from "./successStoryApi";
@@ -29,7 +33,10 @@ interface Props {
     navigation: StackNavigationProp<StackParamList, StackScreenName.SUCCESS_STORY_NEW>;
 }
 
-type FormState = Omit<ISuccessStory, "id" | "created_at" | "updated_at" | "created_by_user_id">;
+type FormState = Omit<
+    ISuccessStory,
+    "id" | "created_at" | "updated_at" | "created_by_user_id" | PhotoField
+>;
 
 const BLANK_FORM = (clientId: string): FormState => ({
     client_id: clientId,
@@ -48,10 +55,20 @@ const BLANK_FORM = (clientId: string): FormState => ({
     part3_introduction: "",
     part4_action: "",
     part5_impact: "",
-    photo: "",
-    publish_permission: PublishPermission.NO,
-    status: StoryStatus.WORK_IN_PROGRESS,
+    publish_permission: "" as PublishPermission,
+    status: "" as StoryStatus,
     date: new Date().toISOString().slice(0, 10),
+});
+
+interface PhotoItem {
+    id: string;
+    uri: string;
+}
+
+let photoIdCounter = 0;
+const makePhotoItem = (uri: string): PhotoItem => ({
+    id: `photo-${Date.now()}-${photoIdCounter++}`,
+    uri,
 });
 
 // Images at or above this size are downscaled before being base64-encoded so
@@ -91,8 +108,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const currentUser = useCurrentUser();
     const database = useDatabase();
     const [form, setForm] = useState<FormState>(BLANK_FORM(clientID));
-    const [photoUri, setPhotoUri] = useState<string>("");
-    const [existingPhotoUri, setExistingPhotoUri] = useState<string>("");
+    const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string>();
@@ -113,28 +129,23 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
         setIsLoading(true);
         getStoryById(database, storyId)
             .then((existing) => {
-                const { id, created_at, updated_at, created_by_user_id, ...rest } = existing;
+                const {
+                    id,
+                    created_at,
+                    updated_at,
+                    created_by_user_id,
+                    photo,
+                    photo_2,
+                    photo_3,
+                    photo_4,
+                    photo_5,
+                    ...rest
+                } = existing;
                 setForm(rest);
                 initialFormRef.current = JSON.stringify(rest);
 
-                // Prefer the locally-stored photo URI; otherwise fall back to the
-                // online image endpoint (only available for already-synced stories).
-                if (existing.photo) {
-                    setExistingPhotoUri(existing.photo);
-                } else {
-                    apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
-                        .then((resp) => resp.blob())
-                        .then((blob) => {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                if (typeof reader.result === "string") {
-                                    setExistingPhotoUri(reader.result);
-                                }
-                            };
-                            reader.readAsDataURL(blob);
-                        })
-                        .catch(() => {});
-                }
+                const urls = resolveStoryPhotos(existing);
+                setPhotos(urls.map(makePhotoItem));
             })
             .catch(() => setError("Could not load the success story."))
             .finally(() => setIsLoading(false));
@@ -149,11 +160,18 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const hasUnsavedChanges = useMemo(() => {
         if (hasSubmitted) return false;
         const currentFormJson = JSON.stringify(form);
-        return currentFormJson !== initialFormRef.current || !!photoUri;
-    }, [form, photoUri, hasSubmitted]);
+        return currentFormJson !== initialFormRef.current || photos.length > 0;
+    }, [form, photos, hasSubmitted]);
 
     const set = (field: keyof FormState) => (text: string) =>
         setForm((prev) => ({ ...prev, [field]: text }));
+
+    const addPhoto = (dataUrl: string) =>
+        setPhotos((prev) =>
+            prev.length >= MAX_STORY_PHOTOS ? prev : [...prev, makePhotoItem(dataUrl)]
+        );
+
+    const removePhoto = (id: string) => setPhotos((prev) => prev.filter((p) => p.id !== id));
 
     const pickPhoto = async () => {
         // The gallery uses the Android Photo Picker / iOS limited picker, which need no
@@ -165,8 +183,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             quality: 0.7,
         });
         if (result && !result.canceled) {
-            setPhotoUri(await assetToDataUrl(result.assets[0]));
-            setExistingPhotoUri("");
+            addPhoto(await assetToDataUrl(result.assets[0]));
         }
     };
 
@@ -183,14 +200,18 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             quality: 0.7,
         });
         if (result && !result.canceled) {
-            setPhotoUri(await assetToDataUrl(result.assets[0]));
-            setExistingPhotoUri("");
+            addPhoto(await assetToDataUrl(result.assets[0]));
         }
     };
 
     const handleSubmit = () => {
         if (!writerName || !form.part1_background) {
             setError("Please fill in at least the writer name and Part 1 (Background).");
+            return;
+        }
+
+        if (!form.status || !form.publish_permission) {
+            setError("Please select a story status and a permission to publish.");
             return;
         }
 
@@ -217,24 +238,15 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             date: form.date,
         };
 
-        // Resolve the local-only photo URI to persist: a newly-picked image wins;
-        // if the photo was removed, clear it; if it is unchanged, leave it as is.
-        let photoArg: string | undefined;
-        if (photoUri) {
-            photoArg = photoUri;
-        } else if (!existingPhotoUri) {
-            photoArg = "";
-        } else {
-            photoArg = undefined;
-        }
+        const photoUris = photos.map((p) => p.uri);
 
         setIsSubmitting(true);
         setError(undefined);
         setHasSubmitted(true);
 
         const request = storyId
-            ? updateStory(database, storyId, payload, photoArg)
-            : createStory(database, clientID, userId, payload, photoArg);
+            ? updateStory(database, storyId, payload, photoUris)
+            : createStory(database, clientID, userId, payload, photoUris);
 
         request
             .then(() => navigation.goBack())
@@ -266,6 +278,34 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
                 style={styles.formMultiline}
             />
         </React.Fragment>
+    );
+
+    const renderPhoto = (photo: PhotoItem, index: number) => (
+        <View key={photo.id} style={{ marginBottom: 12 }}>
+            <Text style={styles.formHelperText}>Photo {index + 1}</Text>
+            <Image source={{ uri: photo.uri }} style={styles.photoPreview} resizeMode="contain" />
+            <View style={styles.photoButtonRow}>
+                <Button mode="outlined" onPress={() => removePhoto(photo.id)} compact>
+                    Remove
+                </Button>
+            </View>
+        </View>
+    );
+
+    const renderAddPhoto = () => (
+        <View key="add" style={{ marginBottom: 12 }}>
+            <Text style={styles.formHelperText}>
+                {photos.length === 0 ? "Add a photo" : "Add another photo"}
+            </Text>
+            <View style={styles.photoButtonRow}>
+                <Button mode="outlined" icon="image" onPress={pickPhoto} compact>
+                    Gallery
+                </Button>
+                <Button mode="outlined" icon="camera" onPress={takePhoto} compact>
+                    Camera
+                </Button>
+            </View>
+        </View>
     );
 
     return (
@@ -410,36 +450,13 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
 
                 <Divider style={{ marginVertical: 8 }} />
 
-                {/* --- PHOTO --- */}
-                <Text style={styles.formSectionTitle}>Photograph</Text>
-                <Text style={styles.formHelperText}>Please take a photograph if possible.</Text>
-                {existingPhotoUri || photoUri ? (
-                    <Image
-                        source={{ uri: photoUri || existingPhotoUri }}
-                        style={styles.photoPreview}
-                        resizeMode="contain"
-                    />
-                ) : null}
-                <View style={styles.photoButtonRow}>
-                    <Button mode="outlined" icon="image" onPress={pickPhoto} compact>
-                        Gallery
-                    </Button>
-                    <Button mode="outlined" icon="camera" onPress={takePhoto} compact>
-                        Camera
-                    </Button>
-                    {existingPhotoUri || photoUri ? (
-                        <Button
-                            mode="outlined"
-                            onPress={() => {
-                                setPhotoUri("");
-                                setExistingPhotoUri("");
-                            }}
-                            compact
-                        >
-                            Remove
-                        </Button>
-                    ) : null}
-                </View>
+                {/* --- PHOTOS --- */}
+                <Text style={styles.formSectionTitle}>Photographs</Text>
+                <Text style={styles.formHelperText}>
+                    You can add up to {MAX_STORY_PHOTOS} photographs.
+                </Text>
+                {photos.map((photo, index) => renderPhoto(photo, index))}
+                {photos.length < MAX_STORY_PHOTOS && renderAddPhoto()}
 
                 <Divider style={{ marginVertical: 12 }} />
 
@@ -452,7 +469,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
                 <ExposedDropdownMenu
                     valuesType="record-string"
                     values={STATUS_VALUES}
-                    value={STATUS_VALUES[form.status] ?? ""}
+                    value={form.status ? storyStatusLabel(form.status) : ""}
                     onKeyChange={(key) =>
                         setForm((prev) => ({ ...prev, status: key as StoryStatus }))
                     }
@@ -464,7 +481,9 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
                 <ExposedDropdownMenu
                     valuesType="record-string"
                     values={PERMISSION_VALUES}
-                    value={PERMISSION_VALUES[form.publish_permission] ?? ""}
+                    value={
+                        form.publish_permission ? PERMISSION_VALUES[form.publish_permission] : ""
+                    }
                     onKeyChange={(key) =>
                         setForm((prev) => ({
                             ...prev,
@@ -486,7 +505,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
                         disabled={isSubmitting}
                         loading={isSubmitting}
                     >
-                        {isEditing ? "Save Changes" : "Submit Story"}
+                        {isEditing ? "Save Changes" : "Submit Success Story"}
                     </Button>
                     <Button
                         mode="outlined"

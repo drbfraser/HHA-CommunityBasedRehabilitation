@@ -3,19 +3,24 @@ import { Image, ScrollView, Text, View } from "react-native";
 import { ActivityIndicator, Button, Card, Divider } from "react-native-paper";
 import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { apiFetch, Endpoint, themeColors } from "@cbr/common";
+import { themeColors } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
-import { getStoryById, ISuccessStory, StoryStatus, PublishPermission } from "./successStoryApi";
+import {
+    getStoryById,
+    ISuccessStory,
+    StoryStatus,
+    PublishPermission,
+    resolveStoryPhotos,
+    storyStatusLabel,
+} from "./successStoryApi";
 import { styles } from "./SuccessStories.styles";
 
 interface Props {
     route: RouteProp<StackParamList, StackScreenName.SUCCESS_STORY_VIEW>;
     navigation: StackNavigationProp<StackParamList, StackScreenName.SUCCESS_STORY_VIEW>;
 }
-
-const statusLabel = (s: StoryStatus) => (s === StoryStatus.READY ? "Ready" : "Work in Progress");
 
 const permissionLabel = (p: PublishPermission) => {
     switch (p) {
@@ -59,33 +64,16 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
     const [story, setStory] = useState<ISuccessStory>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [photoBlobUrl, setPhotoBlobUrl] = useState<string>("");
+    const [photoUris, setPhotoUris] = useState<string[]>([]);
 
     const loadStory = useCallback(() => {
         setLoading(true);
+        setPhotoUris([]);
         getStoryById(database, storyId)
             .then((data) => {
                 setStory(data);
                 setError(false);
-
-                // Prefer the locally-stored photo URI; otherwise fall back to the
-                // online image endpoint (only available for synced stories).
-                if (data.photo) {
-                    setPhotoBlobUrl(data.photo);
-                } else {
-                    apiFetch(Endpoint.SUCCESS_STORY_PHOTO, `${storyId}`)
-                        .then((resp) => resp.blob())
-                        .then((blob) => {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                if (typeof reader.result === "string") {
-                                    setPhotoBlobUrl(reader.result);
-                                }
-                            };
-                            reader.readAsDataURL(blob);
-                        })
-                        .catch(() => setPhotoBlobUrl(""));
-                }
+                setPhotoUris(resolveStoryPhotos(data));
             })
             .catch(() => setError(true))
             .finally(() => setLoading(false));
@@ -154,14 +142,17 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
             <Section title="Part 4: Action" body={story.part4_action} />
             <Section title="Part 5: Impact" body={story.part5_impact} />
 
-            {photoBlobUrl ? (
+            {photoUris.some(Boolean) ? (
                 <View style={styles.photoContainer}>
-                    <Text style={styles.sectionTitle}>Photograph</Text>
-                    <Image
-                        source={{ uri: photoBlobUrl }}
-                        style={styles.photo}
-                        resizeMode="contain"
-                    />
+                    <Text style={styles.sectionTitle}>Photographs</Text>
+                    {photoUris.filter(Boolean).map((uri, index) => (
+                        <Image
+                            key={index}
+                            source={{ uri }}
+                            style={styles.photo}
+                            resizeMode="contain"
+                        />
+                    ))}
                 </View>
             ) : null}
 
@@ -193,12 +184,13 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
                         <Text style={styles.fieldLabel}>Status</Text>
                         <View
                             style={
-                                story.status === StoryStatus.READY
+                                story.status === StoryStatus.READY ||
+                                story.status === StoryStatus.PUBLISHED
                                     ? styles.chipReady
                                     : styles.chipWIP
                             }
                         >
-                            <Text style={styles.chipText}>{statusLabel(story.status)}</Text>
+                            <Text style={styles.chipText}>{storyStatusLabel(story.status)}</Text>
                         </View>
                     </View>
                     <Field

@@ -1,7 +1,7 @@
 import React from "react";
 import { Chip } from "@mui/material";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
-import { ISuccessStory, StoryStatus } from "util/successStories";
+import { ISuccessStory, storyStatusLabel, storyStatusChipColor } from "util/successStories";
 import TimelineEntry from "../Timeline/TimelineEntry";
 import { SummaryContainer } from "./Entry.styles";
 import history from "@cbr/common/util/history";
@@ -11,13 +11,15 @@ interface IEntryProps {
 }
 
 const SuccessStoryEntry = ({ story }: IEntryProps) => {
-    const statusLabel = story.status === StoryStatus.READY ? "Ready" : "WIP";
-    const statusColor = story.status === StoryStatus.READY ? "success" : "warning";
-
     const Summary = () => (
         <SummaryContainer>
             <b>Success Story</b> — {story.written_by_name || "Untitled"}
-            <Chip label={statusLabel} color={statusColor} size="small" sx={{ ml: 1 }} />
+            <Chip
+                label={storyStatusLabel(story.status)}
+                color={storyStatusChipColor(story.status)}
+                size="small"
+                sx={{ ml: 1 }}
+            />
         </SummaryContainer>
     );
 

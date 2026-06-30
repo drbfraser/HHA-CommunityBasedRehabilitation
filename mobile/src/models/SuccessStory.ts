@@ -25,9 +25,14 @@ export default class SuccessStory extends Model implements SyncableModel {
     @text("status") status;
     @text("date") date;
 
-    // Local-only image URI for on-device preview. The binary is never synced —
-    // the photo otherwise lives on the dedicated REST image endpoints (online only).
+    // Local image URIs (data URLs) for up to five photos. On push these travel in
+    // the sync payload as base64; on pull they are re-hydrated from the REST image
+    // endpoints. Slot 1 stays "photo" for backward compatibility.
     @text("photo") photo;
+    @text("photo_2") photo_2;
+    @text("photo_3") photo_3;
+    @text("photo_4") photo_4;
+    @text("photo_5") photo_5;
 
     @readonly @date(mobileGenericField.created_at) createdAt;
     @readonly @date(mobileGenericField.updated_at) updatedAt;

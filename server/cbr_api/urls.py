@@ -56,6 +56,11 @@ urlpatterns = [
         name="success-story-photo",
     ),
     path(
+        "successstories/photo/<str:pk>/<int:index>",
+        views.SuccessStoryImage.as_view(),
+        name="success-story-photo-indexed",
+    ),
+    path(
         "successstories/<str:pk>",
         views.SuccessStoryDetail.as_view(),
         name="success-story-detail",

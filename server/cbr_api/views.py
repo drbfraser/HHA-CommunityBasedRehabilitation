@@ -626,11 +626,27 @@ class SuccessStoryImage(AuthenticatedObjectDownloadView):
     model = models.SuccessStory
     file_field = "photo"
 
+    @staticmethod
+    def _field_for_index(index):
+        # index is 1-based; slot 1 is "photo", slots 2-5 are "photo_2".."photo_5".
+        try:
+            slot = int(index)
+        except (TypeError, ValueError):
+            slot = 1
+        if slot < 1 or slot > len(models.SuccessStory.PHOTO_FIELDS):
+            return None
+        return models.SuccessStory.PHOTO_FIELDS[slot - 1]
+
     @extend_schema(
-        description="Gets the photo of a success story if it exists.",
+        description="Gets a photo (slot 1-5) of a success story if it exists.",
         responses={(200, "image/*"): OpenApiTypes.BINARY, 304: None, 404: None},
     )
-    def get(self, request, pk):
+    def get(self, request, pk, index=1):
+        field_name = self._field_for_index(index)
+        if field_name is None:
+            return HttpResponseNotFound()
+        self.file_field = field_name
+
         if DEBUG:
 
             def super_get(self_new, request_new, pk_new):
@@ -640,7 +656,8 @@ class SuccessStoryImage(AuthenticatedObjectDownloadView):
 
         success_story = models.SuccessStory.objects.get(pk=pk)
         if success_story:
-            if not success_story.photo or len(success_story.photo.name) <= 0:
+            photo = getattr(success_story, field_name)
+            if not photo or len(photo.name) <= 0:
                 return HttpResponseNotFound()
 
             return super().get(self, request, pk)
@@ -817,7 +834,8 @@ def sync(request):
         else:
             validation_fail(patient_note_serializer)
 
-        decode_image(request.data["success_stories"], "photo")
+        for photo_field in models.SuccessStory.PHOTO_FIELDS:
+            decode_image(request.data["success_stories"], photo_field)
         success_story_serializer = serializers.pushSuccessStorySerializer(
             data=request.data,
             context={"sync_time": sync_time, "user": request.user},

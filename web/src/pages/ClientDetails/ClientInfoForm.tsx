@@ -159,7 +159,7 @@ const ClientInfoForm = (props: IProps) => {
                                     }
                                     disabled={isSubmitting || !values.is_active}
                                 >
-                                    Submit Story
+                                    New Success Story
                                 </Button>
                             </Grid>
                         </Grid>

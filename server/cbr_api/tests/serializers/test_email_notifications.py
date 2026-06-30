@@ -1,3 +1,4 @@
+import smtplib
 import uuid
 from base64 import b64decode
 from unittest.mock import patch
@@ -8,8 +9,9 @@ from django.test import TestCase, override_settings
 from cbr_api.email_notifications import (
     send_bug_report_email,
     send_referral_created_email,
+    verify_email_credentials,
 )
-from cbr_api.models import Client, Referral, UserCBR, Zone
+from cbr_api.models import Client, EmailSettings, Referral, UserCBR, Zone
 from cbr_api.tests.helpers import create_client
 
 
@@ -274,4 +276,91 @@ class BugReportEmailNotificationTests(TestCase):
         )
 
         self.assertFalse(success)
-        self.assertEqual(error, "Failed to send bug report email.")
+        self.assertEqual(
+            error, "Failed to send the email. Please verify the email settings and try again."
+        )
+
+    @patch("cbr_api.email_notifications.EmailMultiAlternatives")
+    @patch("cbr_api.email_notifications.get_connection", return_value="smtp-connection")
+    @patch(
+        "cbr_api.email_notifications._get_bug_report_email_config",
+        return_value=("from@example.com", "expired-password", "to@example.com"),
+    )
+    def test_send_bug_report_email_returns_auth_error_when_password_invalid(
+        self, _mock_cfg, _mock_get_connection, mock_email_cls
+    ):
+        mock_email_cls.return_value.send.side_effect = smtplib.SMTPAuthenticationError(
+            535, b"5.7.8 Username and Password not accepted"
+        )
+
+        success, error = send_bug_report_email(
+            report_type="bug_report",
+            description="Details",
+            submitted_by_name="Jane",
+            submitted_by_username="jdoe",
+        )
+
+        self.assertFalse(success)
+        self.assertIn("app password", error)
+        self.assertIn("invalid or", error)
+
+
+class VerifyEmailCredentialsTests(TestCase):
+    def _set_settings(self, *, from_email, from_password, to_email):
+        EmailSettings.objects.filter(
+            category=EmailSettings.Category.REFERRAL
+        ).delete()
+        return EmailSettings.objects.create(
+            category=EmailSettings.Category.REFERRAL,
+            from_email=from_email,
+            from_email_password=from_password,
+            to_email=to_email,
+        )
+
+    def test_returns_not_configured_when_password_missing(self):
+        self._set_settings(
+            from_email="from@example.com",
+            from_password="",
+            to_email="to@example.com",
+        )
+
+        result = verify_email_credentials(EmailSettings.Category.REFERRAL)
+
+        self.assertEqual(result["status"], "not_configured")
+        self.assertFalse(result["configured"])
+
+    @patch("cbr_api.email_notifications.get_connection")
+    def test_returns_ok_when_login_succeeds(self, mock_get_connection):
+        self._set_settings(
+            from_email="from@example.com",
+            from_password="valid-password",
+            to_email="to@example.com",
+        )
+        connection = mock_get_connection.return_value
+        connection.open.return_value = True
+
+        result = verify_email_credentials(EmailSettings.Category.REFERRAL)
+
+        self.assertEqual(result["status"], "ok")
+        self.assertTrue(result["configured"])
+        connection.open.assert_called_once()
+        connection.close.assert_called_once()
+
+    @patch("cbr_api.email_notifications.get_connection")
+    def test_returns_auth_error_when_login_rejected(self, mock_get_connection):
+        self._set_settings(
+            from_email="from@example.com",
+            from_password="expired-password",
+            to_email="to@example.com",
+        )
+        connection = mock_get_connection.return_value
+        connection.open.side_effect = smtplib.SMTPAuthenticationError(
+            535, b"5.7.8 Username and Password not accepted"
+        )
+
+        result = verify_email_credentials(EmailSettings.Category.REFERRAL)
+
+        self.assertEqual(result["status"], "auth_error")
+        self.assertTrue(result["configured"])
+        self.assertIn("app password", result["details"])
+        connection.close.assert_called_once()

@@ -17,7 +17,7 @@ from rest_framework.exceptions import ValidationError
 
 from cbr.settings import DEBUG
 from cbr_api import models, serializers, filters, permissions
-from cbr_api.email_notifications import send_bug_report_email
+from cbr_api.email_notifications import send_bug_report_email, verify_email_credentials
 from cbr_api.sql import (
     getDisabilityStats,
     getNumClientsWithDisabilities,
@@ -279,6 +279,27 @@ class EmailSettingsView(generics.RetrieveUpdateAPIView):
                 }
             )
         return models.EmailSettings.get_solo(category)
+
+
+class EmailSettingsVerifyView(generics.GenericAPIView):
+    permission_classes = [permissions.AdminAll]
+
+    def get(self, request, *args, **kwargs):
+        category = request.query_params.get(
+            "category", models.EmailSettings.Category.REFERRAL
+        )
+        valid_categories = {
+            models.EmailSettings.Category.REFERRAL,
+            models.EmailSettings.Category.BUG_REPORT,
+        }
+        if category not in valid_categories:
+            raise ValidationError(
+                {
+                    "category": "Invalid category. Use 'referral' or 'bug_report'.",
+                }
+            )
+        result = verify_email_credentials(category)
+        return Response(result)
 
 
 class BugReportEmailView(generics.CreateAPIView):

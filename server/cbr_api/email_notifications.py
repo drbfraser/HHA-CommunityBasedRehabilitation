@@ -1,5 +1,5 @@
 from datetime import datetime
-import logging
+import smtplib
 from email.mime.image import MIMEImage
 
 from django.conf import settings
@@ -7,7 +7,25 @@ from django.core.mail import EmailMultiAlternatives, get_connection, send_mail
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-logger = logging.getLogger(__name__)
+
+def describe_error_cause(exc):
+    if isinstance(exc, smtplib.SMTPAuthenticationError):
+        return (
+            "Email sign-in failed: the sender email or app password is invalid or "
+            "expired. Please update the app password in the admin email settings."
+        )
+    if isinstance(exc, (smtplib.SMTPSenderRefused, smtplib.SMTPRecipientsRefused)):
+        return (
+            "The email server rejected the sender or recipient address. Please "
+            "verify the email settings."
+        )
+    if isinstance(exc, smtplib.SMTPException):
+        return (
+            "The email server rejected the request. Please verify the email "
+            "settings and try again."
+        )
+    return "Failed to send the email. Please verify the email settings and try again."
+
 
 EMAIL_SUBJECT = "New CBR Referral Created"
 BUG_REPORT_SUBJECT = "New CBR Bug Report"
@@ -33,7 +51,6 @@ def _get_referral_email_config():
             email_settings.to_email,
         )
     except Exception:
-        logger.exception("Failed to load email settings; referral email skipped")
         return None
 
 
@@ -109,10 +126,6 @@ def send_referral_created_email(referral):
 
     from_email, from_password, to_email = config
     if not from_email or not to_email or not from_password:
-        logger.warning(
-            "Referral notification email skipped; email settings incomplete",
-            extra={"referral_id": str(referral.id)},
-        )
         return
 
     domain = getattr(settings, "DOMAIN", "")
@@ -179,10 +192,7 @@ def send_referral_created_email(referral):
             html_message=html_body,
         )
     except Exception:
-        logger.exception(
-            "Failed to send referral notification email",
-            extra={"referral_id": str(referral.id)},
-        )
+        pass
 
 
 def _get_bug_report_email_config():
@@ -196,7 +206,6 @@ def _get_bug_report_email_config():
             email_settings.to_email,
         )
     except Exception:
-        logger.exception("Failed to load bug report email settings")
         return None
 
 
@@ -288,6 +297,70 @@ def send_bug_report_email(
             message.attach(inline_image)
         message.send(fail_silently=False)
         return True, None
+    except Exception as exc:
+        return False, describe_error_cause(exc)
+
+
+def verify_email_credentials(category):
+    """Check whether the saved email credentials for a category can sign in.
+
+    - ``ok``: credentials are complete and sign-in succeeded
+    - ``not_configured``: one or more of from/to/password is missing
+    - ``auth_error``: sign-in was rejected (app password likely invalid/expired)
+    - ``error``: settings could not be loaded or another failure occurred
+    """
+    from cbr_api.models import EmailSettings
+
+    try:
+        email_settings = EmailSettings.get_solo(category)
     except Exception:
-        logger.exception("Failed to send bug report/suggestion email")
-        return False, "Failed to send bug report email."
+        return {
+            "status": "error",
+            "configured": False,
+            "details": "Unable to load email settings.",
+        }
+
+    from_email = email_settings.from_email
+    from_password = email_settings.from_email_password
+    to_email = email_settings.to_email
+
+    if not (from_email and from_password and to_email):
+        return {
+            "status": "not_configured",
+            "configured": False,
+            "details": "Email settings are not fully set up yet.",
+        }
+
+    connection = get_connection(
+        username=from_email,
+        password=from_password,
+        fail_silently=False,
+    )
+
+    error_result = None
+    try:
+        connection.open()
+    except Exception as exc:
+        error_result = {
+            "status": (
+                "auth_error"
+                if isinstance(exc, smtplib.SMTPAuthenticationError)
+                else "error"
+            ),
+            "configured": True,
+            "details": describe_error_cause(exc),
+        }
+    finally:
+        try:
+            connection.close()
+        except Exception:
+            pass
+
+    if error_result is not None:
+        return error_result
+
+    return {
+        "status": "ok",
+        "configured": True,
+        "details": "Email sign-in succeeded. The saved credentials are valid.",
+    }

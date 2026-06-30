@@ -1,8 +1,20 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Field, Formik } from "formik";
 import { TextField } from "formik-mui";
-import { Box, Button, Card, CardContent, CardHeader, Grid, Typography } from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    Card,
+    CardContent,
+    CardHeader,
+    CircularProgress,
+    Grid,
+    IconButton,
+    Typography,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import * as Yup from "yup";
 
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
@@ -16,6 +28,14 @@ type EmailSettingsFormValues = {
 };
 
 type EmailSettingsCategory = "referral" | "bug_report";
+
+type VerifyStatus = "ok" | "not_configured" | "auth_error" | "error";
+
+type VerifyResult = {
+    status: VerifyStatus;
+    configured: boolean;
+    details: string;
+};
 
 type EmailSettingsTabConfig = {
     category: EmailSettingsCategory;
@@ -49,6 +69,19 @@ const emailSettingsTabs: EmailSettingsTabConfig[] = [
 
 const getCategoryUrlParams = (category: EmailSettingsCategory) => `?category=${category}`;
 
+const verifyStatusSeverity = (status: VerifyStatus): "success" | "info" | "warning" | "error" => {
+    switch (status) {
+        case "ok":
+            return "success";
+        case "not_configured":
+            return "info";
+        case "auth_error":
+            return "error";
+        default:
+            return "warning";
+    }
+};
+
 const AdminEmailSettings = () => {
     const { t } = useTranslation();
     const [tabIndex, setTabIndex] = useState(0);
@@ -56,8 +89,29 @@ const AdminEmailSettings = () => {
     const [passwordSet, setPasswordSet] = useState(false);
     const [passwordUpdatedAt, setPasswordUpdatedAt] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
+    const [verifyResult, setVerifyResult] = useState<VerifyResult | null>(null);
+    const [verifying, setVerifying] = useState(false);
 
     const activeTab = emailSettingsTabs[tabIndex];
+
+    const runVerification = useCallback((category: EmailSettingsCategory) => {
+        setVerifying(true);
+        setVerifyResult(null);
+        apiFetch(Endpoint.EMAIL_SETTINGS_VERIFY, getCategoryUrlParams(category))
+            .then((res) => res.json())
+            .then((data: VerifyResult) => {
+                setVerifyResult(data);
+            })
+            .catch((e) => {
+                const errMsg = e instanceof APIFetchFailError ? e.details ?? e.message : `${e}`;
+                setVerifyResult({
+                    status: "error",
+                    configured: false,
+                    details: `Could not check email credentials: ${errMsg}`,
+                });
+            })
+            .finally(() => setVerifying(false));
+    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -81,7 +135,8 @@ const AdminEmailSettings = () => {
                 alert(errMsg);
             })
             .finally(() => setLoading(false));
-    }, [activeTab.category]);
+        runVerification(activeTab.category);
+    }, [activeTab.category, runVerification]);
 
     const validationSchema = useMemo(() => {
         const requiredMsg = "Required";
@@ -206,6 +261,7 @@ const AdminEmailSettings = () => {
                                         );
                                         helpers.resetForm({ values: nextValues });
                                         alert("Email settings updated.");
+                                        runVerification(activeTab.category);
                                     })
                                     .catch((e) => {
                                         const errMsg =
@@ -309,6 +365,60 @@ const AdminEmailSettings = () => {
                                             )}
                                         </Grid>
                                     </Grid>
+
+                                    {(verifying || verifyResult) && (
+                                        <Box sx={{ mt: 2 }}>
+                                            {verifying ? (
+                                                <Alert
+                                                    icon={<CircularProgress size={18} />}
+                                                    severity="info"
+                                                    variant="outlined"
+                                                >
+                                                    Checking email credentials...
+                                                </Alert>
+                                            ) : (
+                                                verifyResult && (
+                                                    <Alert
+                                                        severity={verifyStatusSeverity(
+                                                            verifyResult.status
+                                                        )}
+                                                        action={
+                                                            <Box
+                                                                sx={{
+                                                                    display: "flex",
+                                                                    alignItems: "center",
+                                                                }}
+                                                            >
+                                                                <Button
+                                                                    color="inherit"
+                                                                    size="small"
+                                                                    onClick={() =>
+                                                                        runVerification(
+                                                                            activeTab.category
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Re-check
+                                                                </Button>
+                                                                <IconButton
+                                                                    aria-label="dismiss"
+                                                                    color="inherit"
+                                                                    size="small"
+                                                                    onClick={() =>
+                                                                        setVerifyResult(null)
+                                                                    }
+                                                                >
+                                                                    <CloseIcon fontSize="inherit" />
+                                                                </IconButton>
+                                                            </Box>
+                                                        }
+                                                    >
+                                                        {verifyResult.details}
+                                                    </Alert>
+                                                )
+                                            )}
+                                        </Box>
+                                    )}
 
                                     <Grid container justifyContent="flex-end">
                                         <Grid item>

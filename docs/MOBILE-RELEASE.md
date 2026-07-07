@@ -24,6 +24,18 @@ In `mobile/app.json`, update `expo.android.versionCode` by incrementing to the n
 **Update the API Version Number:**
 The API version number maintained in the mobile app must match that of the server. Ensure that `mobileApiVersion` in `mobile/src/util/syncHandler.ts` matches the version specified by `API_VERSION` in `server/cbr_api/util.py`. This will likely need to be updated only when a full DB wipe has occurred on the server and therefore requires the mobile client to also do a complete local database wipe before syncing with the server. Changing the major version number of the `API_VERSION` will cause the mobile client to wipe its database when syncing.
 
+### 1.2.1: `API_VERSION` — Forcing Incompatible Versions to Stop
+
+`API_VERSION` (`server/cbr_api/util.py`) and `mobileApiVersion` (`mobile/src/util/syncHandler.ts`) are used to gate compatibility. `api_versions_compatible()` compares only the major version — `5.9.9` ↔ `5.0.0` are compatible; `5.x` - `6.x` are not. Minor/patch bumps do nothing.
+
+- The app sends `api_version` on every sync. If the major version doesn't match, the `sync` and `versioncheck/` endpoints return a 403, blocking the sync, esentially forcing the user to update their app.
+
+- To force an update: bump the major version in both files
+
+- A major bump wipes each client's local DB on next sync
+
+The "HHA CBR is Updating!" modal. Shown when the local DB was last synced under a different api version than the current app build. This happens on a fresh/never-synced install or after updating the app. The modal calls `versioncheck/`: if the server says compatible (200) it shows this "clear local data to sync" prompt; if incompatible (403) it shows the "outdated app, update on Play Store" prompt instead. Confirming wipes local DB, syncs, then records the current version so it won't reappear until the version changes.
+
 ### 1.3: Ensure `android` Directory is Updated
 1. In `mobile/`, run `npm run prebuild` to ensure that the project is up to date.
 

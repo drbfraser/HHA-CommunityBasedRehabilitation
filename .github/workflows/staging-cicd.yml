@@ -39,7 +39,9 @@ jobs:
     uses: ./.github/workflows/deploy-from-dockerhub.yml
     with:
         RUNNER_NAME: deploy-staging
-        DOMAIN:      cbr-stg.cmpt.sfu.ca
+        # Set domain to include port 80 to force HTTP (not HTTPS) since running through reverse 
+        # proxy on SFU server.  Without :80 we get "The page isn’t redirecting properly" error.
+        DOMAIN:      cbr-stg.cs.sfu.ca:80 
         IMAGE_TAG:   ${{ needs.export-image-tag.outputs.image_tag }}
     secrets: inherit
 

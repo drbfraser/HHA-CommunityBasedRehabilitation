@@ -7,8 +7,8 @@ const STORAGE_KEYS = {
 
 const BASE_URLS = {
     local: process.env.LOCAL_URL ?? "",
-    dev: "https://cbr-dev.cmpt.sfu.ca",
-    staging: "https://cbr-stg.cmpt.sfu.ca",
+    dev: "https://cbr-dev.cs.sfu.ca",
+    staging: "https://cbr-stg.cs.sfu.ca",
     prod: "https://cbr.hopehealthaction.org",
 };
 

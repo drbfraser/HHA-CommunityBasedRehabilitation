@@ -19,6 +19,7 @@
             },
             "package": "org.hopehealthaction.cbrapp",
             "versionCode": 31,
+            "allowBackup": false,
             "blockedPermissions": [
                 "android.permission.READ_EXTERNAL_STORAGE",
                 "android.permission.WRITE_EXTERNAL_STORAGE",
@@ -50,7 +51,10 @@
             "typedRoutes": true
         },
         "ios": {
-            "bundleIdentifier": "org.hopehealthaction.cbrapp"
+            "bundleIdentifier": "org.hopehealthaction.cbrapp",
+            "entitlements": {
+                "com.apple.developer.default-data-protection": "NSFileProtectionComplete"
+            }
         }
     }
 }

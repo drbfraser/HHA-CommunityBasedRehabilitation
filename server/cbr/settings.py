@@ -32,7 +32,7 @@ if DEBUG:
     ALLOWED_HOSTS = ["*"]
     CORS_ALLOW_ALL_ORIGINS = True
 else:
-    ALLOWED_HOSTS = [os.environ["DOMAIN"]]
+    ALLOWED_HOSTS = [os.environ["DOMAIN"].split(":")[0]]  # Strip port if present
     CORS_ALLOW_ALL_ORIGINS = False
     USE_X_FORWARDED_HOST = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

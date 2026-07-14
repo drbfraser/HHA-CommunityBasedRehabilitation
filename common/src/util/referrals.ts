@@ -25,6 +25,11 @@ export interface IReferral {
     mental_health_condition: MentalConditions;
     mental_condition_other: string;
 
+    safe_guarding: boolean;
+    safe_guarding_observation: SafeGuardingObservation;
+    safe_guarding_person_involved: string;
+    safe_guarding_action_needed: SafeGuardingActionNeeded;
+
     hha_nutrition_and_agriculture_project: boolean;
     emergency_food_aid: boolean;
     agriculture_livelihood_program_enrollment: boolean;
@@ -42,6 +47,7 @@ export interface IOutstandingReferral {
     prosthetic: boolean;
     orthotic: boolean;
     mental_health: boolean;
+    safe_guarding: boolean;
     hha_nutrition_and_agriculture_project: boolean;
     emergency_food_aid: boolean;
     agriculture_livelihood_program_enrollment: boolean;
@@ -53,6 +59,7 @@ export enum ReferralTypes {
     PROSTHETIC = "prosthetic",
     ORTHOTIC = "orthotic",
     HHANAP = "hha_nutrition_and_agriculture_project",
+    SAFE_GUARDING = "safe_guarding",
 }
 
 export enum InjuryLocation {
@@ -88,6 +95,19 @@ export enum MentalConditions {
     AUTISM = "Autism",
     DEMENTIA = "Dementia",
     OTHER = "Other",
+}
+
+export enum SafeGuardingObservation {
+    SIGNS_OF_HARM = "SIGNS_OF_HARM",
+    NEGLECT = "NEGLECT",
+    UNSAFE_BEHAVIOUR = "UNSAFE_BEHAVIOUR",
+    OTHER = "OTHER",
+}
+
+export enum SafeGuardingActionNeeded {
+    URGENT_ATTENTION = "URGENT_ATTENTION",
+    FOLLOW_UP = "FOLLOW_UP",
+    DOCUMENTATION_ONLY = "DOCUMENTATION_ONLY",
 }
 
 enum PhysiotherapyConditions {
@@ -130,6 +150,8 @@ export let orthoticInjuryLocations: { [key: string]: string } = {};
 export let otherServices: { [key: string]: string } = {};
 export let wheelchairExperiences: { [key: string]: string } = {};
 export let mentalHealthConditions: { [key: string]: string } = {};
+export let safeGuardingObservations: { [key: string]: string } = {};
+export let safeGuardingActionsNeeded: { [key: string]: string } = {};
 const refreshArrays = () => {
     prostheticInjuryLocations = {
         [InjuryLocation.BELOW_KNEE]: i18n.t("referral.belowKnee"),
@@ -165,6 +187,19 @@ const refreshArrays = () => {
         [MentalConditions.AUTISM]: i18n.t("referral.autism"),
         [MentalConditions.DEMENTIA]: i18n.t("referral.dementia"),
         [MentalConditions.OTHER]: i18n.t("referral.other"),
+    };
+
+    safeGuardingObservations = {
+        [SafeGuardingObservation.SIGNS_OF_HARM]: i18n.t("referral.signsOfHarm"),
+        [SafeGuardingObservation.NEGLECT]: i18n.t("referral.neglect"),
+        [SafeGuardingObservation.UNSAFE_BEHAVIOUR]: i18n.t("referral.unsafeBehaviour"),
+        [SafeGuardingObservation.OTHER]: i18n.t("referral.other"),
+    };
+
+    safeGuardingActionsNeeded = {
+        [SafeGuardingActionNeeded.URGENT_ATTENTION]: i18n.t("referral.urgentAttention"),
+        [SafeGuardingActionNeeded.FOLLOW_UP]: i18n.t("referral.followUp"),
+        [SafeGuardingActionNeeded.DOCUMENTATION_ONLY]: i18n.t("referral.documentationOnly"),
     };
 };
 refreshArrays();

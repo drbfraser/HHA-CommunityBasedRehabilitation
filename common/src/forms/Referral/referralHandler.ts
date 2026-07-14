@@ -62,6 +62,17 @@ export const referralHandleSubmit = async (values: ReferralFormValues, source: s
                 : values[ReferralFormField.mentalHealthCondition]
             : "",
 
+        safe_guarding: values[ReferralFormField.safeGuarding],
+        safe_guarding_observation: values[ReferralFormField.safeGuarding]
+            ? values[ReferralFormField.safeGuardingObservation]
+            : "",
+        safe_guarding_person_involved: values[ReferralFormField.safeGuarding]
+            ? values[ReferralFormField.safeGuardingPersonInvolved]
+            : "",
+        safe_guarding_action_needed: values[ReferralFormField.safeGuarding]
+            ? values[ReferralFormField.safeGuardingActionNeeded]
+            : "",
+
         services_other: values[ReferralFormField.servicesOther]
             ? values[ReferralFormField.otherDescription] === Impairments.OTHER
                 ? values[ReferralFormField.referralOther]

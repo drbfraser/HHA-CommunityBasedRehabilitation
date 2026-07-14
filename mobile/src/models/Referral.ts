@@ -38,6 +38,10 @@ export default class Referral extends Model implements SyncableModel {
     @field(ReferralField.mental_health) mental_health;
     @text(ReferralField.mental_health_condition) mental_health_condition;
     @text(ReferralField.mental_condition_other) mental_condition_other;
+    @field(ReferralField.safe_guarding) safe_guarding;
+    @text(ReferralField.safe_guarding_observation) safe_guarding_observation;
+    @text(ReferralField.safe_guarding_person_involved) safe_guarding_person_involved;
+    @text(ReferralField.safe_guarding_action_needed) safe_guarding_action_needed;
 
     @readonly @date(mobileGenericField.updated_at) updatedAt;
 

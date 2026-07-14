@@ -4,6 +4,8 @@ import {
     Impairments,
     InjuryLocation,
     MentalConditions,
+    SafeGuardingActionNeeded,
+    SafeGuardingObservation,
     WheelchairExperience,
     mentalHealthConditions,
     orthoticInjury,
@@ -40,6 +42,11 @@ export enum ReferralField {
     mental_health_condition = "mental_health_condition",
     mental_condition_other = "mental_condition_other",
 
+    safe_guarding = "safe_guarding",
+    safe_guarding_observation = "safe_guarding_observation",
+    safe_guarding_person_involved = "safe_guarding_person_involved",
+    safe_guarding_action_needed = "safe_guarding_action_needed",
+
     hha_nutrition_and_agriculture_project = "hha_nutrition_and_agriculture_project",
     emergency_food_aid = "emergency_food_aid",
     agriculture_livelihood_program_enrollment = "agriculture_livelihood_program_enrollment",
@@ -67,6 +74,11 @@ export enum ReferralFormField {
     mentalHealthCondition = "mental_health_condition",
     mentalConditionOther = "mental_condition_other",
 
+    safeGuarding = "safe_guarding",
+    safeGuardingObservation = "safe_guarding_observation",
+    safeGuardingPersonInvolved = "safe_guarding_person_involved",
+    safeGuardingActionNeeded = "safe_guarding_action_needed",
+
     hhaNutritionAndAgricultureProject = "hha_nutrition_and_agriculture_project",
     emergencyFoodAidRequired = "emergency_food_aid",
     agricultureLivelihoodProgramEnrollment = "agriculture_livelihood_program_enrollment",
@@ -82,6 +94,7 @@ export const referralServicesTypes = [
     ReferralFormField.prosthetic,
     ReferralFormField.orthotic,
     ReferralFormField.mentalHealth,
+    ReferralFormField.safeGuarding,
     ReferralFormField.hhaNutritionAndAgricultureProject,
     ReferralFormField.servicesOther,
 ];
@@ -110,6 +123,13 @@ const refreshArrays = () => {
         [ReferralFormField.mentalHealthCondition]: i18n.t("referral.mentalHealthCondition"),
         [ReferralFormField.mentalConditionOther]: i18n.t("referral.mentalConditionOther"),
 
+        [ReferralFormField.safeGuarding]: i18n.t("referral.safeGuarding"),
+        [ReferralFormField.safeGuardingObservation]: i18n.t("referral.safeGuardingObservation"),
+        [ReferralFormField.safeGuardingPersonInvolved]: i18n.t(
+            "referral.safeGuardingPersonInvolved"
+        ),
+        [ReferralFormField.safeGuardingActionNeeded]: i18n.t("referral.safeGuardingActionNeeded"),
+
         [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t(
             "referral.hhaNutritionAndAgricultureProject"
         ),
@@ -132,6 +152,7 @@ const refreshArrays = () => {
             "referral.hhaNutritionAndAgricultureProjectAbbr"
         ),
         [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
+        [ReferralFormField.safeGuarding]: i18n.t("referral.safeGuarding"),
         [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
     };
 };
@@ -159,6 +180,11 @@ export const referralInitialValues = {
     [ReferralFormField.mentalHealth]: false,
     [ReferralFormField.mentalHealthCondition]: "",
     [ReferralFormField.mentalConditionOther]: "",
+
+    [ReferralFormField.safeGuarding]: false,
+    [ReferralFormField.safeGuardingObservation]: SafeGuardingObservation.SIGNS_OF_HARM,
+    [ReferralFormField.safeGuardingPersonInvolved]: "",
+    [ReferralFormField.safeGuardingActionNeeded]: SafeGuardingActionNeeded.FOLLOW_UP,
 
     [ReferralFormField.hhaNutritionAndAgricultureProject]: false,
     [ReferralFormField.emergencyFoodAidRequired]: false,
@@ -266,6 +292,23 @@ export const hhaNutritionAndAgricultureProjectValidationSchema = () =>
             return new Yup.ValidationError(i18n.t("referral.selectOneOption"), null, "custom");
         });
 
+export const safeGuardingValidationSchema = () =>
+    Yup.object().shape({
+        [ReferralFormField.safeGuardingObservation]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.safeGuardingObservation])
+            .max(20)
+            .required(),
+        [ReferralFormField.safeGuardingPersonInvolved]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.safeGuardingPersonInvolved])
+            .max(100)
+            .trim()
+            .required(),
+        [ReferralFormField.safeGuardingActionNeeded]: Yup.string()
+            .label(referralFieldLabels[ReferralFormField.safeGuardingActionNeeded])
+            .max(20)
+            .required(),
+    });
+
 export const otherServicesValidationSchema = () =>
     Yup.object().shape({
         [ReferralFormField.otherDescription]: Yup.string()
@@ -297,6 +340,7 @@ export const serviceTypes: ReferralFormField[] = [
     ReferralFormField.orthotic,
     ReferralFormField.hhaNutritionAndAgricultureProject,
     ReferralFormField.mentalHealth,
+    ReferralFormField.safeGuarding,
     ReferralFormField.servicesOther,
 ];
 

@@ -24,6 +24,8 @@ import {
     otherServices,
     physiotherapyConditions,
     prostheticInjuryLocations,
+    safeGuardingActionsNeeded,
+    safeGuardingObservations,
     wheelchairExperiences,
 } from "@cbr/common/util/referrals";
 import { themeColors } from "@cbr/common/util/colors";
@@ -95,6 +97,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     <ReasonChip label={t("general.nutrition")} />
                 )}
                 {referral.mental_health && <ReasonChip label={t("referral.mental")} />}
+                {referral.safe_guarding && <ReasonChip label={t("referral.safeGuarding")} />}
                 {referral.services_other && <ReasonChip label={t("referral.other")} />}
 
                 {hasPhoto && (
@@ -248,6 +251,22 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                             {mentalHealthConditions[referral.mental_health_condition]
                                 ? mentalHealthConditions[referral.mental_health_condition]
                                 : referral.mental_health_condition}
+                        </div>
+                    )}
+                    {referral.safe_guarding && (
+                        <div>
+                            <b>{t("referral.safeGuardingObservation")}: </b>
+                            {safeGuardingObservations[referral.safe_guarding_observation]
+                                ? safeGuardingObservations[referral.safe_guarding_observation]
+                                : referral.safe_guarding_observation}
+                            <br />
+                            <b>{t("referral.safeGuardingPersonInvolved")}: </b>
+                            {referral.safe_guarding_person_involved}
+                            <br />
+                            <b>{t("referral.safeGuardingActionNeeded")}: </b>
+                            {safeGuardingActionsNeeded[referral.safe_guarding_action_needed]
+                                ? safeGuardingActionsNeeded[referral.safe_guarding_action_needed]
+                                : referral.safe_guarding_action_needed}
                         </div>
                     )}
                     {Boolean(referral.services_other.trim().length) && (

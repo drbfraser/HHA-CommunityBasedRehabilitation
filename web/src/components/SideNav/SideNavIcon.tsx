@@ -8,7 +8,7 @@ import { apiFetch, APILoadError, Endpoint } from "@cbr/common/util/endpoints";
 import { socket } from "@cbr/common/context/SocketIOContext";
 import { IUser } from "@cbr/common/util/users";
 import { getCurrentUser } from "@cbr/common/util/hooks/currentUser";
-import { IPage, PageName } from "util/pages";
+import { IPage, pageDisplayTitle, PageName } from "util/pages";
 import { sideNavStyles } from "./SideNav.styles";
 
 interface IProps {
@@ -60,12 +60,12 @@ const SideNavIcon = ({ page, active: iconIsActive }: IProps) => {
     }, [fetchAlerts, isUnreadAlertCountSet]);
 
     function IconInfo(props: { page: IPage }) {
-        const { path, name, Icon } = props.page;
+        const { path, Icon } = props.page;
 
         return (
             <Link to={path}>
                 <Tooltip
-                    title={t(name)}
+                    title={pageDisplayTitle(props.page, t)}
                     placement="top"
                     arrow
                     componentsProps={{

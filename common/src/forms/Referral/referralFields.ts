@@ -123,12 +123,12 @@ const refreshArrays = () => {
         [ReferralFormField.mentalHealthCondition]: i18n.t("referral.mentalHealthCondition"),
         [ReferralFormField.mentalConditionOther]: i18n.t("referral.mentalConditionOther"),
 
-        [ReferralFormField.safeGuarding]: i18n.t("referral.safeGuarding"),
-        [ReferralFormField.safeGuardingObservation]: i18n.t("referral.safeGuardingObservation"),
+        [ReferralFormField.safeGuarding]: i18n.t("referral.safeguarding"),
+        [ReferralFormField.safeGuardingObservation]: i18n.t("referral.safeguardingObservation"),
         [ReferralFormField.safeGuardingPersonInvolved]: i18n.t(
-            "referral.safeGuardingPersonInvolved"
+            "referral.safeguardingPersonInvolved"
         ),
-        [ReferralFormField.safeGuardingActionNeeded]: i18n.t("referral.safeGuardingActionNeeded"),
+        [ReferralFormField.safeGuardingActionNeeded]: i18n.t("referral.safeguardingActionNeeded"),
 
         [ReferralFormField.hhaNutritionAndAgricultureProject]: i18n.t(
             "referral.hhaNutritionAndAgricultureProject"
@@ -152,7 +152,7 @@ const refreshArrays = () => {
             "referral.hhaNutritionAndAgricultureProjectAbbr"
         ),
         [ReferralFormField.mentalHealth]: i18n.t("referral.mentalHealth"),
-        [ReferralFormField.safeGuarding]: i18n.t("referral.safeGuarding"),
+        [ReferralFormField.safeGuarding]: i18n.t("referral.safeguarding"),
         [ReferralFormField.servicesOther]: i18n.t("referral.servicesOther"),
     };
 };

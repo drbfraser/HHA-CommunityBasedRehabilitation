@@ -17,7 +17,7 @@ const SafeGuardingForm = (_props: IFormProps) => {
 
     return (
         <div>
-            <FormLabel>{t("referral.safeGuarding")}</FormLabel>
+            <FormLabel>{t("referral.safeguarding")}</FormLabel>
             <br />
             <br />
             <Box sx={newReferralStyles.fieldIndent}>

@@ -45,9 +45,9 @@ class ReferralEmailNotificationTests(TestCase):
             safe_guarding=True,
             condition="Back pain",
             mental_health_condition="Anxiety",
-            safe_guarding_observation=Referral.SafeGuardingObservation.SIGNS_OF_HARM,
+            safe_guarding_observation=referral.safeguardingObservation.SIGNS_OF_HARM,
             safe_guarding_person_involved="Caregiver",
-            safe_guarding_action_needed=Referral.SafeGuardingActionNeeded.FOLLOW_UP,
+            safe_guarding_action_needed=referral.safeguardingActionNeeded.FOLLOW_UP,
             services_other="Transport assistance",
         )
 

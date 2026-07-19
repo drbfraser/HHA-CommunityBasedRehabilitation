@@ -97,7 +97,7 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     <ReasonChip label={t("general.nutrition")} />
                 )}
                 {referral.mental_health && <ReasonChip label={t("referral.mental")} />}
-                {referral.safe_guarding && <ReasonChip label={t("referral.safeGuarding")} />}
+                {referral.safe_guarding && <ReasonChip label={t("referral.safeguarding")} />}
                 {referral.services_other && <ReasonChip label={t("referral.other")} />}
 
                 {hasPhoto && (
@@ -255,15 +255,15 @@ const ReferralEntry = ({ referral, refreshClient, dateFormatter }: IEntryProps) 
                     )}
                     {referral.safe_guarding && (
                         <div>
-                            <b>{t("referral.safeGuardingObservation")}: </b>
+                            <b>{t("referral.safeguardingObservation")}: </b>
                             {safeGuardingObservations[referral.safe_guarding_observation]
                                 ? safeGuardingObservations[referral.safe_guarding_observation]
                                 : referral.safe_guarding_observation}
                             <br />
-                            <b>{t("referral.safeGuardingPersonInvolved")}: </b>
+                            <b>{t("referral.safeguardingPersonInvolved")}: </b>
                             {referral.safe_guarding_person_involved}
                             <br />
-                            <b>{t("referral.safeGuardingActionNeeded")}: </b>
+                            <b>{t("referral.safeguardingActionNeeded")}: </b>
                             {safeGuardingActionsNeeded[referral.safe_guarding_action_needed]
                                 ? safeGuardingActionsNeeded[referral.safe_guarding_action_needed]
                                 : referral.safe_guarding_action_needed}

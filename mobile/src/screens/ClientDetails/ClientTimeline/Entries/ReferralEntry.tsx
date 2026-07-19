@@ -166,7 +166,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {referral.mental_health && <ReasonChip label={t("general.mental")} />}
                         {referral.safe_guarding && (
-                            <ReasonChip label={t("referral.safeGuarding")} />
+                            <ReasonChip label={t("referral.safeguarding")} />
                         )}
                         {referral.services_other && <ReasonChip label={t("referral.other")} />}
                     </Dialog.Title>
@@ -315,7 +315,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                 <View style={{ marginTop: 20 }}>
                                     <Text>
                                         <Text style={styles.labelBold}>
-                                            {t("referral.safeGuardingObservation")}:{" "}
+                                            {t("referral.safeguardingObservation")}:{" "}
                                         </Text>
                                         <Text>
                                             {safeGuardingObservations[
@@ -325,13 +325,13 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                     </Text>
                                     <Text>
                                         <Text style={styles.labelBold}>
-                                            {t("referral.safeGuardingPersonInvolved")}:{" "}
+                                            {t("referral.safeguardingPersonInvolved")}:{" "}
                                         </Text>
                                         <Text>{referral.safe_guarding_person_involved}</Text>
                                     </Text>
                                     <Text>
                                         <Text style={styles.labelBold}>
-                                            {t("referral.safeGuardingActionNeeded")}:{" "}
+                                            {t("referral.safeguardingActionNeeded")}:{" "}
                                         </Text>
                                         <Text>
                                             {safeGuardingActionsNeeded[

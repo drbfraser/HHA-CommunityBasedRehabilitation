@@ -459,16 +459,16 @@ interface Resources {
       "autism": "Gilöti Lo kwiŋit.",
       "addPicture": "&Upload Image",
       "addImageDescription": "&Add image if available",
-      "safeGuardingObservation": "&Observation",
-      "safeGuardingPersonInvolved": "&Person Involved",
-      "safeGuardingActionNeeded": "&Actions Needed",
+      "safeguardingObservation": "&Observation",
+      "safeguardingPersonInvolved": "&Person Involved",
+      "safeguardingActionNeeded": "&Actions Needed",
       "signsOfHarm": "&Signs of Harm",
       "neglect": "&Neglect",
       "unsafeBehaviour": "&Unsafe Behaviour",
       "urgentAttention": "&Urgent Attention",
       "followUp": "&Follow-up",
       "documentationOnly": "&Documentation Only",
-      "safeGuardingVisit": "&Safe Guarding Visit"
+      "safeguardingVisit": "&Safe Guarding Visit"
     },
     "risks": {
       "riskLevel": "Ngo' naron na gba da",
@@ -1394,16 +1394,16 @@ interface Resources {
       "autism": "Autism",
       "addPicture": "Upload Image",
       "addImageDescription": "Add image if available",
-      "safeGuardingObservation": "Observation",
-      "safeGuardingPersonInvolved": "Person Involved",
-      "safeGuardingActionNeeded": "Actions Needed",
+      "safeguardingObservation": "Observation",
+      "safeguardingPersonInvolved": "Person Involved",
+      "safeguardingActionNeeded": "Actions Needed",
       "signsOfHarm": "Signs of Harm",
       "neglect": "Neglect",
       "unsafeBehaviour": "Unsafe Behaviour",
       "urgentAttention": "Urgent Attention",
       "followUp": "Follow-up",
       "documentationOnly": "Documentation Only",
-      "safeGuardingVisit": "Safe Guarding Visit"
+      "safeguardingVisit": "Safe Guarding Visit"
     },
     "risks": {
       "riskLevel": "Risk Level",

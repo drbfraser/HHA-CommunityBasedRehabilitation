@@ -26,7 +26,7 @@ const SafeGuardingForm = (props: IFormProps) => {
 
     return (
         <View style={styles.formContainer}>
-            <Text style={styles.question}>{t("referral.safeGuardingObservation")}</Text>
+            <Text style={styles.question}>{t("referral.safeguardingObservation")}</Text>
             <FormikExposedDropdownMenu
                 style={safeGuardingStyles.field}
                 field={ReferralFormField.safeGuardingObservation}
@@ -37,7 +37,7 @@ const SafeGuardingForm = (props: IFormProps) => {
                 mode="outlined"
             />
             <View style={styles.formContainer}>
-                <Text style={styles.question}>{t("referral.safeGuardingPersonInvolved")}</Text>
+                <Text style={styles.question}>{t("referral.safeguardingPersonInvolved")}</Text>
                 <TextInput
                     style={safeGuardingStyles.field}
                     mode="outlined"
@@ -56,7 +56,7 @@ const SafeGuardingForm = (props: IFormProps) => {
                 />
             </View>
             <View style={styles.formContainer}>
-                <Text style={styles.question}>{t("referral.safeGuardingActionNeeded")}</Text>
+                <Text style={styles.question}>{t("referral.safeguardingActionNeeded")}</Text>
                 <FormikExposedDropdownMenu
                     style={safeGuardingStyles.field}
                     field={ReferralFormField.safeGuardingActionNeeded}

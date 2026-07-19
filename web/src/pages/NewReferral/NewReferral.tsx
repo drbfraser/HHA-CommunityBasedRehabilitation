@@ -83,7 +83,7 @@ const NewReferral = () => {
             validationSchema: mentalHealthValidationSchema,
         },
         [ReferralFormField.safeGuarding]: {
-            label: t("referral.safeGuardingVisit"),
+            label: t("referral.safeguardingVisit"),
             Form: SafeGuardingForm,
             validationSchema: safeGuardingValidationSchema,
         },

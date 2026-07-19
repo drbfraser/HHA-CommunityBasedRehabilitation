@@ -457,7 +457,17 @@
     "injectionNeuritis": "Injection Neuritis",
     "autism": "Autism",
     "addPicture": "Upload Image",
-    "addImageDescription": "Add image if available"
+    "addImageDescription": "Add image if available",
+    "safeGuardingObservation": "Observation",
+    "safeGuardingPersonInvolved": "Person Involved",
+    "safeGuardingActionNeeded": "Actions Needed",
+    "signsOfHarm": "Signs of Harm",
+    "neglect": "Neglect",
+    "unsafeBehaviour": "Unsafe Behaviour",
+    "urgentAttention": "Urgent Attention",
+    "followUp": "Follow-up",
+    "documentationOnly": "Documentation Only",
+    "safeGuardingVisit": "Safe Guarding Visit"
   },
   "risks": {
     "riskLevel": "Risk Level",
@@ -687,11 +697,7 @@
     "editZone": "Edit Zone",
     "newAlert": "New Alert",
     "notFound": "Not Found",
-    "clientRiskHistory": "Client Risk History",
-    "newSuccessStory": "New Success Story",
-    "editSuccessStory": "Edit Success Story",
-    "successStory": "Success Story",
-    "successStories": "Success Stories"
+    "clientRiskHistory": "Client Risk History"
   },
   "statistics": {
     "statistics": "Statistics",
@@ -912,8 +918,7 @@
         "_$Family": "Promote understanding in the family",
         "_$Community": "Promote understanding in the community",
         "_$Refer": "Refer to mental health agencies",
-        "_$CounsellingStressTrauma": "Advice and counselling - stress and trauma",
-        "_$CounsellingOther": "Advice and counselling - other"
+        "_$CounsellingStressTrauma": "Advice and counselling - stress and trauma"
       },
       "goal": {
         "_$Family": "Inclusion in family",
@@ -925,5 +930,6 @@
         "_$Improvements": "Improvements"
       }
     }
-  }
+  },
+  "x": "Advice and counselling - other"
 }

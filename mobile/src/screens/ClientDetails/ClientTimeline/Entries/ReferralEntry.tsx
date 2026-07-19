@@ -5,6 +5,8 @@ import {
     IReferral,
     orthoticInjuryLocations,
     prostheticInjuryLocations,
+    safeGuardingActionsNeeded,
+    safeGuardingObservations,
     themeColors,
     timestampToDateTime,
     wheelchairExperiences,
@@ -163,6 +165,9 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                             <ReasonChip label={t("general.nutrition")} />
                         )}
                         {referral.mental_health && <ReasonChip label={t("general.mental")} />}
+                        {referral.safe_guarding && (
+                            <ReasonChip label={t("referral.safeGuarding")} />
+                        )}
                         {referral.services_other && <ReasonChip label={t("referral.other")} />}
                     </Dialog.Title>
                     <Dialog.Content>
@@ -301,6 +306,38 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                                             {t("referralAttr.condition", { context: "mental" })}:{" "}
                                         </Text>
                                         <Text>{referral.mental_health_condition}</Text>
+                                    </Text>
+                                </View>
+                            </>
+                        )}
+                        {referral.safe_guarding && (
+                            <>
+                                <View style={{ marginTop: 20 }}>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.safeGuardingObservation")}:{" "}
+                                        </Text>
+                                        <Text>
+                                            {safeGuardingObservations[
+                                                referral.safe_guarding_observation
+                                            ] || referral.safe_guarding_observation}
+                                        </Text>
+                                    </Text>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.safeGuardingPersonInvolved")}:{" "}
+                                        </Text>
+                                        <Text>{referral.safe_guarding_person_involved}</Text>
+                                    </Text>
+                                    <Text>
+                                        <Text style={styles.labelBold}>
+                                            {t("referral.safeGuardingActionNeeded")}:{" "}
+                                        </Text>
+                                        <Text>
+                                            {safeGuardingActionsNeeded[
+                                                referral.safe_guarding_action_needed
+                                            ] || referral.safe_guarding_action_needed}
+                                        </Text>
                                     </Text>
                                 </View>
                             </>

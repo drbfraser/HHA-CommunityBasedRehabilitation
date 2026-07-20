@@ -169,9 +169,6 @@ export default function App() {
         loadLanguage();
     }, []);
 
-    // On startup, check the Play Store for a newer version and show a soft,
-    // non-blocking update nudge if one exists. Best-effort and Android-only;
-    // failures are swallowed inside the helper so they never block launch.
     useEffect(() => {
         checkForPlayStoreUpdate(getI18nInstance().t);
     }, []);

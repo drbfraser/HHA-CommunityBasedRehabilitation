@@ -194,5 +194,31 @@ export default schemaMigrations({
                 }),
             ],
         },
+        {
+            toVersion: 12,
+            steps: [
+                addColumns({
+                    table: modelName.referrals,
+                    columns: [
+                        {
+                            name: ReferralField.safe_guarding,
+                            type: "boolean",
+                        },
+                        {
+                            name: ReferralField.safe_guarding_observation,
+                            type: "string",
+                        },
+                        {
+                            name: ReferralField.safe_guarding_person_involved,
+                            type: "string",
+                        },
+                        {
+                            name: ReferralField.safe_guarding_action_needed,
+                            type: "string",
+                        },
+                    ],
+                }),
+            ],
+        },
     ],
 });

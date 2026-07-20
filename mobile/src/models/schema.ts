@@ -12,7 +12,7 @@ import { appSchema, tableSchema } from "@nozbe/watermelondb";
 import { mobileGenericField, modelName, tableKey } from "./constant";
 
 export default appSchema({
-    version: 11,
+    version: 12,
     tables: [
         tableSchema({
             name: modelName.users,
@@ -111,6 +111,10 @@ export default appSchema({
                 { name: ReferralField.mental_health, type: "boolean" },
                 { name: ReferralField.mental_health_condition, type: "string" },
                 { name: ReferralField.mental_condition_other, type: "string" },
+                { name: ReferralField.safe_guarding, type: "boolean" },
+                { name: ReferralField.safe_guarding_observation, type: "string" },
+                { name: ReferralField.safe_guarding_person_involved, type: "string" },
+                { name: ReferralField.safe_guarding_action_needed, type: "string" },
                 { name: mobileGenericField.updated_at, type: "number" },
             ],
         }),

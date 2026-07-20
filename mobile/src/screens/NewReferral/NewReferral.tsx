@@ -21,6 +21,7 @@ import {
     countObjectKeys,
     hhaNutritionAndAgricultureProjectValidationSchema,
     mentalHealthValidationSchema,
+    safeGuardingValidationSchema,
 } from "@cbr/common";
 import WheelchairForm from "./ReferralForm/WheelchairForm";
 import PhysiotherapyForm from "./ReferralForm/PhysiotherapyForm";
@@ -29,6 +30,7 @@ import ProstheticOrthoticForm from "./ReferralForm/ProstheticOrthoticForm";
 import NutritionAgricultureForm from "./ReferralForm/NutritionAgricultureForm";
 import MentalHealthForm from "./ReferralForm/MentalHealthForm";
 import OtherServicesForm from "./ReferralForm/OtherServicesForm";
+import SafeGuardingForm from "./ReferralForm/SafeGuardingForm";
 import TextCheckBox from "../../components/TextCheckBox/TextCheckBox";
 import { StackScreenName } from "../../util/StackScreenName";
 import { StackParamList } from "../../util/stackScreens";
@@ -196,6 +198,11 @@ const NewReferral = (props: INewReferralProps) => {
             label: `${referralFieldLabels[ReferralFormField.mentalHealth]} ${visitStr}`,
             Form: MentalHealthForm,
             validationSchema: mentalHealthValidationSchema,
+        },
+        [ReferralFormField.safeGuarding]: {
+            label: `${referralFieldLabels[ReferralFormField.safeGuarding]} ${visitStr}`,
+            Form: SafeGuardingForm,
+            validationSchema: safeGuardingValidationSchema,
         },
         [ReferralFormField.servicesOther]: {
             label: `${referralFieldLabels[ReferralFormField.servicesOther]} ${visitStr}`,

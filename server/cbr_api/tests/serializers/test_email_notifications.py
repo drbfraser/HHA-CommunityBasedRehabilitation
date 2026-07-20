@@ -42,8 +42,12 @@ class ReferralEmailNotificationTests(TestCase):
             wheelchair=True,
             physiotherapy=True,
             mental_health=True,
+            safe_guarding=True,
             condition="Back pain",
             mental_health_condition="Anxiety",
+            safe_guarding_observation=Referral.SafeGuardingObservation.SIGNS_OF_HARM,
+            safe_guarding_person_involved="Caregiver",
+            safe_guarding_action_needed=Referral.SafeGuardingActionNeeded.FOLLOW_UP,
             services_other="Transport assistance",
         )
 
@@ -67,8 +71,10 @@ class ReferralEmailNotificationTests(TestCase):
         self.assertIn("New CBR Referral Created", args[0])
         self.assertIn("John Doe", args[0])
         self.assertIn("Wheelchair", args[0])
+        self.assertIn("Safe Guarding", args[0])
         self.assertIn("Client name: John Doe", args[1])
         self.assertIn("Referral type(s): Wheelchair", args[1])
+        self.assertIn("Safe Guarding", args[1])
         self.assertIn("Client link: https://cbr.example.org/client/", args[1])
         self.assertIn("Created at:", args[1])
         self.assertEqual(args[2], "from@example.com")
@@ -84,6 +90,7 @@ class ReferralEmailNotificationTests(TestCase):
         self.assertEqual(render_args[1]["client_name"], "John Doe")
         self.assertIn("Wheelchair", render_args[1]["services_label"])
         self.assertIn("Physiotherapy", render_args[1]["services_label"])
+        self.assertIn("Safe Guarding", render_args[1]["services_label"])
         self.assertEqual(
             render_args[1]["client_link"],
             f"https://cbr.example.org/client/{self.client.id}",

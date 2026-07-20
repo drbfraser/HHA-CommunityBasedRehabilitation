@@ -413,6 +413,10 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
             "agriculture_livelihood_program_enrollment",
             "mental_health",
             "mental_health_condition",
+            "safe_guarding",
+            "safe_guarding_observation",
+            "safe_guarding_person_involved",
+            "safe_guarding_action_needed",
             "services_other",
             "picture",
             "updated_at",
@@ -468,6 +472,10 @@ class ReferralSyncSerializer(serializers.ModelSerializer):
             "agriculture_livelihood_program_enrollment",
             "mental_health",
             "mental_health_condition",
+            "safe_guarding",
+            "safe_guarding_observation",
+            "safe_guarding_person_involved",
+            "safe_guarding_action_needed",
             "services_other",
             "picture",
             "updated_at",
@@ -498,6 +506,7 @@ class OutstandingReferralSerializer(serializers.Serializer):
     physiotherapy = serializers.BooleanField()
     hha_nutrition_and_agriculture_project = serializers.BooleanField()
     mental_health = serializers.BooleanField()
+    safe_guarding = serializers.BooleanField()
     wheelchair = serializers.BooleanField()
     prosthetic = serializers.BooleanField()
     orthotic = serializers.BooleanField()

@@ -1,46 +1,46 @@
 services:
-  django:
-    container_name: cbr_django
-    build:
-      context: ./server
-    environment:
-      - POSTGRES_HOST=cbr_postgres
-      - POSTGRES_DB=cbr
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - SECRET_KEY=${SECRET_KEY}
-      - DOMAIN=${DOMAIN}
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.{{.Name}}.{{.ID}}
-        fluentd-async: "true"
-        fluentd-address: tcp://localhost:24224
-    depends_on:
-      - postgres
-    volumes:
-      - django_logs:/var/log
-      - django_uploads:/uploads/
-  postgres:
-    container_name: cbr_postgres
-    image: postgres:13.1-alpine
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.{{.Name}}.{{.ID}}
-        fluentd-async: "true"
-        fluentd-address: tcp://localhost:24224
-    environment:
-      - POSTGRES_DB=cbr
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    volumes:
-      - cbr_postgres_data:/var/lib/postgresql/data
+    django:
+        container_name: cbr_django
+        build:
+            context: ./server
+        environment:
+            - POSTGRES_HOST=cbr_postgres
+            - POSTGRES_DB=cbr
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - SECRET_KEY=${SECRET_KEY}
+            - DOMAIN=${DOMAIN}
+        logging:
+            driver: fluentd
+            options:
+                tag: docker.{{.Name}}.{{.ID}}
+                fluentd-async: "true"
+                fluentd-address: tcp://localhost:24224
+        depends_on:
+            - postgres
+        volumes:
+            - django_logs:/var/log
+            - django_uploads:/uploads/
+    postgres:
+        container_name: cbr_postgres
+        image: postgres:13.1-alpine
+        logging:
+            driver: fluentd
+            options:
+                tag: docker.{{.Name}}.{{.ID}}
+                fluentd-async: "true"
+                fluentd-address: tcp://localhost:24224
+        environment:
+            - POSTGRES_DB=cbr
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        volumes:
+            - cbr_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  cbr_postgres_data:
-  django_logs:
-  django_uploads:
-  caddy_logs:
-  fluentbit_logs_db:
-  fluentbit_logs_output:
+    cbr_postgres_data:
+    django_logs:
+    django_uploads:
+    caddy_logs:
+    fluentbit_logs_db:
+    fluentbit_logs_output:

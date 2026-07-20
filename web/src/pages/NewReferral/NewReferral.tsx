@@ -16,6 +16,7 @@ import {
     hhaNutritionAndAgricultureProjectValidationSchema,
     serviceTypes,
     mentalHealthValidationSchema,
+    safeGuardingValidationSchema,
 } from "@cbr/common/forms/Referral/referralFields";
 import { handleSubmit } from "./formHandler";
 import {
@@ -25,6 +26,7 @@ import {
     PhysiotherapyForm,
     ProstheticOrthoticForm,
     ReferralServiceForm,
+    SafeGuardingForm,
     WheelchairForm,
 } from "./forms";
 import GoBackButton from "components/GoBackButton/GoBackButton";
@@ -79,6 +81,11 @@ const NewReferral = () => {
             label: t("referral.mentalHealthVisit"),
             Form: MentalHealthForm,
             validationSchema: mentalHealthValidationSchema,
+        },
+        [ReferralFormField.safeGuarding]: {
+            label: t("referral.safeguardingVisit"),
+            Form: SafeGuardingForm,
+            validationSchema: safeGuardingValidationSchema,
         },
 
         [ReferralFormField.servicesOther]: {

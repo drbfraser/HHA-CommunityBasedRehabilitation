@@ -2,137 +2,137 @@ name: Mobile APK Build
 # For syntax, see: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 env:
-  # HUB_REPO_BACKEND: "${{ secrets.HUB_REPO_BACKEND }}"
-  # HUB_REPO_FRONTEND: "${{ secrets.HUB_REPO_FRONTEND }}"
-  # HUB_TOKEN: "${{ secrets.HUB_TOKEN }}"
-  # HUB_USER: "${{ secrets.HUB_USER }}"
-  # GRAFANA_API_KEY: "${{ secrets.GRAFANA_API_KEY }}"
-  NPM_VERSION: 10.7.0
-  CLONE_DEPTH: 150
-  # Keep npm's cache out of home directory (mounted from host)
-  # otherwise, NPM gives EACCES error trying to mkdir /github/home/.npm
-  # Using the /isolated_build/ folder (inside the container) keeps permissions straight
-  npm_config_cache: /isolated_build/.npm-cache
+    # HUB_REPO_BACKEND: "${{ secrets.HUB_REPO_BACKEND }}"
+    # HUB_REPO_FRONTEND: "${{ secrets.HUB_REPO_FRONTEND }}"
+    # HUB_TOKEN: "${{ secrets.HUB_TOKEN }}"
+    # HUB_USER: "${{ secrets.HUB_USER }}"
+    # GRAFANA_API_KEY: "${{ secrets.GRAFANA_API_KEY }}"
+    NPM_VERSION: 10.7.0
+    CLONE_DEPTH: 150
+    # Keep npm's cache out of home directory (mounted from host)
+    # otherwise, NPM gives EACCES error trying to mkdir /github/home/.npm
+    # Using the /isolated_build/ folder (inside the container) keeps permissions straight
+    npm_config_cache: /isolated_build/.npm-cache
 
 jobs:
-  display_github_contexts:
-    runs-on: [self-hosted, docker]
-    steps:
-      - uses: bfraser/cicd/actions/debug_display_contexts@v1
+    display_github_contexts:
+        runs-on: [self-hosted, docker]
+        steps:
+            - uses: bfraser/cicd/actions/debug_display_contexts@v1
 
-  # build-common:
-  #   runs-on: [self-hosted, docker]
-  #   container:
-  #     image: node:18
-  #   timeout-minutes: 60
-  #   steps:
-  #     - name: Checkout code into container
-  #       uses: bfraser/cicd/actions/checkout@v1
-  #       with:
-  #         path: /isolated_build/repo/
-  #     - name: Install NPM globally & Run 'npm ci'
-  #       run: |
-  #         npm install -g npm@$NPM_VERSION --loglevel=verbose
-  #         npm ci
-  #       working-directory: /isolated_build/repo/common
-  #     - name: Check code formatting
-  #       run: npx prettier --check .
-  #       working-directory: /isolated_build/repo/common
-  #     - name: Run TypeScript compiler
-  #       run: npx tsc
-  #       working-directory: /isolated_build/repo/common
-  #     - name: Run tests on ./common/
-  #       run: npm run test-ci
-  #       working-directory: /isolated_build/repo/common
+    # build-common:
+    #   runs-on: [self-hosted, docker]
+    #   container:
+    #     image: node:18
+    #   timeout-minutes: 60
+    #   steps:
+    #     - name: Checkout code into container
+    #       uses: bfraser/cicd/actions/checkout@v1
+    #       with:
+    #         path: /isolated_build/repo/
+    #     - name: Install NPM globally & Run 'npm ci'
+    #       run: |
+    #         npm install -g npm@$NPM_VERSION --loglevel=verbose
+    #         npm ci
+    #       working-directory: /isolated_build/repo/common
+    #     - name: Check code formatting
+    #       run: npx prettier --check .
+    #       working-directory: /isolated_build/repo/common
+    #     - name: Run TypeScript compiler
+    #       run: npx tsc
+    #       working-directory: /isolated_build/repo/common
+    #     - name: Run tests on ./common/
+    #       run: npm run test-ci
+    #       working-directory: /isolated_build/repo/common
 
-  build-mobile-apk:
-    runs-on: [self-hosted, docker]
-    container:
-      # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
-      # TODO: Update this version to support Android tools version 34?
-      # image: reactnativecommunity/react-native-android:6.2
-      # todosd: bump this more?  for now, support for Node 18.20
-      image: reactnativecommunity/react-native-android:13.2.1
-    timeout-minutes: 60
-    env:
-      # Keep Gradle's settings file out of home directory (mounted from host)
-      GRADLE_USER_HOME: /isolated_build/.gradle
-      HOME: /isolated_build/
-    steps:
-      - name: Checkout code into container
-        uses: bfraser/cicd/actions/checkout@v1
-        with:
-          path: /isolated_build/repo/
+    build-mobile-apk:
+        runs-on: [self-hosted, docker]
+        container:
+            # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
+            # TODO: Update this version to support Android tools version 34?
+            # image: reactnativecommunity/react-native-android:6.2
+            # todosd: bump this more?  for now, support for Node 18.20
+            image: reactnativecommunity/react-native-android:13.2.1
+        timeout-minutes: 60
+        env:
+            # Keep Gradle's settings file out of home directory (mounted from host)
+            GRADLE_USER_HOME: /isolated_build/.gradle
+            HOME: /isolated_build/
+        steps:
+            - name: Checkout code into container
+              uses: bfraser/cicd/actions/checkout@v1
+              with:
+                  path: /isolated_build/repo/
 
-      - name: Build Date String
-        id: date_str
-        run: echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
+            - name: Build Date String
+              id: date_str
+              run: echo "::set-output name=stdout::$(date -u +%Y-%m-%d-%H%M%S%z)"
 
-      - name: Install NPM version & Build Common
-        run: |
-          set -x  # echo commands names
-          npm install -g npm@$NPM_VERSION
-          npm ci
-          npx tsc
-        working-directory: /isolated_build/repo/common
+            - name: Install NPM version & Build Common
+              run: |
+                  set -x  # echo commands names
+                  npm install -g npm@$NPM_VERSION
+                  npm ci
+                  npx tsc
+              working-directory: /isolated_build/repo/common
 
-      - name: Prepare mobile build environment
-        run: |
-          npm uninstall @cbr/common
-          COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
-          npm install $COMMON_PACK_NAME
-          npm ci
-          npx prettier --check .
-        working-directory: /isolated_build/repo/mobile
+            - name: Prepare mobile build environment
+              run: |
+                  npm uninstall @cbr/common
+                  COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
+                  npm install $COMMON_PACK_NAME
+                  npm ci
+                  npx prettier --check .
+              working-directory: /isolated_build/repo/mobile
 
-      - name: Run TypeScript compiler
-        run: npx tsc --noEmit
-        working-directory: /isolated_build/repo/mobile
+            - name: Run TypeScript compiler
+              run: npx tsc --noEmit
+              working-directory: /isolated_build/repo/mobile
 
-      # todosd: remove need for sudo?
-      - name: Prebuild android folder
-        run: sudo npm run prebuild
-        working-directory: /isolated_build/repo/mobile
+            # todosd: remove need for sudo?
+            - name: Prebuild android folder
+              run: sudo npm run prebuild
+              working-directory: /isolated_build/repo/mobile
 
-      - name: Setup Release Keystore for Play Store
-        run: |
-          set -x  # echo commands names
-          mkdir -p $GRADLE_USER_HOME
-          echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
-          echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
-          base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
-          echo "Date String: ${{ steps.date_str.outputs.stdout }}"
-        working-directory: /isolated_build/repo/mobile/android/app
+            - name: Setup Release Keystore for Play Store
+              run: |
+                  set -x  # echo commands names
+                  mkdir -p $GRADLE_USER_HOME
+                  echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_GRADLEPROP }}" > $GRADLE_USER_HOME/gradle.properties
+                  echo "${{ secrets.PLAY_STORE_UPLOAD_KEYSTORE_FILE_B64 }}" > ./cbr-upload-key.keystore.b64
+                  base64 -d ./cbr-upload-key.keystore.b64 > ./cbr-upload-key.keystore
+                  echo "Date String: ${{ steps.date_str.outputs.stdout }}"
+              working-directory: /isolated_build/repo/mobile/android/app
 
-      # NOTE: Artifact upload *was previously* disabled because builds from the CI/CD server seem
-      #       to not work. Specifically, creating a client on mobile and then
-      #       trying to sync results in a "Invalid Date" sync error.
-      #       Since these builds cannot be trusted, they are disabled.
-      #       Instead, the builds must be done locally.
-      # - uses: actions/upload-artifact@v3
-      #   with:
-      #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
-      #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-      #     retention-days: 60
-      #     if-no-files-found: error
+            # NOTE: Artifact upload *was previously* disabled because builds from the CI/CD server seem
+            #       to not work. Specifically, creating a client on mobile and then
+            #       trying to sync results in a "Invalid Date" sync error.
+            #       Since these builds cannot be trusted, they are disabled.
+            #       Instead, the builds must be done locally.
+            # - uses: actions/upload-artifact@v3
+            #   with:
+            #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
+            #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+            #     retention-days: 60
+            #     if-no-files-found: error
 
-      - name: Build APK for Testing (Targeting Staging Server)
-        # If the HOME folder is left as the default /github/home, then `npm run build-aab prod`
-        #    fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
-        #    from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
-        # Fix: Set HOME to /isolated_build/ in the job's env: section above.
-        run: |
-          rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-          npm run build-apk staging
-        working-directory: /isolated_build/repo/mobile
-      - name: Display build/outputs folder
-        run: find /isolated_build/repo/mobile/android/app/build/outputs/
-      - name: Upload APK Artifact (Staging)
-        uses: actions/upload-artifact@v3
-        with:
-          name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
-          path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-          retention-days: 60
-          if-no-files-found: error
+            - name: Build APK for Testing (Targeting Staging Server)
+              # If the HOME folder is left as the default /github/home, then `npm run build-aab prod`
+              #    fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
+              #    from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
+              # Fix: Set HOME to /isolated_build/ in the job's env: section above.
+              run: |
+                  rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+                  npm run build-apk staging
+              working-directory: /isolated_build/repo/mobile
+            - name: Display build/outputs folder
+              run: find /isolated_build/repo/mobile/android/app/build/outputs/
+            - name: Upload APK Artifact (Staging)
+              uses: actions/upload-artifact@v3
+              with:
+                  name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
+                  path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+                  retention-days: 60
+                  if-no-files-found: error

@@ -20,9 +20,9 @@ We run our full Django integration tests as the **test-server** job in **.github
 
 7. Runs `python manage.py test --verbosity=2 --no-input` inside **/isolated_build/repo/server**, which:
 
-   - Creates a temporary test database on test_postgres.
-   - Applies all migrations.
-   - Runs every `test\_**.py` file in **tests/\*\***.
+    - Creates a temporary test database on test_postgres.
+    - Applies all migrations.
+    - Runs every `test\_**.py` file in **tests/\*\***.
 
 8. Tears down the test DB when finished.
 
@@ -56,9 +56,9 @@ cbr_api/
 
 ### Naming conventions
 
-- **File names**: `test_<thing>_*.py`, matching the component under test.
-- **Test classes**: `<Thing>Tests` (e.g. `ClientModelTests`).
-- **Methods**: start with `test_`, each covering one behavior.
+-   **File names**: `test_<thing>_*.py`, matching the component under test.
+-   **Test classes**: `<Thing>Tests` (e.g. `ClientModelTests`).
+-   **Methods**: start with `test_`, each covering one behavior.
 
 ---
 
@@ -66,47 +66,47 @@ cbr_api/
 
 Whenever developers introduce or modify functionality, they must add or update tests in the appropriate folder:
 
-- **Models** (`tests/models/`):
+-   **Models** (`tests/models/`):
 
-  - New or changed fields, managers, `save()` overrides, signals, validators.
-  - E.g. adding a new field or changing existing fields by adding constraints.
+    -   New or changed fields, managers, `save()` overrides, signals, validators.
+    -   E.g. adding a new field or changing existing fields by adding constraints.
 
-- **Serializers** (`tests/serializers/`):
+-   **Serializers** (`tests/serializers/`):
 
-  - E.g. create and update methods in the serializer for POST requests.
+    -   E.g. create and update methods in the serializer for POST requests.
 
-- **Views & ViewSets** (`tests/views/`):
+-   **Views & ViewSets** (`tests/views/`):
 
-  - Endpoint CRUD operations, permissions, and authentication flows.
+    -   Endpoint CRUD operations, permissions, and authentication flows.
 
-- **Helpers** (`tests/helpers.py`):
+-   **Helpers** (`tests/helpers.py`):
 
-  - Any classes or functions which can be used to setup tests.
-  - E.g. create_client function in helpers.py used to create client objects across test files.
+    -   Any classes or functions which can be used to setup tests.
+    -   E.g. create_client function in helpers.py used to create client objects across test files.
 
 **When to add tests**:
 
-- **Feature branches**: tests for every new model, serializer, or endpoint.
-- **Schema changes**: ensure migrations preserve API behavior via integration tests.
+-   **Feature branches**: tests for every new model, serializer, or endpoint.
+-   **Schema changes**: ensure migrations preserve API behavior via integration tests.
 
 ---
 
 ## 4. Running Tests
 
-- **Locally** (inside Docker):
+-   **Locally** (inside Docker):
 
-  ```bash
-  docker exec cbr_django python manage.py test --verbosity=2 --no-input
-  # to run a specific test suite
-  docker exec cbr_django python manage.py test cbr_api.tests.[TEST_FOLDER_HERE].[TEST_FILE_NAME_HERE] --verbosity=2 --no-input
-  ```
+    ```bash
+    docker exec cbr_django python manage.py test --verbosity=2 --no-input
+    # to run a specific test suite
+    docker exec cbr_django python manage.py test cbr_api.tests.[TEST_FOLDER_HERE].[TEST_FILE_NAME_HERE] --verbosity=2 --no-input
+    ```
 
-- **CI**: the `test-server` job in **maincicd.yml** automatically runs `python manage.py test ...` in an isolated container on pushes to `main`, enforcing that no backend changes break existing functionality.
+-   **CI**: the `test-server` job in **maincicd.yml** automatically runs `python manage.py test ...` in an isolated container on pushes to `main`, enforcing that no backend changes break existing functionality.
 
 ---
 
 ## 5. References
 
-- Django REST Framework testing guide (recommended): [https://www.django-rest-framework.org/api-guide/testing/](https://www.django-rest-framework.org/api-guide/testing/)
-- NetNinja Django testing series: [https://youtu.be/OfiCALrGE14?si=EJ0Uw5AdNSVikHpa](https://youtu.be/OfiCALrGE14?si=EJ0Uw5AdNSVikHpa)
-- Django Rest Framework API testing overview: [https://youtu.be/sRluxnmZ-H8?si=OkpXTJTAPz2MFNLe](https://youtu.be/sRluxnmZ-H8?si=OkpXTJTAPz2MFNLe)
+-   Django REST Framework testing guide (recommended): [https://www.django-rest-framework.org/api-guide/testing/](https://www.django-rest-framework.org/api-guide/testing/)
+-   NetNinja Django testing series: [https://youtu.be/OfiCALrGE14?si=EJ0Uw5AdNSVikHpa](https://youtu.be/OfiCALrGE14?si=EJ0Uw5AdNSVikHpa)
+-   Django Rest Framework API testing overview: [https://youtu.be/sRluxnmZ-H8?si=OkpXTJTAPz2MFNLe](https://youtu.be/sRluxnmZ-H8?si=OkpXTJTAPz2MFNLe)

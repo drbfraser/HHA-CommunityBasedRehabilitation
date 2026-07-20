@@ -36,23 +36,24 @@ Please first follow the [setup guide](SETUP.md) if you have not already.
 
 You'll likely want to seed some data for development purposes. This can be done with a single command, or done individually by data type. Use `docker exec cbr_django python manage.py _______` by replacing the `_______` with one of the keywords below.
 
-- Complete Database: `seeddatabase`
+-   Complete Database: `seeddatabase`
 
-- Zones: `seedzones`
-- Disabilities: `seeddisabilities`
-- Users: `seedusers` (or use `seedadminuser` to create one admin with a random password; useful for production install)
-- Clients: `seedclients`
-- Visits: `seedvisits`
-- Alerts : `seedalerts`
+-   Zones: `seedzones`
+-   Disabilities: `seeddisabilities`
+-   Users: `seedusers` (or use `seedadminuser` to create one admin with a random password; useful for production install)
+-   Clients: `seedclients`
+-   Visits: `seedvisits`
+-   Alerts : `seedalerts`
 
 If at some point during development you want to re-seed the database with the example data again, you'll need to delete everything first. Use `docker exec -it cbr_django python manage.py flush` to clear the database, then run the seeding commands again.
 
 If the seed commands fail with an error related "relation 'cbr_api_zone' does not exist", it is likely you need to run the `docker exec cbr_django python manage.py migrate` command to create the DB structure.
 
 If you have branches A and B, where branch A has a new migration, to test branch A you must run:
-- `docker exec cbr_django python manage.py migrate`
-- `docker exec -it cbr_django python manage.py flush`
-- `docker exec -it cbr_django python manage.py seeddatabase`
+
+-   `docker exec cbr_django python manage.py migrate`
+-   `docker exec -it cbr_django python manage.py flush`
+-   `docker exec -it cbr_django python manage.py seeddatabase`
 
 If you want to go back to branch B (which does not have the extra migration) you must first run `docker exec -it cbr_django python manage.py migrate cbr_api <last_common_migration>`, replacing the last parameter with the filename of the last migration file that both branches have, then repeat the 3 commands above.
 
@@ -100,9 +101,10 @@ If your issue involves server updates i.e model, view, or serializer updates/cha
 
 Prior to submitting a merge request make sure to format your code - it won't pass the CI/CD pipeline without it. Note that both of these commands end in a `.` - that's important!
 
-**Common / Mobile / Frontend:** 
-- Install the shared Husky/lint-staged/Prettier tooling once by running npm install from the repo root. The pre-commit hook (via lint-staged) now formats each staged file automatically, so you typically don’t need to run 'npx prettier --write .' inside subfolders unless you’re formatting tons of untracked files in bulk. 
-- If you do want to format everything in a specific area, you can cd into that directory (e.g., mobile/, common/, or web/) and run 'npx prettier --write .' to format all files in that subfolder.
+**Common / Mobile / Frontend:**
+
+-   Install the shared Husky/lint-staged/Prettier tooling once by running npm install from the repo root. The pre-commit hook (via lint-staged) now formats each staged file automatically, so you typically don’t need to run 'npx prettier --write .' inside subfolders unless you’re formatting tons of untracked files in bulk.
+-   If you do want to format everything in a specific area, you can cd into that directory (e.g., mobile/, common/, or web/) and run 'npx prettier --write .' to format all files in that subfolder.
 
 **Backend:**
 

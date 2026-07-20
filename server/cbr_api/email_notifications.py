@@ -142,7 +142,9 @@ def send_referral_created_email(referral):
     if not from_email or not to_email or not from_password:
         return
 
-    domain = getattr(settings, "DOMAIN", "")
+    domain = getattr(settings, "DOMAIN", "").strip()
+    if ":" in domain:
+        domain = domain.rsplit(":", 1)[0]
     base_url = (f"https://{domain}" if domain else DEFAULT_WEB_BASE_URL).rstrip("/")
     client_link = _build_client_link(client_id, base_url) if client_id else ""
 

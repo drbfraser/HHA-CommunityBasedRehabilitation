@@ -34,6 +34,7 @@ import { SyncDatabaseTask } from "./tasks/SyncDatabaseTask";
 import { SyncContext } from "./context/SyncContext/SyncContext";
 import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
+import { checkForPlayStoreUpdate } from "./util/playStoreUpdate";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
 import { Platform, StatusBar } from "react-native";
@@ -166,6 +167,10 @@ export default function App() {
         };
 
         loadLanguage();
+    }, []);
+
+    useEffect(() => {
+        checkForPlayStoreUpdate(getI18nInstance().t);
     }, []);
 
     useEffect(() => {

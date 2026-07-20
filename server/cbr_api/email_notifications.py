@@ -106,7 +106,9 @@ def send_referral_created_email(referral):
     if referral.hip_width:
         details.append(f"Hip width: {referral.hip_width}")
     if referral.safe_guarding_observation:
-        details.append(f"Safe Guarding observation: {referral.safe_guarding_observation}")
+        details.append(
+            f"Safe Guarding observation: {referral.safe_guarding_observation}"
+        )
     if referral.safe_guarding_person_involved:
         details.append(
             f"Safe Guarding person involved: {referral.safe_guarding_person_involved}"

@@ -68,7 +68,7 @@ export const PageName = {
     NOT_FOUND: "screenNames.notFound",
 } as const;
 
-export type PageName = typeof PageName[keyof typeof PageName];
+export type PageTranslationKey = typeof PageName[keyof typeof PageName];
 
 interface IPageBase {
     path: string;
@@ -81,11 +81,11 @@ interface IPageBase {
 
 export type IPage =
     | (IPageBase & {
-          name: PageName;
+          name: PageTranslationKey;
           title?: string;
       })
     | (IPageBase & {
-          name?: PageName;
+          name?: PageTranslationKey;
           title: string;
       });
 

@@ -34,6 +34,7 @@ import { SyncDatabaseTask } from "./tasks/SyncDatabaseTask";
 import { SyncContext } from "./context/SyncContext/SyncContext";
 import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
+import { checkForPlayStoreUpdate } from "./util/playStoreUpdate";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
 import { Platform, StatusBar } from "react-native";
@@ -166,6 +167,13 @@ export default function App() {
         };
 
         loadLanguage();
+    }, []);
+
+    // On startup, check the Play Store for a newer version and show a soft,
+    // non-blocking update nudge if one exists. Best-effort and Android-only;
+    // failures are swallowed inside the helper so they never block launch.
+    useEffect(() => {
+        checkForPlayStoreUpdate(getI18nInstance().t);
     }, []);
 
     useEffect(() => {

@@ -4,4 +4,5 @@ export { default as OtherServicesForm } from "./OtherServicesForm";
 export { default as PhysiotherapyForm } from "./PhysiotherapyForm";
 export { default as ProstheticOrthoticForm } from "./ProstheticOrthoticForm";
 export { default as ReferralServiceForm } from "./ReferralServiceForm";
+export { default as SafeGuardingForm } from "./SafeGuardingForm";
 export { default as WheelchairForm } from "./WheelchairForm";

@@ -39,48 +39,55 @@ import NewSuccessStory from "pages/NewSuccessStory/NewSuccessStory";
 import SuccessStoryView from "pages/SuccessStoryView/SuccessStoryView";
 import SuccessStoriesList from "pages/SuccessStoriesList/SuccessStoriesList";
 import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import { TFunction } from "i18next";
 
-export enum PageName {
-    DASHBOARD = "general.dashboard",
-    NEW_CLIENT = "clientAttr.newClient",
-    CLIENTS = "screenNames.clientList",
-    CLIENT_DETAILS = "clientAttr.clientDetails",
-    CLIENT_RISK_HISTORY = "screenNames.clientRiskHistory",
-    REFERRALS = "statistics.referrals",
-    NEW_VISIT = "screenNames.newVisit",
-    NEW_SURVEY = "screenNames.newBaselineSurvey",
-    NEW_REFERRAL = "screenNames.newReferral",
-    PROFILE = "screenNames.profile",
-    BUG_REPORT = "screenNames.profile",
-    CHANGE_PASSWORD = "login.changePassword",
-    STATS = "statistics.statistics",
-    ADMIN = "users.admin",
-    NEW_USER = "screenNames.newUser",
-    EDIT_USER = "screenNames.viewUser",
-    VIEW_USER = "screenNames.editUser",
-    EDIT_USER_PASS = "screenNames.editUserPass",
-    NEW_ZONE = "screenNames.newZone",
-    EDIT_ZONE = "screenNames.editZone",
-    LOGOUT = "login.logout",
-    NEW_ALERT = "screenNames.newAlert",
-    INBOX = "screenNames.inbox",
-    NOT_FOUND = "screenNames.notFound",
-    NEW_SUCCESS_STORY = "screenNames.newSuccessStory",
-    EDIT_SUCCESS_STORY = "screenNames.editSuccessStory",
-    VIEW_SUCCESS_STORY = "screenNames.successStory",
-    SUCCESS_STORIES_LIST = "screenNames.successStories",
-}
+export const PageName = {
+    DASHBOARD: "general.dashboard",
+    NEW_CLIENT: "clientAttr.newClient",
+    CLIENTS: "screenNames.clientList",
+    CLIENT_DETAILS: "clientAttr.clientDetails",
+    CLIENT_RISK_HISTORY: "screenNames.clientRiskHistory",
+    REFERRALS: "statistics.referrals",
+    NEW_VISIT: "screenNames.newVisit",
+    NEW_SURVEY: "screenNames.newBaselineSurvey",
+    NEW_REFERRAL: "screenNames.newReferral",
+    PROFILE: "screenNames.profile",
+    BUG_REPORT: "screenNames.profile",
+    CHANGE_PASSWORD: "login.changePassword",
+    STATS: "statistics.statistics",
+    ADMIN: "users.admin",
+    NEW_USER: "screenNames.newUser",
+    EDIT_USER: "screenNames.viewUser",
+    VIEW_USER: "screenNames.editUser",
+    EDIT_USER_PASS: "screenNames.editUserPass",
+    NEW_ZONE: "screenNames.newZone",
+    EDIT_ZONE: "screenNames.editZone",
+    LOGOUT: "login.logout",
+    NEW_ALERT: "screenNames.newAlert",
+    INBOX: "screenNames.inbox",
+    NOT_FOUND: "screenNames.notFound",
+} as const;
 
-export interface IPage {
+export type PageTranslationKey = typeof PageName[keyof typeof PageName];
+
+interface IPageBase {
     path: string;
     exact?: boolean;
-    name: PageName;
-    title?: string;
     roles?: UserRole[];
     Component: React.ComponentType<any>;
     showInNav: boolean;
     Icon?: OverridableComponent<SvgIconTypeMap<{}, "svg">>;
 }
+
+export type IPage =
+    | (IPageBase & {
+          name: PageTranslationKey;
+          title?: string;
+      })
+    | (IPageBase & {
+          name?: PageTranslationKey;
+          title: string;
+      });
 
 const pages: IPage[] = [
     {
@@ -241,7 +248,7 @@ const pages: IPage[] = [
     },
     {
         path: "/stories",
-        name: PageName.SUCCESS_STORIES_LIST,
+        title: "Success Stories",
         roles: [UserRole.ADMIN],
         Component: SuccessStoriesList,
         showInNav: true,
@@ -249,19 +256,19 @@ const pages: IPage[] = [
     },
     {
         path: "/client/:clientId/stories/new",
-        name: PageName.NEW_SUCCESS_STORY,
+        title: "New Beneficiary Case Study",
         Component: NewSuccessStory,
         showInNav: false,
     },
     {
         path: "/client/:clientId/stories/:storyId/edit",
-        name: PageName.EDIT_SUCCESS_STORY,
+        title: "Edit Success Story",
         Component: NewSuccessStory,
         showInNav: false,
     },
     {
         path: "/client/:clientId/stories/:storyId",
-        name: PageName.VIEW_SUCCESS_STORY,
+        title: "Success Story",
         Component: SuccessStoryView,
         showInNav: false,
     },
@@ -274,6 +281,14 @@ const pages: IPage[] = [
         showInNav: false,
     },
 ];
+
+export const pageDisplayTitle = (page: IPage, t: TFunction): string => {
+    if (page.title) {
+        return page.title;
+    }
+
+    return page.name ? `${t(page.name)}` : "";
+};
 
 export const pagesForUser = (user: IUser | TAPILoadError | undefined) => {
     return pages.filter((page) => {

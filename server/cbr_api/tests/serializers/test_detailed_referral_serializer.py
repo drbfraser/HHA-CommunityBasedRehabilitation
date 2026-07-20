@@ -42,6 +42,10 @@ class DetailedReferralSerializerTests(TestCase):
             "agriculture_livelihood_program_enrollment": False,
             "mental_health": True,
             "mental_health_condition": "Anxiety",
+            "safe_guarding": True,
+            "safe_guarding_observation": Referral.SafeGuardingObservation.SIGNS_OF_HARM,
+            "safe_guarding_person_involved": "Caregiver",
+            "safe_guarding_action_needed": Referral.SafeGuardingActionNeeded.FOLLOW_UP,
             "services_other": "Transport assistance",
         }
 
@@ -71,7 +75,7 @@ class DetailedReferralSerializerTests(TestCase):
         self.assertTrue(referral.wheelchair)
         self.assertTrue(referral.physiotherapy)
         self.assertTrue(referral.mental_health)
-
+        self.assertTrue(referral.safe_guarding)
         mock_send_email.assert_called_once_with(referral)
 
     @patch("cbr_api.serializers.send_referral_created_email")

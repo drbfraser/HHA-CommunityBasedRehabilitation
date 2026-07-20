@@ -87,6 +87,8 @@ def send_referral_created_email(referral):
         services.append("Emergency Food Aid")
     if referral.agriculture_livelihood_program_enrollment:
         services.append("Agriculture/Livelihood Program Enrollment")
+    if referral.safe_guarding:
+        services.append("Safe Guarding")
     if referral.services_other:
         services.append("Other Services")
 
@@ -103,6 +105,18 @@ def send_referral_created_email(referral):
         details.append(f"Orthotic injury location: {referral.orthotic_injury_location}")
     if referral.hip_width:
         details.append(f"Hip width: {referral.hip_width}")
+    if referral.safe_guarding_observation:
+        details.append(
+            f"Safe Guarding observation: {referral.safe_guarding_observation}"
+        )
+    if referral.safe_guarding_person_involved:
+        details.append(
+            f"Safe Guarding person involved: {referral.safe_guarding_person_involved}"
+        )
+    if referral.safe_guarding_action_needed:
+        details.append(
+            f"Safe Guarding action needed: {referral.safe_guarding_action_needed}"
+        )
     if referral.services_other:
         details.append(f"Other services: {referral.services_other}")
 
@@ -128,7 +142,9 @@ def send_referral_created_email(referral):
     if not from_email or not to_email or not from_password:
         return
 
-    domain = getattr(settings, "DOMAIN", "")
+    domain = getattr(settings, "DOMAIN", "").strip()
+    if ":" in domain:
+        domain = domain.rsplit(":", 1)[0]
     base_url = (f"https://{domain}" if domain else DEFAULT_WEB_BASE_URL).rstrip("/")
     client_link = _build_client_link(client_id, base_url) if client_id else ""
 

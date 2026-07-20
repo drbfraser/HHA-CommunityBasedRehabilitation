@@ -12,7 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { appStyles } from "App.styles";
 import LanguagePicker from "components/LanguagePicker/LanguagePicker";
 import Login from "pages/Login/Login";
-import { defaultPagePath, pagesForUser } from "util/pages";
+import { defaultPagePath, pageDisplayTitle, pagesForUser } from "util/pages";
 import AlertNotification from "./components/Alerts/AlertNotification";
 import AlertOffline from "./components/Alerts/AlertOffline";
 import SideNav from "./components/SideNav/SideNav";
@@ -57,7 +57,7 @@ const App = () => {
                                         }}
                                     >
                                         <Typography variant="h1" sx={appStyles.pageTitle}>
-                                            {page.title ?? t(page.name)}
+                                            {pageDisplayTitle(page, t)}
                                         </Typography>
                                         <LanguagePicker />
                                     </Box>

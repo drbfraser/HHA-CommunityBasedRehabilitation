@@ -420,6 +420,26 @@ class Referral(models.Model):
     mental_health = models.BooleanField(default=False)
     mental_health_condition = models.CharField(max_length=100, blank=True)
 
+    class SafeGuardingObservation(models.TextChoices):
+        SIGNS_OF_HARM = "SIGNS_OF_HARM", _("Signs of Harm")
+        NEGLECT = "NEGLECT", _("Neglect")
+        UNSAFE_BEHAVIOUR = "UNSAFE_BEHAVIOUR", _("Unsafe Behaviour")
+        OTHER = "OTHER", _("Other")
+
+    class SafeGuardingActionNeeded(models.TextChoices):
+        URGENT_ATTENTION = "URGENT_ATTENTION", _("Urgent Attention")
+        FOLLOW_UP = "FOLLOW_UP", _("Follow-up")
+        DOCUMENTATION_ONLY = "DOCUMENTATION_ONLY", _("Documentation Only")
+
+    safe_guarding = models.BooleanField(default=False)
+    safe_guarding_observation = models.CharField(
+        max_length=20, choices=SafeGuardingObservation.choices, blank=True
+    )
+    safe_guarding_person_involved = models.CharField(max_length=100, blank=True)
+    safe_guarding_action_needed = models.CharField(
+        max_length=20, choices=SafeGuardingActionNeeded.choices, blank=True
+    )
+
     services_other = models.CharField(max_length=100, blank=True)
 
 

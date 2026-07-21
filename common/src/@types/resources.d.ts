@@ -231,8 +231,10 @@ interface Resources {
       "clearLocalDataConfirmation": "Ama kodo kukurudyö do nyo tutu ŋerot ko kita nanyit na , ''wurji loŋio lo kata rigwo'' I dena",
       "newVersionAvailability": "Tokoret luduko lo HHA no nakitak gwe kata songinana(Tiyana) I kobuŋot ni , a'delaki ki yu . Böŋö tolu duke tito ilot kitayet songinana/node tiyana , node a do de gwe ti bulo kitani.",
       "reinstallingSuggestion": "Ko do gwon ko tito kitayet lo beron (App) ko koti meddy a loŋe , iti ŋerot I tolupö kindyö ko I nyöggu na tolupokinyo na ŋilo tito (App)",
-      "updateAvailableTitle": "Update Available",
-      "updateAvailableMessage": "A new version of the HHA CBR app is available on the Google Play Store. Please update the next time you have a good internet connection. The version you are running now will continue to work, but may have some bugs or missing features."
+      "readOnlyModeTitle": "Read-Only Mode",
+      "readOnlyModeMessage": "App working in Read-Only mode. These changes were not saved. Please use the web interface to re-input your changes that are not synchronized to the server, then restart this application to trigger a sync and/or app update.",
+      "readOnlyBannerMandatory": "This app is out of date and is running in read-only mode. Please update from the Google Play Store to make changes again.",
+      "readOnlyBannerResync": "Your data is out of sync and the app is running in read-only mode. Please sync with the server to make changes again."
     },
     "admin": {
       "username": "Karin ti katokitayinit",
@@ -1168,8 +1170,10 @@ interface Resources {
       "clearLocalDataConfirmation": "If you understand and would still like to proceed with the sync, type \"clear local data\" to confirm.",
       "newVersionAvailability": "A new version of the HHA CBR app is available on the Google Play Store. Please update your app now, or you will be unable to sync.",
       "reinstallingSuggestion": "If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app.",
-      "updateAvailableTitle": "Update Available",
-      "updateAvailableMessage": "A new version of the HHA CBR app is available on the Google Play Store. Please update the next time you have a good internet connection. The version you are running now will continue to work, but may have some bugs or missing features."
+      "readOnlyModeTitle": "Read-Only Mode",
+      "readOnlyModeMessage": "App working in Read-Only mode. These changes were not saved. Please use the web interface to re-input your changes that are not synchronized to the server, then restart this application to trigger a sync and/or app update.",
+      "readOnlyBannerMandatory": "This app is out of date and is running in read-only mode. Please update from the Google Play Store to make changes again.",
+      "readOnlyBannerResync": "Your data is out of sync and the app is running in read-only mode. Please sync with the server to make changes again."
     },
     "admin": {
       "username": "Username",

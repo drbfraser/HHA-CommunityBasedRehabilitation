@@ -34,7 +34,7 @@ import { SyncDatabaseTask } from "./tasks/SyncDatabaseTask";
 import { SyncContext } from "./context/SyncContext/SyncContext";
 import { SyncSettings } from "./screens/Sync/PrefConstants";
 import { AutoSyncDB } from "./util/syncHandler";
-import { checkForPlayStoreUpdate } from "./util/playStoreUpdate";
+import { runStartupVersionCheck } from "./util/startupVersionCheck";
 import { store } from "./redux/store";
 import { I18nextProvider } from "react-i18next";
 import { Platform, StatusBar } from "react-native";
@@ -170,10 +170,6 @@ export default function App() {
     }, []);
 
     useEffect(() => {
-        checkForPlayStoreUpdate(getI18nInstance().t);
-    }, []);
-
-    useEffect(() => {
         // Refresh disabilities, zones, current user information
         isLoggedIn()
             .then((loggedIn) => {
@@ -222,6 +218,10 @@ export default function App() {
     useEffect(() => {
         if (authState.state === "loggedIn") {
             setScreenRefresh(true);
+            // Decide whether the app must run in read-only mode based on
+            // server/app version compatibility (see playStoreUpdate for the
+            // separate soft update nudge).
+            runStartupVersionCheck();
             if (autoSync) {
                 AutoSyncDB(database, autoSync, cellularSync).then(() => {
                     SyncDatabaseTask.scheduleAutoSync(database, autoSync, cellularSync);

@@ -40,7 +40,7 @@ import { notifyAutoSyncFailure, notifyAutoSyncSuccess } from "./syncNotification
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
-export const mobileApiVersion: string = "5.0.0";
+export const mobileApiVersion: string = "4.0.0";
 const syncMutex = new Mutex();
 
 export async function checkUnsyncedChanges() {
@@ -251,7 +251,7 @@ export async function lastVersionSyncedIsCurrentVersion() {
     return lastVersionSynced !== null && lastVersionSynced === mobileApiVersion;
 }
 
-async function noPreviousSyncsPerformed(): Promise<boolean> {
+export async function noPreviousSyncsPerformed(): Promise<boolean> {
     try {
         const lastVersionSynced = await AsyncStorage.getItem(SyncSettings.VersionLastSynced);
         return lastVersionSynced === null;

@@ -4,6 +4,19 @@ const E2E_USERNAME = process.env.E2E_USERNAME;
 const E2E_PASSWORD = process.env.E2E_PASSWORD;
 
 const AUTH_SCREEN_IDS = ["login-button"];
+const HOME_TAB_ID = "tab-dashboard";
+const UNLOCKED_APP_SCREEN_IDS = [
+    HOME_TAB_ID,
+    "tab-sync",
+    "tab-new-client",
+    "tab-client-list",
+    "sync-database-button",
+    "sync-alert-ok-button",
+    "new-client-consent-checkbox",
+    "client-first-name-input",
+    "new-client-submit-button",
+    "client-list-scroll-view",
+];
 
 function assertE2eCredentials() {
     if (!E2E_USERNAME || !E2E_PASSWORD) {
@@ -36,27 +49,52 @@ async function isOnBlockingAuthScreen() {
     return false;
 }
 
-/**
- * Wait until no auth gate is blocking the app. Prefers seeing the dashboard
- * tab after login; on stack screens (e.g. Sync) tabs may be hidden, so we
- * also accept "no blocking auth screen visible".
- */
-async function waitUntilUnlocked(timeout = 30000) {
+async function isOnUnlockedAppScreen(timeout = 500) {
+    for (const testId of UNLOCKED_APP_SCREEN_IDS) {
+        if (await isElementVisible(testId, timeout)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+async function waitForHomeScreen(timeout = 60000) {
+    try {
+        await waitFor(element(by.id(HOME_TAB_ID)))
+            .toBeVisible()
+            .withTimeout(timeout);
+    } catch {
+        throw new Error(
+            `App did not reach the home screen: expected ${HOME_TAB_ID} to be visible after launch/login`
+        );
+    }
+}
+
+async function waitForUnlockedAppScreen(timeout = 30000) {
     const deadline = Date.now() + timeout;
     while (Date.now() < deadline) {
-        try {
-            await waitFor(element(by.id("tab-dashboard")))
-                .toBeVisible()
-                .withTimeout(1000);
-            return;
-        } catch {}
-
-        if (!(await isOnBlockingAuthScreen())) {
+        if (await isOnUnlockedAppScreen()) {
             return;
         }
         await new Promise((r) => setTimeout(r, 500));
     }
-    throw new Error("Timed out waiting for app to unlock (still on login screen)");
+    throw new Error("App is not on a recognized unlocked screen after launch/login");
+}
+
+/**
+ * Wait until the app is on a recognized unlocked screen. Prefers seeing the
+ * dashboard tab after login; on stack screens (e.g. Sync), tabs may be hidden.
+ */
+async function waitUntilUnlocked(timeout = 30000) {
+    const deadline = Date.now() + timeout;
+    while (Date.now() < deadline) {
+        if (await isOnUnlockedAppScreen(1000)) {
+            return;
+        }
+
+        await new Promise((r) => setTimeout(r, 500));
+    }
+    throw new Error("Timed out waiting for app to unlock");
 }
 
 /**
@@ -109,13 +147,21 @@ async function loginAndUnlockApp() {
  * Recover from the login screen. Safe to call when already on stack screens
  * (e.g. Sync) where the tab bar is not visible.
  */
-async function ensureAppUnlocked() {
+async function ensureAppUnlocked({ requireHome = false, timeout = 60000 } = {}) {
     if (!(await isOnBlockingAuthScreen())) {
+        if (requireHome) {
+            await waitForHomeScreen(timeout);
+        } else {
+            await waitForUnlockedAppScreen(timeout);
+        }
         return;
     }
 
     if (await isElementVisible("login-button", 2000)) {
         await loginAndUnlockApp();
+        if (requireHome) {
+            await waitForHomeScreen(timeout);
+        }
         return;
     }
 
@@ -129,5 +175,7 @@ module.exports = {
     loginAndUnlockApp,
     ensureAppUnlocked,
     waitUntilUnlocked,
+    waitForHomeScreen,
+    waitForUnlockedAppScreen,
     isOnBlockingAuthScreen,
 };

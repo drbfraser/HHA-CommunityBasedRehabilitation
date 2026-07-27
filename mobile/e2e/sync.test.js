@@ -249,11 +249,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
             } catch (e) {}
         }
 
-        await ensureAppUnlocked();
-
-        await waitFor(element(by.id("tab-dashboard")))
-            .toBeVisible()
-            .withTimeout(60000);
+        await ensureAppUnlocked({ requireHome: true, timeout: 60000 });
     }, 600000);
 
     beforeEach(async () => {

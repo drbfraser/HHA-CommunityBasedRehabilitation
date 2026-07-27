@@ -5,18 +5,6 @@ const E2E_PASSWORD = process.env.E2E_PASSWORD;
 
 const AUTH_SCREEN_IDS = ["login-button"];
 const HOME_TAB_ID = "tab-dashboard";
-const UNLOCKED_APP_SCREEN_IDS = [
-    HOME_TAB_ID,
-    "tab-sync",
-    "tab-new-client",
-    "tab-client-list",
-    "sync-database-button",
-    "sync-alert-ok-button",
-    "new-client-consent-checkbox",
-    "client-first-name-input",
-    "new-client-submit-button",
-    "client-list-scroll-view",
-];
 
 function assertE2eCredentials() {
     if (!E2E_USERNAME || !E2E_PASSWORD) {
@@ -49,15 +37,6 @@ async function isOnBlockingAuthScreen() {
     return false;
 }
 
-async function isOnUnlockedAppScreen(timeout = 500) {
-    for (const testId of UNLOCKED_APP_SCREEN_IDS) {
-        if (await isElementVisible(testId, timeout)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 async function waitForHomeScreen(timeout = 60000) {
     try {
         await waitFor(element(by.id(HOME_TAB_ID)))
@@ -70,31 +49,11 @@ async function waitForHomeScreen(timeout = 60000) {
     }
 }
 
-async function waitForUnlockedAppScreen(timeout = 30000) {
-    const deadline = Date.now() + timeout;
-    while (Date.now() < deadline) {
-        if (await isOnUnlockedAppScreen()) {
-            return;
-        }
-        await new Promise((r) => setTimeout(r, 500));
-    }
-    throw new Error("App is not on a recognized unlocked screen after launch/login");
-}
-
 /**
- * Wait until the app is on a recognized unlocked screen. Prefers seeing the
- * dashboard tab after login; on stack screens (e.g. Sync), tabs may be hidden.
+ * Wait until the app reaches the dashboard after login.
  */
 async function waitUntilUnlocked(timeout = 30000) {
-    const deadline = Date.now() + timeout;
-    while (Date.now() < deadline) {
-        if (await isOnUnlockedAppScreen(1000)) {
-            return;
-        }
-
-        await new Promise((r) => setTimeout(r, 500));
-    }
-    throw new Error("Timed out waiting for app to unlock");
+    await waitForHomeScreen(timeout);
 }
 
 /**
@@ -151,8 +110,6 @@ async function ensureAppUnlocked({ requireHome = false, timeout = 60000 } = {}) 
     if (!(await isOnBlockingAuthScreen())) {
         if (requireHome) {
             await waitForHomeScreen(timeout);
-        } else {
-            await waitForUnlockedAppScreen(timeout);
         }
         return;
     }
@@ -176,6 +133,5 @@ module.exports = {
     ensureAppUnlocked,
     waitUntilUnlocked,
     waitForHomeScreen,
-    waitForUnlockedAppScreen,
     isOnBlockingAuthScreen,
 };

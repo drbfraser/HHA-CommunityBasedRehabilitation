@@ -175,6 +175,7 @@ async function dismissSyncUpdateModalIfPresent() {
 
 async function triggerSyncAndWaitForAlert() {
     await dismissSyncAlertIfPresent();
+    await waitForSyncIdle();
     await element(by.id("sync-database-button")).tap();
 
     const dismissed = await dismissSyncUpdateModalIfPresent();
@@ -187,10 +188,33 @@ async function triggerSyncAndWaitForAlert() {
 
     await waitFor(element(by.id("sync-alert-ok-button")))
         .toBeVisible()
-        .withTimeout(60000);
+        .withTimeout(120000);
+}
+
+async function waitForSyncIdle(timeout = 120000) {
+    await waitFor(element(by.text("Sync in progress...")))
+        .not.toBeVisible()
+        .withTimeout(timeout);
+    await waitFor(element(by.text("Automatic sync in progress...")))
+        .not.toBeVisible()
+        .withTimeout(timeout);
+}
+
+async function ensureAutoSyncDisabled() {
+    await waitForSyncIdle();
+
+    try {
+        await expect(element(by.id("sync-auto-switch"))).toHaveToggleValue(false);
+        return;
+    } catch {}
+
+    await element(by.id("sync-auto-switch")).tap();
+    await expect(element(by.id("sync-auto-switch"))).toHaveToggleValue(false);
 }
 
 async function ensureCellularSyncEnabled() {
+    await waitForSyncIdle();
+
     try {
         await expect(element(by.id("sync-cellular-switch"))).toHaveToggleValue(true);
         return;
@@ -269,6 +293,7 @@ describe("Sync: offline caching via WatermelonDB then online server sync", () =>
         });
 
         it("enables sync over cellular for offline sync test flow", async () => {
+            await ensureAutoSyncDisabled();
             await ensureCellularSyncEnabled();
         });
 

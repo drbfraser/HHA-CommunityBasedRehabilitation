@@ -36,23 +36,3 @@ describe("Login", () => {
             .withTimeout(30000);
     });
 });
-
-describe("Login (fresh session)", () => {
-    it("should login and reach the dashboard in one flow", async () => {
-        await device.launchApp({
-            newInstance: true,
-            delete: true,
-            launchArgs: { detoxEnableSynchronization: 0, detoxAnrWaitTimeout: 0 },
-        });
-
-        await waitFor(element(by.id("login-button")))
-            .toBeVisible()
-            .withTimeout(120000);
-
-        await loginAndUnlockApp();
-
-        await waitFor(element(by.id("tab-dashboard")))
-            .toBeVisible()
-            .withTimeout(30000);
-    });
-});

@@ -11,6 +11,7 @@ import {
     logger,
     AutoSyncDB,
     lastVersionSyncedIsCurrentVersion,
+    noPreviousSyncsPerformed,
 } from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
 import { useNetInfo } from "@react-native-community/netinfo";
@@ -266,7 +267,10 @@ const Sync = () => {
                         loading={isSyncing}
                         onPress={async () => {
                             try {
-                                if (!(await lastVersionSyncedIsCurrentVersion())) {
+                                if (
+                                    !(await lastVersionSyncedIsCurrentVersion()) &&
+                                    !(await noPreviousSyncsPerformed())
+                                ) {
                                     setSyncUpdateModal(true);
                                 } else {
                                     await performSync();

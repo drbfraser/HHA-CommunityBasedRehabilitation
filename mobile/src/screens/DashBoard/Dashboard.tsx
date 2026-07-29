@@ -25,6 +25,7 @@ import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
 import Alert from "../../components/Alert/Alert";
 import { modelName } from "../../models/constant";
+import { useReadOnlyMode } from "../../util/readOnlyMode";
 import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../Sync/PrefConstants";
@@ -56,6 +57,7 @@ const Dashboard = () => {
     const { setUnSyncedChanges, screenRefresh } = useContext(SyncContext);
 
     const { t } = useTranslation();
+    const { readOnly, reason } = useReadOnlyMode();
     const { status: syncStatus } = useSyncStatus();
     const previousSyncPhase = useRef(syncStatus.phase);
     const previousDashboardLoading = useRef<boolean>(true);
@@ -308,6 +310,18 @@ const Dashboard = () => {
                 </View>
             ) : (
                 <ScrollView>
+                    {readOnly ? (
+                        <Alert
+                            severity={"error"}
+                            text={t(
+                                reason === "mandatoryUpdate"
+                                    ? "alert.readOnlyBannerMandatory"
+                                    : "alert.readOnlyBannerResync"
+                            )}
+                        />
+                    ) : (
+                        <></>
+                    )}
                     <View style={styles.row}>
                         <Text style={styles.title}>{t("general.dashboard")}</Text>
                     </View>

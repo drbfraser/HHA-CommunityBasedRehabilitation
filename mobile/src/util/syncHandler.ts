@@ -37,10 +37,11 @@ import {
     SyncSource,
 } from "./syncState";
 import { notifyAutoSyncFailure, notifyAutoSyncSuccess } from "./syncNotifications";
+import { runWithWriteBypass, setReadOnly } from "./readOnlyMode";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
-export const mobileApiVersion: string = "5.0.0";
+export const mobileApiVersion: string = "4.0.0";
 const syncMutex = new Mutex();
 
 export async function checkUnsyncedChanges() {
@@ -96,113 +97,126 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
         markSyncStart(source);
 
         try {
-            const didSync = await synchronize({
-                database,
-                log: logger.newLog(),
+            // Run the whole sync with the read-only write guard suspended: the
+            // sync must write to the local DB (pull + mark-as-synced), and if the
+            // app is in "resyncRequired" read-only mode this sync is exactly how
+            // the user gets out of it. Without the bypass the guard would reject
+            // these writes and the resync could never complete.
+            const didSync = await runWithWriteBypass<boolean>(() =>
+                synchronize({
+                    database,
+                    log: logger.newLog(),
 
-                pullChanges: async ({ lastPulledAt }) => {
-                    markSyncPhase("pulling");
-                    const start = Date.now();
-                    console.log(`[SYNC PULL] lastPulledAt=${lastPulledAt}`);
+                    pullChanges: async ({ lastPulledAt }) => {
+                        markSyncPhase("pulling");
+                        const start = Date.now();
+                        console.log(`[SYNC PULL] lastPulledAt=${lastPulledAt}`);
 
-                    const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-                    console.log(`[SYNC PULL] Fetching: ${Endpoint.SYNC}${urlParams}`);
+                        const urlParams = `?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                        console.log(`[SYNC PULL] Fetching: ${Endpoint.SYNC}${urlParams}`);
 
-                    let response;
-                    try {
-                        response = await apiFetch(Endpoint.SYNC, urlParams);
-                    } catch (err: any) {
-                        console.log("[SYNC PULL] apiFetch ERROR");
-                        console.log("message:", err?.message);
-                        console.log("name:", err?.name);
-                        console.log("stack:", err?.stack);
-                        console.log(err);
-                        showGenericAlert(
-                            "[SYNC PULL] apiFetch ERROR",
-                            "Please try syncing again or contact support if the issue persists."
+                        let response;
+                        try {
+                            response = await apiFetch(Endpoint.SYNC, urlParams);
+                        } catch (err: any) {
+                            console.log("[SYNC PULL] apiFetch ERROR");
+                            console.log("message:", err?.message);
+                            console.log("name:", err?.name);
+                            console.log("stack:", err?.stack);
+                            console.log(err);
+                            showGenericAlert(
+                                "[SYNC PULL] apiFetch ERROR",
+                                "Please try syncing again or contact support if the issue persists."
+                            );
+                            throw err; // VERY important so Watermelon aborts correctly
+                        }
+
+                        const latency = Date.now() - start;
+                        console.log(
+                            `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
                         );
-                        throw err; // VERY important so Watermelon aborts correctly
-                    }
 
-                    const latency = Date.now() - start;
-                    console.log(
-                        `[SYNC PULL] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
-                    );
+                        if (!response.ok) {
+                            throw new Error(await response.text());
+                        }
 
-                    if (!response.ok) {
-                        throw new Error(await response.text());
-                    }
+                        const { changes, timestamp } = await response.json();
 
-                    const { changes, timestamp } = await response.json();
+                        console.log(`[SYNC PULL] New timestamp=${timestamp}`);
 
-                    console.log(`[SYNC PULL] New timestamp=${timestamp}`);
+                        await getImage(changes);
 
-                    await getImage(changes);
+                        return { changes, timestamp };
+                    },
 
-                    return { changes, timestamp };
-                },
+                    pushChanges: async ({ changes, lastPulledAt }) => {
+                        markSyncPhase("pushing");
+                        const start = Date.now();
+                        console.log(`[SYNC PUSH] lastPulledAt=${lastPulledAt}`);
 
-                pushChanges: async ({ changes, lastPulledAt }) => {
-                    markSyncPhase("pushing");
-                    const start = Date.now();
-                    console.log(`[SYNC PUSH] lastPulledAt=${lastPulledAt}`);
+                        const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
+                        console.log(`[SYNC PUSH] Posting: ${Endpoint.SYNC}${urlParams}`);
 
-                    const urlParams = `/?last_pulled_at=${lastPulledAt}&api_version=${mobileApiVersion}`;
-                    console.log(`[SYNC PUSH] Posting: ${Endpoint.SYNC}${urlParams}`);
+                        const init: RequestInit = {
+                            method: "POST",
+                            body: JSON.stringify(changes),
+                        };
 
-                    const init: RequestInit = {
-                        method: "POST",
-                        body: JSON.stringify(changes),
-                    };
+                        let response;
+                        try {
+                            response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                        } catch (err: any) {
+                            console.log("[SYNC PUSH] apiFetch ERROR");
+                            console.log("message:", err?.message);
+                            console.log("name:", err?.name);
+                            console.log("stack:", err?.stack);
+                            showGenericAlert(
+                                "[SYNC PUSH] apiFetch ERROR",
+                                "Please try syncing again or contact support if the issue persists."
+                            );
+                            throw err; // keeps sync from corrupting timestamps
+                        }
 
-                    let response;
-                    try {
-                        response = await apiFetch(Endpoint.SYNC, urlParams, init);
-                    } catch (err: any) {
-                        console.log("[SYNC PUSH] apiFetch ERROR");
-                        console.log("message:", err?.message);
-                        console.log("name:", err?.name);
-                        console.log("stack:", err?.stack);
-                        showGenericAlert(
-                            "[SYNC PUSH] apiFetch ERROR",
-                            "Please try syncing again or contact support if the issue persists."
+                        const latency = Date.now() - start;
+                        console.log(
+                            `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
                         );
-                        throw err; // keeps sync from corrupting timestamps
+
+                        if (!response.ok) {
+                            throw new Error(await response.text());
+                        }
+                    },
+
+                    migrationsEnabledAtVersion: 5,
+                    conflictResolver: conflictResolver,
+                }).then(async () => {
+                    markSyncPhase("finalizing");
+                    console.log("[SYNC] Finished successfully");
+                    await updateLastVersionSynced();
+                    // The local data is now synced under the current app version, so a
+                    // "resyncRequired" read-only state is resolved. A successful sync
+                    // also proves the server considers our major version compatible
+                    // (an incompatible one fails with 403 before reaching here), so it
+                    // is safe to leave read-only mode entirely.
+                    setReadOnly(false);
+                    const stats = await storeStats();
+                    markSyncSuccess();
+                    if (
+                        source === "auto" &&
+                        stats &&
+                        ((stats.localChanges ?? 0) > 0 || (stats.remoteChanges ?? 0) > 0)
+                    ) {
+                        notifyAutoSyncSuccess();
                     }
-
-                    const latency = Date.now() - start;
-                    console.log(
-                        `[SYNC PUSH] Response status=${response.status} ok=${response.ok} latency=${latency}ms`
-                    );
-
-                    if (!response.ok) {
-                        throw new Error(await response.text());
-                    }
-                },
-
-                migrationsEnabledAtVersion: 5,
-                conflictResolver: conflictResolver,
-            }).then(async () => {
-                markSyncPhase("finalizing");
-                console.log("[SYNC] Finished successfully");
-                updateLastVersionSynced();
-                const stats = await storeStats();
-                markSyncSuccess();
-                if (
-                    source === "auto" &&
-                    stats &&
-                    ((stats.localChanges ?? 0) > 0 || (stats.remoteChanges ?? 0) > 0)
-                ) {
-                    notifyAutoSyncSuccess();
-                }
-                return true;
-            });
+                    return true;
+                })
+            );
             return didSync;
         } catch (e) {
             if (e instanceof APIFetchFailError && e.status === 403) {
                 showGenericAlert(
                     "Sync Is Not Compatible With Your Current Version Of CBR",
-                    "Please install the newest update of CBR on the Google Play Store."
+                    "Please update to the newest version of CBR to continue syncing."
                 );
             }
             markSyncError(getErrorMessage(e));
@@ -217,9 +231,13 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
 export async function preSyncOperations(database: dbType) {
     try {
         if (!(await lastVersionSyncedIsCurrentVersion())) {
-            await database.write(async () => {
-                await database.unsafeResetDatabase();
-            });
+            // Bypass the read-only guard: this reset is part of the sync flow, and
+            // in "resyncRequired" read-only mode the guard would otherwise block it.
+            await runWithWriteBypass(() =>
+                database.write(async () => {
+                    await database.unsafeResetDatabase();
+                })
+            );
 
             await AsyncStorage.removeItem(SyncSettings.SyncStats);
         }
@@ -251,7 +269,7 @@ export async function lastVersionSyncedIsCurrentVersion() {
     return lastVersionSynced !== null && lastVersionSynced === mobileApiVersion;
 }
 
-async function noPreviousSyncsPerformed(): Promise<boolean> {
+export async function noPreviousSyncsPerformed(): Promise<boolean> {
     try {
         const lastVersionSynced = await AsyncStorage.getItem(SyncSettings.VersionLastSynced);
         return lastVersionSynced === null;

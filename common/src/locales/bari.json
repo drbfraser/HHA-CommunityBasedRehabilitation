@@ -229,7 +229,11 @@
     "timeDataUsageNotice": "Na nonet gwon ko diŋit a naŋötut ka'de , koti ti loŋio lo tetemakindya lo kitarinkin",
     "clearLocalDataConfirmation": "Ama kodo kukurudyö do nyo tutu ŋerot ko kita nanyit na , ''wurji loŋio lo kata rigwo'' I dena",
     "newVersionAvailability": "Tokoret luduko lo HHA no nakitak gwe kata songinana(Tiyana) I kobuŋot ni , a'delaki ki yu . Böŋö tolu duke tito ilot kitayet songinana/node tiyana , node a do de gwe ti bulo kitani.",
-    "reinstallingSuggestion": "Ko do gwon ko tito kitayet lo beron (App) ko koti meddy a loŋe , iti ŋerot I tolupö kindyö ko I nyöggu na tolupokinyo na ŋilo tito (App)"
+    "reinstallingSuggestion": "Ko do gwon ko tito kitayet lo beron (App) ko koti meddy a loŋe , iti ŋerot I tolupö kindyö ko I nyöggu na tolupokinyo na ŋilo tito (App)",
+    "readOnlyModeTitle": "Read-Only Mode",
+    "readOnlyModeMessage": "App working in Read-Only mode. These changes were not saved. Please use the web interface to re-input your changes that are not synchronized to the server, then restart this application to trigger a sync and/or app update.",
+    "readOnlyBannerMandatory": "This app is out of date and is running in read-only mode. Please update to the latest version to make changes again.",
+    "readOnlyBannerResync": "Your data is out of sync and the app is running in read-only mode. Please sync with the server to make changes again."
   },
   "admin": {
     "username": "Karin ti katokitayinit",

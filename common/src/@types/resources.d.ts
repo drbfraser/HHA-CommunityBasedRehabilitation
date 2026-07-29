@@ -233,8 +233,7 @@ interface Resources {
       "reinstallingSuggestion": "Ko do gwon ko tito kitayet lo beron (App) ko koti meddy a loŋe , iti ŋerot I tolupö kindyö ko I nyöggu na tolupokinyo na ŋilo tito (App)",
       "readOnlyModeTitle": "Read-Only Mode",
       "readOnlyModeMessage": "App working in Read-Only mode. These changes were not saved. Please use the web interface to re-input your changes that are not synchronized to the server, then restart this application to trigger a sync and/or app update.",
-      "readOnlyBannerMandatory": "This app is out of date and is running in read-only mode. Please update from the Google Play Store to make changes again.",
-      "readOnlyBannerResync": "Your data is out of sync and the app is running in read-only mode. Please sync with the server to make changes again."
+      "readOnlyBannerMandatory": "This app is out of date, so your changes can no longer be saved or synced to the server. The app is now in read-only mode — please update to the latest version to make changes again."
     },
     "admin": {
       "username": "Karin ti katokitayinit",
@@ -1172,8 +1171,7 @@ interface Resources {
       "reinstallingSuggestion": "If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app.",
       "readOnlyModeTitle": "Read-Only Mode",
       "readOnlyModeMessage": "App working in Read-Only mode. These changes were not saved. Please use the web interface to re-input your changes that are not synchronized to the server, then restart this application to trigger a sync and/or app update.",
-      "readOnlyBannerMandatory": "This app is out of date and is running in read-only mode. Please update from the Google Play Store to make changes again.",
-      "readOnlyBannerResync": "Your data is out of sync and the app is running in read-only mode. Please sync with the server to make changes again."
+      "readOnlyBannerMandatory": "This app is out of date, so your changes can no longer be saved or synced to the server. The app is now in read-only mode — please update to the latest version to make changes again."
     },
     "admin": {
       "username": "Username",

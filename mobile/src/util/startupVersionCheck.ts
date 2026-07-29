@@ -1,38 +1,22 @@
 import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common";
-import {
-    lastVersionSyncedIsCurrentVersion,
-    mobileApiVersion,
-    noPreviousSyncsPerformed,
-} from "./syncHandler";
+import { mobileApiVersion } from "./syncHandler";
 import { setReadOnly } from "./readOnlyMode";
 
 /**
- * Startup version check (see docs/DESIGN-mobile-version-check-and-readonly.md §4,
- * steps 1 & 3). Runs once the user is logged in and decides whether the app must
- * run in read-only mode:
+ * Startup version check. Runs once the user is logged in and decides whether the
+ * app must run in read-only mode.
  *
- *   1. MAJOR mismatch with the server  -> read-only, reason "mandatoryUpdate".
- *      The app can never sync on this version, so writes would be lost forever.
- *   3. Majors match but local data was last synced under a different app version
- *      -> read-only, reason "resyncRequired". The data is stale and a resync will
- *      wipe it, so we protect unsynced work until the user resyncs.
+ * Read-only mode is entered ONLY on a MAJOR version incompatibility with the
+ * server: on that version the app can never sync, so any local change would be
+ * lost. We block further local edits and show the user a banner. A minor/patch
+ * difference still syncs, so the app stays in normal read/write mode.
  *
  * Best-effort: if the check itself can't complete (e.g. offline) we leave writes
  * enabled rather than trapping the user in read-only mode.
  */
 export async function runStartupVersionCheck(): Promise<void> {
     try {
-        if (!(await isServerMajorCompatible())) {
-            setReadOnly(true, "mandatoryUpdate");
-            return;
-        }
-
-        // Skip on a fresh install (no prior sync) — there is no local data to
-        // protect, so read-only would only get in the user's way.
-        const versionDrift =
-            !(await lastVersionSyncedIsCurrentVersion()) && !(await noPreviousSyncsPerformed());
-
-        setReadOnly(versionDrift, versionDrift ? "resyncRequired" : null);
+        setReadOnly(!(await isServerMajorCompatible()));
     } catch (e) {
         console.log("[VersionCheck] Startup version check skipped:", e);
         setReadOnly(false);

@@ -98,10 +98,10 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
 
         try {
             // Run the whole sync with the read-only write guard suspended: the
-            // sync must write to the local DB (pull + mark-as-synced), and if the
-            // app is in "resyncRequired" read-only mode this sync is exactly how
-            // the user gets out of it. Without the bypass the guard would reject
-            // these writes and the resync could never complete.
+            // sync must write to the local DB (pull + mark-as-synced), and those
+            // writes must succeed even if a previous sync attempt left the app in
+            // read-only mode. Without the bypass the guard would reject the sync's
+            // own writes.
             const didSync = await runWithWriteBypass<boolean>(() =>
                 synchronize({
                     database,
@@ -193,11 +193,9 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
                     markSyncPhase("finalizing");
                     console.log("[SYNC] Finished successfully");
                     await updateLastVersionSynced();
-                    // The local data is now synced under the current app version, so a
-                    // "resyncRequired" read-only state is resolved. A successful sync
-                    // also proves the server considers our major version compatible
-                    // (an incompatible one fails with 403 before reaching here), so it
-                    // is safe to leave read-only mode entirely.
+                    // A successful sync proves the server considers our major version
+                    // compatible (an incompatible one fails with 403 before reaching
+                    // here), so clear any read-only mode a prior failed sync had set.
                     setReadOnly(false);
                     const stats = await storeStats();
                     markSyncSuccess();
@@ -214,6 +212,10 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
             return didSync;
         } catch (e) {
             if (e instanceof APIFetchFailError && e.status === 403) {
+                // The server has rejected our major version: nothing this app saves
+                // can ever sync, so enter read-only mode to stop the user making
+                // changes that would be lost, and tell them why.
+                setReadOnly(true);
                 showGenericAlert(
                     "Sync Is Not Compatible With Your Current Version Of CBR",
                     "Please update to the newest version of CBR to continue syncing."
@@ -231,8 +233,8 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
 export async function preSyncOperations(database: dbType) {
     try {
         if (!(await lastVersionSyncedIsCurrentVersion())) {
-            // Bypass the read-only guard: this reset is part of the sync flow, and
-            // in "resyncRequired" read-only mode the guard would otherwise block it.
+            // Bypass the read-only guard: this reset is part of the sync flow, so it
+            // must run even if the app is currently in read-only mode.
             await runWithWriteBypass(() =>
                 database.write(async () => {
                     await database.unsafeResetDatabase();

@@ -57,7 +57,7 @@ const Dashboard = () => {
     const { setUnSyncedChanges, screenRefresh } = useContext(SyncContext);
 
     const { t } = useTranslation();
-    const { readOnly, reason } = useReadOnlyMode();
+    const readOnly = useReadOnlyMode();
     const { status: syncStatus } = useSyncStatus();
     const previousSyncPhase = useRef(syncStatus.phase);
     const previousDashboardLoading = useRef<boolean>(true);
@@ -311,14 +311,7 @@ const Dashboard = () => {
             ) : (
                 <ScrollView>
                     {readOnly ? (
-                        <Alert
-                            severity={"error"}
-                            text={t(
-                                reason === "mandatoryUpdate"
-                                    ? "alert.readOnlyBannerMandatory"
-                                    : "alert.readOnlyBannerResync"
-                            )}
-                        />
+                        <Alert severity={"error"} text={t("alert.readOnlyBannerMandatory")} />
                     ) : (
                         <></>
                     )}

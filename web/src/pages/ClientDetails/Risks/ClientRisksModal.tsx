@@ -118,8 +118,8 @@ const ClientRisksModal = (props: IModalProps) => {
             )}
 
             <Formik
-                onSubmit={(values) => {
-                    handleSubmit(values, props.risk, props.setRisk);
+                onSubmit={async (values) => {
+                    await handleSubmit(values, props.risk, props.setRisk);
                     props.close();
                 }}
                 enableReinitialize

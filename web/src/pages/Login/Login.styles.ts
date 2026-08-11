@@ -6,11 +6,11 @@ export const loginStyles: Record<string, SxProps<Theme>> = {
     container: {
         height: "100%",
         backgroundRepeat: "no-repeat",
-        backgroundImage: `url(${BackgroundImage})`,
+        backgroundImage: `url("${BackgroundImage}")`,
         backgroundSize: "100% auto",
 
         "@media (max-width: 600px)": {
-            backgroundImage: `url(${BackgroundImageMobile})`,
+            backgroundImage: `url("${BackgroundImageMobile}")`,
         },
     },
     logo: {

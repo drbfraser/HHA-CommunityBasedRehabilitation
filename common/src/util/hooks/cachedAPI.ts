@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { commonConfiguration } from "../../init";
-import EventEmitter from "events";
 
 export type InvalidationListener = () => void;
 
@@ -67,7 +66,6 @@ export const invalidateAllCachedAPIInternal = async (
     );
 };
 
-const INVALIDATION_EVENT = "cacheInvalidation";
 const DEFAULT_FETCH_TIMEOUT_MILLIS = 15000;
 
 /**
@@ -111,7 +109,7 @@ export class APICacheData<TValue, TLoading, TError> {
      */
     private readonly transformData: (data: any) => TValue;
 
-    private readonly invalidationEventEmitter = new EventEmitter();
+    private readonly invalidationListeners = new Set<InvalidationListener>();
 
     private abortController = new AbortController();
 
@@ -145,11 +143,11 @@ export class APICacheData<TValue, TLoading, TError> {
     }
 
     addInvalidationListener(listener: InvalidationListener) {
-        this.invalidationEventEmitter.addListener(INVALIDATION_EVENT, listener);
+        this.invalidationListeners.add(listener);
     }
 
     removeInvalidationListener(listener: InvalidationListener) {
-        this.invalidationEventEmitter.removeListener(INVALIDATION_EVENT, listener);
+        this.invalidationListeners.delete(listener);
     }
 
     private async clearExistingPromise() {
@@ -283,11 +281,11 @@ export class APICacheData<TValue, TLoading, TError> {
     }
 
     private notifyListeners() {
-        this.invalidationEventEmitter.emit(INVALIDATION_EVENT);
+        this.invalidationListeners.forEach((listener) => listener());
     }
 
     private async notifyListenersAsync() {
-        this.invalidationEventEmitter.emit(INVALIDATION_EVENT);
+        this.notifyListeners();
     }
 
     private getCachedValueInner(): Promise<ICachedAPIResult<TValue, TError>> {

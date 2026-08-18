@@ -22,32 +22,23 @@ export const RecentActivity = (props: IActivityProps) => {
 
     return (
         <View>
-            {!showAllEntries
-                ? topTimelineItems.map((presentActivity) => {
-                      return (
-                          <Timeline
-                              key={presentActivity.id}
-                              activity={presentActivity}
-                              refreshClient={props.refreshClient}
-                          />
-                      );
-                  })
-                : timelineItems.map((presentActivity) => {
-                      return (
-                          <Timeline
-                              key={presentActivity.id}
-                              activity={presentActivity}
-                              refreshClient={props.refreshClient}
-                          />
-                      );
-                  })}
-            {!showAllEntries && timelineItems.length > numEntriesToShow && (
+            {(showAllEntries ? timelineItems : topTimelineItems).map((presentActivity) => {
+                return (
+                    <Timeline
+                        key={presentActivity.id}
+                        activity={presentActivity}
+                        refreshClient={props.refreshClient}
+                    />
+                );
+            })}
+            {timelineItems.length > numEntriesToShow && (
                 <TouchableOpacity
+                    testID="timeline-show-toggle"
                     onPress={() => {
-                        setShowAllEntries(true);
+                        setShowAllEntries(!showAllEntries);
                     }}
                 >
-                    <ShowMore />
+                    <ShowMore expanded={showAllEntries} />
                 </TouchableOpacity>
             )}
             <TimelineDate date={props.clientCreateDate} />

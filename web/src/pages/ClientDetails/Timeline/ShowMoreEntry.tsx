@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Box, SvgIconTypeMap, SxProps } from "@mui/material";
 import { OverridableComponent } from "@mui/material/OverridableComponent";
-import { MoreVert, ArrowDropDown } from "@mui/icons-material";
+import { MoreVert, ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 import {
     TimelineOppositeContent,
     TimelineItem,
@@ -15,10 +15,11 @@ import {
 import { timelineStyles } from "./Timeline.styles";
 
 interface IProps {
+    expanded?: boolean;
     onClick?: () => void;
 }
 
-const ShowMoreEntry = ({ onClick }: IProps) => {
+const ShowMoreEntry = ({ expanded, onClick }: IProps) => {
     const { t } = useTranslation();
     const Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> = MoreVert;
 
@@ -42,9 +43,14 @@ const ShowMoreEntry = ({ onClick }: IProps) => {
                     }
                     style={{ color: "white", fontWeight: 700 }}
                     onClick={onClick}
+                    data-testid="timeline-show-toggle"
                 >
-                    {`${t("general.showMore")} `}
-                    {<ArrowDropDown style={{ marginBottom: "-7px" }} />}
+                    {`${t(expanded ? "general.showLess" : "general.showMore")} `}
+                    {expanded ? (
+                        <ArrowDropUp style={{ marginBottom: "-7px" }} />
+                    ) : (
+                        <ArrowDropDown style={{ marginBottom: "-7px" }} />
+                    )}
                 </Box>
             </TimelineContent>
         </TimelineItem>

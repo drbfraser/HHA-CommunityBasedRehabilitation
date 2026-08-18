@@ -62,13 +62,14 @@ const ClientTimeline = ({ client, refreshClient }: IProps) => {
         <Timeline sx={timelineStyles.timeline}>
             {client ? (
                 <>
-                    {!showAllEntries
-                        ? topTimelineItems.map((entry) => entry.Component)
-                        : timelineItems.map((entry) => entry.Component)}
-                    {!showAllEntries && timelineItems.length > numEntriesToShow && (
+                    {(showAllEntries ? timelineItems : topTimelineItems).map(
+                        (entry) => entry.Component
+                    )}
+                    {timelineItems.length > numEntriesToShow && (
                         <ShowMoreEntry
+                            expanded={showAllEntries}
                             onClick={() => {
-                                setShowAllEntries(true);
+                                setShowAllEntries(!showAllEntries);
                             }}
                         />
                     )}

@@ -4,11 +4,7 @@ import { IconButton } from "react-native-paper";
 import useStyles from "./Timeline.style";
 import { useTranslation } from "react-i18next";
 
-interface IProps {
-    expanded?: boolean;
-}
-
-const ShowMore = ({ expanded }: IProps) => {
+const ShowMore = () => {
     const styles = useStyles();
     const { t } = useTranslation();
 
@@ -28,14 +24,8 @@ const ShowMore = ({ expanded }: IProps) => {
                     <View style={styles.verticleLine}></View>
                 </View>
                 <View style={styles.subItem}>
-                    <Text style={styles.subItemTextDark}>
-                        {expanded ? "Show Less" : t("general.showMore")}
-                    </Text>
-                    <IconButton
-                        style={styles.arrowButton}
-                        icon={expanded ? "chevron-double-up" : "chevron-double-down"}
-                        size={16}
-                    />
+                    <Text style={styles.subItemTextDark}>{t("general.showMore")}</Text>
+                    <IconButton style={styles.arrowButton} icon={"chevron-double-down"} size={16} />
                 </View>
             </View>
             <View style={styles.dividerStyle} />

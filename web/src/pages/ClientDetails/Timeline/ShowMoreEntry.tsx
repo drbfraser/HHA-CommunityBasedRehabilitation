@@ -45,7 +45,7 @@ const ShowMoreEntry = ({ expanded, onClick }: IProps) => {
                     onClick={onClick}
                     data-testid="timeline-show-toggle"
                 >
-                    {`${t(expanded ? "general.showLess" : "general.showMore")} `}
+                    {`${expanded ? "Show Less" : t("general.showMore")} `}
                     {expanded ? (
                         <ArrowDropUp style={{ marginBottom: "-7px" }} />
                     ) : (

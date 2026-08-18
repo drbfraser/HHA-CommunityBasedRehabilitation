@@ -29,7 +29,7 @@ const ShowMore = ({ expanded }: IProps) => {
                 </View>
                 <View style={styles.subItem}>
                     <Text style={styles.subItemTextDark}>
-                        {t(expanded ? "general.showLess" : "general.showMore")}
+                        {expanded ? "Show Less" : t("general.showMore")}
                     </Text>
                     <IconButton
                         style={styles.arrowButton}

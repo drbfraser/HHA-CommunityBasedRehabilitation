@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { Card, Divider, Text } from "react-native-paper";
@@ -30,10 +30,13 @@ interface riskProps {
 
 export const ClientRisk = (props: riskProps) => {
     const styles = clientStyle();
-    const [risk, setRisk] = useState<IRisk>(
-        getLatestRisks(props.clientRisks, props.presentRiskType)
-    );
+    const latestRisk = getLatestRisks(props.clientRisks, props.presentRiskType);
+    const [risk, setRisk] = useState<IRisk>(latestRisk);
     const { t } = useTranslation();
+
+    useEffect(() => {
+        setRisk(latestRisk);
+    }, [latestRisk]);
 
     const getRiskTitle = (): string => {
         switch (risk.risk_type) {

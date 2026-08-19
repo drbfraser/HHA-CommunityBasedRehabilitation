@@ -1,5 +1,6 @@
-from cbr_api.sql import getUnreadAlertListByUserId
 import socketio
+from asgiref.sync import sync_to_async
+from cbr_api.sql import getUnreadAlertListByUserId
 from cbr.settings import DEBUG, ALLOWED_HOSTS
 
 # The maximum allowable number of clients that can connect to the socketIO concurrently.
@@ -8,8 +9,8 @@ MAX_SOCKET_CONNECTION_LIMIT = 50
 
 # Set CORS propertly to ALLOWED_HOSTS from settings.py when not in debug mode
 cors_allowed_origins = "*" if DEBUG else ["https://" + host for host in ALLOWED_HOSTS]
-sio = socketio.Server(
-    async_mode="eventlet",
+sio = socketio.AsyncServer(
+    async_mode="asgi",
     always_connect=True,
     cors_allowed_origins=cors_allowed_origins,
 )
@@ -21,9 +22,9 @@ sio.numCurrentConnections = 0
 
 
 @sio.on("connect")
-def connect(sid, environ):
+async def connect(sid, environ, auth=None):
     sio.numCurrentConnections = sio.numCurrentConnections + 1
-    sio.emit("alert", {"sid": sid, "data": "[SocketIO Server] User Connected."})
+    await sio.emit("alert", {"sid": sid, "data": "[SocketIO Server] User Connected."})
     print("[SocketIO Server] User connected with socketID {}.".format(sid))
 
     if sio.numCurrentConnections > sio.maxConnections:
@@ -32,21 +33,21 @@ def connect(sid, environ):
                 sid
             )
         )
-        sio.disconnect(sid)
+        await sio.disconnect(sid)
 
 
 @sio.on("disconnect")
-def disconnect(sid):
+async def disconnect(sid, reason=None):
     sio.numCurrentConnections = sio.numCurrentConnections - 1
     print("[SocketIO Server] User {} has disconnected.".format(sid))
 
 
 @sio.on("newAlert")
-def newAlert(sid, data):
+async def newAlert(sid, data):
     print("[SocketIO Server]: Received a new alert '{} from {}".format(data, sid))
     # when 'room' arg is omitted from emit, the event is sent to all connected clients
     # Alternatively, use the 'broadcast=True' arg to send to all connected clients
-    sio.emit(
+    await sio.emit(
         "broadcastAlert",
         {
             "subject": data["subject"],
@@ -58,5 +59,8 @@ def newAlert(sid, data):
 
 
 @sio.on("alertViewed")
-def alertViewed(sid, data):
-    sio.emit("updateUnreadList", getUnreadAlertListByUserId(data["currentUser"]))
+async def alertViewed(sid, data):
+    unread_alerts = await sync_to_async(getUnreadAlertListByUserId)(
+        data["currentUser"]
+    )
+    await sio.emit("updateUnreadList", unread_alerts)

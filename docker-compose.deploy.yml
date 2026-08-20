@@ -32,7 +32,7 @@ services:
         build:
             dockerfile: Dockerfile.deploy
         restart: always
-        command: gunicorn -k eventlet --workers 1 cbr.wsgi --bind 0:8000
+        command: uvicorn cbr.asgi:application --host 0.0.0.0 --port 8000 --workers 1
         environment:
             - DOMAIN=${DOMAIN}
         volumes:

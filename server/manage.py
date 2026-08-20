@@ -4,17 +4,8 @@
 import os
 import sys
 
-# Eventlet's greendns resolver can fail to resolve external SMTP hosts in Docker.
-# Disable it so email sending uses the normal system DNS resolver instead.
-os.environ.setdefault("EVENTLET_NO_GREENDNS", "yes")
-
 
 def main():
-    import eventlet  # concurrent networking library
-
-    # replaces blocking function with async functions - MUST be called before any other imports
-    eventlet.monkey_patch(socket=True, select=True)
-
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "cbr.settings")
     try:

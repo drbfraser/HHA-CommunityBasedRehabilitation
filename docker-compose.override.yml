@@ -1,10 +1,9 @@
 services:
     django:
-        command: python manage.py runserver 0.0.0.0:8000
+        command: uvicorn cbr.asgi:application --host 0.0.0.0 --port 8000 --reload
         ports:
             - "8000:8000"
         environment:
-            - LISTEN_PORT=8000
             - DEBUG=yes
         volumes:
             - ./server:/code

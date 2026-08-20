@@ -229,7 +229,10 @@
     "timeDataUsageNotice": "This action may take awhile, and a considerable amount of cellular data may be used.",
     "clearLocalDataConfirmation": "If you understand and would still like to proceed with the sync, type \"clear local data\" to confirm.",
     "newVersionAvailability": "A new version of the HHA CBR app is available on the Google Play Store. Please update your app now, or you will be unable to sync.",
-    "reinstallingSuggestion": "If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app."
+    "reinstallingSuggestion": "If you have the latest version of the app and still see this message, then try uninstalling and reinstalling the app.",
+    "readOnlyModeTitle": "Read-Only Mode",
+    "readOnlyModeMessage": "App working in Read-Only mode. These changes were not saved. Please use the web interface to re-input your changes that are not synchronized to the server, then restart this application to trigger a sync and/or app update.",
+    "readOnlyBannerMandatory": "This app is out of date, so your changes can no longer be saved or synced to the server. The app is now in read-only mode — please update to the latest version to make changes again."
   },
   "admin": {
     "username": "Username",

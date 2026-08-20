@@ -60,7 +60,5 @@ async def newAlert(sid, data):
 
 @sio.on("alertViewed")
 async def alertViewed(sid, data):
-    unread_alerts = await sync_to_async(getUnreadAlertListByUserId)(
-        data["currentUser"]
-    )
+    unread_alerts = await sync_to_async(getUnreadAlertListByUserId)(data["currentUser"])
     await sio.emit("updateUnreadList", unread_alerts)

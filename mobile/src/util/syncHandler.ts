@@ -41,7 +41,7 @@ import { runWithWriteBypass, setReadOnly } from "./readOnlyMode";
 
 export const logger = new SyncLogger(10 /* limit of sync logs to keep in memory */);
 
-export const mobileApiVersion: string = "4.0.0";
+export const mobileApiVersion: string = "5.0.0";
 const syncMutex = new Mutex();
 
 export async function checkUnsyncedChanges() {

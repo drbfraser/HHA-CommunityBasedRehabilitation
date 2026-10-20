@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
     Alert,
@@ -26,7 +26,6 @@ type ReportType = "bug_report" | "suggestion";
 type UserViewLocationState = {
     bugReportSuccessMessage?: string;
 };
-const INTERNET_CHECK_URL = "https://clients3.google.com/generate_204";
 
 const BugReport = () => {
     const history = useHistory();
@@ -64,63 +63,18 @@ const BugReport = () => {
         };
     }, [attachedImage]);
 
-    const checkConnectivity = useCallback(async () => {
-        if (!navigator.onLine) {
-            setIsOffline(true);
-            return false;
-        }
-
-        try {
-            await fetch(INTERNET_CHECK_URL, {
-                method: "GET",
-                mode: "no-cors",
-                cache: "no-store",
-            });
-            setIsOffline(false);
-            return true;
-        } catch {
-            setIsOffline(true);
-            return false;
-        }
-    }, []);
-
     useEffect(() => {
-        let isActive = true;
-
-        const handleOnline = () => {
-            void checkConnectivity();
-        };
-        const handleOffline = () => {
-            setIsOffline(true);
-        };
-        const handleVisibilityChange = () => {
-            if (document.visibilityState === "visible") {
-                void checkConnectivity();
-            }
-        };
-
-        void checkConnectivity().then((hasInternet) => {
-            if (!isActive) {
-                return;
-            }
-            setIsOffline(!hasInternet);
-        });
-        const intervalId = window.setInterval(() => {
-            void checkConnectivity();
-        }, 10000);
+        const handleOnline = () => setIsOffline(false);
+        const handleOffline = () => setIsOffline(true);
 
         window.addEventListener("online", handleOnline);
         window.addEventListener("offline", handleOffline);
-        document.addEventListener("visibilitychange", handleVisibilityChange);
 
         return () => {
-            isActive = false;
-            window.clearInterval(intervalId);
             window.removeEventListener("online", handleOnline);
             window.removeEventListener("offline", handleOffline);
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, [checkConnectivity]);
+    }, []);
 
     const onImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedImage = event.target.files?.[0] ?? null;
@@ -227,8 +181,8 @@ const BugReport = () => {
 
         setSubmitError(null);
 
-        const hasInternet = await checkConnectivity();
-        if (!hasInternet) {
+        if (!navigator.onLine) {
+            setIsOffline(true);
             return;
         }
 
@@ -257,9 +211,8 @@ const BugReport = () => {
                 bugReportSuccessMessage: successMessage,
             } as UserViewLocationState);
         } catch (e) {
-            const stillOnline = await checkConnectivity();
-            if (!stillOnline) {
-                setSubmitError(null);
+            if (!navigator.onLine) {
+                setIsOffline(true);
                 return;
             }
 

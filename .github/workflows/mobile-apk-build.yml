@@ -4,11 +4,6 @@ name: Mobile APK Build
 on:
     workflow_dispatch:
 env:
-    # HUB_REPO_BACKEND: "${{ secrets.HUB_REPO_BACKEND }}"
-    # HUB_REPO_FRONTEND: "${{ secrets.HUB_REPO_FRONTEND }}"
-    # HUB_TOKEN: "${{ secrets.HUB_TOKEN }}"
-    # HUB_USER: "${{ secrets.HUB_USER }}"
-    # GRAFANA_API_KEY: "${{ secrets.GRAFANA_API_KEY }}"
     NPM_VERSION: 10.7.0
     CLONE_DEPTH: 150
     # Keep npm's cache out of home directory (mounted from host)
@@ -21,31 +16,6 @@ jobs:
         runs-on: [self-hosted, docker]
         steps:
             - uses: bfraser/cicd/actions/debug_display_contexts@v1
-
-    # build-common:
-    #   runs-on: [self-hosted, docker]
-    #   container:
-    #     image: node:18
-    #   timeout-minutes: 60
-    #   steps:
-    #     - name: Checkout code into container
-    #       uses: bfraser/cicd/actions/checkout@v1
-    #       with:
-    #         path: /isolated_build/repo/
-    #     - name: Install NPM globally & Run 'npm ci'
-    #       run: |
-    #         npm install -g npm@$NPM_VERSION --loglevel=verbose
-    #         npm ci
-    #       working-directory: /isolated_build/repo/common
-    #     - name: Check code formatting
-    #       run: npx prettier --check .
-    #       working-directory: /isolated_build/repo/common
-    #     - name: Run TypeScript compiler
-    #       run: npx tsc
-    #       working-directory: /isolated_build/repo/common
-    #     - name: Run tests on ./common/
-    #       run: npm run test-ci
-    #       working-directory: /isolated_build/repo/common
 
     build-mobile-apk:
         runs-on: [self-hosted, docker]
@@ -106,18 +76,6 @@ jobs:
                   echo "Date String: ${{ steps.date_str.outputs.stdout }}"
               working-directory: /isolated_build/repo/mobile/android/app
 
-            # NOTE: Artifact upload *was previously* disabled because builds from the CI/CD server seem
-            #       to not work. Specifically, creating a client on mobile and then
-            #       trying to sync results in a "Invalid Date" sync error.
-            #       Since these builds cannot be trusted, they are disabled.
-            #       Instead, the builds must be done locally.
-            # - uses: actions/upload-artifact@v3
-            #   with:
-            #     name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Dev.apk"
-            #     path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-            #     retention-days: 60
-            #     if-no-files-found: error
-
             - name: Build APK for Testing (Targeting Staging Server)
               # If the HOME folder is left as the default /github/home, then `npm run build-aab prod`
               #    fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
@@ -133,6 +91,25 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                   name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
+                  path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+                  retention-days: 60
+                  if-no-files-found: error
+
+            - name: Build APK for Production (Targeting HHA's Server)
+              # If the HOME folder is left as the default /github/home, then `npm run build-aab prod`
+              #    fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
+              #    from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
+              # Fix: Set HOME to /isolated_build/ in the job's env: section above.
+              run: |
+                  rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
+                  npm run build-apk prod
+              working-directory: /isolated_build/repo/mobile
+            - name: Display build/outputs folder
+              run: find /isolated_build/repo/mobile/android/app/build/outputs/
+            - name: Upload APK Artifact (Production)
+              uses: actions/upload-artifact@v3
+              with:
+                  name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Production.apk"
                   path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
                   retention-days: 60
                   if-no-files-found: error

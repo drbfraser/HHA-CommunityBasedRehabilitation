@@ -18,6 +18,18 @@ jobs:
             - uses: bfraser/cicd/actions/debug_display_contexts@v1
 
     build-mobile-apk:
+        # Each target builds in its own job (fresh container) so no Metro/Babel cache from one
+        # build can leak into the other; APP_ENV is inlined into the JS bundle at build time and
+        # the caches do not key on it.
+        name: build-mobile-apk (${{ matrix.label }})
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - target: staging
+                      label: Staging
+                    - target: prod
+                      label: Production
         runs-on: [self-hosted, docker]
         container:
             # Select version 6.2: Java 11.x, Node 14.x, Android tools 33.0
@@ -76,40 +88,21 @@ jobs:
                   echo "Date String: ${{ steps.date_str.outputs.stdout }}"
               working-directory: /isolated_build/repo/mobile/android/app
 
-            - name: Build APK for Testing (Targeting Staging Server)
+            - name: Build APK (Targeting ${{ matrix.label }} Server)
               # If the HOME folder is left as the default /github/home, then `npm run build-aab prod`
               #    fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
               #    from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
               # Fix: Set HOME to /isolated_build/ in the job's env: section above.
               run: |
                   rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-                  npm run build-apk staging
+                  npm run build-apk ${{ matrix.target }}
               working-directory: /isolated_build/repo/mobile
             - name: Display build/outputs folder
               run: find /isolated_build/repo/mobile/android/app/build/outputs/
-            - name: Upload APK Artifact (Staging)
+            - name: Upload APK Artifact (${{ matrix.label }})
               uses: actions/upload-artifact@v3
               with:
-                  name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Staging.apk"
-                  path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-                  retention-days: 60
-                  if-no-files-found: error
-
-            - name: Build APK for Production (Targeting HHA's Server)
-              # If the HOME folder is left as the default /github/home, then `npm run build-aab prod`
-              #    fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
-              #    from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
-              # Fix: Set HOME to /isolated_build/ in the job's env: section above.
-              run: |
-                  rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
-                  npm run build-apk prod
-              working-directory: /isolated_build/repo/mobile
-            - name: Display build/outputs folder
-              run: find /isolated_build/repo/mobile/android/app/build/outputs/
-            - name: Upload APK Artifact (Production)
-              uses: actions/upload-artifact@v3
-              with:
-                  name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-Production.apk"
+                  name: "CBR-Mobile-${{ steps.date_str.outputs.stdout }}-${{ matrix.label }}.apk"
                   path: /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
                   retention-days: 60
                   if-no-files-found: error

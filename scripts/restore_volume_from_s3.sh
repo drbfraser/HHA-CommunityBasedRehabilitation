@@ -38,7 +38,7 @@ if [ -z "$backups" ]; then
 fi
 
 echo "Available backups:"
-echo "YYYY-MM-DD  TIME        #BYTES FILENAME-OF-BACKUP
+echo "YYYY-MM-DD  TIME        #BYTES FILENAME-OF-BACKUP"
 echo "$backups"
 read -p "Enter the name of the backup you want to restore: " selected_backup
 

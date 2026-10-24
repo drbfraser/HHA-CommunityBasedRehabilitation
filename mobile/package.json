@@ -19,10 +19,20 @@
         "detox:build": "cd android && node -e \"require('child_process').execSync((process.platform==='win32'?'gradlew.bat':'./gradlew')+' :app:assembleDebug :app:assembleDebugAndroidTest -DtestBuildType=debug',{stdio:'inherit'})\"",
         "detox:test": "npx detox test -c android.emu.debug",
         "detox:install": "cd android && node -e \"require('child_process').execSync((process.platform==='win32'?'gradlew.bat':'./gradlew')+' installDebug installDebugAndroidTest -DtestBuildType=debug',{stdio:'inherit'})\"",
-        "detox:run": "npm run detox:bundle && detox build -c android.emu.debug && detox test -c android.emu.debug"
+        "detox:run": "npm run detox:bundle && detox build -c android.emu.debug && detox test -c android.emu.debug",
+        "postinstall": "patch-package"
     },
     "jest": {
         "preset": "jest-expo"
+    },
+    "expo": {
+        "autolinking": {
+            "android": {
+                "buildFromSource": [
+                    "expo-image-picker"
+                ]
+            }
+        }
     },
     "dependencies": {
         "@babel/runtime": "^7.25.7",
@@ -122,6 +132,7 @@
         "metro": "^0.81.0",
         "metro-config": "^0.81.0",
         "metro-resolver": "^0.81.0",
+        "patch-package": "^8.0.1",
         "prettier": "2.3.0",
         "react-native-vector-icons": "^8.1.0",
         "react-test-renderer": "19.0.0",

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Alert, Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ActivityIndicator, Button, Divider, TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { RouteProp } from "@react-navigation/native";
@@ -11,6 +11,7 @@ import { themeColors, useCurrentUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
+import { ensureCameraPermission, showImageError } from "../../util/cameraPermission";
 import ExposedDropdownMenu from "../../components/ExposedDropdownMenu/ExposedDropdownMenu";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import {
@@ -176,31 +177,37 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const pickPhoto = async () => {
         // The gallery uses the Android Photo Picker / iOS limited picker, which need no
         // media-library permission, so we go straight to the picker.
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            base64: true,
-            quality: 0.7,
-        });
-        if (result && !result.canceled) {
-            addPhoto(await assetToDataUrl(result.assets[0]));
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                base64: true,
+                quality: 0.7,
+            });
+            if (result && !result.canceled) {
+                addPhoto(await assetToDataUrl(result.assets[0]));
+            }
+        } catch (error) {
+            showImageError(error);
         }
     };
 
     const takePhoto = async () => {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-            Alert.alert("Permission required", "Camera permission is needed.");
-            return;
-        }
-        const result = await ImagePicker.launchCameraAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            base64: true,
-            quality: 0.7,
-        });
-        if (result && !result.canceled) {
-            addPhoto(await assetToDataUrl(result.assets[0]));
+        try {
+            if (!(await ensureCameraPermission())) {
+                return;
+            }
+            const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                base64: true,
+                quality: 0.7,
+            });
+            if (result && !result.canceled) {
+                addPhoto(await assetToDataUrl(result.assets[0]));
+            }
+        } catch (error) {
+            showImageError(error);
         }
     };
 

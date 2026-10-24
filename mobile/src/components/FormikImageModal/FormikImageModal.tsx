@@ -9,6 +9,7 @@ import useStyles from "./FormikImageModal.styles";
 import * as FileSystem from "expo-file-system";
 import { manipulateAsync, FlipType, SaveFormat } from "expo-image-manipulator";
 import { useTranslation } from "react-i18next";
+import { ensureCameraPermission, showImageError } from "../../util/cameraPermission";
 
 interface IFormikImageModal<Field extends string> extends TFormikComponentProps<Field> {
     visible: boolean;
@@ -61,18 +62,15 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
     };
 
     const pickImage = async (imageSource: ImageSource) => {
+        if (Platform.OS === "web") {
+            return;
+        }
         setIsLoading(true);
-        if (Platform.OS !== "web") {
+        try {
             // The gallery uses the Android Photo Picker / iOS limited picker, which need
             // no media-library permission. Only the camera path requires a permission.
-            if (imageSource === ImageSource.CAMERA) {
-                const { status } = await ImagePicker.requestCameraPermissionsAsync();
-                if (status !== "granted") {
-                    alert(`Permissions are required to access the ${imageSource}.`);
-                    props.onDismiss();
-                    setIsLoading(false);
-                    return;
-                }
+            if (imageSource === ImageSource.CAMERA && !(await ensureCameraPermission())) {
+                return;
             }
             const imagePicker =
                 imageSource === ImageSource.CAMERA
@@ -107,9 +105,12 @@ const FormikImageModal = (props: IFormikImageModal<string>) => {
                 props.formikProps.setFieldTouched(props.field, true);
                 props.formikProps.setFieldValue(props.field, uri);
             }
+        } catch (error) {
+            showImageError(error);
+        } finally {
             props.onDismiss();
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     const handleDismiss = () => {

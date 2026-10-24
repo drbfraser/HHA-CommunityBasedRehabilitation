@@ -1,0 +1,27 @@
+diff --git a/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/ImagePickerModule.kt b/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/ImagePickerModule.kt
+index ba07483..5160216 100644
+--- a/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/ImagePickerModule.kt
++++ b/node_modules/expo-image-picker/android/src/main/java/expo/modules/imagepicker/ImagePickerModule.kt
+@@ -268,7 +268,21 @@ class ImagePickerModule : Module() {
+     }
+   }
+ 
+-  private suspend fun ensureCameraPermissionsAreGranted(): Unit = suspendCancellableCoroutine { continuation ->
++  // Patched via patch-package (HHA-CBR): skip askForPermissions when the permissions are already
++  // granted. On Android 16 with React Native < 0.81.5 that request never resolves, so the camera
++  // only opened after the app was backgrounded and resumed. https://github.com/expo/expo/issues/39480
++  private suspend fun ensureCameraPermissionsAreGranted() {
++    val required = listOfNotNull(
++      Manifest.permission.WRITE_EXTERNAL_STORAGE.takeIf { Build.VERSION.SDK_INT < Build.VERSION_CODES.Q },
++      Manifest.permission.CAMERA
++    )
++    if (required.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }) {
++      return
++    }
++    requestCameraPermissions()
++  }
++
++  private suspend fun requestCameraPermissions(): Unit = suspendCancellableCoroutine { continuation ->
+     val permissions = appContext.permissions ?: throw ModuleNotFoundException("Permissions")
+ 
+     permissions.askForPermissions(

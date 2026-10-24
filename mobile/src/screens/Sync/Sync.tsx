@@ -211,6 +211,13 @@ const Sync = () => {
 
         if (e instanceof APIFetchFailError && e.status === 403) {
             setAlertSubtitle(t("sync.downloadNewVersion"));
+        } else if (e instanceof Error) {
+            setAlertSubtitle(e.message);
+        } else if (typeof e === "string") {
+            // apiFetch rejects with a plain string when it cannot get an access token.
+            setAlertSubtitle(e);
+        } else {
+            setAlertSubtitle("");
         }
 
         setSyncModal(true);

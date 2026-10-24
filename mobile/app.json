@@ -22,7 +22,6 @@
             "allowBackup": false,
             "blockedPermissions": [
                 "android.permission.READ_EXTERNAL_STORAGE",
-                "android.permission.WRITE_EXTERNAL_STORAGE",
                 "android.permission.READ_MEDIA_IMAGES",
                 "android.permission.READ_MEDIA_VIDEO"
             ]
@@ -45,7 +44,8 @@
             ],
             "expo-localization",
             "./plugins/withAndroidSigningConfig.ts",
-            "./plugins/withDetoxTest.ts"
+            "./plugins/withDetoxTest.ts",
+            "./plugins/withLegacyStoragePermission.ts"
         ],
         "experiments": {
             "typedRoutes": true

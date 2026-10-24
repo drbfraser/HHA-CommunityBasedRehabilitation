@@ -84,7 +84,7 @@ Note that the code in GitHub.sfu.ca (private repo) is continually mirrored to th
 
     - On a fresh Ubuntu 26.04 server, log in as `root` and create the file `/root/setup_production.sh` and copy into it the contents of the `setup_production.sh` file from this repo. Suggested command:
         ```
-        curl -fL -o setup_production.sh https://github.sfu.ca/bfraser/415-HHA-CBR/raw/production/scripts/setup_production.sh
+        curl -fL -o setup_production.sh https://github.com/drbfraser/HHA-CommunityBasedRehabilitation/raw/production/scripts/setup_production.sh
         ```
         - Or, manually:
         ```bash

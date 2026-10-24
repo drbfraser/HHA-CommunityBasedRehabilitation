@@ -47,10 +47,17 @@ export const handleSubmitVisitForm = async (values: TVisitFormValues) => {
         village: values[VisitFormField.village],
         longitude: 0.0,
         latitude: 0.0,
-        improvements: sanitizedImprovements,
     };
 
     const visitObj = objectToFormData(newVisit);
+
+    // DRF parses nested lists in multipart data from keys like "improvements[0]risk_type";
+    // objectToFormData would stringify each object to "[object Object]" and they'd be dropped.
+    sanitizedImprovements.forEach((imp, i) => {
+        Object.entries(imp).forEach(([key, val]) => {
+            visitObj.append(`${VisitFormField.improvements}[${i}]${key}`, String(val));
+        });
+    });
 
     //if referral picture exist, then attached into form data
     if (values[VisitFormField.picture]) {

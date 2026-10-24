@@ -12,3 +12,6 @@ resources.d.ts
 .expo-shared
 dist
 public
+
+# Django templates: Prettier breaks {{ }} / {% %} tags across lines
+server/**/templates/**/*.html

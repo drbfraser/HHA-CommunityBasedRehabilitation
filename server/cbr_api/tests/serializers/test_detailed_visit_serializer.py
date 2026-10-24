@@ -1,4 +1,5 @@
 import uuid
+from django.http import QueryDict
 from django.test import TestCase
 from unittest.mock import patch
 
@@ -206,6 +207,32 @@ class DetailedVisitSerializerTests(TestCase):
 
             # sanity check they actually exist
             self.assertEqual(Improvement.objects.filter(visit_id=visit).count(), 3)
+
+    @patch("cbr_api.serializers.current_milli_time", return_value=1700000000000)
+    def test_create_visit_with_improvements_from_multipart_form(self, _now):
+        # The web client posts visits as multipart form data (to allow a picture),
+        # with improvements encoded as "improvements[<i>]<field>" keys.
+        form = QueryDict(mutable=True)
+        for key, val in helper.base_visit_payload(self.client.id, self.zone.id).items():
+            form[key] = str(val)
+        form["improvements[0]risk_type"] = RiskType.HEALTH
+        form["improvements[0]provided"] = "Advice"
+        form["improvements[0]desc"] = "Discussed diet"
+        form["improvements[1]risk_type"] = RiskType.SOCIAL
+        form["improvements[1]provided"] = "Encouragement"
+        form["improvements[1]desc"] = "Join community group"
+
+        ctx = {"request": helper.mock_request(self.user)}
+        s = DetailedVisitSerializer(data=form, context=ctx)
+        self.assertTrue(s.is_valid(), s.errors)
+        visit = s.save()
+
+        imps = {imp.provided: imp for imp in Improvement.objects.filter(visit_id=visit)}
+        self.assertEqual(set(imps), {"Advice", "Encouragement"})
+        self.assertEqual(imps["Advice"].risk_type, RiskType.HEALTH)
+        self.assertEqual(imps["Advice"].desc, "Discussed diet")
+        self.assertEqual(imps["Encouragement"].risk_type, RiskType.SOCIAL)
+        self.assertEqual(imps["Encouragement"].desc, "Join community group")
 
     def test_missing_required_top_level_field_fails_validation(self):
         bad = helper.base_visit_payload(self.client.id, self.zone.id)

@@ -10,7 +10,7 @@ set -e
 
 echo -e "${BLUE}"
 echo -e "Hope Health Action - Community Based Rehabilitation: Deployment Script"
-echo -e "This script must be run as root or with sudo. It is only supported on Ubuntu Server 22.04."
+echo -e "This script must be run as root or with sudo. It is only supported on Ubuntu Server 26.04."
 echo -e "It installs the config and deployment files in /root/cbr/"
 echo -e "${COLOR_OFF}${RED}"
 echo -e "WARNING: If run on an existing server instance, this will likely delete data."

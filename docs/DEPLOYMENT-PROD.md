@@ -52,7 +52,7 @@ Note that the code in GitHub.sfu.ca (private repo) is continually mirrored to th
     - HW: Shared CPU: 1 vCPU, 1024MB, 25GB NVMe  
        "vhf-1c-1gb" (as of Oct 2025, $6/month)
     - Automatic Backups: Disabled
-    - OS: Ubuntu 22.04 (64-bit)
+    - OS: Ubuntu 26.04 (64-bit)
 
 2. Create new Block Storage
 
@@ -82,12 +82,16 @@ Note that the code in GitHub.sfu.ca (private repo) is continually mirrored to th
 
 3. Install Server
 
-    - On a fresh Ubuntu 22.04 server, log in as `root` and create the file `/root/setup_production.sh` and copy into it the contents of the `setup_production.sh` file from this repo. Suggested commands:
+    - On a fresh Ubuntu 26.04 server, log in as `root` and create the file `/root/setup_production.sh` and copy into it the contents of the `setup_production.sh` file from this repo. Suggested command:
+        ```
+        curl -fL -o setup_production.sh https://github.sfu.ca/bfraser/415-HHA-CBR/raw/production/scripts/setup_production.sh
+        ```
+        - Or, manually:
         ```bash
         ssh root@<ip-address>
         # Password found on VPS overview page on host provider site.
         nano /root/setup_production.sh
-        ```
+        ```  
     - Run the script  
       `cd /root/`  
       `chmod +x ./setup_production.sh`  

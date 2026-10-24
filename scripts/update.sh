@@ -10,7 +10,7 @@ set -e
 
 echo -e "${BLUE}"
 echo -e "Hope Health Action - Community Based Rehabilitation: Update Script"
-echo -e "This script must be run as root or with sudo. It is only supported on Ubuntu Server 22.04."
+echo -e "This script must be run as root or with sudo. It is only supported on Ubuntu Server 26.04."
 echo -e "${COLOR_OFF}${RED}"
 echo -e "This is not expected to lose any current data or configurations, but a backup is recommended."
 echo -e "WARNING: Running this will bring down the server for a few minutes."

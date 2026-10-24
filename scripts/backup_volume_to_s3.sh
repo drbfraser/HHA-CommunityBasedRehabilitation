@@ -52,6 +52,8 @@ mkdir -p $FOLDER
 echo "Time: $(date +%Y%m%d_%H%M%S)" >> $FOLDER/info.txt
 echo "Host Name: $HOSTNAME"         >> $FOLDER/info.txt
 echo ""                             >> $FOLDER/info.txt
+(cd "$SCRIPT_DIR" && source ./set-image-tag.sh) >> $FOLDER/info.txt 2>&1
+echo ""                             >> $FOLDER/info.txt
 echo "docker ps:"                   >> $FOLDER/info.txt
 docker ps                           >> $FOLDER/info.txt
 echo ""                             >> $FOLDER/info.txt

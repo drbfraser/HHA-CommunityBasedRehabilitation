@@ -124,10 +124,6 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
                             console.log("name:", err?.name);
                             console.log("stack:", err?.stack);
                             console.log(err);
-                            showGenericAlert(
-                                "[SYNC PULL] apiFetch ERROR",
-                                "Please try syncing again or contact support if the issue persists."
-                            );
                             throw err; // VERY important so Watermelon aborts correctly
                         }
 
@@ -170,10 +166,6 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
                             console.log("message:", err?.message);
                             console.log("name:", err?.name);
                             console.log("stack:", err?.stack);
-                            showGenericAlert(
-                                "[SYNC PUSH] apiFetch ERROR",
-                                "Please try syncing again or contact support if the issue persists."
-                            );
                             throw err; // keeps sync from corrupting timestamps
                         }
 

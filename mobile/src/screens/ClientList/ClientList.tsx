@@ -2,10 +2,10 @@ import { SearchOption, themeColors, useZones } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { Picker } from "@react-native-picker/picker";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import CustomMultiPicker from "react-native-multiple-select-list";
 import { Checkbox, DataTable, IconButton, Modal, Portal, Searchbar } from "react-native-paper";
 import { WrappedText } from "../../components/WrappedText/WrappedText";
@@ -26,6 +26,93 @@ import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 const styles = useStyles();
+
+const renderRiskIcon = (levelColor: string) => {
+    if (levelColor !== themeColors.noRiskGrey) return riskTypes.CIRCLE.Icon(levelColor);
+    return riskTypes.CIRCLE_OUTLINE.Icon(levelColor);
+};
+
+type ColumnVisibility = {
+    name: boolean;
+    zone: boolean;
+    health: boolean;
+    education: boolean;
+    social: boolean;
+    nutrition: boolean;
+    mental: boolean;
+};
+
+interface ClientRowProps {
+    item: ClientListRow;
+    columns: ColumnVisibility;
+    onPress: (clientID: string) => void;
+}
+
+const isSameRow = (a: ClientListRow, b: ClientListRow) =>
+    (Object.keys(a) as (keyof ClientListRow)[]).every((key) => a[key] === b[key]);
+
+// Memoized so reloading the list only re-renders rows whose data changed.
+const ClientRow = React.memo(
+    ({ item, columns, onPress }: ClientRowProps) => (
+        <DataTable.Row style={styles.item} onPress={() => onPress(item.id)}>
+            {columns.name ? (
+                <View style={styles.column_name}>
+                    <WrappedText text={item.full_name} is_active={item.is_active} />
+                </View>
+            ) : (
+                <View></View>
+            )}
+
+            {columns.zone ? (
+                <View style={styles.column_zone}>
+                    <WrappedText text={item.zone} is_active={item.is_active} />
+                </View>
+            ) : (
+                <View></View>
+            )}
+
+            {columns.health ? (
+                <DataTable.Cell style={styles.columnIcons}>
+                    {renderRiskIcon(item.HealthLevel)}
+                </DataTable.Cell>
+            ) : (
+                <View></View>
+            )}
+            {columns.education ? (
+                <DataTable.Cell style={styles.columnIcons}>
+                    {renderRiskIcon(item.EducationLevel)}
+                </DataTable.Cell>
+            ) : (
+                <View></View>
+            )}
+            {columns.social ? (
+                <DataTable.Cell style={styles.columnIcons}>
+                    {renderRiskIcon(item.SocialLevel)}
+                </DataTable.Cell>
+            ) : (
+                <View></View>
+            )}
+            {columns.nutrition ? (
+                <DataTable.Cell style={styles.columnIcons}>
+                    {renderRiskIcon(item.NutritionLevel)}
+                </DataTable.Cell>
+            ) : (
+                <View></View>
+            )}
+            {columns.mental ? (
+                <DataTable.Cell style={styles.columnIcons}>
+                    {renderRiskIcon(item.MentalLevel)}
+                </DataTable.Cell>
+            ) : (
+                <View></View>
+            )}
+        </DataTable.Row>
+    ),
+    (prev, next) =>
+        prev.columns === next.columns &&
+        prev.onPress === next.onPress &&
+        isSameRow(prev.item, next.item)
+);
 
 const ClientList = () => {
     const insets = useSafeAreaInsets();
@@ -150,10 +237,40 @@ const ClientList = () => {
         });
     };
 
-    const renderRiskIcon = (levelColor) => {
-        if (levelColor !== themeColors.noRiskGrey) return riskTypes.CIRCLE.Icon(levelColor);
-        return riskTypes.CIRCLE_OUTLINE.Icon(levelColor);
-    };
+    const columns = useMemo<ColumnVisibility>(
+        () => ({
+            name: showNameColumn,
+            zone: showZoneColumn,
+            health: showHealthColumn,
+            education: showEducationColumn,
+            social: showSocialColumn,
+            nutrition: showNutritionColumn,
+            mental: ShowMentalColumn,
+        }),
+        [
+            showNameColumn,
+            showZoneColumn,
+            showHealthColumn,
+            showEducationColumn,
+            showSocialColumn,
+            showNutritionColumn,
+            ShowMentalColumn,
+        ]
+    );
+
+    const openClient = useCallback(
+        (clientID: string) => {
+            navigation.navigate(StackScreenName.CLIENT, { clientID });
+        },
+        [navigation]
+    );
+
+    const renderClientRow = useCallback(
+        ({ item }: { item: ClientListRow }) => (
+            <ClientRow item={item} columns={columns} onPress={openClient} />
+        ),
+        [columns, openClient]
+    );
 
     useEffect(() => {
         if (isFocused) {
@@ -281,8 +398,12 @@ const ClientList = () => {
                     />
                 </View>
             </View>
-            <ScrollView testID="client-list-scroll-view">
-                <DataTable>
+            <FlatList
+                testID="client-list-scroll-view"
+                data={clientList}
+                keyExtractor={(item) => item.id}
+                renderItem={renderClientRow}
+                ListHeaderComponent={
                     <DataTable.Header style={styles.item}>
                         <ShowTitle
                             label={t("general.name")}
@@ -327,76 +448,8 @@ const ClientList = () => {
                             thisColumnSortOption={SortOptions.MENTAL}
                         />
                     </DataTable.Header>
-                    {clientList.map((item: ClientListRow) => {
-                        return (
-                            <DataTable.Row
-                                style={styles.item}
-                                key={item.id}
-                                onPress={() => {
-                                    navigation.navigate(StackScreenName.CLIENT, {
-                                        clientID: item.id,
-                                    });
-                                }}
-                            >
-                                {showNameColumn ? (
-                                    <View style={styles.column_name}>
-                                        <WrappedText
-                                            text={item.full_name}
-                                            is_active={item.is_active}
-                                        />
-                                    </View>
-                                ) : (
-                                    <View></View>
-                                )}
-
-                                {showZoneColumn ? (
-                                    <View style={styles.column_zone}>
-                                        <WrappedText text={item.zone} is_active={item.is_active} />
-                                    </View>
-                                ) : (
-                                    <View></View>
-                                )}
-
-                                {showHealthColumn ? (
-                                    <DataTable.Cell style={styles.columnIcons}>
-                                        {renderRiskIcon(item.HealthLevel)}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
-                                {showEducationColumn ? (
-                                    <DataTable.Cell style={styles.columnIcons}>
-                                        {renderRiskIcon(item.EducationLevel)}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
-                                {showSocialColumn ? (
-                                    <DataTable.Cell style={styles.columnIcons}>
-                                        {renderRiskIcon(item.SocialLevel)}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
-                                {showNutritionColumn ? (
-                                    <DataTable.Cell style={styles.columnIcons}>
-                                        {renderRiskIcon(item.NutritionLevel)}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
-                                {ShowMentalColumn ? (
-                                    <DataTable.Cell style={styles.columnIcons}>
-                                        {renderRiskIcon(item.MentalLevel)}
-                                    </DataTable.Cell>
-                                ) : (
-                                    <View></View>
-                                )}
-                            </DataTable.Row>
-                        );
-                    })}
-                </DataTable>
-            </ScrollView>
+                }
+            />
         </SafeAreaView>
     );
 };

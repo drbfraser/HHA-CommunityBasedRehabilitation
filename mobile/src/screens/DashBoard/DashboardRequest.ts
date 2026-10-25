@@ -1,4 +1,4 @@
-import { clientPrioritySort, getZones } from "@cbr/common";
+import { clientPrioritySort, getZones, ReferralField } from "@cbr/common";
 import { IClientSummary } from "@cbr/common";
 import { riskLevels } from "@cbr/common";
 import { modelName } from "../../models/constant";
@@ -76,56 +76,45 @@ export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientLis
 
 export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]> => {
     let clientReferrals: Array<BriefReferral> = [];
-    let fetchReferrals;
     const queryStart = Date.now();
-    let loopStart = 0;
 
-    await database
-        .get<Client>(modelName.clients)
-        .query()
-        .fetch()
-        .then((fetchedClients) => {
-            logPerf(
-                "Dashboard",
-                "referrals clients db query",
-                queryStart,
-                `${fetchedClients.length} clients`
-            );
-            loopStart = Date.now();
-            let clientCount = 0;
-
-            fetchReferrals = new Promise<void>((resolve) => {
-                fetchedClients.forEach(async (client) => {
-                    const referrals = (await client.outstandingReferrals.fetch()) as Referral[];
-                    if (referrals.length > 0) {
-                        referrals.forEach((referral) => {
-                            const currReferral: BriefReferral = {
-                                id: referral.id,
-                                client_id: client.id,
-                                full_name: client.full_name,
-                                type: concatenateReferralType(referral),
-                                date_referred: referral.date_referred,
-                            };
-
-                            clientReferrals.push(currReferral);
-                        });
-                    }
-
-                    clientCount++;
-                    if (clientCount == fetchedClients.length) {
-                        resolve();
-                    }
-                });
-            });
-        });
-
-    await fetchReferrals;
+    const fetchedClients = await database.get<Client>(modelName.clients).query().fetch();
     logPerf(
         "Dashboard",
-        "per-client referral queries",
-        loopStart,
-        `${clientReferrals.length} outstanding`
+        "referrals clients db query",
+        queryStart,
+        `${fetchedClients.length} clients`
     );
+    const clientsById = new Map(fetchedClients.map((client) => [client.id, client]));
+
+    // Outstanding referrals of all clients (archived ones included). One query for all
+    // referrals, matched to their client here, instead of one query per client.
+    const referralsStart = Date.now();
+    const referrals = await database
+        .get<Referral>(modelName.referrals)
+        .query(Q.where(ReferralField.resolved, Q.eq(false)))
+        .fetch();
+    logPerf(
+        "Dashboard",
+        "outstanding referrals db query",
+        referralsStart,
+        `${referrals.length} outstanding`
+    );
+
+    referrals.forEach((referral) => {
+        const client = clientsById.get(referral.client.id);
+        if (!client) {
+            return;
+        }
+        clientReferrals.push({
+            id: referral.id,
+            client_id: client.id,
+            full_name: client.full_name,
+            type: concatenateReferralType(referral),
+            date_referred: referral.date_referred,
+        });
+    });
+
     return clientReferrals
         .sort((a: BriefReferral, b: BriefReferral) => b.date_referred - a.date_referred)
         .slice(0, 5); /* Display 5 most recent outstanding referrals */

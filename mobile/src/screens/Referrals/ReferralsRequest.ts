@@ -1,9 +1,9 @@
-import { IReferral } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
 import { logPerf } from "../../util/perfTiming";
 import i18n from "i18next";
 import Client from "@/src/models/Client";
+import Referral from "@/src/models/Referral";
 
 export type BriefReferral = {
     id: string;
@@ -15,7 +15,7 @@ export type BriefReferral = {
     resolved: boolean;
 };
 
-const getReferralTypes = (referral: IReferral) => {
+const getReferralTypes = (referral: Referral) => {
     const keys: string[] = [];
     const labels: string[] = [];
 
@@ -55,40 +55,40 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
 
     try {
         const queryStart = Date.now();
-        const fetchedClients = await database.get(modelName.clients).query().fetch();
+        const fetchedClients = (await database.get(modelName.clients).query().fetch()) as Client[];
         logPerf("Referrals", "clients db query", queryStart, `${fetchedClients.length} clients`);
-        const loopStart = Date.now();
 
-        for (const clientData of fetchedClients) {
-            const client = clientData as Client;
-
+        // Referrals of active clients only. One query for all referrals, matched to their client
+        // here, instead of one query per client.
+        const activeClients = new Map<string, Client>();
+        fetchedClients.forEach((client) => {
             if (client.is_active) {
-                const referrals = await client.referrals.fetch();
-
-                referrals.forEach((referral) => {
-                    const { type, type_keys } = getReferralTypes(referral);
-
-                    const r: BriefReferral = {
-                        id: referral.id,
-                        client_id: client.id,
-                        full_name: client.full_name,
-                        type,
-                        type_keys,
-                        date_referred: referral.date_referred,
-                        resolved: referral.resolved,
-                    };
-
-                    clientReferrals.push(r);
-                });
+                activeClients.set(client.id, client);
             }
-        }
+        });
 
-        logPerf(
-            "Referrals",
-            "per-client referral queries",
-            loopStart,
-            `${clientReferrals.length} referrals`
-        );
+        const referralsStart = Date.now();
+        const referrals = (await database.get(modelName.referrals).query().fetch()) as Referral[];
+        logPerf("Referrals", "referrals db query", referralsStart, `${referrals.length} referrals`);
+
+        referrals.forEach((referral) => {
+            const client = activeClients.get(referral.client.id);
+            if (!client) {
+                return;
+            }
+            const { type, type_keys } = getReferralTypes(referral);
+
+            clientReferrals.push({
+                id: referral.id,
+                client_id: client.id,
+                full_name: client.full_name,
+                type,
+                type_keys,
+                date_referred: referral.date_referred,
+                resolved: referral.resolved,
+            });
+        });
+
         return clientReferrals.sort((a, b) => b.date_referred - a.date_referred);
     } catch (error) {
         console.error("Failed to fetch referrals:", error);

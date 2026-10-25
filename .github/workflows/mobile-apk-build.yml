@@ -93,7 +93,11 @@ jobs:
               #    fails with the error: Error: EACCES: permission denied, mkdir '/github/home/.expo'
               #    from the file: /isolated_build/repo/mobile/node_modules/@expo/cli/bin/cli.ts
               # Fix: Set HOME to /isolated_build/ in the job's env: section above.
+              # The APK includes only the ARM CPU types that phones use. x86/x86_64 are only for
+              # emulators, which run debug builds (`npx expo run:android`), so leaving them out
+              # roughly halves the APK. Must match scripts/build_apk_in_container.sh.
               run: |
+                  echo "reactNativeArchitectures=armeabi-v7a,arm64-v8a" >> $GRADLE_USER_HOME/gradle.properties
                   rm -f /isolated_build/repo/mobile/android/app/build/outputs/apk/release/app-release.apk
                   npm run build-apk ${{ matrix.target }}
               working-directory: /isolated_build/repo/mobile

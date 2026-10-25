@@ -59,6 +59,10 @@ echo "CBR_UPLOAD_STORE_FILE=/secrets/upload.keystore" >> /gradle/gradle.properti
 # Reuse task outputs (Kotlin/Java compiles, lint, ...) from earlier builds when inputs are
 # unchanged. The cache lives in the /gradle volume.
 echo "org.gradle.caching=true" >> /gradle/gradle.properties
+# The APK includes only the ARM CPU types that phones use. x86/x86_64 are only for emulators,
+# which run debug builds (`npx expo run:android`), so leaving them out roughly halves the APK.
+# Must match .github/workflows/mobile-apk-build.yml.
+echo "reactNativeArchitectures=armeabi-v7a,arm64-v8a" >> /gradle/gradle.properties
 
 # Reset the compiler cache's counters so the end-of-build stats cover only this build.
 ccache --zero-stats > /dev/null

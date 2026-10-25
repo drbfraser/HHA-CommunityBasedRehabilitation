@@ -27,7 +27,9 @@ function addContentCaptureExclusion(src) {
 
     const onCreate = /^.*super\.onCreate\([^)]*\).*\n/m;
     if (!onCreate.test(src)) {
-        throw new Error("withContentCaptureDisabled: super.onCreate() not found in MainActivity.kt");
+        throw new Error(
+            "withContentCaptureDisabled: super.onCreate() not found in MainActivity.kt"
+        );
     }
     src = src.replace(onCreate, (line) => line + CODE);
 

@@ -4,11 +4,19 @@ import { Picker } from "@react-native-picker/picker";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, Switch, Text, View, ViewStyle } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import CustomMultiPicker from "react-native-multiple-select-list";
-import { Checkbox, DataTable, IconButton, Modal, Portal, Searchbar } from "react-native-paper";
-import { WrappedText } from "../../components/WrappedText/WrappedText";
+import {
+    Checkbox,
+    DataTable,
+    IconButton,
+    Modal,
+    Portal,
+    Searchbar,
+    Text as PaperText,
+    TouchableRipple,
+} from "react-native-paper";
 import { SyncContext } from "../../context/SyncContext/SyncContext";
 import {
     arrowDirectionController,
@@ -54,64 +62,99 @@ const isSameRow = (a: ClientListRow, b: ClientListRow) =>
 const isSameList = (a: ClientListRow[], b: ClientListRow[]) =>
     a.length === b.length && a.every((row, index) => isSameRow(row, b[index]));
 
+/*
+    Row and cell styles copied from react-native-paper's DataTable.Row and DataTable.Cell (for the
+    app's MD2 theme) and from WrappedText. Rows are built from these directly because the Paper
+    components cost ~40 ms per row on low-end phones (every DataTable.Cell is its own
+    TouchableRipple, and WrappedText creates its styles on every render), which made scrolling
+    show blank rows.
+*/
+const rowStyles = StyleSheet.create({
+    row: {
+        borderStyle: "solid",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+        borderBottomColor: "rgba(0, 0, 0, 0.12)",
+        minHeight: 48,
+        paddingHorizontal: 16,
+    },
+    rowContent: {
+        flex: 1,
+        flexDirection: "row",
+    },
+    cell: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    wrappedView: {
+        flexDirection: "row",
+        flex: 1.5,
+        alignItems: "center",
+        padding: 5,
+    },
+    activeText: {
+        flexShrink: 1,
+    },
+    archivedText: {
+        flexShrink: 1,
+        color: "grey",
+    },
+});
+
+const RowText = ({ text, isActive }: { text: string; isActive?: boolean }) => (
+    <View style={rowStyles.wrappedView}>
+        <PaperText
+            style={
+                isActive === undefined || isActive ? rowStyles.activeText : rowStyles.archivedText
+            }
+        >
+            {text}
+        </PaperText>
+    </View>
+);
+
+const RiskCell = ({ levelColor }: { levelColor: string }) => (
+    <View style={[rowStyles.cell, styles.columnIcons]}>{renderRiskIcon(levelColor)}</View>
+);
+
 // Memoized so reloading the list only re-renders rows whose data changed.
 const ClientRow = React.memo(
     ({ item, columns, onPress }: ClientRowProps) => {
         countRender("ClientRow");
         return (
-            <DataTable.Row style={styles.item} onPress={() => onPress(item.id)}>
-                {columns.name ? (
-                    <View style={styles.column_name}>
-                        <WrappedText text={item.full_name} is_active={item.is_active} />
-                    </View>
-                ) : (
-                    <View></View>
-                )}
+            <TouchableRipple style={[rowStyles.row, styles.item]} onPress={() => onPress(item.id)}>
+                <View style={rowStyles.rowContent}>
+                    {columns.name ? (
+                        <View style={styles.column_name}>
+                            <RowText text={item.full_name} isActive={item.is_active} />
+                        </View>
+                    ) : (
+                        <View></View>
+                    )}
 
-                {columns.zone ? (
-                    <View style={styles.column_zone}>
-                        <WrappedText text={item.zone} is_active={item.is_active} />
-                    </View>
-                ) : (
-                    <View></View>
-                )}
+                    {columns.zone ? (
+                        <View style={styles.column_zone}>
+                            <RowText text={item.zone} isActive={item.is_active} />
+                        </View>
+                    ) : (
+                        <View></View>
+                    )}
 
-                {columns.health ? (
-                    <DataTable.Cell style={styles.columnIcons}>
-                        {renderRiskIcon(item.HealthLevel)}
-                    </DataTable.Cell>
-                ) : (
-                    <View></View>
-                )}
-                {columns.education ? (
-                    <DataTable.Cell style={styles.columnIcons}>
-                        {renderRiskIcon(item.EducationLevel)}
-                    </DataTable.Cell>
-                ) : (
-                    <View></View>
-                )}
-                {columns.social ? (
-                    <DataTable.Cell style={styles.columnIcons}>
-                        {renderRiskIcon(item.SocialLevel)}
-                    </DataTable.Cell>
-                ) : (
-                    <View></View>
-                )}
-                {columns.nutrition ? (
-                    <DataTable.Cell style={styles.columnIcons}>
-                        {renderRiskIcon(item.NutritionLevel)}
-                    </DataTable.Cell>
-                ) : (
-                    <View></View>
-                )}
-                {columns.mental ? (
-                    <DataTable.Cell style={styles.columnIcons}>
-                        {renderRiskIcon(item.MentalLevel)}
-                    </DataTable.Cell>
-                ) : (
-                    <View></View>
-                )}
-            </DataTable.Row>
+                    {columns.health ? <RiskCell levelColor={item.HealthLevel} /> : <View></View>}
+                    {columns.education ? (
+                        <RiskCell levelColor={item.EducationLevel} />
+                    ) : (
+                        <View></View>
+                    )}
+                    {columns.social ? <RiskCell levelColor={item.SocialLevel} /> : <View></View>}
+                    {columns.nutrition ? (
+                        <RiskCell levelColor={item.NutritionLevel} />
+                    ) : (
+                        <View></View>
+                    )}
+                    {columns.mental ? <RiskCell levelColor={item.MentalLevel} /> : <View></View>}
+                </View>
+            </TouchableRipple>
         );
     },
     (prev, next) =>

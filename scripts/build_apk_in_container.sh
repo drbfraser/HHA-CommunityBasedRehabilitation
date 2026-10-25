@@ -17,7 +17,22 @@ set -euo pipefail
 
 TARGET="$1"
 NPM_VERSION=10.7.0
-START=$(date +%s)
+
+# Print a heading for each stage and record how long the previous one took;
+# the timings are summarized at the end. `stage ""` ends the last stage.
+STAGE_NAME=""
+STAGE_START=$SECONDS
+TIMINGS=""
+stage() {
+    if [ -n "$STAGE_NAME" ]; then
+        TIMINGS+=$(printf "%5ds  %s" $((SECONDS - STAGE_START)) "$STAGE_NAME")$'\n'
+    fi
+    STAGE_NAME="$1"
+    STAGE_START=$SECONDS
+    if [ -n "$1" ]; then
+        echo "== $1"
+    fi
+}
 
 export HOME=/build
 export GRADLE_USER_HOME=/gradle
@@ -38,21 +53,24 @@ trap 'rm -f /gradle/gradle.properties' EXIT
 grep -v '^CBR_UPLOAD_STORE_FILE=' /secrets/gradle.properties > /gradle/gradle.properties
 echo "CBR_UPLOAD_STORE_FILE=/secrets/upload.keystore" >> /gradle/gradle.properties
 
-echo "== Export committed HEAD"
+# Reset the compiler cache's counters so the end-of-build stats cover only this build.
+ccache --zero-stats > /dev/null
+
+stage "Export committed HEAD"
 rm -rf /build/repo
 mkdir -p /build/repo
 git -c safe.directory='*' -C /repo archive HEAD | tar -xf - -C /build/repo
 SHA=$(git -c safe.directory='*' -C /repo rev-parse --short=8 HEAD)
 
-echo "== npm $NPM_VERSION"
+stage "npm $NPM_VERSION"
 npm install -g "npm@$NPM_VERSION" --no-audit --no-fund >/dev/null
 
-echo "== Build common"
+stage "Build common"
 cd /build/repo/common
 npm ci --no-audit --no-fund
 npx tsc
 
-echo "== Install common into mobile; npm ci (applies patches)"
+stage "Install common into mobile; npm ci (applies patches)"
 cd /build/repo/mobile
 npm uninstall @cbr/common --no-audit --no-fund
 COMMON_PACK_NAME=$(npm pack ../common | tail -n 1)
@@ -64,19 +82,31 @@ if ! grep -q "Patched via patch-package" \
     exit 1
 fi
 
-echo "== Prebuild"
+stage "Prebuild"
 npx expo prebuild --clean --platform android
 
-echo "== Build APK (APP_ENV=$TARGET)"
-APK=android/app/build/outputs/apk/release/app-release.apk
-npm run build-apk "$TARGET"
-# build.js does not pass on Gradle's exit code, so check for the APK instead.
-if [ ! -f "$APK" ]; then
+stage "Build APK (APP_ENV=$TARGET)"
+# Same Gradle command that `npm run build-apk` (build.js) runs, which CI uses, plus
+# --profile for a per-task timing report. Calling Gradle directly also gives us its
+# exit code, which build.js does not pass on.
+if ! (cd android && APP_ENV="$TARGET" ./gradlew assembleRelease --profile); then
     echo "ERROR: Gradle build failed; no APK produced."
     exit 1
 fi
+stage ""
 
 VERSION=$(node -p "require('./app.json').expo.version")
-OUT="/out/CBR-$TARGET-$VERSION-$SHA.apk"
-cp "$APK" "$OUT"
-echo "== Done in $(( ($(date +%s) - START) / 60 )) min: $(basename "$OUT")"
+BASE_NAME="CBR-$TARGET-$VERSION-$SHA"
+cp android/app/build/outputs/apk/release/app-release.apk "/out/$BASE_NAME.apk"
+
+# Gradle's profile report is an HTML page plus its CSS/JS files.
+PROFILE_DIR="/out/$BASE_NAME-gradle-profile"
+rm -rf "$PROFILE_DIR"
+cp -r android/build/reports/profile "$PROFILE_DIR"
+
+echo "== Stage timings:"
+printf "%s" "$TIMINGS"
+echo "== Compiler cache (ccache):"
+ccache --show-stats | sed '/^Primary storage/q' | { grep -E "^ *(Hits|Misses|Uncacheable):" || true; }
+echo "== Gradle profile: $(basename "$PROFILE_DIR")/$(basename "$(ls "$PROFILE_DIR"/profile-*.html)")"
+echo "== Done in $((SECONDS / 60)) min: $BASE_NAME.apk"

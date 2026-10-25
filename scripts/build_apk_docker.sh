@@ -7,7 +7,8 @@
 #     target: local, dev, staging or prod (selects which server the app talks to)
 #     gradle.properties: signing config; defaults to ~/.gradle/gradle.properties
 #
-# Output: mobile/build/apk/CBR-<target>-<version>-<commit>.apk
+# Output: mobile/build/apk/CBR-<target>-<version>-<commit>.apk, plus a Gradle timing report in
+#   mobile/build/apk/CBR-<target>-<version>-<commit>-gradle-profile/ (open the profile-*.html).
 #
 # Caches are kept in Docker volumes (cbr_build, cbr_gradle, cbr_npm) so later builds are
 # faster. To reset them: docker volume rm cbr_build cbr_gradle cbr_npm

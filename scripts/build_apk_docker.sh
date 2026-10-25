@@ -10,8 +10,8 @@
 # Output: mobile/build/apk/CBR-<target>-<version>-<commit>.apk, plus a Gradle timing report in
 #   mobile/build/apk/CBR-<target>-<version>-<commit>-gradle-profile/ (open the profile-*.html).
 #
-# Caches are kept in Docker volumes (cbr_build, cbr_gradle, cbr_npm) so later builds are
-# faster. To reset them: docker volume rm cbr_build cbr_gradle cbr_npm
+# Caches are kept in Docker volumes (cbr_build, cbr_gradle, cbr_npm, cbr_ndk) so later builds
+# are faster. To reset them: docker volume rm cbr_build cbr_gradle cbr_npm cbr_ndk
 # Windows PowerShell users can run build_apk_docker.ps1 instead.
 
 set -euo pipefail
@@ -71,6 +71,7 @@ docker run --rm \
     -v cbr_build:/build \
     -v cbr_gradle:/gradle \
     -v cbr_npm:/root/.npm \
+    -v cbr_ndk:/opt/android/ndk \
     -v "$(to_docker_path "$GRADLE_PROPS"):/secrets/gradle.properties:ro" \
     -v "$(to_docker_path "$KEYSTORE"):/secrets/upload.keystore:ro" \
     -v "$(to_docker_path "$OUT_DIR"):/out" \

@@ -8,7 +8,11 @@
 #
 # Expected mounts:
 #   /repo                         repo root (read-only); the committed HEAD is built
-#   /build, /gradle, /root/.npm   Docker volumes: work dir, Gradle cache, npm cache
+#   /build, /gradle, /root/.npm   Docker volumes: work dir (incl. ccache), Gradle cache, npm cache
+#   /opt/android/ndk              Docker volume: Android NDKs. The image lacks the NDK version the
+#                                 build needs, so Gradle installs it; keeping it in a volume avoids
+#                                 re-downloading it and keeps its timestamp stable, which ccache
+#                                 needs to reuse compiled C++.
 #   /secrets/gradle.properties    signing config (read-only)
 #   /secrets/upload.keystore      upload keystore (read-only)
 #   /out                          APK output folder
@@ -52,6 +56,9 @@ fi
 trap 'rm -f /gradle/gradle.properties' EXIT
 grep -v '^CBR_UPLOAD_STORE_FILE=' /secrets/gradle.properties > /gradle/gradle.properties
 echo "CBR_UPLOAD_STORE_FILE=/secrets/upload.keystore" >> /gradle/gradle.properties
+# Reuse task outputs (Kotlin/Java compiles, lint, ...) from earlier builds when inputs are
+# unchanged. The cache lives in the /gradle volume.
+echo "org.gradle.caching=true" >> /gradle/gradle.properties
 
 # Reset the compiler cache's counters so the end-of-build stats cover only this build.
 ccache --zero-stats > /dev/null

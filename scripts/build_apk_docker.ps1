@@ -10,8 +10,8 @@
 # Output: mobile\build\apk\CBR-<target>-<version>-<commit>.apk, plus a Gradle timing report in
 #   mobile\build\apk\CBR-<target>-<version>-<commit>-gradle-profile\ (open the profile-*.html).
 #
-# Caches are kept in Docker volumes (cbr_build, cbr_gradle, cbr_npm) so later builds are
-# faster. To reset them: docker volume rm cbr_build cbr_gradle cbr_npm
+# Caches are kept in Docker volumes (cbr_build, cbr_gradle, cbr_npm, cbr_ndk) so later builds
+# are faster. To reset them: docker volume rm cbr_build cbr_gradle cbr_npm cbr_ndk
 
 param(
     [Parameter(Mandatory = $true, Position = 0)]
@@ -59,6 +59,7 @@ docker run --rm `
     -v cbr_build:/build `
     -v cbr_gradle:/gradle `
     -v cbr_npm:/root/.npm `
+    -v cbr_ndk:/opt/android/ndk `
     -v "${GradleProperties}:/secrets/gradle.properties:ro" `
     -v "${Keystore}:/secrets/upload.keystore:ro" `
     -v "${OutDir}:/out" `

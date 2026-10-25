@@ -1,6 +1,5 @@
 import { formatDate, IReferral, ISurvey, themeColors, useZones } from "@cbr/common";
 import React, { useState } from "react";
-import { useEffect } from "react";
 import { View, Text, TouchableOpacity, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { IconButton, Modal, Portal } from "react-native-paper";
@@ -35,6 +34,12 @@ export interface IActivity {
     survey: ISurvey | undefined;
 }
 
+const ACTIVITY_ICONS: Record<ActivityType, string> = {
+    [ActivityType.VISIT]: "walk",
+    [ActivityType.REFERAL]: "navigation",
+    [ActivityType.SURVEY]: "account-box-outline",
+};
+
 const Timeline = (props: ISummaryProps) => {
     countRender("Timeline");
     const zones = useZones(false);
@@ -45,18 +50,12 @@ const Timeline = (props: ISummaryProps) => {
     const showDetails = () => setDetailsVisible(true);
     const hideDetails = () => setDetailsVisible(false);
     const styles = useStyles();
-    const [icon, setIcon] = useState("");
+    const icon = ACTIVITY_ICONS[props.activity.type] ?? "";
 
     const locale = Localization.locale;
     const timezone = Localization.timezone; // todo: update deprecated
 
     const database = useDatabase();
-
-    useEffect(() => {
-        if (props.activity.type === ActivityType.VISIT) setIcon("walk");
-        if (props.activity.type === ActivityType.REFERAL) setIcon("navigation");
-        if (props.activity.type === ActivityType.SURVEY) setIcon("account-box-outline");
-    });
 
     return (
         <TouchableOpacity
@@ -254,4 +253,5 @@ const Timeline = (props: ISummaryProps) => {
     );
 };
 
-export default Timeline;
+// Memoized so re-renders of the client page don't re-render every entry.
+export default React.memo(Timeline);

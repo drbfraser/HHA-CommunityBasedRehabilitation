@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { riskTypes } from "../../../util/riskIcon";
 import { IVisitSummary } from "../../../../../common/src/util/visits";
 import useStyles from "./Timeline.style";
+import { countRender } from "../../../util/perfTiming";
 import BaselineEntry from "./Entries/BaselineEntry";
 import ReferralEntry from "./Entries/ReferralEntry";
 import VisitEntry from "./Entries/VisitEntry";
@@ -35,6 +36,7 @@ export interface IActivity {
 }
 
 const Timeline = (props: ISummaryProps) => {
+    countRender("Timeline");
     const zones = useZones(false);
     const zone = props.activity.visit ? zones.get(props.activity.visit.zone) : "";
     const { t } = useTranslation();

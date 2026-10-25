@@ -22,6 +22,7 @@ import {
 } from "@cbr/common";
 import { objectFromMap } from "../../util/ObjectFromMap";
 import { FormikProps } from "formik";
+import { countRender } from "../../util/perfTiming";
 import FormikTextInput from "../FormikTextInput/FormikTextInput";
 import { FieldError } from "../../util/formikUtil";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -48,6 +49,7 @@ export interface IClientFormProps {
 }
 
 export const ClientForm = (props: IClientFormProps) => {
+    countRender("ClientForm");
     const styles = useStyles();
     const { t } = useTranslation();
     const disabilityMap = useDisabilities(t);

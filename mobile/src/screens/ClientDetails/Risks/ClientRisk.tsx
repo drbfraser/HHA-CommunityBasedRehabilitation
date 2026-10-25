@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { countRender } from "../../../util/perfTiming";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 import { Card, Divider, Text } from "react-native-paper";
@@ -29,6 +30,7 @@ interface riskProps {
 }
 
 export const ClientRisk = (props: riskProps) => {
+    countRender("ClientRisk");
     const styles = clientStyle();
     const latestRisk = getLatestRisks(props.clientRisks, props.presentRiskType);
     const [risk, setRisk] = useState<IRisk>(latestRisk);

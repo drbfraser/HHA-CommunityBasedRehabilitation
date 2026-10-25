@@ -30,7 +30,7 @@ import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../Sync/PrefConstants";
 import { useSyncStatus } from "../../util/useSyncStatus";
-import { logPerf } from "../../util/perfTiming";
+import { countRender, logPerf } from "../../util/perfTiming";
 import {
     notifyAutoSyncFailure,
     notifyDashboardSyncComplete,
@@ -39,6 +39,7 @@ import {
 import { useNetInfo } from "@react-native-community/netinfo";
 
 const Dashboard = () => {
+    countRender("Dashboard");
     const styles = useStyles();
     const [clientSortOption, setClientSortOption] = useState("");
     const [clientSortDirection, setClientIsSortDirection] = useState<TSortDirection>("None");

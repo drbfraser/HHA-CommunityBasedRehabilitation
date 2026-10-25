@@ -10,6 +10,28 @@ export const logPerf = (screen: string, step: string, startMs: number, detail?: 
     console.log(`[PERF] ${screen} ${step}: ${Date.now() - startMs} ms${suffix}`);
 };
 
+const renderCounts: Record<string, number> = {};
+let renderLogTimer: ReturnType<typeof setInterval> | null = null;
+
+/*
+    Call at the top of a component's render. Every 2 s, logs how many times each counted component
+    rendered in that period (only components that rendered), to spot render loops and unexpected
+    re-renders of hidden screens.
+*/
+export const countRender = (component: string) => {
+    renderCounts[component] = (renderCounts[component] ?? 0) + 1;
+    if (!renderLogTimer) {
+        renderLogTimer = setInterval(() => {
+            const counted = Object.entries(renderCounts).filter(([, count]) => count > 0);
+            if (counted.length > 0) {
+                const summary = counted.map(([name, count]) => `${name}=${count}`).join(" ");
+                console.log(`[PERF] renders in last 2 s: ${summary}`);
+                counted.forEach(([name]) => (renderCounts[name] = 0));
+            }
+        }, 2000);
+    }
+};
+
 export type RenderTiming = { loadStart: number; renderStart: number };
 
 /*

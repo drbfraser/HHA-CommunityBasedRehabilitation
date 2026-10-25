@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
@@ -36,6 +36,7 @@ import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModa
 import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal";
 import { TouchableOpacity } from "react-native";
 import { getStoriesForClient, ISuccessStory, StoryStatus } from "../SuccessStories/successStoryApi";
+import { countRender, logPerf, RenderTiming, useLogRenderTiming } from "../../util/perfTiming";
 
 interface ClientProps {
     clientID: string;
@@ -44,8 +45,15 @@ interface ClientProps {
 }
 
 const ClientDetails = (props: ClientProps) => {
+    countRender("ClientDetails");
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
+    const renderTiming = useRef<RenderTiming | null>(null);
+    useLogRenderTiming("ClientDetails", renderTiming, [loading]);
+    useEffect(() => {
+        console.log("[PERF] ClientDetails mounted");
+        return () => console.log("[PERF] ClientDetails unmounted");
+    }, []);
     const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
     const database = useDatabase();
@@ -82,13 +90,26 @@ const ClientDetails = (props: ClientProps) => {
 
     const getClientDetails = async () => {
         try {
+            const loadStart = Date.now();
+            let stepStart = Date.now();
             const presentClient: any = await database
                 .get(modelName.clients)
                 .find(props.route.params.clientID);
+            logPerf("ClientDetails", "find client", stepStart);
+            stepStart = Date.now();
             const fetchedRisk = await presentClient.risks.fetch();
+            logPerf("ClientDetails", "risks", stepStart, `${fetchedRisk.length}`);
+            stepStart = Date.now();
             const fetchedReferrals = await presentClient.referrals.fetch();
+            logPerf("ClientDetails", "referrals", stepStart, `${fetchedReferrals.length}`);
+            stepStart = Date.now();
             const fetchedSurveys = await presentClient.surveys.fetch();
+            logPerf("ClientDetails", "surveys", stepStart, `${fetchedSurveys.length}`);
+            stepStart = Date.now();
             const fetchedVisits = await presentClient.visits.fetch();
+            logPerf("ClientDetails", "visits", stepStart, `${fetchedVisits.length}`);
+            logPerf("ClientDetails", "data total", loadStart);
+            renderTiming.current = { loadStart, renderStart: Date.now() };
             setClient(presentClient);
             setRisk(fetchedRisk);
             setReferrals(fetchedReferrals);
@@ -105,6 +126,7 @@ const ClientDetails = (props: ClientProps) => {
     const loadPatientNote = useCallback(async () => {
         if (!props.route.params.clientID) return;
         setNoteLoading(true);
+        const noteStart = Date.now();
         try {
             const notes = await database
                 .get(modelName.patient_notes)
@@ -115,6 +137,7 @@ const ClientDetails = (props: ClientProps) => {
                 )
                 .fetch();
             setPatientNote(notes.length > 0 ? (notes[0] as any).note ?? "" : "");
+            logPerf("ClientDetails", "patient note", noteStart);
         } catch {
             setPatientNote("");
         } finally {
@@ -128,8 +151,10 @@ const ClientDetails = (props: ClientProps) => {
 
     const loadStories = useCallback(() => {
         if (!props.route.params.clientID) return;
+        const storiesStart = Date.now();
         getStoriesForClient(database, props.route.params.clientID)
             .then((data) => {
+                logPerf("ClientDetails", "success stories", storiesStart, `${data.length}`);
                 setStories(data);
                 setStoriesError(false);
             })

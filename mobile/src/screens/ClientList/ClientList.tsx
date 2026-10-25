@@ -21,7 +21,7 @@ import { riskTypes } from "../../util/riskIcon";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
-import { logPerf, RenderTiming, useLogRenderTiming } from "../../util/perfTiming";
+import { countRender, logPerf, RenderTiming, useLogRenderTiming } from "../../util/perfTiming";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -53,61 +53,64 @@ const isSameRow = (a: ClientListRow, b: ClientListRow) =>
 
 // Memoized so reloading the list only re-renders rows whose data changed.
 const ClientRow = React.memo(
-    ({ item, columns, onPress }: ClientRowProps) => (
-        <DataTable.Row style={styles.item} onPress={() => onPress(item.id)}>
-            {columns.name ? (
-                <View style={styles.column_name}>
-                    <WrappedText text={item.full_name} is_active={item.is_active} />
-                </View>
-            ) : (
-                <View></View>
-            )}
+    ({ item, columns, onPress }: ClientRowProps) => {
+        countRender("ClientRow");
+        return (
+            <DataTable.Row style={styles.item} onPress={() => onPress(item.id)}>
+                {columns.name ? (
+                    <View style={styles.column_name}>
+                        <WrappedText text={item.full_name} is_active={item.is_active} />
+                    </View>
+                ) : (
+                    <View></View>
+                )}
 
-            {columns.zone ? (
-                <View style={styles.column_zone}>
-                    <WrappedText text={item.zone} is_active={item.is_active} />
-                </View>
-            ) : (
-                <View></View>
-            )}
+                {columns.zone ? (
+                    <View style={styles.column_zone}>
+                        <WrappedText text={item.zone} is_active={item.is_active} />
+                    </View>
+                ) : (
+                    <View></View>
+                )}
 
-            {columns.health ? (
-                <DataTable.Cell style={styles.columnIcons}>
-                    {renderRiskIcon(item.HealthLevel)}
-                </DataTable.Cell>
-            ) : (
-                <View></View>
-            )}
-            {columns.education ? (
-                <DataTable.Cell style={styles.columnIcons}>
-                    {renderRiskIcon(item.EducationLevel)}
-                </DataTable.Cell>
-            ) : (
-                <View></View>
-            )}
-            {columns.social ? (
-                <DataTable.Cell style={styles.columnIcons}>
-                    {renderRiskIcon(item.SocialLevel)}
-                </DataTable.Cell>
-            ) : (
-                <View></View>
-            )}
-            {columns.nutrition ? (
-                <DataTable.Cell style={styles.columnIcons}>
-                    {renderRiskIcon(item.NutritionLevel)}
-                </DataTable.Cell>
-            ) : (
-                <View></View>
-            )}
-            {columns.mental ? (
-                <DataTable.Cell style={styles.columnIcons}>
-                    {renderRiskIcon(item.MentalLevel)}
-                </DataTable.Cell>
-            ) : (
-                <View></View>
-            )}
-        </DataTable.Row>
-    ),
+                {columns.health ? (
+                    <DataTable.Cell style={styles.columnIcons}>
+                        {renderRiskIcon(item.HealthLevel)}
+                    </DataTable.Cell>
+                ) : (
+                    <View></View>
+                )}
+                {columns.education ? (
+                    <DataTable.Cell style={styles.columnIcons}>
+                        {renderRiskIcon(item.EducationLevel)}
+                    </DataTable.Cell>
+                ) : (
+                    <View></View>
+                )}
+                {columns.social ? (
+                    <DataTable.Cell style={styles.columnIcons}>
+                        {renderRiskIcon(item.SocialLevel)}
+                    </DataTable.Cell>
+                ) : (
+                    <View></View>
+                )}
+                {columns.nutrition ? (
+                    <DataTable.Cell style={styles.columnIcons}>
+                        {renderRiskIcon(item.NutritionLevel)}
+                    </DataTable.Cell>
+                ) : (
+                    <View></View>
+                )}
+                {columns.mental ? (
+                    <DataTable.Cell style={styles.columnIcons}>
+                        {renderRiskIcon(item.MentalLevel)}
+                    </DataTable.Cell>
+                ) : (
+                    <View></View>
+                )}
+            </DataTable.Row>
+        );
+    },
     (prev, next) =>
         prev.columns === next.columns &&
         prev.onPress === next.onPress &&
@@ -115,6 +118,7 @@ const ClientRow = React.memo(
 );
 
 const ClientList = () => {
+    countRender("ClientList");
     const insets = useSafeAreaInsets();
     const navigation = useNavigation<AppStackNavProp>();
     const [clientList, setClientList] = useState<ClientListRow[]>([]);

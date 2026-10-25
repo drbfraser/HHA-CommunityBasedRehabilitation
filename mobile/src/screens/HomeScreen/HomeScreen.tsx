@@ -6,6 +6,7 @@ import { createMaterialBottomTabNavigator } from "@react-navigation/material-bot
 import { AuthContext } from "../../context/AuthContext/AuthContext";
 import { StackNavigationProp } from "@react-navigation/stack";
 import useStyles from "./HomeScreen.style";
+import { countRender } from "../../util/perfTiming";
 import { IUser, TAPILoadError, APILoadError, useZones } from "@cbr/common";
 import { screens } from "../../util/screens";
 import { StackScreenName } from "../../util/StackScreenName";
@@ -46,6 +47,7 @@ const screensForUser = (user: IUser | TAPILoadError | undefined) => {
 };
 
 const HomeScreen = (props: IHomeScreenProps) => {
+    countRender("HomeScreen");
     const styles = useStyles();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const Tab = createMaterialBottomTabNavigator();

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { Card, DataTable, Chip } from "react-native-paper";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList } from "react-native-gesture-handler";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useTranslation } from "react-i18next";
@@ -17,6 +17,7 @@ import { themeColors, timestampToDate } from "@cbr/common";
 import useStyles from "./Referrals.styles";
 import { BriefReferral, fetchReferrals } from "./ReferralsRequest";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useAppTheme } from "@/src/util/theme.styles";
 
 const STATUS = {
     PENDING: "pending",
@@ -24,8 +25,57 @@ const STATUS = {
     ALL: "all",
 };
 
+const rowStyles = useStyles();
+
+interface ReferralRowProps {
+    item: BriefReferral;
+    locale: string;
+    timezone: string;
+    onPress: (clientID: string) => void;
+}
+
+const isSameReferral = (a: BriefReferral, b: BriefReferral) =>
+    a.id === b.id &&
+    a.client_id === b.client_id &&
+    a.full_name === b.full_name &&
+    a.type === b.type &&
+    a.date_referred === b.date_referred &&
+    a.resolved === b.resolved;
+
+// Memoized so reloading or filtering the list only re-renders rows whose data changed.
+const ReferralRow = React.memo(
+    ({ item: r, locale, timezone, onPress }: ReferralRowProps) => (
+        <DataTable.Row style={rowStyles.item} onPress={() => onPress(r.client_id)}>
+            <View style={rowStyles.column_referral_status}>
+                <Text>
+                    <Icon
+                        name={r.resolved ? "check-circle" : "clock-o"}
+                        size={15}
+                        color={r.resolved ? themeColors.riskGreen : themeColors.riskRed}
+                    />
+                </Text>
+            </View>
+            <View style={rowStyles.column_referral_name}>
+                <Text>{r.full_name}</Text>
+            </View>
+            <View style={rowStyles.column_referral_type}>
+                <Text>{r.type}</Text>
+            </View>
+            <DataTable.Cell style={rowStyles.column_referral_date}>
+                <Text>{timestampToDate(Number(r.date_referred), locale, timezone)}</Text>
+            </DataTable.Cell>
+        </DataTable.Row>
+    ),
+    (prev, next) =>
+        prev.locale === next.locale &&
+        prev.timezone === next.timezone &&
+        prev.onPress === next.onPress &&
+        isSameReferral(prev.item, next.item)
+);
+
 const Referrals = () => {
     const styles = useStyles();
+    const theme = useAppTheme();
     const database = useDatabase();
     const navigation = useNavigation();
     const { t } = useTranslation();
@@ -100,44 +150,71 @@ const Referrals = () => {
     const locale = Localization.locale;
     const timezone = Localization.timezone;
 
+    const openClient = useCallback(
+        (clientID: string) => {
+            navigation.navigate("ClientDetails", { clientID });
+        },
+        [navigation]
+    );
+
+    const renderReferralRow = useCallback(
+        ({ item }: { item: BriefReferral }) => (
+            <ReferralRow item={item} locale={locale} timezone={timezone} onPress={openClient} />
+        ),
+        [locale, timezone, openClient]
+    );
+
+    // The rows can't be inside a Card in a virtualized list, so the list content is given the
+    // Card's look instead.
     return (
-        <ScrollView style={styles.container}>
-            <Card>
-                <Card.Title title={t("statistics.referrals")} />
+        <FlatList
+            style={styles.container}
+            // Keep rows built for ~2 screens above and below, not the default ~10 (see ClientList).
+            windowSize={5}
+            contentContainerStyle={{
+                backgroundColor: theme.colors.surface,
+                borderRadius: theme.roundness,
+                elevation: 1,
+            }}
+            data={filteredReferrals}
+            keyExtractor={(r) => r.id}
+            renderItem={renderReferralRow}
+            ListHeaderComponent={
+                <>
+                    <Card.Title title={t("statistics.referrals")} />
 
-                <View style={styles.filterView}>
-                    <Text style={styles.filterLabel}>{t("referral.filterByStatus")}:</Text>
-                    <View style={styles.filterContainer}>
-                        {Object.values(STATUS).map((status) => (
-                            <Chip
-                                key={status}
-                                selected={filterStatus === status}
-                                onPress={() => setFilterStatus(status)}
-                                style={styles.chip}
-                            >
-                                {status === STATUS.ALL && t("general.all")}
-                                {status === STATUS.PENDING && t("general.pending")}
-                                {status === STATUS.RESOLVED && t("general.resolved")}
-                            </Chip>
-                        ))}
+                    <View style={styles.filterView}>
+                        <Text style={styles.filterLabel}>{t("referral.filterByStatus")}:</Text>
+                        <View style={styles.filterContainer}>
+                            {Object.values(STATUS).map((status) => (
+                                <Chip
+                                    key={status}
+                                    selected={filterStatus === status}
+                                    onPress={() => setFilterStatus(status)}
+                                    style={styles.chip}
+                                >
+                                    {status === STATUS.ALL && t("general.all")}
+                                    {status === STATUS.PENDING && t("general.pending")}
+                                    {status === STATUS.RESOLVED && t("general.resolved")}
+                                </Chip>
+                            ))}
+                        </View>
+
+                        <Text style={styles.filterLabel}>{t("referral.filterByType")}:</Text>
+                        <View style={styles.filterContainer}>
+                            {REFERRAL_TYPES.map(({ key, label }) => (
+                                <Chip
+                                    key={key}
+                                    selected={selectedTypes.includes(key)}
+                                    onPress={() => toggleType(key)}
+                                    style={styles.chip}
+                                >
+                                    {label}
+                                </Chip>
+                            ))}
+                        </View>
                     </View>
 
-                    <Text style={styles.filterLabel}>{t("referral.filterByType")}:</Text>
-                    <View style={styles.filterContainer}>
-                        {REFERRAL_TYPES.map(({ key, label }) => (
-                            <Chip
-                                key={key}
-                                selected={selectedTypes.includes(key)}
-                                onPress={() => toggleType(key)}
-                                style={styles.chip}
-                            >
-                                {label}
-                            </Chip>
-                        ))}
-                    </View>
-                </View>
-
-                <DataTable>
                     <DataTable.Header style={styles.item}>
                         <DataTable.Title
                             style={styles.column_referral_status}
@@ -168,44 +245,9 @@ const Referrals = () => {
                             {t("referralAttr.dateReferred")}
                         </DataTable.Title>
                     </DataTable.Header>
-
-                    {filteredReferrals.map((r) => (
-                        <DataTable.Row
-                            key={r.id}
-                            style={styles.item}
-                            onPress={() =>
-                                navigation.navigate("ClientDetails", {
-                                    clientID: r.client_id,
-                                })
-                            }
-                        >
-                            <View style={styles.column_referral_status}>
-                                <Text>
-                                    <Icon
-                                        name={r.resolved ? "check-circle" : "clock-o"}
-                                        size={15}
-                                        color={
-                                            r.resolved ? themeColors.riskGreen : themeColors.riskRed
-                                        }
-                                    />
-                                </Text>
-                            </View>
-                            <View style={styles.column_referral_name}>
-                                <Text>{r.full_name}</Text>
-                            </View>
-                            <View style={styles.column_referral_type}>
-                                <Text>{r.type}</Text>
-                            </View>
-                            <DataTable.Cell style={styles.column_referral_date}>
-                                <Text>
-                                    {timestampToDate(Number(r.date_referred), locale, timezone)}
-                                </Text>
-                            </DataTable.Cell>
-                        </DataTable.Row>
-                    ))}
-                </DataTable>
-            </Card>
-        </ScrollView>
+                </>
+            }
+        />
     );
 };
 

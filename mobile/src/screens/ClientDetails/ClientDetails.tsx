@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
@@ -46,6 +46,17 @@ interface ClientProps {
 const ClientDetails = (props: ClientProps) => {
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
+
+    // Render the top of the page (photo, buttons, client details) first, and the sections
+    // further down a frame later, so the page appears sooner on slow phones.
+    const [showLowerSections, setShowLowerSections] = useState(false);
+    useEffect(() => {
+        if (loading || showLowerSections) {
+            return;
+        }
+        const frame = requestAnimationFrame(() => setShowLowerSections(true));
+        return () => cancelAnimationFrame(frame);
+    }, [loading, showLowerSections]);
     const [touchDisable, setTouchDisable] = useState<boolean>(true);
     const isFocused = useIsFocused();
     const database = useDatabase();
@@ -80,15 +91,20 @@ const ClientDetails = (props: ClientProps) => {
             },
         ]);
 
-    const getClientDetails = async () => {
+    // useCallback keeps this function stable, so passing it to the memoized timeline entries
+    // (as refreshClient) does not make them re-render.
+    const getClientDetails = useCallback(async () => {
         try {
             const presentClient: any = await database
                 .get(modelName.clients)
                 .find(props.route.params.clientID);
-            const fetchedRisk = await presentClient.risks.fetch();
-            const fetchedReferrals = await presentClient.referrals.fetch();
-            const fetchedSurveys = await presentClient.surveys.fetch();
-            const fetchedVisits = await presentClient.visits.fetch();
+            const [fetchedRisk, fetchedReferrals, fetchedSurveys, fetchedVisits] =
+                await Promise.all([
+                    presentClient.risks.fetch(),
+                    presentClient.referrals.fetch(),
+                    presentClient.surveys.fetch(),
+                    presentClient.visits.fetch(),
+                ]);
             setClient(presentClient);
             setRisk(fetchedRisk);
             setReferrals(fetchedReferrals);
@@ -100,7 +116,7 @@ const ClientDetails = (props: ClientProps) => {
         } catch (e) {
             console.error(e);
         }
-    };
+    }, [database, props.route.params.clientID]);
 
     const loadPatientNote = useCallback(async () => {
         if (!props.route.params.clientID) return;
@@ -182,52 +198,57 @@ const ClientDetails = (props: ClientProps) => {
 
     //Activity component rendering
     const navigation = useNavigation<AppStackNavProp>();
-    const tempActivity: IActivity[] = [];
-    let presentId = 0;
+    // Built only when the data changes, so the memoized timeline entries keep the same props
+    // across unrelated re-renders of this screen.
+    const tempActivity = useMemo(() => {
+        const activity: IActivity[] = [];
+        let presentId = 0;
 
-    if (referrals) {
-        referrals.forEach((presentReferral) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.REFERAL,
-                date: presentReferral.date_referred,
-                visit: undefined,
-                referral: presentReferral,
-                survey: undefined,
+        if (referrals) {
+            referrals.forEach((presentReferral) => {
+                activity.push({
+                    id: presentId,
+                    type: ActivityType.REFERAL,
+                    date: presentReferral.date_referred,
+                    visit: undefined,
+                    referral: presentReferral,
+                    survey: undefined,
+                });
+                presentId += 1;
             });
-            presentId += 1;
-        });
-    }
+        }
 
-    if (surveys) {
-        surveys.forEach((presentSurvey) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.SURVEY,
-                date: presentSurvey.survey_date,
-                visit: undefined,
-                referral: undefined,
-                survey: presentSurvey,
+        if (surveys) {
+            surveys.forEach((presentSurvey) => {
+                activity.push({
+                    id: presentId,
+                    type: ActivityType.SURVEY,
+                    date: presentSurvey.survey_date,
+                    visit: undefined,
+                    referral: undefined,
+                    survey: presentSurvey,
+                });
+                presentId += 1;
             });
-            presentId += 1;
-        });
-    }
+        }
 
-    if (visits) {
-        visits.forEach((presentVisit) => {
-            tempActivity.push({
-                id: presentId,
-                type: ActivityType.VISIT,
-                date: presentVisit.createdAt,
-                visit: presentVisit,
-                referral: undefined,
-                survey: undefined,
+        if (visits) {
+            visits.forEach((presentVisit) => {
+                activity.push({
+                    id: presentId,
+                    type: ActivityType.VISIT,
+                    date: presentVisit.createdAt,
+                    visit: presentVisit,
+                    referral: undefined,
+                    survey: undefined,
+                });
+                presentId += 1;
             });
-            presentId += 1;
-        });
-    }
+        }
 
-    tempActivity.sort((a, b) => (a.date > b.date ? -1 : 1));
+        activity.sort((a, b) => (a.date > b.date ? -1 : 1));
+        return activity;
+    }, [referrals, surveys, visits]);
 
     const handleFormSubmit = (
         values: TClientValues,
@@ -390,192 +411,212 @@ const ClientDetails = (props: ClientProps) => {
                             )}
                         </Formik>
                     </Card>
-                    {/* Patient Note Section */}
-                    <Card style={styles.patientNoteCard}>
-                        <View style={styles.patientNoteTitleRow}>
-                            <Text style={styles.patientNoteTitle}>Patient Note</Text>
-                            <View style={styles.patientNoteButtonRow}>
+                    {!showLowerSections ? (
+                        <ActivityIndicator size="small" color={themeColors.blueAccent} />
+                    ) : (
+                        <>
+                            {/* Patient Note Section */}
+                            <Card style={styles.patientNoteCard}>
+                                <View style={styles.patientNoteTitleRow}>
+                                    <Text style={styles.patientNoteTitle}>Patient Note</Text>
+                                    <View style={styles.patientNoteButtonRow}>
+                                        <Button
+                                            mode="contained"
+                                            compact
+                                            style={styles.patientNoteButton}
+                                            onPress={() => setEditModalOpen(true)}
+                                        >
+                                            Edit
+                                        </Button>
+                                        <Button
+                                            mode="outlined"
+                                            compact
+                                            style={styles.patientNoteButton}
+                                            onPress={() => setHistoryModalOpen(true)}
+                                        >
+                                            History
+                                        </Button>
+                                    </View>
+                                </View>
+                                {noteLoading ? (
+                                    <ActivityIndicator
+                                        size="small"
+                                        color={themeColors.blueAccent}
+                                    />
+                                ) : (
+                                    <View style={styles.patientNoteDisplayBox}>
+                                        <Text style={styles.patientNoteText}>
+                                            {patientNote || "No note recorded."}
+                                        </Text>
+                                    </View>
+                                )}
+                            </Card>
+                            <Divider />
+
+                            <Text style={styles.riskLevelsSectionTitle}>
+                                {t("clientAttr.riskLevels")}
+                            </Text>
+                            <Divider />
+                            <View style={styles.previousGoalsButtonContainer}>
                                 <Button
                                     mode="contained"
-                                    compact
-                                    style={styles.patientNoteButton}
-                                    onPress={() => setEditModalOpen(true)}
+                                    style={styles.previousGoalsButton}
+                                    onPress={() => setPreviousGoalsModalOpen(true)}
                                 >
-                                    Edit
-                                </Button>
-                                <Button
-                                    mode="outlined"
-                                    compact
-                                    style={styles.patientNoteButton}
-                                    onPress={() => setHistoryModalOpen(true)}
-                                >
-                                    History
+                                    {t("goals.previousGoals")}
                                 </Button>
                             </View>
-                        </View>
-                        {noteLoading ? (
-                            <ActivityIndicator size="small" color={themeColors.blueAccent} />
-                        ) : (
-                            <View style={styles.patientNoteDisplayBox}>
-                                <Text style={styles.patientNoteText}>
-                                    {patientNote || "No note recorded."}
-                                </Text>
-                            </View>
-                        )}
-                    </Card>
-                    <Divider />
-
-                    <Text style={styles.riskLevelsSectionTitle}>{t("clientAttr.riskLevels")}</Text>
-                    <Divider />
-                    <View style={styles.previousGoalsButtonContainer}>
-                        <Button
-                            mode="contained"
-                            style={styles.previousGoalsButton}
-                            onPress={() => setPreviousGoalsModalOpen(true)}
-                        >
-                            {t("goals.previousGoals")}
-                        </Button>
-                    </View>
-                    {[
-                        RiskType.HEALTH,
-                        RiskType.EDUCATION,
-                        RiskType.SOCIAL,
-                        RiskType.NUTRITION,
-                        RiskType.MENTAL,
-                    ].map((riskType, index) => (
-                        <React.Fragment key={riskType}>
-                            {index > 0 && <Divider />}
-                            <ClientRisk
-                                clientRisks={risks || []}
-                                presentRiskType={riskType}
-                                clientArchived={client.is_active}
-                            />
-                        </React.Fragment>
-                    ))}
-                    <Card style={styles.riskCardStyle}>
-                        <View style={styles.activityCardContentStyle}>
-                            <Text style={styles.riskTitleStyle}>
-                                {t("clientAttr.visitsRefsSurveys")}
-                            </Text>
-                        </View>
-                        {client && (
-                            <RecentActivity
-                                clientVisits={client.visits ?? []}
-                                activity={tempActivity}
-                                clientCreateDate={client.createdAt}
-                                refreshClient={getClientDetails}
-                            />
-                        )}
-                        <View style={styles.clientDetailsFinalView}></View>
-                    </Card>
-                    {/* Success Stories Section */}
-                    <Divider />
-                    <Text style={styles.riskLevelsSectionTitle}>Success Stories</Text>
-                    <Divider />
-                    <View style={{ paddingHorizontal: 12, marginTop: 8, marginBottom: 16 }}>
-                        {storiesError ? (
-                            <Text style={{ color: "#d32f2f", textAlign: "center", marginTop: 8 }}>
-                                Could not load success stories.
-                            </Text>
-                        ) : stories.length === 0 ? (
-                            <Text
-                                style={{
-                                    color: "#757575",
-                                    textAlign: "center",
-                                    marginTop: 8,
-                                }}
-                            >
-                                No success stories submitted for this client yet.
-                            </Text>
-                        ) : (
-                            stories.map((story) => (
-                                <TouchableOpacity
-                                    key={story.id}
-                                    activeOpacity={0.7}
-                                    onPress={() =>
-                                        navigation.navigate(StackScreenName.SUCCESS_STORY_VIEW, {
-                                            clientID: client?.id,
-                                            storyId: story.id,
-                                            clientName: `${client?.first_name ?? ""} ${
-                                                client?.last_name ?? ""
-                                            }`,
-                                        })
-                                    }
-                                    style={{
-                                        backgroundColor: "#fff",
-                                        borderRadius: 8,
-                                        borderWidth: 1,
-                                        borderColor: "#e0e0e0",
-                                        padding: 12,
-                                        marginBottom: 8,
-                                        flexDirection: "row",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <View style={{ flex: 1, marginRight: 8 }}>
-                                        <Text
-                                            style={{
-                                                fontSize: 15,
-                                                fontWeight: "bold",
-                                                color: "#333",
-                                            }}
-                                            numberOfLines={1}
-                                        >
-                                            {story.title || "Untitled"}
-                                        </Text>
-                                        <Text style={{ fontSize: 13, color: "#757575" }}>
-                                            {story.date} · {story.written_by_name}
-                                        </Text>
-                                    </View>
-                                    <View
+                            {[
+                                RiskType.HEALTH,
+                                RiskType.EDUCATION,
+                                RiskType.SOCIAL,
+                                RiskType.NUTRITION,
+                                RiskType.MENTAL,
+                            ].map((riskType, index) => (
+                                <React.Fragment key={riskType}>
+                                    {index > 0 && <Divider />}
+                                    <ClientRisk
+                                        clientRisks={risks || []}
+                                        presentRiskType={riskType}
+                                        clientArchived={client.is_active}
+                                    />
+                                </React.Fragment>
+                            ))}
+                            <Card style={styles.riskCardStyle}>
+                                <View style={styles.activityCardContentStyle}>
+                                    <Text style={styles.riskTitleStyle}>
+                                        {t("clientAttr.visitsRefsSurveys")}
+                                    </Text>
+                                </View>
+                                {client && (
+                                    <RecentActivity
+                                        clientVisits={client.visits ?? []}
+                                        activity={tempActivity}
+                                        clientCreateDate={client.createdAt}
+                                        refreshClient={getClientDetails}
+                                    />
+                                )}
+                                <View style={styles.clientDetailsFinalView}></View>
+                            </Card>
+                            {/* Success Stories Section */}
+                            <Divider />
+                            <Text style={styles.riskLevelsSectionTitle}>Success Stories</Text>
+                            <Divider />
+                            <View style={{ paddingHorizontal: 12, marginTop: 8, marginBottom: 16 }}>
+                                {storiesError ? (
+                                    <Text
                                         style={{
-                                            backgroundColor:
-                                                story.status === StoryStatus.READY
-                                                    ? "#e8f5e9"
-                                                    : "#fff3e0",
-                                            paddingHorizontal: 10,
-                                            paddingVertical: 4,
-                                            borderRadius: 12,
+                                            color: "#d32f2f",
+                                            textAlign: "center",
+                                            marginTop: 8,
                                         }}
                                     >
-                                        <Text style={{ fontSize: 11, fontWeight: "600" }}>
-                                            {story.status === StoryStatus.READY
-                                                ? "Ready"
-                                                : "Work in Progress"}
-                                        </Text>
-                                    </View>
-                                </TouchableOpacity>
-                            ))
-                        )}
-                    </View>
+                                        Could not load success stories.
+                                    </Text>
+                                ) : stories.length === 0 ? (
+                                    <Text
+                                        style={{
+                                            color: "#757575",
+                                            textAlign: "center",
+                                            marginTop: 8,
+                                        }}
+                                    >
+                                        No success stories submitted for this client yet.
+                                    </Text>
+                                ) : (
+                                    stories.map((story) => (
+                                        <TouchableOpacity
+                                            key={story.id}
+                                            activeOpacity={0.7}
+                                            onPress={() =>
+                                                navigation.navigate(
+                                                    StackScreenName.SUCCESS_STORY_VIEW,
+                                                    {
+                                                        clientID: client?.id,
+                                                        storyId: story.id,
+                                                        clientName: `${client?.first_name ?? ""} ${
+                                                            client?.last_name ?? ""
+                                                        }`,
+                                                    }
+                                                )
+                                            }
+                                            style={{
+                                                backgroundColor: "#fff",
+                                                borderRadius: 8,
+                                                borderWidth: 1,
+                                                borderColor: "#e0e0e0",
+                                                padding: 12,
+                                                marginBottom: 8,
+                                                flexDirection: "row",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <View style={{ flex: 1, marginRight: 8 }}>
+                                                <Text
+                                                    style={{
+                                                        fontSize: 15,
+                                                        fontWeight: "bold",
+                                                        color: "#333",
+                                                    }}
+                                                    numberOfLines={1}
+                                                >
+                                                    {story.title || "Untitled"}
+                                                </Text>
+                                                <Text style={{ fontSize: 13, color: "#757575" }}>
+                                                    {story.date} · {story.written_by_name}
+                                                </Text>
+                                            </View>
+                                            <View
+                                                style={{
+                                                    backgroundColor:
+                                                        story.status === StoryStatus.READY
+                                                            ? "#e8f5e9"
+                                                            : "#fff3e0",
+                                                    paddingHorizontal: 10,
+                                                    paddingVertical: 4,
+                                                    borderRadius: 12,
+                                                }}
+                                            >
+                                                <Text style={{ fontSize: 11, fontWeight: "600" }}>
+                                                    {story.status === StoryStatus.READY
+                                                        ? "Ready"
+                                                        : "Work in Progress"}
+                                                </Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    ))
+                                )}
+                            </View>
 
-                    {client && (
-                        <PatientNoteModal
-                            open={editModalOpen}
-                            clientId={client.id}
-                            onClose={() => setEditModalOpen(false)}
-                            initialMode="edit"
-                            title="Edit Patient Note"
-                            onNoteUpdated={loadPatientNote}
-                        />
+                            {client && (
+                                <PatientNoteModal
+                                    open={editModalOpen}
+                                    clientId={client.id}
+                                    onClose={() => setEditModalOpen(false)}
+                                    initialMode="edit"
+                                    title="Edit Patient Note"
+                                    onNoteUpdated={loadPatientNote}
+                                />
+                            )}
+                            {client && (
+                                <PatientNoteModal
+                                    open={historyModalOpen}
+                                    clientId={client.id}
+                                    onClose={() => setHistoryModalOpen(false)}
+                                    initialMode="history"
+                                    title="Patient Note History"
+                                    onNoteUpdated={loadPatientNote}
+                                />
+                            )}
+                            <PreviousGoalsModal
+                                open={previousGoalsModalOpen}
+                                close={() => setPreviousGoalsModalOpen(false)}
+                                clientRisks={risks || []}
+                                onRefresh={getClientDetails}
+                            />
+                        </>
                     )}
-                    {client && (
-                        <PatientNoteModal
-                            open={historyModalOpen}
-                            clientId={client.id}
-                            onClose={() => setHistoryModalOpen(false)}
-                            initialMode="history"
-                            title="Patient Note History"
-                            onNoteUpdated={loadPatientNote}
-                        />
-                    )}
-                    <PreviousGoalsModal
-                        open={previousGoalsModalOpen}
-                        close={() => setPreviousGoalsModalOpen(false)}
-                        clientRisks={risks || []}
-                        onRefresh={getClientDetails}
-                    />
                 </View>
             )}
         </ScrollView>

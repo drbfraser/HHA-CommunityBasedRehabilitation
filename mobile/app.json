@@ -2,7 +2,7 @@
     "expo": {
         "name": "CBR",
         "slug": "CBR",
-        "version": "1.4.3-34",
+        "version": "1.4.6-37",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "scheme": "cbr",
@@ -18,7 +18,7 @@
                 "backgroundColor": "#ffffff"
             },
             "package": "org.hopehealthaction.cbrapp",
-            "versionCode": 34,
+            "versionCode": 37,
             "allowBackup": false,
             "blockedPermissions": [
                 "android.permission.READ_EXTERNAL_STORAGE",
@@ -45,7 +45,8 @@
             "expo-localization",
             "./plugins/withAndroidSigningConfig.ts",
             "./plugins/withDetoxTest.ts",
-            "./plugins/withLegacyStoragePermission.ts"
+            "./plugins/withLegacyStoragePermission.ts",
+            "./plugins/withContentCaptureDisabled.ts"
         ],
         "experiments": {
             "typedRoutes": true

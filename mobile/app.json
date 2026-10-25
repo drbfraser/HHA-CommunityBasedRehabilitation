@@ -45,7 +45,8 @@
             "expo-localization",
             "./plugins/withAndroidSigningConfig.ts",
             "./plugins/withDetoxTest.ts",
-            "./plugins/withLegacyStoragePermission.ts"
+            "./plugins/withLegacyStoragePermission.ts",
+            "./plugins/withContentCaptureDisabled.ts"
         ],
         "experiments": {
             "typedRoutes": true

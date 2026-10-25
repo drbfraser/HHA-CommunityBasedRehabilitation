@@ -4,6 +4,7 @@ import { riskLevels } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
+import { logPerf } from "../../util/perfTiming";
 import { Q } from "@nozbe/watermelondb";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import i18n from "i18next";
@@ -48,9 +49,11 @@ const concatenateReferralType = (referral: Referral) => {
 export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientListRow[]> => {
     try {
         const zones = await getZones();
+        const queryStart = Date.now();
         const tempClients: any = await database
             .get(modelName.clients)
             .query(Q.where(ClientField.is_active, true));
+        logPerf("Dashboard", "clients db query", queryStart, `${tempClients.length} clients`);
         const resultRows = tempClients
             .sort(clientPrioritySort)
             .slice(0, 5)
@@ -74,12 +77,21 @@ export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientLis
 export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]> => {
     let clientReferrals: Array<BriefReferral> = [];
     let fetchReferrals;
+    const queryStart = Date.now();
+    let loopStart = 0;
 
     await database
         .get<Client>(modelName.clients)
         .query()
         .fetch()
         .then((fetchedClients) => {
+            logPerf(
+                "Dashboard",
+                "referrals clients db query",
+                queryStart,
+                `${fetchedClients.length} clients`
+            );
+            loopStart = Date.now();
             let clientCount = 0;
 
             fetchReferrals = new Promise<void>((resolve) => {
@@ -108,6 +120,12 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
         });
 
     await fetchReferrals;
+    logPerf(
+        "Dashboard",
+        "per-client referral queries",
+        loopStart,
+        `${clientReferrals.length} outstanding`
+    );
     return clientReferrals
         .sort((a: BriefReferral, b: BriefReferral) => b.date_referred - a.date_referred)
         .slice(0, 5); /* Display 5 most recent outstanding referrals */

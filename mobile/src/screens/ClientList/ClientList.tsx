@@ -2,7 +2,7 @@ import { SearchOption, themeColors, useZones } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { Picker } from "@react-native-picker/picker";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleProp, Switch, Text, View, ViewStyle } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -21,6 +21,7 @@ import { riskTypes } from "../../util/riskIcon";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
+import { logPerf, RenderTiming, useLogRenderTiming } from "../../util/perfTiming";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -98,7 +99,11 @@ const ClientList = () => {
         return clientComparator(a, b, sortOption, sortDirection);
     };
 
+    const renderTiming = useRef<RenderTiming | null>(null);
+    useLogRenderTiming("ClientList", renderTiming, [clientList]);
+
     const newClientGet = async () => {
+        const loadStart = Date.now();
         var exampleClient = await fetchClientsFromDB(
             selectedSearchOption,
             searchQuery,
@@ -109,6 +114,8 @@ const ClientList = () => {
         if (sortDirection !== "None") {
             exampleClient = exampleClient.sort(clientListScreenComparator);
         }
+        logPerf("ClientList", "fetch", loadStart, `${exampleClient.length} rows`);
+        renderTiming.current = { loadStart, renderStart: Date.now() };
         setClientList(exampleClient);
     };
 
@@ -151,7 +158,9 @@ const ClientList = () => {
     useEffect(() => {
         if (isFocused) {
             newClientGet();
+            const unsyncedStart = Date.now();
             checkUnsyncedChanges().then((res) => {
+                logPerf("ClientList", "unsynced check", unsyncedStart);
                 setUnSyncedChanges(res);
             });
         }

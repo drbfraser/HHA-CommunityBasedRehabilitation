@@ -10,6 +10,7 @@ import {
 import { Q } from "@nozbe/watermelondb";
 import { modelName, tableKey } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import { logPerf } from "../../util/perfTiming";
 
 export type ClientListRow = {
     id: string;
@@ -73,7 +74,9 @@ export const fetchClientsFromDB = async (
                 }
             }
         }
+        const queryStart = Date.now();
         const results = await query.fetch();
+        logPerf("ClientList", "db query", queryStart, `${results.length} clients`);
         var resultRow: Array<ClientListRow> = results.map((responseRow: IClientSummary) => ({
             id: responseRow.id,
             full_name: responseRow.full_name,

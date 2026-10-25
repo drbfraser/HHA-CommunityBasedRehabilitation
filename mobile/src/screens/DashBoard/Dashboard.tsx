@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SyncSettings } from "../Sync/PrefConstants";
 import { useSyncStatus } from "../../util/useSyncStatus";
+import { logPerf } from "../../util/perfTiming";
 import {
     notifyAutoSyncFailure,
     notifyDashboardSyncComplete,
@@ -149,11 +150,22 @@ const Dashboard = () => {
     };
 
     const refreshDashboardData = async () => {
+        const refreshStart = Date.now();
         const currentUserId = await getUserProfile();
+        logPerf("Dashboard", "user profile", refreshStart);
+        const alertsStart = Date.now();
         await countUnreadAlerts(currentUserId ?? undefined);
-        await Promise.all([getNewClient(), getReferrals()]);
+        logPerf("Dashboard", "unread alerts", alertsStart);
+        const listsStart = Date.now();
+        await Promise.all([
+            getNewClient().then(() => logPerf("Dashboard", "clients", listsStart)),
+            getReferrals().then(() => logPerf("Dashboard", "referrals", listsStart)),
+        ]);
+        const unsyncedStart = Date.now();
         const hasUnsyncedChanges = await checkUnsyncedChanges();
+        logPerf("Dashboard", "unsynced check", unsyncedStart);
         setUnSyncedChanges(hasUnsyncedChanges);
+        logPerf("Dashboard", "refresh total", refreshStart);
     };
 
     const loadLastSyncTimestamp = async () => {

@@ -1,6 +1,7 @@
 import { IReferral } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
+import { logPerf } from "../../util/perfTiming";
 import i18n from "i18next";
 import Client from "@/src/models/Client";
 
@@ -53,7 +54,10 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
     const clientReferrals: BriefReferral[] = [];
 
     try {
+        const queryStart = Date.now();
         const fetchedClients = await database.get(modelName.clients).query().fetch();
+        logPerf("Referrals", "clients db query", queryStart, `${fetchedClients.length} clients`);
+        const loopStart = Date.now();
 
         for (const clientData of fetchedClients) {
             const client = clientData as Client;
@@ -79,6 +83,12 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
             }
         }
 
+        logPerf(
+            "Referrals",
+            "per-client referral queries",
+            loopStart,
+            `${clientReferrals.length} referrals`
+        );
         return clientReferrals.sort((a, b) => b.date_referred - a.date_referred);
     } catch (error) {
         console.error("Failed to fetch referrals:", error);

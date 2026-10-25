@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Text, View, NativeModules } from "react-native";
 import * as Localization from "expo-localization";
 import { Card, DataTable, Chip } from "react-native-paper";
@@ -16,7 +16,6 @@ import {
 import { themeColors, timestampToDate } from "@cbr/common";
 import useStyles from "./Referrals.styles";
 import { BriefReferral, fetchReferrals } from "./ReferralsRequest";
-import { logPerf, RenderTiming, useLogRenderTiming } from "../../util/perfTiming";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useAppTheme } from "@/src/util/theme.styles";
 
@@ -101,19 +100,13 @@ const Referrals = () => {
     const [sortOption, setSortOption] = useState<string>(SortOptions.DATE);
     const [sortDirection, setSortDirection] = useState<TSortDirection>("None");
 
-    const renderTiming = useRef<RenderTiming | null>(null);
-    useLogRenderTiming("Referrals", renderTiming, [filteredReferrals]);
-
     const getReferrals = async () => {
-        const loadStart = Date.now();
         let fetchedReferrals = await fetchReferrals(database);
         if (sortDirection !== "None") {
             fetchedReferrals = fetchedReferrals.sort((a, b) =>
                 referralComparator(a, b, sortOption, sortDirection)
             );
         }
-        logPerf("Referrals", "fetch", loadStart, `${fetchedReferrals.length} referrals`);
-        renderTiming.current = { loadStart, renderStart: Date.now() };
         setReferrals(fetchedReferrals);
     };
 

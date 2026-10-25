@@ -29,7 +29,6 @@ import { riskTypes } from "../../util/riskIcon";
 import { StackScreenName } from "../../util/StackScreenName";
 import { AppStackNavProp } from "../../util/stackScreens";
 import { checkUnsyncedChanges } from "../../util/syncHandler";
-import { countRender, logPerf, RenderTiming, useLogRenderTiming } from "../../util/perfTiming";
 import useStyles from "./ClientList.styles";
 import { ClientListRow, fetchClientsFromDB } from "./ClientListRequest";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
@@ -119,44 +118,33 @@ const RiskCell = ({ levelColor }: { levelColor: string }) => (
 
 // Memoized so reloading the list only re-renders rows whose data changed.
 const ClientRow = React.memo(
-    ({ item, columns, onPress }: ClientRowProps) => {
-        countRender("ClientRow");
-        return (
-            <TouchableRipple style={[rowStyles.row, styles.item]} onPress={() => onPress(item.id)}>
-                <View style={rowStyles.rowContent}>
-                    {columns.name ? (
-                        <View style={styles.column_name}>
-                            <RowText text={item.full_name} isActive={item.is_active} />
-                        </View>
-                    ) : (
-                        <View></View>
-                    )}
+    ({ item, columns, onPress }: ClientRowProps) => (
+        <TouchableRipple style={[rowStyles.row, styles.item]} onPress={() => onPress(item.id)}>
+            <View style={rowStyles.rowContent}>
+                {columns.name ? (
+                    <View style={styles.column_name}>
+                        <RowText text={item.full_name} isActive={item.is_active} />
+                    </View>
+                ) : (
+                    <View></View>
+                )}
 
-                    {columns.zone ? (
-                        <View style={styles.column_zone}>
-                            <RowText text={item.zone} isActive={item.is_active} />
-                        </View>
-                    ) : (
-                        <View></View>
-                    )}
+                {columns.zone ? (
+                    <View style={styles.column_zone}>
+                        <RowText text={item.zone} isActive={item.is_active} />
+                    </View>
+                ) : (
+                    <View></View>
+                )}
 
-                    {columns.health ? <RiskCell levelColor={item.HealthLevel} /> : <View></View>}
-                    {columns.education ? (
-                        <RiskCell levelColor={item.EducationLevel} />
-                    ) : (
-                        <View></View>
-                    )}
-                    {columns.social ? <RiskCell levelColor={item.SocialLevel} /> : <View></View>}
-                    {columns.nutrition ? (
-                        <RiskCell levelColor={item.NutritionLevel} />
-                    ) : (
-                        <View></View>
-                    )}
-                    {columns.mental ? <RiskCell levelColor={item.MentalLevel} /> : <View></View>}
-                </View>
-            </TouchableRipple>
-        );
-    },
+                {columns.health ? <RiskCell levelColor={item.HealthLevel} /> : <View></View>}
+                {columns.education ? <RiskCell levelColor={item.EducationLevel} /> : <View></View>}
+                {columns.social ? <RiskCell levelColor={item.SocialLevel} /> : <View></View>}
+                {columns.nutrition ? <RiskCell levelColor={item.NutritionLevel} /> : <View></View>}
+                {columns.mental ? <RiskCell levelColor={item.MentalLevel} /> : <View></View>}
+            </View>
+        </TouchableRipple>
+    ),
     (prev, next) =>
         prev.columns === next.columns &&
         prev.onPress === next.onPress &&
@@ -164,7 +152,6 @@ const ClientRow = React.memo(
 );
 
 const ClientList = () => {
-    countRender("ClientList");
     const insets = useSafeAreaInsets();
     const navigation = useNavigation<AppStackNavProp>();
     const [clientList, setClientList] = useState<ClientListRow[]>([]);
@@ -237,11 +224,8 @@ const ClientList = () => {
     };
 
     const clientListRef = useRef<ClientListRow[]>([]);
-    const renderTiming = useRef<RenderTiming | null>(null);
-    useLogRenderTiming("ClientList", renderTiming, [clientList]);
 
     const newClientGet = async () => {
-        const loadStart = Date.now();
         var exampleClient = await fetchClientsFromDB(
             selectedSearchOption,
             searchQuery,
@@ -252,15 +236,12 @@ const ClientList = () => {
         if (sortDirection !== "None") {
             exampleClient = exampleClient.sort(clientListScreenComparator);
         }
-        logPerf("ClientList", "fetch", loadStart, `${exampleClient.length} rows`);
         // Reloading on every focus usually returns the same rows. Keeping the current list then
         // avoids making the FlatList re-render all of its built rows (slow on low-end phones).
         if (isSameList(clientListRef.current, exampleClient)) {
-            logPerf("ClientList", "unchanged, not re-rendered", loadStart);
             return;
         }
         clientListRef.current = exampleClient;
-        renderTiming.current = { loadStart, renderStart: Date.now() };
         setClientList(exampleClient);
     };
 
@@ -333,9 +314,7 @@ const ClientList = () => {
     useEffect(() => {
         if (isFocused) {
             newClientGet();
-            const unsyncedStart = Date.now();
             checkUnsyncedChanges().then((res) => {
-                logPerf("ClientList", "unsynced check", unsyncedStart);
                 setUnSyncedChanges(res);
             });
         }

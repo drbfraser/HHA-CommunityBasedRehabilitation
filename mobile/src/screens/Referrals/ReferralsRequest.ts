@@ -1,6 +1,5 @@
 import { modelName } from "../../models/constant";
 import { dbType } from "../../util/watermelonDatabase";
-import { logPerf } from "../../util/perfTiming";
 import i18n from "i18next";
 import Client from "@/src/models/Client";
 import Referral from "@/src/models/Referral";
@@ -54,9 +53,7 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
     const clientReferrals: BriefReferral[] = [];
 
     try {
-        const queryStart = Date.now();
         const fetchedClients = (await database.get(modelName.clients).query().fetch()) as Client[];
-        logPerf("Referrals", "clients db query", queryStart, `${fetchedClients.length} clients`);
 
         // Referrals of active clients only. One query for all referrals, matched to their client
         // here, instead of one query per client.
@@ -67,9 +64,7 @@ export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]>
             }
         });
 
-        const referralsStart = Date.now();
         const referrals = (await database.get(modelName.referrals).query().fetch()) as Referral[];
-        logPerf("Referrals", "referrals db query", referralsStart, `${referrals.length} referrals`);
 
         referrals.forEach((referral) => {
             const client = activeClients.get(referral.client.id);

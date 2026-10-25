@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Card, Divider, ActivityIndicator, TouchableRipple } from "react-native-paper";
 import {
@@ -36,7 +36,6 @@ import PatientNoteModal from "../../components/PatientNoteModals/PatientNoteModa
 import PreviousGoalsModal from "./PreviousGoals/PreviousGoalsModal";
 import { TouchableOpacity } from "react-native";
 import { getStoriesForClient, ISuccessStory, StoryStatus } from "../SuccessStories/successStoryApi";
-import { countRender, logPerf, RenderTiming, useLogRenderTiming } from "../../util/perfTiming";
 
 interface ClientProps {
     clientID: string;
@@ -45,29 +44,17 @@ interface ClientProps {
 }
 
 const ClientDetails = (props: ClientProps) => {
-    countRender("ClientDetails");
     const styles = clientStyle();
     const [loading, setLoading] = useState(true);
-    const renderTiming = useRef<RenderTiming | null>(null);
-    useLogRenderTiming("ClientDetails", renderTiming, [loading]);
-    useEffect(() => {
-        console.log("[PERF] ClientDetails mounted");
-        return () => console.log("[PERF] ClientDetails unmounted");
-    }, []);
 
     // Render the top of the page (photo, buttons, client details) first, and the sections
     // further down a frame later, so the page appears sooner on slow phones.
     const [showLowerSections, setShowLowerSections] = useState(false);
-    const lowerRenderTiming = useRef<RenderTiming | null>(null);
-    useLogRenderTiming("ClientDetails lower sections", lowerRenderTiming, [showLowerSections]);
     useEffect(() => {
         if (loading || showLowerSections) {
             return;
         }
-        const frame = requestAnimationFrame(() => {
-            lowerRenderTiming.current = { loadStart: Date.now(), renderStart: Date.now() };
-            setShowLowerSections(true);
-        });
+        const frame = requestAnimationFrame(() => setShowLowerSections(true));
         return () => cancelAnimationFrame(frame);
     }, [loading, showLowerSections]);
     const [touchDisable, setTouchDisable] = useState<boolean>(true);
@@ -108,13 +95,9 @@ const ClientDetails = (props: ClientProps) => {
     // (as refreshClient) does not make them re-render.
     const getClientDetails = useCallback(async () => {
         try {
-            const loadStart = Date.now();
-            let stepStart = Date.now();
             const presentClient: any = await database
                 .get(modelName.clients)
                 .find(props.route.params.clientID);
-            logPerf("ClientDetails", "find client", stepStart);
-            stepStart = Date.now();
             const [fetchedRisk, fetchedReferrals, fetchedSurveys, fetchedVisits] =
                 await Promise.all([
                     presentClient.risks.fetch(),
@@ -122,15 +105,6 @@ const ClientDetails = (props: ClientProps) => {
                     presentClient.surveys.fetch(),
                     presentClient.visits.fetch(),
                 ]);
-            logPerf(
-                "ClientDetails",
-                "risks, referrals, surveys, visits",
-                stepStart,
-                `${fetchedRisk.length}, ${fetchedReferrals.length}, ` +
-                    `${fetchedSurveys.length}, ${fetchedVisits.length}`
-            );
-            logPerf("ClientDetails", "data total", loadStart);
-            renderTiming.current = { loadStart, renderStart: Date.now() };
             setClient(presentClient);
             setRisk(fetchedRisk);
             setReferrals(fetchedReferrals);
@@ -147,7 +121,6 @@ const ClientDetails = (props: ClientProps) => {
     const loadPatientNote = useCallback(async () => {
         if (!props.route.params.clientID) return;
         setNoteLoading(true);
-        const noteStart = Date.now();
         try {
             const notes = await database
                 .get(modelName.patient_notes)
@@ -158,7 +131,6 @@ const ClientDetails = (props: ClientProps) => {
                 )
                 .fetch();
             setPatientNote(notes.length > 0 ? (notes[0] as any).note ?? "" : "");
-            logPerf("ClientDetails", "patient note", noteStart);
         } catch {
             setPatientNote("");
         } finally {
@@ -172,10 +144,8 @@ const ClientDetails = (props: ClientProps) => {
 
     const loadStories = useCallback(() => {
         if (!props.route.params.clientID) return;
-        const storiesStart = Date.now();
         getStoriesForClient(database, props.route.params.clientID)
             .then((data) => {
-                logPerf("ClientDetails", "success stories", storiesStart, `${data.length}`);
                 setStories(data);
                 setStoriesError(false);
             })

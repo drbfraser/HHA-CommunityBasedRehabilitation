@@ -4,7 +4,6 @@ import { riskLevels } from "@cbr/common";
 import { modelName } from "../../models/constant";
 import { ClientListRow } from "../ClientList/ClientListRequest";
 import { dbType } from "../../util/watermelonDatabase";
-import { logPerf } from "../../util/perfTiming";
 import { Q } from "@nozbe/watermelondb";
 import { ClientField } from "@cbr/common/src/forms/Client/clientFields";
 import i18n from "i18next";
@@ -49,11 +48,9 @@ const concatenateReferralType = (referral: Referral) => {
 export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientListRow[]> => {
     try {
         const zones = await getZones();
-        const queryStart = Date.now();
         const tempClients: any = await database
             .get(modelName.clients)
             .query(Q.where(ClientField.is_active, true));
-        logPerf("Dashboard", "clients db query", queryStart, `${tempClients.length} clients`);
         const resultRows = tempClients
             .sort(clientPrioritySort)
             .slice(0, 5)
@@ -76,30 +73,16 @@ export const fetchAllClientsFromDB = async (database: dbType): Promise<ClientLis
 
 export const fetchReferrals = async (database: dbType): Promise<BriefReferral[]> => {
     let clientReferrals: Array<BriefReferral> = [];
-    const queryStart = Date.now();
 
     const fetchedClients = await database.get<Client>(modelName.clients).query().fetch();
-    logPerf(
-        "Dashboard",
-        "referrals clients db query",
-        queryStart,
-        `${fetchedClients.length} clients`
-    );
     const clientsById = new Map(fetchedClients.map((client) => [client.id, client]));
 
     // Outstanding referrals of all clients (archived ones included). One query for all
     // referrals, matched to their client here, instead of one query per client.
-    const referralsStart = Date.now();
     const referrals = await database
         .get<Referral>(modelName.referrals)
         .query(Q.where(ReferralField.resolved, Q.eq(false)))
         .fetch();
-    logPerf(
-        "Dashboard",
-        "outstanding referrals db query",
-        referralsStart,
-        `${referrals.length} outstanding`
-    );
 
     referrals.forEach((referral) => {
         const client = clientsById.get(referral.client.id);

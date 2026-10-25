@@ -51,6 +51,9 @@ interface ClientRowProps {
 const isSameRow = (a: ClientListRow, b: ClientListRow) =>
     (Object.keys(a) as (keyof ClientListRow)[]).every((key) => a[key] === b[key]);
 
+const isSameList = (a: ClientListRow[], b: ClientListRow[]) =>
+    a.length === b.length && a.every((row, index) => isSameRow(row, b[index]));
+
 // Memoized so reloading the list only re-renders rows whose data changed.
 const ClientRow = React.memo(
     ({ item, columns, onPress }: ClientRowProps) => {
@@ -190,6 +193,7 @@ const ClientList = () => {
         return clientComparator(a, b, sortOption, sortDirection);
     };
 
+    const clientListRef = useRef<ClientListRow[]>([]);
     const renderTiming = useRef<RenderTiming | null>(null);
     useLogRenderTiming("ClientList", renderTiming, [clientList]);
 
@@ -206,6 +210,13 @@ const ClientList = () => {
             exampleClient = exampleClient.sort(clientListScreenComparator);
         }
         logPerf("ClientList", "fetch", loadStart, `${exampleClient.length} rows`);
+        // Reloading on every focus usually returns the same rows. Keeping the current list then
+        // avoids making the FlatList re-render all of its built rows (slow on low-end phones).
+        if (isSameList(clientListRef.current, exampleClient)) {
+            logPerf("ClientList", "unchanged, not re-rendered", loadStart);
+            return;
+        }
+        clientListRef.current = exampleClient;
         renderTiming.current = { loadStart, renderStart: Date.now() };
         setClientList(exampleClient);
     };
@@ -405,6 +416,10 @@ const ClientList = () => {
             <FlatList
                 testID="client-list-scroll-view"
                 data={clientList}
+                // Keep rows built for ~2 screens above and below, not the default ~10: each row is
+                // expensive on low-end phones, and filling a large window after scrolling kept
+                // the JS thread busy for many seconds, even after opening a client.
+                windowSize={5}
                 keyExtractor={(item) => item.id}
                 renderItem={renderClientRow}
                 ListHeaderComponent={

@@ -176,6 +176,8 @@ const Referrals = () => {
     return (
         <FlatList
             style={styles.container}
+            // Keep rows built for ~2 screens above and below, not the default ~10 (see ClientList).
+            windowSize={5}
             contentContainerStyle={{
                 backgroundColor: theme.colors.surface,
                 borderRadius: theme.roundness,

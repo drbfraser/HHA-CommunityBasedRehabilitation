@@ -463,6 +463,9 @@ const ClientList = () => {
                 // expensive on low-end phones, and filling a large window after scrolling kept
                 // the JS thread busy for many seconds, even after opening a client.
                 windowSize={5}
+                // Android restores focus to the search field when returning from a client. With
+                // the default ("never"), the first tap on a row then only unfocused the field.
+                keyboardShouldPersistTaps="handled"
                 keyExtractor={(item) => item.id}
                 renderItem={renderClientRow}
                 ListHeaderComponent={

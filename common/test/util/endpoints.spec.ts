@@ -81,6 +81,15 @@ describe("endpoints.ts", () => {
             const response = await apiFetch(Endpoint.ZONES, "", {}, 2000);
             expect(response.ok).toBe(true);
         });
+
+        it("should reject when the caller's own signal aborts", async () => {
+            fetchMock.get(Endpoint.ZONES, slowResponse(500));
+            const callerAbort = new AbortController();
+            timers.push(setTimeout(() => callerAbort.abort(), 50));
+            await expect(
+                apiFetch(Endpoint.ZONES, "", { signal: callerAbort.signal }, 2000)
+            ).rejects.toBeInstanceOf(Error);
+        });
     });
 
     describe("APIFetchFailError", () => {

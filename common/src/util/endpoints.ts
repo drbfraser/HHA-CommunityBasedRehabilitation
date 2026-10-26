@@ -4,7 +4,11 @@ import buildFormErrorInternal from "./internal/buildFormError";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
 import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 
-export { SYNC_FETCH_TIMEOUT_MILLIS } from "../constants";
+export {
+    SYNC_FETCH_TIMEOUT_MILLIS,
+    IMAGE_FETCH_TIMEOUT_MILLIS,
+    STORY_SAVE_TIMEOUT_MILLIS,
+} from "../constants";
 
 export enum Endpoint {
     LOGIN = "login",
@@ -159,6 +163,15 @@ export const apiFetchByRequest = async (
 
     const abortController: AbortController = new AbortController();
     const timeoutId = setTimeout(() => abortController.abort(), timeoutMs);
+    // Still honour the caller's own signal (e.g. a cache aborting its request).
+    const callerSignal = customInit.signal;
+    if (callerSignal) {
+        if (callerSignal.aborted) {
+            abortController.abort();
+        } else {
+            callerSignal.addEventListener("abort", () => abortController.abort());
+        }
+    }
     customInit.signal = abortController.signal;
 
     return fetch(request, customInit)

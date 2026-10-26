@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import {
     Alert,
     Button,
+    CircularProgress,
     Grid,
     MenuItem,
     TextField,
@@ -520,12 +521,22 @@ const NewSuccessStory = () => {
                     onClick={handleSubmit}
                     sx={{ mr: 2 }}
                     disabled={isSubmitting || isLoadingStory}
+                    startIcon={isSubmitting && <CircularProgress color="inherit" size={18} />}
                 >
-                    {isEditing ? "Save Changes" : "Submit Success Story"}
+                    {isSubmitting
+                        ? "Saving..."
+                        : isEditing
+                        ? "Save Changes"
+                        : "Submit Success Story"}
                 </Button>
-                <Button variant="outlined" onClick={() => history.goBack()}>
+                <Button variant="outlined" onClick={() => history.goBack()} disabled={isSubmitting}>
                     Cancel
                 </Button>
+                {isSubmitting && photos.length > 0 && (
+                    <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+                        Uploading photos. This can take up to a minute on a slow connection.
+                    </Typography>
+                )}
             </Box>
         </>
     );

@@ -4,6 +4,7 @@ import {
     Endpoint,
     adminUserFieldLabels,
     APIFetchFailError,
+    SYNC_FETCH_TIMEOUT_MILLIS,
 } from "@cbr/common";
 import {
     conflictFields,
@@ -117,7 +118,12 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
 
                         let response;
                         try {
-                            response = await apiFetch(Endpoint.SYNC, urlParams);
+                            response = await apiFetch(
+                                Endpoint.SYNC,
+                                urlParams,
+                                {},
+                                SYNC_FETCH_TIMEOUT_MILLIS
+                            );
                         } catch (err: any) {
                             console.log("[SYNC PULL] apiFetch ERROR");
                             console.log("message:", err?.message);
@@ -160,7 +166,12 @@ export async function SyncDB(database: dbType, source: SyncSource = "manual"): P
 
                         let response;
                         try {
-                            response = await apiFetch(Endpoint.SYNC, urlParams, init);
+                            response = await apiFetch(
+                                Endpoint.SYNC,
+                                urlParams,
+                                init,
+                                SYNC_FETCH_TIMEOUT_MILLIS
+                            );
                         } catch (err: any) {
                             console.log("[SYNC PUSH] apiFetch ERROR");
                             console.log("message:", err?.message);

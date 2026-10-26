@@ -10,6 +10,15 @@ from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
 
 from cbr import settings
+from cbr_api.image_limits import (
+    ImageBudgetMixin,
+    ImageTooLargeError,
+    RECORD_IMAGE_BUDGET,
+    STORY_PHOTO_BUDGET,
+    STORY_PHOTOS_TOTAL_MAX_BYTES,
+    dropping_oversized_images,
+    fit_image,
+)
 from cbr_api.storage import OverwriteStorage
 from cbr_api.validators import FileSizeValidator
 from cbr_api.util import current_milli_time
@@ -132,7 +141,7 @@ visit_picture_upload_dir = "images/visits"
 success_story_picture_upload_dir = "images/success_stories"
 
 
-class Client(models.Model):
+class Client(ImageBudgetMixin, models.Model):
     class Gender(models.TextChoices):
         MALE = "M", _("Male")
         FEMALE = "F", _("Female")
@@ -206,7 +215,11 @@ class Client(models.Model):
     mental_timestamp = models.BigIntegerField(default=0)
     last_visit_date = models.BigIntegerField(default=0)
 
+    IMAGE_BUDGETS = {"picture": RECORD_IMAGE_BUDGET}
+
     def save(self, *args, **kwargs):
+        # Fit the picture first: the rename logic below depends on whether there is one.
+        self.apply_image_budgets()
         self.modified_date = int(time.time())
         # The image might need to be renamed if this is a new client, since a new client would be missing the
         # autoincrement primary key (id).
@@ -282,7 +295,7 @@ class ClientRisk(models.Model):
         super().save(*args, **kwargs)
 
 
-class Visit(models.Model):
+class Visit(ImageBudgetMixin, models.Model):
     id = models.CharField(primary_key=True, max_length=100)
     client_id = models.ForeignKey(
         Client, related_name="visits", on_delete=models.CASCADE
@@ -319,8 +332,10 @@ class Visit(models.Model):
         null=True,
     )  # if picture available
 
+    IMAGE_BUDGETS = {"picture": RECORD_IMAGE_BUDGET}
 
-class Referral(models.Model):
+
+class Referral(ImageBudgetMixin, models.Model):
     id = models.CharField(primary_key=True, max_length=100)
     user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     date_referred = models.BigIntegerField()
@@ -351,7 +366,11 @@ class Referral(models.Model):
         Client, related_name="referrals", on_delete=models.CASCADE
     )
 
+    IMAGE_BUDGETS = {"picture": RECORD_IMAGE_BUDGET}
+
     def save(self, *args, **kwargs):
+        # Fit the picture first: the rename logic below depends on whether there is one.
+        self.apply_image_budgets()
         self.modified_date = int(time.time())
         # The image might need to be renamed if this is a new client, since a new client would be missing the
         # autoincrement primary key (id).
@@ -638,7 +657,7 @@ class PatientNote(models.Model):
         ]
 
 
-class SuccessStory(models.Model):
+class SuccessStory(ImageBudgetMixin, models.Model):
     class StoryStatus(models.TextChoices):
         WORK_IN_PROGRESS = "WIP", _("Work in Progress")
         READY = "READY", _("Ready")
@@ -746,8 +765,58 @@ class SuccessStory(models.Model):
     date = models.DateField()
 
     PHOTO_FIELDS = ("photo", "photo_2", "photo_3", "photo_4", "photo_5")
+    IMAGE_BUDGETS = {field_name: STORY_PHOTO_BUDGET for field_name in PHOTO_FIELDS}
+
+    def _stored_photo_size(self, field_name):
+        photo = getattr(self, field_name)
+        if not photo:
+            return 0
+        try:
+            return photo.size
+        except (OSError, ValueError):  # The file is missing from storage.
+            return 0
+
+    def apply_image_budgets(self):
+        """
+        Fits each new photo to its budget, then keeps all the story's photos within
+        STORY_PHOTOS_TOTAL_MAX_BYTES (phones store them all in one row) by shrinking the new
+        photos further if needed.
+        """
+        super().apply_image_budgets()
+        new_fields = self._new_image_fields()
+        if not new_fields:
+            return
+        stored_total = sum(
+            self._stored_photo_size(name)
+            for name in self.PHOTO_FIELDS
+            if name not in new_fields
+        )
+        new_total = sum(getattr(self, name).size for name in new_fields)
+        if stored_total + new_total <= STORY_PHOTOS_TOTAL_MAX_BYTES:
+            return
+
+        allowance = (STORY_PHOTOS_TOTAL_MAX_BYTES - stored_total) // len(new_fields)
+        for name in new_fields:
+            photo = getattr(self, name)
+            try:
+                if allowance <= 0:
+                    raise ImageTooLargeError(
+                        "The story's other photos leave no room for this one."
+                    )
+                fitted = fit_image(photo, STORY_PHOTO_BUDGET, max_bytes=allowance)
+            except ImageTooLargeError as e:
+                if not dropping_oversized_images():
+                    raise ImageTooLargeError(
+                        {name: f"The story's photos are too large in total. {e.detail}"}
+                    )
+                self._drop_image(name, e.detail)
+                continue
+            if fitted is not photo:
+                setattr(self, name, fitted)
 
     def save(self, *args, **kwargs):
+        # Fit the photos first: the rename logic below depends on which slots have one.
+        self.apply_image_budgets()
         # The image might need to be renamed if this is a new story, since a new story would be missing the
         # UUID primary key (id).
         photos_to_rename = []

@@ -359,7 +359,16 @@ def create_referral_data(validated_data, user, sync_time):
     updated_data = table_data.pop("updated")
     for data in updated_data:
         data["updated_at"] = sync_time
+        # .update() can't store a file, so apply a new picture via save() (which also fits it
+        # to its size budget).
+        new_picture: Optional[File] = data.get("picture")
+        if new_picture:
+            data.pop("picture")
         models.Referral.objects.filter(pk=data["id"]).update(**data)
+        if new_picture:
+            referral = models.Referral.objects.get(pk=data["id"])
+            referral.picture = new_picture
+            referral.save()
 
 
 def create_patient_note_data(validated_data, user, sync_time):

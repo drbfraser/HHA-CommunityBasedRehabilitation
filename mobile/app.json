@@ -2,7 +2,7 @@
     "expo": {
         "name": "CBR",
         "slug": "CBR",
-        "version": "1.4.13-44",
+        "version": "1.4.14-45",
         "orientation": "portrait",
         "icon": "./assets/icon.png",
         "scheme": "cbr",
@@ -18,7 +18,7 @@
                 "backgroundColor": "#ffffff"
             },
             "package": "org.hopehealthaction.cbrapp",
-            "versionCode": 44,
+            "versionCode": 45,
             "allowBackup": false,
             "blockedPermissions": [
                 "android.permission.READ_EXTERNAL_STORAGE",

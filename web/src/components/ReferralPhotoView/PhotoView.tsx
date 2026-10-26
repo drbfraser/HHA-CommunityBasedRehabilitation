@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FormLabel, styled } from "@mui/material";
-import { helperImgCompress } from "./imgCompressHelper";
+import { PhotoSize, RECORD_PHOTO_SIZE, resizePhoto } from "util/resizePhoto";
 
 const Container = styled("div")({
     display: "flex",
@@ -10,6 +10,8 @@ const Container = styled("div")({
 
 interface Iprops {
     onPictureChange: (newPictureURL: string) => void;
+    /** How the picked photo is resized; defaults to the size for client/visit/referral photos. */
+    size?: PhotoSize;
 }
 
 export const PhotoView = (props: Iprops) => {
@@ -29,20 +31,22 @@ export const PhotoView = (props: Iprops) => {
                 accept="image/*"
                 onChange={async (event) => {
                     const files = event.target.files;
-                    if (!files) {
+                    if (!files || !files[0]) {
                         return;
                     }
 
-                    const target_file = await helperImgCompress(files[0]);
-                    const reader = new FileReader();
-                    reader.onload = () => {
-                        const image = (reader.result as ArrayBuffer) ?? undefined;
-                        const url = URL.createObjectURL(new Blob([image]));
+                    try {
+                        const resized = await resizePhoto(
+                            files[0],
+                            props.size ?? RECORD_PHOTO_SIZE
+                        );
+                        const url = URL.createObjectURL(resized);
                         setThumb(url);
                         props.onPictureChange(url);
-                    };
-
-                    reader.readAsArrayBuffer(target_file);
+                    } catch (e) {
+                        console.error(e);
+                        alert("Could not read this image. Please choose a JPEG or PNG photo.");
+                    }
                 }}
             />
         </Container>

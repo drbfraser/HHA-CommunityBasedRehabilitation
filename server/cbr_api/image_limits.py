@@ -41,6 +41,9 @@ RECORD_IMAGE_BUDGET = ImageBudget(max_bytes=200 * 1024, max_side=400, quality=75
 STORY_PHOTO_BUDGET = ImageBudget(max_bytes=320 * 1024, max_side=1500, quality=80)
 # All of a story's photos together: ~1.73 MB as base64, leaving room for the story text.
 STORY_PHOTOS_TOTAL_MAX_BYTES = 1300 * 1024
+# Bug report images are not stored, but emailed (twice: attached and inline), so keep emails small.
+# The apps send at most 800 KB.
+BUG_REPORT_IMAGE_BUDGET = ImageBudget(max_bytes=1024 * 1024, max_side=2000, quality=85)
 
 # Tried in order for an image over its budget: (fraction of max_side, JPEG quality).
 STEP_DOWN = [(1, 75), (1, 70), (1, 65), (0.8, 75), (0.8, 65), (2 / 3, 65), (0.5, 60)]

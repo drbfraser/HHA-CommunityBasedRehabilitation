@@ -3,7 +3,7 @@ import {
     Endpoint,
     IMAGE_FETCH_TIMEOUT_MILLIS,
     objectToFormData,
-    STORY_SAVE_TIMEOUT_MILLIS,
+    UPLOAD_FETCH_TIMEOUT_MILLIS,
 } from "@cbr/common/util/endpoints";
 
 export enum StoryStatus {
@@ -203,7 +203,7 @@ export const createStory = async (
         Endpoint.SUCCESS_STORIES,
         "",
         { method: "POST", body: formData },
-        STORY_SAVE_TIMEOUT_MILLIS
+        UPLOAD_FETCH_TIMEOUT_MILLIS
     );
     return resp.json();
 };
@@ -227,7 +227,7 @@ export const updateStory = async (
         Endpoint.SUCCESS_STORY,
         id,
         { method: "PUT", body: formData },
-        STORY_SAVE_TIMEOUT_MILLIS
+        UPLOAD_FETCH_TIMEOUT_MILLIS
     );
     return resp.json();
 };

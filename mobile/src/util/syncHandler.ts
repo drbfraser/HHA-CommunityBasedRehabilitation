@@ -349,23 +349,47 @@ function blobToDataURL(blob: Blob): Promise<string | null> {
     });
 }
 
-async function getImageData(changes, endpoint, field = "picture", slot = 1) {
-    await Promise.all(
-        changes.map(async (element) => {
-            if (element[field] != null) {
-                try {
-                    const path = slot > 1 ? `${element.id}/${slot}` : `${element.id}`;
-                    const resp = await apiFetch(endpoint, path);
-                    const dataUrl = await blobToDataURL(await resp.blob());
-                    if (dataUrl != null) {
-                        element[field] = dataUrl;
-                    }
-                } catch {
-                    // A missing image on the server must not abort the whole sync.
-                }
+// Images are downloaded a few at a time, each with a generous timeout and one retry. Starting
+// them all at once made the later ones time out while still queued (Android runs only ~5 requests
+// to a server at a time, but each request's timeout starts when it is created).
+const IMAGE_DOWNLOAD_CONCURRENCY = 4;
+const IMAGE_DOWNLOAD_TIMEOUT_MILLIS = 30000;
+const IMAGE_DOWNLOAD_ATTEMPTS = 2;
+
+async function downloadImageDataUrl(endpoint, path: string): Promise<string | null> {
+    for (let attempt = 1; attempt <= IMAGE_DOWNLOAD_ATTEMPTS; attempt++) {
+        try {
+            const resp = await apiFetch(endpoint, path, {}, IMAGE_DOWNLOAD_TIMEOUT_MILLIS);
+            const dataUrl = await blobToDataURL(await resp.blob());
+            if (dataUrl != null) {
+                return dataUrl;
             }
-        })
-    );
+        } catch (e: any) {
+            // Retrying won't help if the server says the image doesn't exist (4xx).
+            const clientError = e != null && APIFetchFailError.isFetchError(e) && e.status < 500;
+            if (clientError || attempt === IMAGE_DOWNLOAD_ATTEMPTS) {
+                console.log(`[SYNC PULL] Could not download image ${endpoint}${path}:`, e?.message);
+                break;
+            }
+        }
+    }
+    return null;
+}
+
+async function getImageData(changes, endpoint, field = "picture", slot = 1) {
+    const withImages = changes.filter((element) => element[field] != null);
+    let next = 0;
+    const downloadNext = async () => {
+        while (next < withImages.length) {
+            const element = withImages[next++];
+            const path = slot > 1 ? `${element.id}/${slot}` : `${element.id}`;
+            // A missing image must not abort the whole sync. If it can't be downloaded, store no
+            // image rather than the server's reference to it, which the app can't display.
+            element[field] = await downloadImageDataUrl(endpoint, path);
+        }
+    };
+    const workers = Math.min(IMAGE_DOWNLOAD_CONCURRENCY, withImages.length);
+    await Promise.all(Array.from({ length: workers }, downloadNext));
 }
 
 function riskResolver(raw, dirtyRaw, newRaw, column, timestamp) {

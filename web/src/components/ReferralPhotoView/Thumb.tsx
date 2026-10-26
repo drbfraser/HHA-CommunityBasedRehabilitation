@@ -1,4 +1,4 @@
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, Endpoint, IMAGE_FETCH_TIMEOUT_MILLIS } from "@cbr/common/util/endpoints";
 import React, { useEffect, useState } from "react";
 import { ImageViewerDialog } from "components/ImageViewer/ImageViewerDialog";
 
@@ -20,7 +20,7 @@ export const Thumb = (props: Iprops) => {
 
     useEffect(() => {
         if (props.Url) {
-            apiFetch(props.endpoint, `${props.Id}`) // Use the passed endpoint
+            apiFetch(props.endpoint, `${props.Id}`, {}, IMAGE_FETCH_TIMEOUT_MILLIS) // Use the passed endpoint
                 .then((resp) => resp.blob())
                 .then((blob) => {
                     setThumb(URL.createObjectURL(blob));

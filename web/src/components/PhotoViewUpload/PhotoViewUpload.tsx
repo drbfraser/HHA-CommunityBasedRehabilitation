@@ -16,7 +16,7 @@ import {
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, Endpoint, IMAGE_FETCH_TIMEOUT_MILLIS } from "@cbr/common/util/endpoints";
 import { useIsMounted } from "util/hooks/useIsMounted";
 import { canvasToJpeg, PhotoSize, RECORD_PHOTO_SIZE, resizePhoto } from "util/resizePhoto";
 import { ImageViewerDialog } from "components/ImageViewer/ImageViewerDialog";
@@ -97,7 +97,7 @@ export const ProfilePicCard = (props: IProps) => {
             const abortController = new AbortController();
             // Note that we refetch the image if the client state changes (and we don't have a local
             // blob to use)
-            apiFetch(Endpoint.CLIENT_PICTURE, `${props.clientId}`)
+            apiFetch(Endpoint.CLIENT_PICTURE, `${props.clientId}`, {}, IMAGE_FETCH_TIMEOUT_MILLIS)
                 .then((resp) => resp.blob())
                 .then((blob) => {
                     hasLoadedImage.current = true;

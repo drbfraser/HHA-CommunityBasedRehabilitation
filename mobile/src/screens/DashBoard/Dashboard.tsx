@@ -37,6 +37,11 @@ import {
 } from "../../util/syncNotifications";
 import { useNetInfo } from "@react-native-community/netinfo";
 
+// Before the first sync completes: how long to wait for a sync to start, and the longest to wait
+// for one that is running (sync requests themselves time out after 2 minutes).
+const FIRST_SYNC_START_WAIT_MILLIS = 15000;
+const FIRST_SYNC_MAX_WAIT_MILLIS = 3 * 60 * 1000;
+
 const Dashboard = () => {
     const styles = useStyles();
     const [clientSortOption, setClientSortOption] = useState("");
@@ -58,7 +63,7 @@ const Dashboard = () => {
 
     const { t } = useTranslation();
     const readOnly = useReadOnlyMode();
-    const { status: syncStatus } = useSyncStatus();
+    const { status: syncStatus, isSyncing } = useSyncStatus();
     const previousSyncPhase = useRef(syncStatus.phase);
     const previousDashboardLoading = useRef<boolean>(true);
     const hasShownDashboardLoadedToast = useRef<boolean>(false);
@@ -229,24 +234,31 @@ const Dashboard = () => {
 
         if (!isFocused || !syncStatsLoaded || allowDashboardFallback) return;
 
-        if (netInfo.isInternetReachable === false) {
+        // Stop waiting for the first sync: show local data with the "unable to synchronize" banner.
+        const fallBack = (reason?: "no_internet") => {
             setAllowDashboardFallback(true);
             void refreshDashboardData();
             if (!hasShownSyncFallbackToast.current) {
-                notifyAutoSyncFailure("no_internet");
+                notifyAutoSyncFailure(reason);
                 hasShownSyncFallbackToast.current = true;
             }
+        };
+
+        if (netInfo.isInternetReachable === false) {
+            fallBack("no_internet");
+            return;
+        }
+        if (syncStatus.phase === "error") {
+            fallBack();
             return;
         }
 
-        const fallbackTimer = setTimeout(() => {
-            setAllowDashboardFallback(true);
-            void refreshDashboardData();
-            if (!hasShownSyncFallbackToast.current) {
-                notifyAutoSyncFailure();
-                hasShownSyncFallbackToast.current = true;
-            }
-        }, 15000);
+        // While a sync is running, keep showing progress: a first sync downloads all the data and
+        // can take a minute or more. Only give up if it runs far longer than a sync's own timeout.
+        const fallbackTimer = setTimeout(
+            () => fallBack(),
+            isSyncing ? FIRST_SYNC_MAX_WAIT_MILLIS : FIRST_SYNC_START_WAIT_MILLIS
+        );
 
         return () => clearTimeout(fallbackTimer);
     }, [
@@ -255,6 +267,8 @@ const Dashboard = () => {
         hasCompletedFirstSync,
         allowDashboardFallback,
         netInfo.isInternetReachable,
+        isSyncing,
+        syncStatus.phase,
     ]);
 
     useEffect(() => {

@@ -1,4 +1,10 @@
-import { apiFetch, Endpoint, objectToFormData } from "@cbr/common/util/endpoints";
+import {
+    apiFetch,
+    Endpoint,
+    IMAGE_FETCH_TIMEOUT_MILLIS,
+    objectToFormData,
+    STORY_SAVE_TIMEOUT_MILLIS,
+} from "@cbr/common/util/endpoints";
 
 export enum StoryStatus {
     WORK_IN_PROGRESS = "WIP",
@@ -126,7 +132,12 @@ export const getStoryById = async (id: string): Promise<ISuccessStory> => {
 export const fetchStoryPhotoUrl = async (storyId: string, slot: number): Promise<string> => {
     const suffix = slot <= 1 ? `${storyId}` : `${storyId}/${slot}`;
     try {
-        const resp = await apiFetch(Endpoint.SUCCESS_STORY_PHOTO, suffix);
+        const resp = await apiFetch(
+            Endpoint.SUCCESS_STORY_PHOTO,
+            suffix,
+            {},
+            IMAGE_FETCH_TIMEOUT_MILLIS
+        );
         const blob = await resp.blob();
         return URL.createObjectURL(blob);
     } catch {
@@ -188,10 +199,12 @@ export const createStory = async (
     const formData = objectToFormData(story);
     await appendPhotos(formData, photos, null);
 
-    const resp = await apiFetch(Endpoint.SUCCESS_STORIES, "", {
-        method: "POST",
-        body: formData,
-    });
+    const resp = await apiFetch(
+        Endpoint.SUCCESS_STORIES,
+        "",
+        { method: "POST", body: formData },
+        STORY_SAVE_TIMEOUT_MILLIS
+    );
     return resp.json();
 };
 
@@ -210,9 +223,11 @@ export const updateStory = async (
         formData.append("cleared_photos", clearedPhotos.join(","));
     }
 
-    const resp = await apiFetch(Endpoint.SUCCESS_STORY, id, {
-        method: "PUT",
-        body: formData,
-    });
+    const resp = await apiFetch(
+        Endpoint.SUCCESS_STORY,
+        id,
+        { method: "PUT", body: formData },
+        STORY_SAVE_TIMEOUT_MILLIS
+    );
     return resp.json();
 };

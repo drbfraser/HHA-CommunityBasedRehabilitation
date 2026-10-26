@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import PhotoIcon from "@mui/icons-material/Photo";
 import history from "@cbr/common/util/history";
-import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
+import { apiFetch, Endpoint, IMAGE_FETCH_TIMEOUT_MILLIS } from "@cbr/common/util/endpoints";
 import {
     getAllStories,
     ISuccessStory,
@@ -32,7 +32,7 @@ const StoryThumbnail = ({ storyId, hasPhoto }: { storyId: string; hasPhoto: bool
     useEffect(() => {
         if (!hasPhoto) return;
         let revoked = false;
-        apiFetch(Endpoint.SUCCESS_STORY_PHOTO, storyId)
+        apiFetch(Endpoint.SUCCESS_STORY_PHOTO, storyId, {}, IMAGE_FETCH_TIMEOUT_MILLIS)
             .then((resp) => resp.blob())
             .then((blob) => {
                 if (!revoked) setBlobUrl(URL.createObjectURL(blob));

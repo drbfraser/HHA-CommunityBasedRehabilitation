@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Image, Platform, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ActivityIndicator, Button, Divider, TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -9,6 +9,8 @@ import { themeColors, useCurrentUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
+import { AutoSyncDB } from "../../util/syncHandler";
+import { SyncContext } from "../../context/SyncContext/SyncContext";
 import { ensureCameraPermission, showImageError } from "../../util/cameraPermission";
 import { resizePhotoToDataUrl, STORY_PHOTO_SIZE } from "../../util/resizePhoto";
 import ExposedDropdownMenu from "../../components/ExposedDropdownMenu/ExposedDropdownMenu";
@@ -93,6 +95,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
 
     const currentUser = useCurrentUser();
     const database = useDatabase();
+    const { autoSync, cellularSync } = useContext(SyncContext);
     const [form, setForm] = useState<FormState>(BLANK_FORM(clientID));
     const [photos, setPhotos] = useState<PhotoItem[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -240,7 +243,10 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             : createStory(database, clientID, userId, payload, photoUris);
 
         request
-            .then(() => navigation.goBack())
+            .then(() => {
+                AutoSyncDB(database, autoSync, cellularSync);
+                navigation.goBack();
+            })
             .catch(() => {
                 setHasSubmitted(false);
                 setError("Could not save the success story.");

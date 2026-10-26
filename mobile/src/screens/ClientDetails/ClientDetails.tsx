@@ -26,6 +26,7 @@ import { Formik, FormikHelpers } from "formik";
 import { handleSubmit } from "../../components/ClientForm/ClientSubmitHandler";
 import defaultProfilePicture from "../../util/defaultProfilePicture";
 import FormikImageModal from "../../components/FormikImageModal/FormikImageModal";
+import ImageViewer from "../../components/ImageViewer/ImageViewer";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { Q } from "@nozbe/watermelondb";
 import { modelName } from "../../models/constant";
@@ -67,6 +68,7 @@ const ClientDetails = (props: ClientProps) => {
     const [originaluri, setOriginaluri] = useState<string>("");
 
     const [showImagePickerModal, setShowImagePickerModal] = useState<boolean>(false);
+    const [photoViewerOpen, setPhotoViewerOpen] = useState<boolean>(false);
     const [editModalOpen, setEditModalOpen] = useState<boolean>(false);
     const [historyModalOpen, setHistoryModalOpen] = useState<boolean>(false);
     const [previousGoalsModalOpen, setPreviousGoalsModalOpen] = useState<boolean>(false);
@@ -250,6 +252,22 @@ const ClientDetails = (props: ClientProps) => {
         return activity;
     }, [referrals, surveys, visits]);
 
+    // In edit mode the photo opens the picker to change it; in view mode it opens the viewer, or
+    // explains how to add a photo if there isn't one.
+    const displayedPhotoUri = imageChange ? uri : originaluri;
+    const onPhotoPress = () => {
+        if (!touchDisable) {
+            setShowImagePickerModal(true);
+        } else if (displayedPhotoUri) {
+            setPhotoViewerOpen(true);
+        } else {
+            Alert.alert(
+                "No photo yet",
+                "To add a photo, tap Edit (below the client details), then tap the photo."
+            );
+        }
+    };
+
     const handleFormSubmit = (
         values: TClientValues,
         formikHelpers: FormikHelpers<TClientValues>
@@ -278,10 +296,7 @@ const ClientDetails = (props: ClientProps) => {
                             {(formikProps) => (
                                 <View style={styles.container}>
                                     <View style={styles.imageContainer}>
-                                        <TouchableRipple
-                                            disabled={touchDisable}
-                                            onPress={() => setShowImagePickerModal(true)}
-                                        >
+                                        <TouchableRipple onPress={onPhotoPress}>
                                             {imageChange ? (
                                                 <Card.Cover
                                                     style={styles.clientCardImageStyle}
@@ -300,6 +315,13 @@ const ClientDetails = (props: ClientProps) => {
                                             )}
                                         </TouchableRipple>
                                     </View>
+                                    {displayedPhotoUri ? (
+                                        <ImageViewer
+                                            visible={photoViewerOpen}
+                                            images={[displayedPhotoUri]}
+                                            onClose={() => setPhotoViewerOpen(false)}
+                                        />
+                                    ) : null}
                                     <FormikImageModal
                                         field={ClientField.picture}
                                         fieldLabels={clientFieldLabels}

@@ -5,13 +5,12 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import * as ImagePicker from "expo-image-picker";
-import * as FileSystem from "expo-file-system";
-import { manipulateAsync } from "expo-image-manipulator";
 import { themeColors, useCurrentUser } from "@cbr/common";
 import { useDatabase } from "@nozbe/watermelondb/hooks";
 import { StackParamList } from "../../util/stackScreens";
 import { StackScreenName } from "../../util/StackScreenName";
 import { ensureCameraPermission, showImageError } from "../../util/cameraPermission";
+import { resizePhotoToDataUrl, STORY_PHOTO_SIZE } from "../../util/resizePhoto";
 import ExposedDropdownMenu from "../../components/ExposedDropdownMenu/ExposedDropdownMenu";
 import ConfirmDialogWithNavListener from "../../components/DiscardDialogs/ConfirmDialogWithNavListener";
 import {
@@ -72,24 +71,10 @@ const makePhotoItem = (uri: string): PhotoItem => ({
     uri,
 });
 
-// Images at or above this size are downscaled before being base64-encoded so
-// the sync payload stays reasonable (mirrors FormikImageModal).
-const MAX_FILE_SIZE = 500000;
-
-// Convert a picked image into a base64 data URL so the photo can travel through
+// Convert a picked image into a resized JPEG data URL so the photo can travel through
 // the sync payload (the binary is decoded server-side).
-const assetToDataUrl = async (asset: ImagePicker.ImagePickerAsset): Promise<string> => {
-    const fileInfo = await FileSystem.getInfoAsync(asset.uri);
-    if (fileInfo.exists && fileInfo.size && fileInfo.size >= MAX_FILE_SIZE) {
-        const resized = await manipulateAsync(
-            `data:image/jpeg;base64,${asset.base64}`,
-            [{ resize: { width: 300 } }],
-            { compress: 0.7, base64: true }
-        );
-        return `data:image/jpeg;base64,${resized.base64}`;
-    }
-    return `data:image/jpeg;base64,${asset.base64}`;
-};
+const assetToDataUrl = (asset: ImagePicker.ImagePickerAsset): Promise<string> =>
+    resizePhotoToDataUrl(asset, STORY_PHOTO_SIZE);
 
 const STATUS_VALUES: Record<string, string> = {
     [StoryStatus.WORK_IN_PROGRESS]: "Work in Progress",
@@ -178,11 +163,11 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
         // The gallery uses the Android Photo Picker / iOS limited picker, which need no
         // media-library permission, so we go straight to the picker.
         try {
+            // Full quality here: the photo is compressed once, when it is resized.
             const result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                base64: true,
-                quality: 0.7,
+                quality: 1,
             });
             if (result && !result.canceled) {
                 addPhoto(await assetToDataUrl(result.assets[0]));
@@ -200,8 +185,7 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
             const result = await ImagePicker.launchCameraAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                base64: true,
-                quality: 0.7,
+                quality: 1,
             });
             if (result && !result.canceled) {
                 addPhoto(await assetToDataUrl(result.assets[0]));

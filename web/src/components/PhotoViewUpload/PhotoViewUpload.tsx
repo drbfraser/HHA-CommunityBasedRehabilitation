@@ -1,5 +1,6 @@
 import React, { Reducer, useEffect, useReducer, useRef, useState } from "react";
 import {
+    Alert,
     Box,
     Button,
     Card,
@@ -9,6 +10,7 @@ import {
     DialogActions,
     DialogContent,
     LinearProgress,
+    Snackbar,
     SxProps,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -16,7 +18,8 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { apiFetch, Endpoint } from "@cbr/common/util/endpoints";
 import { useIsMounted } from "util/hooks/useIsMounted";
-import { helperImgCompress } from "components/ReferralPhotoView/imgCompressHelper";
+import { canvasToJpeg, PhotoSize, RECORD_PHOTO_SIZE, resizePhoto } from "util/resizePhoto";
+import { ImageViewerDialog } from "components/ImageViewer/ImageViewerDialog";
 import { photoViewUploadStyles } from "./PhotoViewUpload.styles";
 
 interface IProps {
@@ -39,6 +42,10 @@ interface ICropperModal {
 
 const DEFAULT_IMAGE_PATH = "/images/profile_pic_icon.png";
 
+// The photo shown in the cropper: large enough to crop precisely, high quality so the final
+// 400 px crop is not noticeably re-compressed.
+const CROPPER_PHOTO_SIZE: PhotoSize = { maxSide: 1500, quality: 0.92 };
+
 type TReducerAction = { newImgSrc: string };
 
 const imgSrcReducer: Reducer<string, TReducerAction> = (prevImgSrc, { newImgSrc }): string => {
@@ -59,6 +66,7 @@ export const ProfilePicCard = (props: IProps) => {
     const profilePicRef = useRef<HTMLInputElement | null>(null);
 
     const [isViewingPicture, setIsViewingPicture] = useState<boolean>(false);
+    const [showNoPictureHint, setShowNoPictureHint] = useState<boolean>(false);
     const [cropModalOpen, setCropModalOpen] = useState<boolean>(false);
 
     const [cropperPictureState, dispatchCropperPictureState] = useReducer(imgSrcReducer, "");
@@ -104,34 +112,16 @@ export const ProfilePicCard = (props: IProps) => {
         }
     }, [props.clientId, props.picture, props.isEditing]);
 
-    const PictureModal = () => {
-        return (
-            <Dialog open={isViewingPicture} onClose={() => setIsViewingPicture(false)}>
-                <DialogContent>
-                    <Box
-                        component="img"
-                        sx={photoViewUploadStyles.pictureModal}
-                        src={imgSrcState}
-                        alt="user-profile-pic"
-                        onError={(e) => {
-                            const target = e.currentTarget;
-                            if (target.src !== DEFAULT_IMAGE_PATH) {
-                                dispatchImgSrcState({ newImgSrc: DEFAULT_IMAGE_PATH });
-                            }
-                        }}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button
-                        variant="outlined"
-                        color="primary"
-                        onClick={() => setIsViewingPicture(false)}
-                    >
-                        Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        );
+    const hasPicture = Boolean(imgSrcState) && imgSrcState !== DEFAULT_IMAGE_PATH;
+
+    const onPictureClick = () => {
+        if (props.isEditing) {
+            triggerFileUpload();
+        } else if (hasPicture) {
+            setIsViewingPicture(true);
+        } else {
+            setShowNoPictureHint(true);
+        }
     };
 
     const CropModal = (cropperProps: ICropperModal) => {
@@ -184,19 +174,25 @@ export const ProfilePicCard = (props: IProps) => {
                             }
 
                             setIsSaving(true);
-                            cropper.current.getCroppedCanvas().toBlob((blob: Blob | null) => {
-                                if (!isMounted()) {
-                                    return;
-                                }
-
-                                if (blob) {
-                                    cropperProps.onPictureChange(URL.createObjectURL(blob));
-                                } else {
-                                    alert("Failed to get image!");
-                                }
-                                setIsSaving(false);
-                                handleExit();
+                            const croppedCanvas = cropper.current.getCroppedCanvas({
+                                maxWidth: RECORD_PHOTO_SIZE.maxSide,
+                                maxHeight: RECORD_PHOTO_SIZE.maxSide,
+                                fillColor: "#fff",
+                                imageSmoothingQuality: "high",
                             });
+                            canvasToJpeg(croppedCanvas, RECORD_PHOTO_SIZE.quality)
+                                .then((blob) => {
+                                    if (isMounted()) {
+                                        cropperProps.onPictureChange(URL.createObjectURL(blob));
+                                    }
+                                })
+                                .catch(() => alert("Failed to get image!"))
+                                .finally(() => {
+                                    if (isMounted()) {
+                                        setIsSaving(false);
+                                        handleExit();
+                                    }
+                                });
                         }}
                     >
                         Save
@@ -216,30 +212,26 @@ export const ProfilePicCard = (props: IProps) => {
         e.preventDefault();
 
         const files = e.target.files;
-        if (!files) {
+        if (!files || !files[0]) {
             return;
         }
-
-        const reader = new FileReader();
-
-        let target_file = await helperImgCompress(files[0]);
-
-        reader.onload = () => {
-            const cropperPicture = (reader.result as ArrayBuffer) ?? undefined;
-            if (cropperPicture) {
-                const blob = new Blob([cropperPicture]);
-                dispatchCropperPictureState({ newImgSrc: URL.createObjectURL(blob) });
-            } else {
-                alert("Error opening image");
-            }
-        };
-
-        reader.readAsArrayBuffer(target_file);
-        setCropModalOpen(true);
+        const file = files[0];
 
         // Allow image reuse when selecting in file picker again.
         // @ts-ignore
         e.target.value = null;
+
+        setCropModalOpen(true);
+        try {
+            // Shrink very large photos (and apply their EXIF rotation) so the cropper stays
+            // responsive; the crop itself is saved at the final size when the user clicks Save.
+            const forCropping = await resizePhoto(file, CROPPER_PHOTO_SIZE);
+            dispatchCropperPictureState({ newImgSrc: URL.createObjectURL(forCropping) });
+        } catch (error) {
+            console.error(error);
+            setCropModalOpen(false);
+            alert("Could not read this image. Please choose a JPEG or PNG photo.");
+        }
     };
 
     const triggerFileUpload = () => {
@@ -258,11 +250,7 @@ export const ProfilePicCard = (props: IProps) => {
                           } as SxProps)
                 }
             >
-                <CardContent
-                    onClick={() =>
-                        !props.isEditing ? setIsViewingPicture(true) : triggerFileUpload()
-                    }
-                >
+                <CardContent onClick={onPictureClick}>
                     {imgSrcState && (
                         <Box
                             component="img"
@@ -289,7 +277,21 @@ export const ProfilePicCard = (props: IProps) => {
                     </Box>
                 </CardContent>
             </Card>
-            <PictureModal />
+            <ImageViewerDialog
+                open={isViewingPicture && hasPicture}
+                onClose={() => setIsViewingPicture(false)}
+                images={[{ src: imgSrcState, fileBaseName: `client-${props.clientId ?? "photo"}` }]}
+            />
+            <Snackbar
+                open={showNoPictureHint}
+                autoHideDuration={6000}
+                onClose={() => setShowNoPictureHint(false)}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+            >
+                <Alert severity="info" onClose={() => setShowNoPictureHint(false)}>
+                    No photo yet. To add one, click Edit, then click the photo.
+                </Alert>
+            </Snackbar>
             <CropModal onPictureChange={props.onPictureChange} />
         </>
     );

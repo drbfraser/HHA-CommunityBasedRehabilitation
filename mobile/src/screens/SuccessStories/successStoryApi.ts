@@ -18,7 +18,11 @@ export enum PublishPermission {
     NO = "NO",
     ANONYMOUS = "ANON",
 }
-export const MAX_STORY_PHOTOS = 5;
+// Maximum number of photos that can be added to a story. A story's photos are all stored in one
+// database row, which Android can only read if it fits in 2 MB, so with larger photos this is 4
+// (see STORY_PHOTO_SIZE). Older stories may still have a 5th photo (smaller, older photos); it is
+// kept.
+export const MAX_STORY_PHOTOS = 4;
 export const PHOTO_FIELDS = ["photo", "photo_2", "photo_3", "photo_4", "photo_5"] as const;
 export type PhotoField = typeof PHOTO_FIELDS[number];
 

@@ -29,6 +29,7 @@ from cbr_api.sql import (
     getDischargedClients,
 )
 from cbr_api.util import client_picture_last_modified_datetime, client_image_etag
+from cbr_api.image_limits import drop_oversized_images
 from downloadview.object import AuthenticatedObjectDownloadView
 from cbr_api.util import (
     syncResp,
@@ -741,6 +742,9 @@ class AlertDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 @api_view(["GET", "POST"])
+# A pushed image that can't be fitted to its size budget is dropped (and logged) rather than
+# failing the push, which the app would otherwise retry forever.
+@drop_oversized_images()
 def sync(request):
     mobileApiVersion = request.GET.get("api_version")
 

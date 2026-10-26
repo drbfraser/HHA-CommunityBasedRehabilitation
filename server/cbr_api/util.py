@@ -6,13 +6,31 @@ from hashlib import blake2b
 import time
 import json
 from typing import Optional
+import logging
 from django.core.files import File
 from django.core.files.base import ContentFile
+from rest_framework import serializers
 
 from cbr_api import models
 from cbr_api.email_notifications import send_referral_created_email
 
 API_VERSION = "5.0.0"
+
+# Largest client/visit/referral/success-story image the server accepts. The apps resize photos
+# to well under this (~0.7 MB at most); it guards against old clients and unusual uploads.
+MAX_IMAGE_BYTES = 3 * 1024 * 1024
+
+logger = logging.getLogger(__name__)
+
+
+def validate_image_size(image):
+    """Serializer field validator: rejects images larger than MAX_IMAGE_BYTES."""
+    size = getattr(image, "size", None)
+    if size is not None and size > MAX_IMAGE_BYTES:
+        raise serializers.ValidationError(
+            f"Image is too large ({size / (1024 * 1024):.1f} MB); "
+            f"the maximum is {MAX_IMAGE_BYTES // (1024 * 1024)} MB."
+        )
 
 
 def client_last_modified_datetime(request, pk, *args):
@@ -156,11 +174,35 @@ def base64_to_data(data):
     return ContentFile(raw, name="temp." + ext)
 
 
+def _decode_within_limit(record, field, value):
+    """
+    Decodes a base64 image, or returns None if it is larger than MAX_IMAGE_BYTES. Oversized images
+    are dropped (and logged) rather than rejected: rejecting would fail the whole sync push, and the
+    app would retry the same push forever.
+    """
+    image = base64_to_data(value)
+    if image.size > MAX_IMAGE_BYTES:
+        logger.warning(
+            "Sync: dropped %s of record %s: %d bytes is over the %d byte limit",
+            field,
+            record.get("id"),
+            image.size,
+            MAX_IMAGE_BYTES,
+        )
+        return None
+    return image
+
+
 def decode_image(data, field="picture"):
     create_data = data.get("created")
     for record in create_data:
-        if record.get(field):
-            record[field] = base64_to_data(record[field])
+        image = (
+            _decode_within_limit(record, field, record[field])
+            if record.get(field)
+            else None
+        )
+        if image:
+            record[field] = image
         else:
             record.pop(field, None)
     # for updated, only convert base64 and convert to raw data if image was locally change, else pop out of data
@@ -168,7 +210,14 @@ def decode_image(data, field="picture"):
     for record in updated_data:
         if field in record.get("_changed", ""):
             value = record.get(field)
-            record[field] = base64_to_data(value) if value else None
+            if not value:
+                record[field] = None  # The image was removed.
+                continue
+            image = _decode_within_limit(record, field, value)
+            if image:
+                record[field] = image
+            else:
+                record.pop(field, None)  # Keep the existing image.
         else:
             record.pop(field, None)
 
@@ -310,7 +359,16 @@ def create_referral_data(validated_data, user, sync_time):
     updated_data = table_data.pop("updated")
     for data in updated_data:
         data["updated_at"] = sync_time
+        # .update() can't store a file, so apply a new picture via save() (which also fits it
+        # to its size budget).
+        new_picture: Optional[File] = data.get("picture")
+        if new_picture:
+            data.pop("picture")
         models.Referral.objects.filter(pk=data["id"]).update(**data)
+        if new_picture:
+            referral = models.Referral.objects.get(pk=data["id"])
+            referral.picture = new_picture
+            referral.save()
 
 
 def create_patient_note_data(validated_data, user, sync_time):

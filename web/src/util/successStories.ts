@@ -43,9 +43,11 @@ export const storyStatusChipColor = (
     }
 };
 
-// Maximum number of photos a story can carry, and the matching server field names.
-// Slot 1 stays "photo" for backward compatibility
-export const MAX_STORY_PHOTOS = 5;
+// Maximum number of photos that can be added to a story. Phones store all of a story's photos in
+// one database row, which Android can only read if it fits in 2 MB, so with larger photos this is
+// 4. Older stories may still have a 5th photo (from smaller, older photos); it is kept.
+export const MAX_STORY_PHOTOS = 4;
+// The server field names for the photo slots. Slot 1 stays "photo" for backward compatibility.
 export const PHOTO_FIELDS = ["photo", "photo_2", "photo_3", "photo_4", "photo_5"] as const;
 export type PhotoField = typeof PHOTO_FIELDS[number];
 
@@ -170,7 +172,8 @@ const appendPhotos = async (
     storyId: string | undefined | null
 ) => {
     await Promise.all(
-        photos.slice(0, MAX_STORY_PHOTOS).map(async (url, index) => {
+        // All slots, not MAX_STORY_PHOTOS, so editing an older 5-photo story keeps its 5th photo.
+        photos.slice(0, PHOTO_FIELDS.length).map(async (url, index) => {
             if (url) {
                 await appendPhoto(formData, PHOTO_FIELDS[index], url, storyId);
             }

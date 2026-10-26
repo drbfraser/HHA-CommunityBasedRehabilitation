@@ -13,7 +13,8 @@ import {
 } from "@cbr/common";
 import { ActivityIndicator, Button, Card, Chip, Dialog, List, Text } from "react-native-paper";
 import useStyles from "./Entry.styles";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
+import ImageViewer from "../../../../components/ImageViewer/ImageViewer";
 import * as Yup from "yup";
 import { Formik, FormikProps } from "formik";
 import FormikTextInput from "../../../../components/FormikTextInput/FormikTextInput";
@@ -34,6 +35,7 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
     const styles = useStyles();
     const [uri, setUri] = useState<string>("");
     const [hasImage, setHasImage] = useState<boolean>(false);
+    const [viewerOpen, setViewerOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const { autoSync, cellularSync } = useContext(SyncContext);
     const { t } = useTranslation();
@@ -356,7 +358,20 @@ const ReferralEntry = ({ referral, database, close, refreshClient }: IEntryProps
                         )}
                         {hasImage && (
                             <>
-                                <Card.Cover style={styles.cardImageStyle} source={{ uri: uri }} />
+                                <TouchableOpacity
+                                    onPress={() => setViewerOpen(true)}
+                                    accessibilityLabel="View photo"
+                                >
+                                    <Card.Cover
+                                        style={styles.cardImageStyle}
+                                        source={{ uri: uri }}
+                                    />
+                                </TouchableOpacity>
+                                <ImageViewer
+                                    visible={viewerOpen}
+                                    images={[uri]}
+                                    onClose={() => setViewerOpen(false)}
+                                />
                             </>
                         )}
                         {!referral.resolved && <ResolveForm />}

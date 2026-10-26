@@ -4,6 +4,8 @@ import buildFormErrorInternal from "./internal/buildFormError";
 import rejectWithWrappedError from "./internal/rejectWithWrappedError";
 import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 
+export { SYNC_FETCH_TIMEOUT_MILLIS } from "../constants";
+
 export enum Endpoint {
     LOGIN = "login",
     LOGIN_REFRESH = "login/refresh",
@@ -128,18 +130,22 @@ export const createApiFetchRequest = (
  * default, this is blank.
  * @param customInit An object containing any custom settings that you want to apply to the request.
  * By default, this is empty. The access token is always placed in the request headers.
+ * @param timeoutMs How long to wait for the response to start before giving up. By default,
+ * DEFAULT_FETCH_TIMEOUT_MILLIS.
  */
 export const apiFetch = async (
     endpoint: Endpoint,
     urlParams: string = "",
-    customInit: RequestInit = {}
+    customInit: RequestInit = {},
+    timeoutMs: number = DEFAULT_FETCH_TIMEOUT_MILLIS
 ): Promise<Response> => {
-    return apiFetchByRequest(createApiFetchRequest(endpoint, urlParams), customInit);
+    return apiFetchByRequest(createApiFetchRequest(endpoint, urlParams), customInit, timeoutMs);
 };
 
 export const apiFetchByRequest = async (
     request: Request,
-    customInit: RequestInit
+    customInit: RequestInit,
+    timeoutMs: number = DEFAULT_FETCH_TIMEOUT_MILLIS
 ): Promise<Response> => {
     const authToken = await getAuthToken();
     if (authToken === null) {
@@ -152,7 +158,7 @@ export const apiFetchByRequest = async (
     }
 
     const abortController: AbortController = new AbortController();
-    const timeoutId = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MILLIS); // timeout value in ms
+    const timeoutId = setTimeout(() => abortController.abort(), timeoutMs);
     customInit.signal = abortController.signal;
 
     return fetch(request, customInit)
@@ -178,7 +184,8 @@ export const apiFetchByRequest = async (
 
             return resp;
         })
-        .catch(rejectWithWrappedError);
+        .catch(rejectWithWrappedError)
+        .finally(() => clearTimeout(timeoutId)); // also when the request fails
 };
 
 // NOTE: This function does not handle nested objects or arrays of objects.

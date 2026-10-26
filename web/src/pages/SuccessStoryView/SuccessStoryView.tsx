@@ -15,6 +15,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import history from "@cbr/common/util/history";
+import { ImageViewerDialog, IViewerImage } from "components/ImageViewer/ImageViewerDialog";
 import {
     getStoryById,
     ISuccessStory,
@@ -58,6 +59,19 @@ const SuccessStoryView = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [photoBlobUrls, setPhotoBlobUrls] = useState<string[]>([]);
+    const [viewerIndex, setViewerIndex] = useState<number>();
+    // photoBlobUrls is indexed by photo slot (with gaps); the viewer gets just the loaded photos.
+    const viewerImages: IViewerImage[] = photoBlobUrls.flatMap((url, slotIndex) =>
+        url
+            ? [
+                  {
+                      src: url,
+                      fileBaseName: `success-story-${storyId}-${slotIndex + 1}`,
+                      alt: `Beneficiary photograph ${slotIndex + 1}`,
+                  },
+              ]
+            : []
+    );
 
     useEffect(() => {
         setLoading(true);
@@ -140,21 +154,30 @@ const SuccessStoryView = () => {
                         Photographs
                     </Typography>
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 1 }}>
-                        {photoBlobUrls.filter(Boolean).map((url, index) => (
+                        {viewerImages.map((image, index) => (
                             <Box
-                                key={index}
+                                key={image.src}
                                 component="img"
-                                src={url}
-                                alt={`Beneficiary photograph ${index + 1}`}
+                                src={image.src}
+                                alt={image.alt}
+                                title="Click to enlarge"
+                                onClick={() => setViewerIndex(index)}
                                 sx={{
                                     maxWidth: 500,
                                     maxHeight: 400,
                                     objectFit: "contain",
                                     borderRadius: 1,
+                                    cursor: "zoom-in",
                                 }}
                             />
                         ))}
                     </Box>
+                    <ImageViewerDialog
+                        open={viewerIndex !== undefined}
+                        onClose={() => setViewerIndex(undefined)}
+                        images={viewerImages}
+                        initialIndex={viewerIndex ?? 0}
+                    />
                 </Box>
             )}
 

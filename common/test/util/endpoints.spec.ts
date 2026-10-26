@@ -59,6 +59,30 @@ describe("endpoints.ts", () => {
         });
     });
 
+    describe("apiFetch timeout", () => {
+        let timers: ReturnType<typeof setTimeout>[] = [];
+        const slowResponse = (delayMs: number) =>
+            new Promise((resolve) => {
+                timers.push(setTimeout(() => resolve({ body: "[]" }), delayMs));
+            });
+
+        afterEach(() => {
+            timers.forEach(clearTimeout);
+            timers = [];
+        });
+
+        it("should reject a request slower than its timeout", async () => {
+            fetchMock.get(Endpoint.ZONES, slowResponse(500));
+            await expect(apiFetch(Endpoint.ZONES, "", {}, 50)).rejects.toBeInstanceOf(Error);
+        });
+
+        it("should allow a slow request with a longer timeout", async () => {
+            fetchMock.get(Endpoint.ZONES, slowResponse(100));
+            const response = await apiFetch(Endpoint.ZONES, "", {}, 2000);
+            expect(response.ok).toBe(true);
+        });
+    });
+
     describe("APIFetchFailError", () => {
         describe("buildFormError", () => {
             it("should aggregate form errors", () => {

@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import GoBackButton from "components/GoBackButton/GoBackButton";
 import { PhotoView } from "components/ReferralPhotoView/PhotoView";
+import { STORY_PHOTO_SIZE } from "util/resizePhoto";
 import { Gender, HCRType, IClient } from "@cbr/common/util/clients";
 import {
     ISuccessStory,
@@ -458,7 +459,11 @@ const NewSuccessStory = () => {
                         </Typography>
                         {/* Remount on each add so PhotoView's own thumbnail preview
                             resets and doesn't duplicate the just-added image. */}
-                        <PhotoView key={photos.length} onPictureChange={addPhoto} />
+                        <PhotoView
+                            key={photos.length}
+                            onPictureChange={addPhoto}
+                            size={STORY_PHOTO_SIZE}
+                        />
                     </Grid>
                 )}
             </Grid>

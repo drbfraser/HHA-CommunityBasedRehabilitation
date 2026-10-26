@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { ActivityIndicator, Button, Card, Divider } from "react-native-paper";
 import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -16,6 +16,7 @@ import {
     storyStatusLabel,
 } from "./successStoryApi";
 import { styles } from "./SuccessStories.styles";
+import ImageViewer from "../../components/ImageViewer/ImageViewer";
 
 interface Props {
     route: RouteProp<StackParamList, StackScreenName.SUCCESS_STORY_VIEW>;
@@ -65,6 +66,8 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [photoUris, setPhotoUris] = useState<string[]>([]);
+    const [viewerIndex, setViewerIndex] = useState<number>();
+    const viewerImages = photoUris.filter(Boolean);
 
     const loadStory = useCallback(() => {
         setLoading(true);
@@ -145,14 +148,21 @@ const SuccessStoryView = ({ route, navigation }: Props) => {
             {photoUris.some(Boolean) ? (
                 <View style={styles.photoContainer}>
                     <Text style={styles.sectionTitle}>Photographs</Text>
-                    {photoUris.filter(Boolean).map((uri, index) => (
-                        <Image
+                    {viewerImages.map((uri, index) => (
+                        <TouchableOpacity
                             key={index}
-                            source={{ uri }}
-                            style={styles.photo}
-                            resizeMode="contain"
-                        />
+                            onPress={() => setViewerIndex(index)}
+                            accessibilityLabel={`View photo ${index + 1}`}
+                        >
+                            <Image source={{ uri }} style={styles.photo} resizeMode="contain" />
+                        </TouchableOpacity>
                     ))}
+                    <ImageViewer
+                        visible={viewerIndex !== undefined}
+                        images={viewerImages}
+                        initialIndex={viewerIndex ?? 0}
+                        onClose={() => setViewerIndex(undefined)}
+                    />
                 </View>
             ) : null}
 

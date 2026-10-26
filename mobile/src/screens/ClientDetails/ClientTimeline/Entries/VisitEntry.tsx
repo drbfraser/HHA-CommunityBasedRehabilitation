@@ -10,7 +10,8 @@ import {
 import { riskTypes } from "../../../../util/riskIcon";
 import { ActivityIndicator, Button, Card, Chip, Dialog, List, Text } from "react-native-paper";
 import useStyles from "./Entry.styles";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
+import ImageViewer from "../../../../components/ImageViewer/ImageViewer";
 import DataCard from "../../../../components/DataCard/DataCard";
 import { database } from "../../../../util/watermelonDatabase";
 import { modelName } from "../../../../models/constant";
@@ -24,6 +25,7 @@ interface IEntryProps {
 const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
     const [visit, setVisit] = useState<IVisit>();
     const [visitImprovements, setVisitImprovement] = useState<any>();
+    const [viewerOpen, setViewerOpen] = useState(false);
     const { t } = useTranslation();
 
     const onOpen = async () => {
@@ -127,9 +129,12 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                     <DetailAccordion key={type} type={type} />
                 ))}
                 {hasImage && (
-                    <>
+                    <TouchableOpacity
+                        onPress={() => setViewerOpen(true)}
+                        accessibilityLabel="View photo"
+                    >
                         <Card.Cover style={styles.cardImageStyle} source={{ uri: uri }} />
-                    </>
+                    </TouchableOpacity>
                 )}
             </>
         );
@@ -159,6 +164,13 @@ const VisitEntry = ({ visitSummary, close }: IEntryProps) => {
                 </Dialog.Title>
                 <Dialog.Content>
                     <Details />
+                    {visit?.picture ? (
+                        <ImageViewer
+                            visible={viewerOpen}
+                            images={[visit.picture]}
+                            onClose={() => setViewerOpen(false)}
+                        />
+                    ) : null}
                 </Dialog.Content>
                 <Dialog.Actions>
                     <Button onPress={onClose} color={themeColors.blueBgDark}>

@@ -21,8 +21,21 @@ from cbr_api.util import (
     create_update_delete_alert_data,
     create_patient_note_data,
     create_success_story_data,
+    validate_image_size,
 )
 import logging
+
+
+class ImageSizeLimitMixin:
+    """Adds the server's image size limit (validate_image_size) to every image field."""
+
+    def get_fields(self):
+        fields = super().get_fields()
+        for field in fields.values():
+            if isinstance(field, serializers.ImageField):
+                field.validators.append(validate_image_size)
+        return fields
+
 
 logger = logging.getLogger(__name__)
 
@@ -386,7 +399,7 @@ class UpdateReferralSerializer(serializers.ModelSerializer):
         return referral
 
 
-class DetailedReferralSerializer(serializers.ModelSerializer):
+class DetailedReferralSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     class Meta:
         model = models.Referral
         fields = [
@@ -446,7 +459,7 @@ class DetailedReferralSerializer(serializers.ModelSerializer):
         return referrals
 
 
-class ReferralSyncSerializer(serializers.ModelSerializer):
+class ReferralSyncSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     class Meta:
         model = models.Referral
         fields = [
@@ -513,7 +526,7 @@ class OutstandingReferralSerializer(serializers.Serializer):
     date_referred = serializers.IntegerField()
 
 
-class DetailedVisitSerializer(serializers.ModelSerializer):
+class DetailedVisitSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     # Make improvements optional if you want to allow visits with none
     improvements = ImprovementSerializer(many=True, required=False, default=list)
 
@@ -569,7 +582,7 @@ class DetailedVisitSerializer(serializers.ModelSerializer):
         return visit
 
 
-class SummaryVisitSerializer(serializers.ModelSerializer):
+class SummaryVisitSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     class Meta:
         model = models.Visit
         fields = [
@@ -685,7 +698,7 @@ class ClientListSerializer(serializers.ModelSerializer):
         ]
 
 
-class ClientSyncSerializer(serializers.ModelSerializer):
+class ClientSyncSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     class Meta:
         model = models.Client
         fields = [
@@ -726,7 +739,7 @@ class ClientSyncSerializer(serializers.ModelSerializer):
         ]
 
 
-class editClientSyncSerializer(serializers.ModelSerializer):
+class editClientSyncSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     id = serializers.CharField(validators=[])
 
     class Meta:
@@ -800,7 +813,7 @@ class BaselineSurveySyncSerializer(serializers.ModelSerializer):
         read_only_fields = ["user_id"]
 
 
-class ClientCreateSerializer(serializers.ModelSerializer):
+class ClientCreateSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     health_risk = ClientCreationRiskSerializer(many=False, write_only=True)
     social_risk = ClientCreationRiskSerializer(many=False, write_only=True)
     educat_risk = ClientCreationRiskSerializer(many=False, write_only=True)
@@ -896,7 +909,7 @@ class ClientCreateSerializer(serializers.ModelSerializer):
         return client
 
 
-class ClientDetailSerializer(serializers.ModelSerializer):
+class ClientDetailSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     risks = ClientCreationRiskSerializer(many=True, read_only=True)
     visits = SummaryVisitSerializer(many=True, read_only=True)
     referrals = DetailedReferralSerializer(many=True, read_only=True)
@@ -1179,7 +1192,7 @@ class multiPatientNoteSerializer(serializers.Serializer):
     deleted = PatientNoteSyncSerializer(many=True)
 
 
-class SuccessStorySyncSerializer(serializers.ModelSerializer):
+class SuccessStorySyncSerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     id = serializers.CharField(validators=[])
     # The mobile client owns these foreign keys; created_by_user_id is set
     # server-side from the request user during push, so it is optional here.
@@ -1371,7 +1384,7 @@ class NoteSerializer(serializers.ModelSerializer):
         ]
 
 
-class SuccessStorySerializer(serializers.ModelSerializer):
+class SuccessStorySerializer(ImageSizeLimitMixin, serializers.ModelSerializer):
     written_by_name = serializers.SerializerMethodField()
     beneficiary_age = serializers.SerializerMethodField()
     beneficiary_gender = serializers.SerializerMethodField()

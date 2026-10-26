@@ -4,7 +4,9 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 
+from cbr_api.image_limits import BUG_REPORT_IMAGE_BUDGET
 from cbr_api.models import UserCBR, Zone
+from cbr_api.tests.test_image_budgets import big_jpeg, dimensions
 
 
 class BugReportEmailViewTests(APITestCase):
@@ -72,6 +74,25 @@ class BugReportEmailViewTests(APITestCase):
         self.assertEqual(kwargs["submitted_by_username"], "bugreportuser")
         self.assertIsNotNone(kwargs["screenshot"])
         self.assertEqual(kwargs["screenshot"].name, "suggestion.gif")
+
+    @patch("cbr_api.views.send_bug_report_email", return_value=(True, None))
+    def test_large_image_is_shrunk_before_emailing(self, mock_send_bug_report_email):
+        data = big_jpeg(4000, 3000)
+        self.assertGreater(len(data), BUG_REPORT_IMAGE_BUDGET.max_bytes)
+        payload = {
+            "report_type": "bug_report",
+            "description": "Large photo attached.",
+            "image": SimpleUploadedFile("photo.png", data, content_type="image/png"),
+        }
+        response = self.api_client.post(self.url, payload, format="multipart")
+
+        self.assertEqual(response.status_code, 201)
+        screenshot = mock_send_bug_report_email.call_args.kwargs["screenshot"]
+        self.assertEqual(screenshot.name, "photo.jpg")
+        self.assertEqual(screenshot.content_type, "image/jpeg")
+        result = screenshot.read()
+        self.assertLessEqual(len(result), BUG_REPORT_IMAGE_BUDGET.max_bytes)
+        self.assertLessEqual(max(dimensions(result)), BUG_REPORT_IMAGE_BUDGET.max_side)
 
     @patch(
         "cbr_api.views.send_bug_report_email",

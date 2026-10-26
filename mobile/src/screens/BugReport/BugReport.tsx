@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Image, ScrollView, View } from "react-native";
-import { apiFetch, themeColors } from "@cbr/common";
+import { apiFetch, themeColors, UPLOAD_FETCH_TIMEOUT_MILLIS } from "@cbr/common";
+import { BUG_REPORT_IMAGE_SIZE, resizePhotoToFile } from "../../util/resizePhoto";
 import { useNetInfo } from "@react-native-community/netinfo";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
@@ -24,6 +25,25 @@ import useStyles from "./BugReport.styles";
 const MAX_DESCRIPTION_LENGTH = 1200;
 type ReportType = "bug_report" | "suggestion";
 const BUG_REPORT_ENDPOINT = "bug_report/";
+
+// The image is emailed, so it is shrunk first (a full-size photo can be several MB). If it cannot
+// be resized, the original is sent and the server fits it.
+const bugReportImagePart = async (image: ImagePicker.ImagePickerAsset) => {
+    const baseName = (image.fileName ?? image.uri.split("/").pop() ?? "attachment").replace(
+        /\.[^.]*$/,
+        ""
+    );
+    try {
+        const uri = await resizePhotoToFile(image, BUG_REPORT_IMAGE_SIZE);
+        return { uri, type: "image/jpeg", name: `${baseName}.jpg` } as any;
+    } catch {
+        return {
+            uri: image.uri,
+            type: image.mimeType ?? "image/jpeg",
+            name: image.fileName ?? `${baseName}.jpg`,
+        } as any;
+    }
+};
 
 const BugReport = () => {
     const styles = useStyles();
@@ -65,27 +85,23 @@ const BugReport = () => {
             return;
         }
 
-        const payload = new FormData();
-        payload.append("report_type", reportType);
-        payload.append("description", description.trim());
-
-        if (attachedImage) {
-            const fileName =
-                attachedImage.fileName ?? attachedImage.uri.split("/").pop() ?? "attachment.jpg";
-            payload.append("image", {
-                uri: attachedImage.uri,
-                type: attachedImage.mimeType ?? "image/jpeg",
-                name: fileName,
-            } as any);
-        }
-
         setIsSubmitting(true);
         setSubmitError(null);
         try {
-            await apiFetch(BUG_REPORT_ENDPOINT as any, "", {
-                method: "POST",
-                body: payload,
-            });
+            const payload = new FormData();
+            payload.append("report_type", reportType);
+            payload.append("description", description.trim());
+
+            if (attachedImage) {
+                payload.append("image", await bugReportImagePart(attachedImage));
+            }
+
+            await apiFetch(
+                BUG_REPORT_ENDPOINT as any,
+                "",
+                { method: "POST", body: payload },
+                UPLOAD_FETCH_TIMEOUT_MILLIS
+            );
             const successMessage =
                 reportType === "suggestion"
                     ? "Your suggestion was created successfully."

@@ -17,7 +17,13 @@ import {
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import SendIcon from "@mui/icons-material/Send";
-import { apiFetch, APIFetchFailError, Endpoint } from "@cbr/common/util/endpoints";
+import {
+    apiFetch,
+    APIFetchFailError,
+    Endpoint,
+    UPLOAD_FETCH_TIMEOUT_MILLIS,
+} from "@cbr/common/util/endpoints";
+import { BUG_REPORT_IMAGE_SIZE, resizePhoto } from "util/resizePhoto";
 import UnsavedChanges from "components/Dialogs/UnsavedChanges";
 import { bugReportStyles } from "./BugReport.styles";
 
@@ -25,6 +31,17 @@ const MAX_DESCRIPTION_LENGTH = 1200;
 type ReportType = "bug_report" | "suggestion";
 type UserViewLocationState = {
     bugReportSuccessMessage?: string;
+};
+
+// The image is emailed, so it is shrunk first (a full-size photo can be several MB). If the browser
+// cannot decode it (e.g. HEIC), the original is sent and the server fits it.
+const bugReportImage = async (file: File): Promise<[Blob, string]> => {
+    try {
+        const jpeg = await resizePhoto(file, BUG_REPORT_IMAGE_SIZE);
+        return [jpeg, file.name.replace(/\.[^.]*$/, "") + ".jpg"];
+    } catch {
+        return [file, file.name];
+    }
 };
 
 const BugReport = () => {
@@ -186,19 +203,22 @@ const BugReport = () => {
             return;
         }
 
-        const payload = new FormData();
-        payload.append("report_type", reportType);
-        payload.append("description", description.trim());
-        if (attachedImage) {
-            payload.append("image", attachedImage);
-        }
-
         setIsSubmitting(true);
         try {
-            await apiFetch(Endpoint.BUG_REPORT, "", {
-                method: "POST",
-                body: payload,
-            });
+            const payload = new FormData();
+            payload.append("report_type", reportType);
+            payload.append("description", description.trim());
+            if (attachedImage) {
+                const [image, name] = await bugReportImage(attachedImage);
+                payload.append("image", image, name);
+            }
+
+            await apiFetch(
+                Endpoint.BUG_REPORT,
+                "",
+                { method: "POST", body: payload },
+                UPLOAD_FETCH_TIMEOUT_MILLIS
+            );
             const successMessage =
                 reportType === "suggestion"
                     ? "Your suggestion was created successfully."

@@ -7,7 +7,7 @@ import { DEFAULT_FETCH_TIMEOUT_MILLIS } from "../constants";
 export {
     SYNC_FETCH_TIMEOUT_MILLIS,
     IMAGE_FETCH_TIMEOUT_MILLIS,
-    STORY_SAVE_TIMEOUT_MILLIS,
+    UPLOAD_FETCH_TIMEOUT_MILLIS,
 } from "../constants";
 
 export enum Endpoint {

@@ -11,6 +11,7 @@ from rest_framework import serializers
 
 from cbr_api import models
 from cbr_api.email_notifications import send_referral_created_email
+from cbr_api.image_limits import BUG_REPORT_IMAGE_BUDGET, fit_image
 from cbr_api.util import (
     current_milli_time,
     create_client_data,
@@ -1065,6 +1066,16 @@ class BugReportSubmissionSerializer(serializers.Serializer):
     )
     description = serializers.CharField(max_length=1200, trim_whitespace=True)
     image = serializers.ImageField(required=False, allow_null=True)
+
+    def validate_image(self, image):
+        """Shrinks a large image (it is emailed) to BUG_REPORT_IMAGE_BUDGET."""
+        if not image:
+            return image
+        fitted = fit_image(image, BUG_REPORT_IMAGE_BUDGET)
+        if fitted is not image:
+            fitted.name = os.path.splitext(image.name or "attachment")[0] + ".jpg"
+            fitted.content_type = "image/jpeg"
+        return fitted
 
 
 class AlertSyncSerializer(serializers.ModelSerializer):

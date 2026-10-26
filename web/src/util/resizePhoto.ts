@@ -16,6 +16,12 @@ export const RECORD_PHOTO_SIZE: PhotoSize = { maxSide: 400, quality: 0.75 }; // 
 // Android can only read if the row fits in 2 MB, and stories uploaded here are synced to phones.
 // 4 photos (MAX_STORY_PHOTOS) of at most 320 KB leave room for the story text and a margin.
 export const STORY_PHOTO_SIZE: PhotoSize = { maxSide: 1500, quality: 0.8, maxBytes: 320 * 1024 };
+// Bug report screenshots and images, sent by email: large enough to read text in a screenshot.
+export const BUG_REPORT_IMAGE_SIZE: PhotoSize = {
+    maxSide: 2000,
+    quality: 0.85,
+    maxBytes: 800 * 1024,
+};
 
 // Tried in order for a photo over its budget: [fraction of maxSide, JPEG quality].
 // For success stories: 1500 px at 0.75/0.7/0.65, then 1200 px, 1000 px and 750 px.

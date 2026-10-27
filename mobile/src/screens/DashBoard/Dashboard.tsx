@@ -366,7 +366,16 @@ const Dashboard = () => {
                                 })}
                             />
                         ) : null}
-                        {showOfflineFallbackWarning && !syncBlockedReason ? (
+                        {showOfflineFallbackWarning && !syncBlockedReason && isSyncing ? (
+                            <Alert
+                                style={styles.offline_fallback_alert}
+                                severity={"info"}
+                                text={t("dashboard.syncInProgress", {
+                                    defaultValue: "Synchronizing with server",
+                                })}
+                            />
+                        ) : null}
+                        {showOfflineFallbackWarning && !syncBlockedReason && !isSyncing ? (
                             <Alert
                                 style={styles.offline_fallback_alert}
                                 severity={"error"}

@@ -225,13 +225,16 @@ export const updateStory = async (
     database: Database,
     id: string,
     payload: ISuccessStoryPayload,
-    photos: string[] = []
+    // Omit to leave the photo slots untouched.
+    photos?: string[]
 ): Promise<void> => {
     await database.write(async () => {
         const record = await database.get<SuccessStory>(modelName.success_stories).find(id);
         await record.update((story) => {
             applyPayload(story, payload);
-            writePhotoSlots(story, photos);
+            if (photos) {
+                writePhotoSlots(story, photos);
+            }
         });
     });
 };

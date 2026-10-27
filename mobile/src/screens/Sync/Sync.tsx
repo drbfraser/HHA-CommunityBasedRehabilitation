@@ -11,6 +11,7 @@ import {
     logger,
     AutoSyncDB,
     lastVersionSyncedIsCurrentVersion,
+    noPreviousSyncsPerformed,
 } from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
 import useStyles from "./Sync.styles";
@@ -296,7 +297,12 @@ const Sync = () => {
                         loading={isSyncing}
                         onPress={async () => {
                             try {
-                                if (!(await lastVersionSyncedIsCurrentVersion())) {
+                                // A device that has never synced has no local data to clear, so
+                                // sync directly (as AutoSyncDB does) instead of showing the modal.
+                                if (
+                                    !(await lastVersionSyncedIsCurrentVersion()) &&
+                                    !(await noPreviousSyncsPerformed())
+                                ) {
                                     setSyncUpdateModal(true);
                                 } else {
                                     await performSync();

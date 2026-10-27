@@ -104,6 +104,10 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const [datePickerVisible, setDatePickerVisible] = useState(false);
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const initialFormRef = useRef<string>("");
+    // Whether the user added or removed a photo. A photo that failed to download during sync is
+    // missing from `photos`, so rewriting the slots when nothing changed would clear it on the
+    // server.
+    const photosChangedRef = useRef<boolean>(false);
 
     const writerName = useMemo(() => {
         if (form.written_by_name) return form.written_by_name;
@@ -155,12 +159,17 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
     const set = (field: keyof FormState) => (text: string) =>
         setForm((prev) => ({ ...prev, [field]: text }));
 
-    const addPhoto = (dataUrl: string) =>
+    const addPhoto = (dataUrl: string) => {
+        photosChangedRef.current = true;
         setPhotos((prev) =>
             prev.length >= MAX_STORY_PHOTOS ? prev : [...prev, makePhotoItem(dataUrl)]
         );
+    };
 
-    const removePhoto = (id: string) => setPhotos((prev) => prev.filter((p) => p.id !== id));
+    const removePhoto = (id: string) => {
+        photosChangedRef.current = true;
+        setPhotos((prev) => prev.filter((p) => p.id !== id));
+    };
 
     const pickPhoto = async () => {
         // The gallery uses the Android Photo Picker / iOS limited picker, which need no
@@ -239,7 +248,12 @@ const NewSuccessStory = ({ route, navigation }: Props) => {
         setHasSubmitted(true);
 
         const request = storyId
-            ? updateStory(database, storyId, payload, photoUris)
+            ? updateStory(
+                  database,
+                  storyId,
+                  payload,
+                  photosChangedRef.current ? photoUris : undefined
+              )
             : createStory(database, clientID, userId, payload, photoUris);
 
         request

@@ -277,9 +277,6 @@ const Sync = () => {
         prevSyncPhase.current = syncStatus.phase;
     }, [syncStatus.phase]);
 
-    console.log("Sync: stats.lastPulledTime: ", stats.lastPulledTime);
-    console.log("Sync: stats.localChanges:   ", stats.localChanges);
-    console.log("Sync: stats.remoteChanges:  ", stats.remoteChanges);
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.groupContainer}>

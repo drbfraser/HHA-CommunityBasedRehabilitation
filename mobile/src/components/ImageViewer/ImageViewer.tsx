@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Image, LayoutChangeEvent, Modal, StyleSheet, Text, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
     runOnJS,
     useAnimatedStyle,
@@ -222,6 +223,7 @@ const ZoomableImage = ({ uri, onSwipe }: IZoomableImageProps) => {
 const ImageViewer = ({ visible, images, initialIndex = 0, onClose }: IProps) => {
     const [index, setIndex] = useState(initialIndex);
     const hasMany = images.length > 1;
+    const insets = useSafeAreaInsets();
 
     useEffect(() => {
         if (visible) {
@@ -248,7 +250,8 @@ const ImageViewer = ({ visible, images, initialIndex = 0, onClose }: IProps) => 
                     // key: start each image unzoomed
                     <ZoomableImage key={index} uri={uri} onSwipe={hasMany ? step : undefined} />
                 ) : null}
-                <View style={styles.header}>
+                {/* The status bar takes touches in its area, so keep the close button below it. */}
+                <View style={[styles.header, { top: insets.top + 4 }]}>
                     <Text style={styles.counter}>
                         {hasMany ? `${index + 1} / ${images.length}` : ""}
                     </Text>
@@ -300,7 +303,6 @@ const styles = StyleSheet.create({
     },
     header: {
         position: "absolute",
-        top: 24,
         left: 0,
         right: 0,
         flexDirection: "row",

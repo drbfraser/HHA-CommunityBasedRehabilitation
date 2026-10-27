@@ -63,6 +63,12 @@ const useStyles = () =>
             marginBottom: 8,
             fontWeight: "600",
         },
+        syncBlockedNotice: {
+            textAlign: "center",
+            color: themeColors.errorRed,
+            marginBottom: 8,
+            marginHorizontal: 10,
+        },
     });
 
 export default useStyles;

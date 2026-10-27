@@ -80,9 +80,12 @@ export default function SyncUpdateAlert({ visibility, dismissAlert, onConfirm })
         setSyncConfirmed(confirmTextIsValid);
     };
 
+    // Only ask the server when the modal opens: the parent screen re-renders every second.
     useEffect(() => {
-        compareServerVersion();
-    });
+        if (visibility) {
+            compareServerVersion();
+        }
+    }, [visibility]);
 
     return (
         <View>

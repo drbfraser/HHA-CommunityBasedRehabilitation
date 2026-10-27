@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Image, LayoutChangeEvent, Modal, StyleSheet, Text, View } from "react-native";
+import { Image, LayoutChangeEvent, Modal, StatusBar, StyleSheet, Text, View } from "react-native";
 import { IconButton } from "react-native-paper";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
@@ -248,7 +248,9 @@ const ImageViewer = ({ visible, images, initialIndex = 0, onClose }: IProps) => 
                     // key: start each image unzoomed
                     <ZoomableImage key={index} uri={uri} onSwipe={hasMany ? step : undefined} />
                 ) : null}
-                <View style={styles.header}>
+                {/* The status bar takes touches in its area, so keep the close button below it.
+                    (Not useSafeAreaInsets: under a navigation header it reports a top inset of 0.) */}
+                <View style={[styles.header, { top: (StatusBar.currentHeight ?? 24) + 4 }]}>
                     <Text style={styles.counter}>
                         {hasMany ? `${index + 1} / ${images.length}` : ""}
                     </Text>
@@ -300,7 +302,6 @@ const styles = StyleSheet.create({
     },
     header: {
         position: "absolute",
-        top: 24,
         left: 0,
         right: 0,
         flexDirection: "row",

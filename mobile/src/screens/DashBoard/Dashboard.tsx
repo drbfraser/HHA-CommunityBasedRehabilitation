@@ -35,7 +35,7 @@ import {
     notifyDashboardSyncComplete,
     notifyStaleSyncWarning,
 } from "../../util/syncNotifications";
-import { useNetInfo } from "@react-native-community/netinfo";
+import { SyncBlockedReason, useSyncBlockedReason } from "../../util/useSyncBlockedReason";
 
 // Before the first sync completes: how long to wait for a sync to start, and the longest to wait
 // for one that is running (sync requests themselves time out after 2 minutes).
@@ -57,7 +57,7 @@ const Dashboard = () => {
     const [allowDashboardFallback, setAllowDashboardFallback] = useState<boolean>(false);
 
     const isFocused = useIsFocused();
-    const netInfo = useNetInfo();
+    const syncBlockedReason = useSyncBlockedReason();
     const database = useDatabase();
     const { setUnSyncedChanges, screenRefresh } = useContext(SyncContext);
 
@@ -235,17 +235,19 @@ const Dashboard = () => {
         if (!isFocused || !syncStatsLoaded || allowDashboardFallback) return;
 
         // Stop waiting for the first sync: show local data with the "unable to synchronize" banner.
-        const fallBack = (reason?: "no_internet") => {
+        const fallBack = (reason?: SyncBlockedReason) => {
             setAllowDashboardFallback(true);
             void refreshDashboardData();
-            if (!hasShownSyncFallbackToast.current) {
-                notifyAutoSyncFailure(reason);
+            // Cellular sync being off isn't a failure; the banner explains it.
+            if (!hasShownSyncFallbackToast.current && reason !== "cellular_disabled") {
+                notifyAutoSyncFailure(reason ?? undefined);
                 hasShownSyncFallbackToast.current = true;
             }
         };
 
-        if (netInfo.isInternetReachable === false) {
-            fallBack("no_internet");
+        // No sync will start on this connection, so don't wait for one.
+        if (syncBlockedReason) {
+            fallBack(syncBlockedReason);
             return;
         }
         if (syncStatus.phase === "error") {
@@ -266,7 +268,7 @@ const Dashboard = () => {
         syncStatsLoaded,
         hasCompletedFirstSync,
         allowDashboardFallback,
-        netInfo.isInternetReachable,
+        syncBlockedReason,
         isSyncing,
         syncStatus.phase,
     ]);
@@ -344,7 +346,27 @@ const Dashboard = () => {
                         )}
                     </View>
                     <View>
-                        {showOfflineFallbackWarning ? (
+                        {syncBlockedReason === "no_internet" ? (
+                            <Alert
+                                style={styles.offline_fallback_alert}
+                                severity={"error"}
+                                text={t("dashboard.syncBlockedNoInternet", {
+                                    defaultValue:
+                                        "No internet connection, so the app can't sync yet. Connect to Wi-Fi or mobile data to sync.",
+                                })}
+                            />
+                        ) : null}
+                        {syncBlockedReason === "cellular_disabled" ? (
+                            <Alert
+                                style={styles.offline_fallback_alert}
+                                severity={"error"}
+                                text={t("dashboard.syncBlockedCellular", {
+                                    defaultValue:
+                                        "Connected only by mobile data, and 'Sync over Cellular' is turned off, so the app can't sync yet. Connect to Wi-Fi, or turn on 'Sync over Cellular' on the Sync screen.",
+                                })}
+                            />
+                        ) : null}
+                        {showOfflineFallbackWarning && !syncBlockedReason ? (
                             <Alert
                                 style={styles.offline_fallback_alert}
                                 severity={"error"}

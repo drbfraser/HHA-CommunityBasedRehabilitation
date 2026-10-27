@@ -13,7 +13,6 @@ import {
     lastVersionSyncedIsCurrentVersion,
 } from "../../util/syncHandler";
 import { SyncSettings } from "./PrefConstants";
-import { useNetInfo } from "@react-native-community/netinfo";
 import useStyles from "./Sync.styles";
 import { SyncDatabaseTask } from "../../tasks/SyncDatabaseTask";
 import SyncUpdateAlert from "../../components/SyncUpdateAlert.tsx/SyncUpdateAlert";
@@ -21,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import * as Application from "expo-application";
 import { useSyncStatus } from "../../util/useSyncStatus";
 import { useNextAutoSyncCountdown } from "../../util/useNextAutoSyncCountdown";
+import { useSyncBlockedReason } from "../../util/useSyncBlockedReason";
 
 export interface ISync {
     lastPulledTime: number;
@@ -38,7 +38,7 @@ const Sync = () => {
     const [showSyncModal, setSyncModal] = useState<boolean>(false);
     const [showSyncUpdateModal, setSyncUpdateModal] = useState<boolean>(false);
     const { autoSync, setAutoSync, cellularSync, setCellularSync } = useContext(SyncContext);
-    const netInfo = useNetInfo();
+    const syncBlockedReason = useSyncBlockedReason();
     const [loading, setLoading] = useState<boolean>(true);
     const [stats, setStats] = useState<ISync>({
         lastPulledTime: 0,
@@ -50,8 +50,30 @@ const Sync = () => {
     const { remainingMs, nextAutoSyncAt } = useNextAutoSyncCountdown(autoSync);
     const prevSyncPhase = useRef(syncStatus.phase);
 
-    const syncButtonDisabled =
-        isSyncing || (netInfo.type === "cellular" && !cellularSync ? true : false);
+    const syncButtonDisabled = isSyncing || syncBlockedReason === "cellular_disabled";
+
+    const renderSyncBlockedNotice = () => {
+        if (syncBlockedReason === "no_internet") {
+            return (
+                <Text style={styles.syncBlockedNotice}>
+                    {t("sync.syncBlockedNoInternet", {
+                        defaultValue: "No internet connection, so the app can't sync yet.",
+                    })}
+                </Text>
+            );
+        }
+        if (syncBlockedReason === "cellular_disabled") {
+            return (
+                <Text style={styles.syncBlockedNotice}>
+                    {t("sync.syncBlockedCellular", {
+                        defaultValue:
+                            "Connected only by mobile data, and 'Sync over Cellular' is turned off, so the app can't sync. Connect to Wi-Fi, or turn on 'Sync over Cellular' below, then tap Sync.",
+                    })}
+                </Text>
+            );
+        }
+        return null;
+    };
 
     const renderSyncingNotice = () => {
         if (!isSyncing) return null;
@@ -262,6 +284,7 @@ const Sync = () => {
             <ScrollView style={styles.groupContainer}>
                 <Text style={styles.cardSectionTitle}>{t("sync.database")} </Text>
                 {renderSyncingNotice()}
+                {renderSyncBlockedNotice()}
                 <View style={styles.btnContainer}>
                     <Button
                         testID="sync-database-button"
